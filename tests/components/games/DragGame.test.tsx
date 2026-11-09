@@ -46,6 +46,24 @@ describe("DragGame", () => {
     expect(narrator.play).toHaveBeenCalledWith({ text: "Match the words!" });
   });
 
+  it("the mascot stops talking once the touched word has been spoken", async () => {
+    const { container } = render(<DragGame step={step} cards={cards} onDone={vi.fn()} />);
+    fireEvent.pointerDown(screen.getByRole("button", { name: "fox" }), { pointerId: 1, clientX: 5, clientY: 5 });
+    expect(mood(container)).toBe("talking");
+    await act(async () => {}); // the word's narration settles while the finger still holds it
+    expect(mood(container)).toBe("idle");
+  });
+
+  it("a drop before the word's narration settles keeps its own mood", async () => {
+    const { container } = render(<DragGame step={step} cards={cards} onDone={vi.fn()} />);
+    dragTo("fox", container.querySelector('[data-drop-target="fox"]')!);
+    await act(async () => {});
+    expect(mood(container)).toBe("happy");
+    dragTo("owl", container.querySelector('[data-drop-target="bear"]')!);
+    await act(async () => {});
+    expect(mood(container)).toBe("encourage");
+  });
+
   it("dropping outside any target returns the word without an error", () => {
     const { container } = render(<DragGame step={step} cards={cards} onDone={vi.fn()} />);
     dragTo("fox", document.body);

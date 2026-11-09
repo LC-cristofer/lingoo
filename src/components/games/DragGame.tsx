@@ -18,6 +18,9 @@ export function DragGame({ step, cards, onDone }: Props) {
   const [drag, setDrag] = useState<{ id: string; dx: number; dy: number } | null>(null);
   const startRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const aliveRef = useRef(true);
+  /** Bumped on every touch and drop: a word's narration ending must not undo a newer mood. */
+  const actionRef = useRef(0);
   const doneRef = useRef(false);
   const onDoneRef = useRef(onDone);
   useEffect(() => {
@@ -28,13 +31,14 @@ export function DragGame({ step, cards, onDone }: Props) {
     void narrator.play({ text: "Match the words!" });
   }, []);
 
-  useEffect(
-    () => () => {
+  useEffect(() => {
+    aliveRef.current = true;
+    return () => {
+      aliveRef.current = false;
       if (timerRef.current) clearTimeout(timerRef.current);
       narrator.stop();
-    },
-    [],
-  );
+    };
+  }, []);
 
   const byId = new Map(cards.map((c) => [c.id, c]));
   const stepCards = step.cardIds.map((id) => byId.get(id)).filter((c): c is Card => !!c);
@@ -49,7 +53,10 @@ export function DragGame({ step, cards, onDone }: Props) {
     startRef.current = { x: e.clientX, y: e.clientY };
     setDrag({ id: card.id, dx: 0, dy: 0 });
     setMood("talking");
-    void narrator.play(card.audio);
+    const action = ++actionRef.current;
+    void narrator.play(card.audio).then(() => {
+      if (aliveRef.current && actionRef.current === action) setMood("idle");
+    });
   }
 
   function onMove(e: PointerEvent<HTMLButtonElement>, card: Card) {
@@ -60,6 +67,7 @@ export function DragGame({ step, cards, onDone }: Props) {
   function onUp(e: PointerEvent<HTMLButtonElement>, card: Card) {
     if (drag?.id !== card.id) return;
     setDrag(null);
+    actionRef.current++;
     const el = document.elementFromPoint?.(e.clientX, e.clientY) ?? null;
     const targetId = el?.closest("[data-drop-target]")?.getAttribute("data-drop-target") ?? null;
     const { state, result } = drop(step, stateRef.current, card.id, targetId);
