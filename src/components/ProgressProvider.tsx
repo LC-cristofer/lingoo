@@ -15,27 +15,35 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
   const [progress, setProgress] = useState<Progress>(emptyProgress);
   const storeRef = useRef<ProgressStore | null>(null);
 
-  useEffect(() => {
-    let storage: Storage | null = null;
-    try {
-      storage = window.localStorage;
-    } catch {
-      storage = null;
+  // Lazy: the store must exist before any use, whatever the effect order (child effects run first).
+  const getStore = useCallback((): ProgressStore => {
+    if (!storeRef.current) {
+      let storage: Storage | null = null;
+      try {
+        storage = window.localStorage;
+      } catch {
+        storage = null;
+      }
+      storeRef.current = createLocalProgressStore(storage);
     }
-    const store = createLocalProgressStore(storage);
-    storeRef.current = store;
-    // Intentional: localStorage only exists on the client, so load after mount.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setProgress(store.load());
+    return storeRef.current;
   }, []);
 
-  const finishLesson = useCallback((lessonId: string, stickerId: string) => {
-    setProgress((prev) => {
-      const next = completeLesson(prev, lessonId, stickerId, new Date());
-      if (next !== prev) storeRef.current?.save(next);
-      return next;
-    });
-  }, []);
+  useEffect(() => {
+    // Intentional: localStorage only exists on the client, so load after mount.
+    setProgress(getStore().load());
+  }, [getStore]);
+
+  const finishLesson = useCallback(
+    (lessonId: string, stickerId: string) => {
+      const store = getStore();
+      const current = store.load(); // memory-cached, never behind React state
+      const next = completeLesson(current, lessonId, stickerId, new Date());
+      if (next !== current) store.save(next);
+      setProgress(next);
+    },
+    [getStore],
+  );
 
   const value = useMemo(() => ({ progress, finishLesson }), [progress, finishLesson]);
   return <ProgressContext.Provider value={value}>{children}</ProgressContext.Provider>;
