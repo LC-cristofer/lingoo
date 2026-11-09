@@ -1,5 +1,6 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { narrator } from "@/audio/narrator";
 import { TapGame } from "@/components/games/TapGame";
 import type { TapStep } from "@/domain/content-schema";
 import { cards } from "./helpers";
@@ -20,7 +21,26 @@ const step: TapStep = {
 
 const mood = (c: HTMLElement) => c.querySelector("[data-mood]")?.getAttribute("data-mood");
 
-beforeEach(() => vi.useFakeTimers());
+const played = () => vi.mocked(narrator.play).mock.calls.map(([m]) => m.text);
+
+/** Like the real narrator: a new play interrupts the previous one, whose promise then resolves. */
+function interruptingNarrator() {
+  let interrupt: (() => void) | null = null;
+  vi.mocked(narrator.play).mockImplementation(
+    () =>
+      new Promise<void>((resolve) => {
+        interrupt?.();
+        interrupt = resolve;
+      }),
+  );
+  return () => interrupt?.(); // ends the current line
+}
+
+beforeEach(() => {
+  vi.useFakeTimers();
+  vi.mocked(narrator.play).mockClear();
+  vi.mocked(narrator.play).mockImplementation(() => Promise.resolve());
+});
 afterEach(() => vi.useRealTimers());
 
 describe("TapGame", () => {
@@ -49,6 +69,42 @@ describe("TapGame", () => {
     fireEvent.click(screen.getByRole("button", { name: "bear" }));
     expect(mood(container)).toBe("happy");
     expect(container.textContent?.toLowerCase()).not.toContain("errado");
+  });
+
+  it("wrong then a quick right: 'Great job!' is not cut by a replay of the answered prompt", async () => {
+    interruptingNarrator();
+    render(<TapGame step={step} cards={cards} onDone={vi.fn()} />);
+    fireEvent.click(screen.getByRole("button", { name: "fox" })); // wrong: "Let's try again!"
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(100);
+    });
+    fireEvent.click(screen.getByRole("button", { name: "bear" })); // right, interrupts the encouragement
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(500); // still before the 1200 ms release
+    });
+    expect(played().at(-1)).toBe("Great job!");
+    expect(played().filter((t) => t === "Find the bear")).toHaveLength(1); // only on mount
+  });
+
+  it("two quick wrong taps repeat the prompt once, after the last encouragement", async () => {
+    const endLine = interruptingNarrator();
+    render(<TapGame step={step} cards={cards} onDone={vi.fn()} />);
+    fireEvent.click(screen.getByRole("button", { name: "fox" }));
+    fireEvent.click(screen.getByRole("button", { name: "owl" }));
+    await act(async () => {
+      endLine(); // the second "Let's try again!" ends
+    });
+    expect(played()).toEqual(["Find the bear", "Let's try again!", "Let's try again!", "Find the bear"]);
+  });
+
+  it("after a wrong answer the prompt is repeated once the encouragement ends", async () => {
+    const endLine = interruptingNarrator();
+    render(<TapGame step={step} cards={cards} onDone={vi.fn()} />);
+    fireEvent.click(screen.getByRole("button", { name: "fox" }));
+    await act(async () => {
+      endLine();
+    });
+    expect(played()).toEqual(["Find the bear", "Let's try again!", "Find the bear"]);
   });
 
   it("3 rapid taps on the right option advance only one round", async () => {

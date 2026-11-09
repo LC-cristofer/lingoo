@@ -16,6 +16,8 @@ export function TapGame({ step, cards, onDone }: Props) {
   const [mood, setMood] = useState<Mood>("talking");
   const aliveRef = useRef(true);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  /** Bumped on every counted tap: a stale "try again" must not replay the prompt. */
+  const pressRef = useRef(0);
   const doneRef = useRef(false);
   const onDoneRef = useRef(onDone);
   useEffect(() => {
@@ -48,6 +50,7 @@ export function TapGame({ step, cards, onDone }: Props) {
     const { state, result } = tapOption(step, stateRef.current, optionId);
     if (!result) return;
     stateRef.current = state;
+    const token = ++pressRef.current;
     if (result === "acerto") {
       setMood("happy");
       void narrator.play({ text: "Great job!" });
@@ -68,7 +71,8 @@ export function TapGame({ step, cards, onDone }: Props) {
     } else {
       setMood("encourage");
       void narrator.play({ text: "Let's try again!" }).then(() => {
-        if (!aliveRef.current) return;
+        // Settles on interruption too: replay only if nothing happened since this tap.
+        if (!aliveRef.current || pressRef.current !== token || stateRef.current.locked) return;
         return narrator.play(step.rounds[stateRef.current.round].prompt);
       });
     }
