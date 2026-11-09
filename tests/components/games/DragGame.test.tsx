@@ -32,6 +32,7 @@ describe("DragGame", () => {
 
   it("dragged word ignores pointer events so elementFromPoint sees the target", () => {
     render(<DragGame step={step} cards={cards} onDone={vi.fn()} />);
+    (document as unknown as { elementFromPoint: unknown }).elementFromPoint = vi.fn(() => document.body);
     const btn = screen.getByRole("button", { name: "fox" });
     fireEvent.pointerDown(btn, { pointerId: 1, clientX: 5, clientY: 5 });
     expect(btn.style.pointerEvents).toBe("none");
