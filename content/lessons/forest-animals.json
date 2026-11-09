@@ -1,0 +1,153 @@
+{
+  "id": "forest-animals",
+  "title": "Forest animals",
+  "cards": [
+    {
+      "id": "bear",
+      "word": "bear",
+      "image": "/content/forest-animals/bear.svg",
+      "audio": {
+        "text": "bear"
+      }
+    },
+    {
+      "id": "fox",
+      "word": "fox",
+      "image": "/content/forest-animals/fox.svg",
+      "audio": {
+        "text": "fox"
+      }
+    },
+    {
+      "id": "owl",
+      "word": "owl",
+      "image": "/content/forest-animals/owl.svg",
+      "audio": {
+        "text": "owl"
+      }
+    },
+    {
+      "id": "rabbit",
+      "word": "rabbit",
+      "image": "/content/forest-animals/rabbit.svg",
+      "audio": {
+        "text": "rabbit"
+      }
+    },
+    {
+      "id": "frog",
+      "word": "frog",
+      "image": "/content/forest-animals/frog.svg",
+      "audio": {
+        "text": "frog"
+      }
+    }
+  ],
+  "steps": [
+    {
+      "kind": "song",
+      "id": "song",
+      "image": "/content/forest-animals/forest.svg",
+      "audio": {
+        "text": "Bear, fox, owl! Rabbit and frog! Animals, animals, in the forest!"
+      }
+    },
+    {
+      "kind": "story",
+      "id": "story",
+      "pages": [
+        {
+          "image": "/content/forest-animals/bear.svg",
+          "narration": {
+            "text": "A big bear walks in the forest."
+          }
+        },
+        {
+          "image": "/content/forest-animals/fox.svg",
+          "narration": {
+            "text": "The fox and the owl say hello."
+          }
+        },
+        {
+          "image": "/content/forest-animals/rabbit.svg",
+          "narration": {
+            "text": "The rabbit jumps and jumps."
+          }
+        },
+        {
+          "image": "/content/forest-animals/frog.svg",
+          "narration": {
+            "text": "The frog sings. All the animals are friends!"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "tap",
+      "id": "tap",
+      "rounds": [
+        {
+          "prompt": {
+            "text": "Where is the fox?"
+          },
+          "optionIds": [
+            "bear",
+            "fox",
+            "owl"
+          ],
+          "answerId": "fox"
+        },
+        {
+          "prompt": {
+            "text": "Where is the rabbit?"
+          },
+          "optionIds": [
+            "rabbit",
+            "frog",
+            "bear"
+          ],
+          "answerId": "rabbit"
+        },
+        {
+          "prompt": {
+            "text": "Where is the owl?"
+          },
+          "optionIds": [
+            "frog",
+            "owl",
+            "fox"
+          ],
+          "answerId": "owl"
+        }
+      ]
+    },
+    {
+      "kind": "drag",
+      "id": "drag",
+      "cardIds": [
+        "bear",
+        "fox",
+        "owl",
+        "rabbit",
+        "frog"
+      ]
+    },
+    {
+      "kind": "repeat",
+      "id": "repeat",
+      "cardIds": [
+        "bear",
+        "fox",
+        "owl",
+        "rabbit",
+        "frog"
+      ]
+    },
+    {
+      "kind": "sticker",
+      "id": "sticker",
+      "stickerId": "sticker-fox",
+      "image": "/content/forest-animals/sticker-fox.svg"
+    }
+  ]
+}

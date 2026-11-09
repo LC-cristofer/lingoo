@@ -1,0 +1,14 @@
+[
+  {
+    "id": "forest",
+    "title": "Floresta",
+    "places": [
+      { "lessonId": "forest-animals", "title": "Animais da floresta", "hasContent": true },
+      { "lessonId": "hello-my-name-is", "title": "Hello e My name is", "hasContent": false },
+      { "lessonId": "pets-and-farm", "title": "Animais de estimação e da fazenda", "hasContent": false },
+      { "lessonId": "colors", "title": "Cores", "hasContent": false },
+      { "lessonId": "more-colors", "title": "Mais cores", "hasContent": false },
+      { "lessonId": "numbers-1-10", "title": "Números de 1 a 10", "hasContent": false }
+    ]
+  }
+]
