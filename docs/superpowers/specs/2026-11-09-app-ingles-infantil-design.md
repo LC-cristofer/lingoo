@@ -4,6 +4,8 @@ Data: 2026-11-09
 Autor: Lucas (com Claude)
 Status: aguardando revisão
 
+> **Atualização:** as seções 4, 7 e o item "Voz" da seção 8 foram substituídos por `2026-11-09-redesenho-trilha-design.md`.
+
 ## 1. Visão e objetivo
 
 Um app web instalável (PWA) em que crianças de 5 a 8 anos aprendem inglês por música, história e brincadeira, seguindo uma trilha em forma de mapa de aventura com um mascote guia. É um infoproduto vendido por assinatura para pais. Não é um produto da Espresso Idiomas.
