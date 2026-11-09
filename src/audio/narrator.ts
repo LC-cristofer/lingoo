@@ -17,6 +17,13 @@ function defaultSpeech(): SpeechSynthesis | null {
   return typeof window !== "undefined" ? (window.speechSynthesis ?? null) : null;
 }
 
+/** An exact en-US voice first, then any English one. */
+function pickVoice(speech: SpeechSynthesis): SpeechSynthesisVoice | undefined {
+  const voices = speech.getVoices?.() ?? [];
+  const lang = (v: SpeechSynthesisVoice) => v.lang.replace("_", "-").toLowerCase();
+  return voices.find((v) => lang(v) === "en-us") ?? voices.find((v) => lang(v).startsWith("en"));
+}
+
 export function createNarrator(deps: NarratorDeps = {}): Narrator {
   const createAudio = deps.createAudio ?? ((src: string) => new Audio(src));
   let unlocked = false;
@@ -76,12 +83,24 @@ export function createNarrator(deps: NarratorDeps = {}): Narrator {
         const utterance = new SpeechSynthesisUtterance(media.text);
         utterance.lang = "en-US";
         utterance.rate = 0.85;
-        const voice = speech.getVoices?.().find((v) => v.lang.toLowerCase().startsWith("en"));
+        const voice = pickVoice(speech);
         if (voice) utterance.voice = voice;
         utterance.onend = settle;
         utterance.onerror = settle;
-        cleanup = () => speech.cancel();
-        speech.speak(utterance);
+        // Chrome and Safari drop an utterance spoken right after cancel(): speak in a later task,
+        // and only if this play has not been interrupted meanwhile.
+        const deferred = setTimeout(() => {
+          if (settled || stopCurrent !== halt) return;
+          try {
+            speech.speak(utterance);
+          } catch {
+            settle();
+          }
+        }, 0);
+        cleanup = () => {
+          clearTimeout(deferred);
+          if (speech.speaking || speech.pending) speech.cancel();
+        };
       } catch {
         settle();
       }

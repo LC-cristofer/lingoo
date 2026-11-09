@@ -10,12 +10,33 @@ class FakeUtterance {
   constructor(public text: string) {}
 }
 
+/** Models the engine state: speaking while an utterance is out, idle after onend or cancel. */
 function fakeSpeech(voices: { lang: string }[] = []) {
-  return {
-    speak: vi.fn(),
-    cancel: vi.fn(),
+  const s = {
+    speaking: false,
+    pending: false,
+    speak: vi.fn((u: FakeUtterance) => {
+      if (u.text) s.speaking = true;
+    }),
+    cancel: vi.fn(() => {
+      s.speaking = false;
+      s.pending = false;
+    }),
     getVoices: vi.fn(() => voices),
   };
+  return s;
+}
+
+/** Real utterances only (the unlock primer is an empty one). */
+const spoken = (speech: ReturnType<typeof fakeSpeech>) =>
+  speech.speak.mock.calls.map((c) => c[0] as FakeUtterance).filter((u) => u.text !== "");
+
+/** speak() is deferred to a later task (I4), so let it run. */
+const nextTask = () => new Promise<void>((r) => setTimeout(r, 0));
+
+function end(speech: ReturnType<typeof fakeSpeech>, u: FakeUtterance) {
+  speech.speaking = false;
+  u.onend!();
 }
 
 function fakeAudio(playResult: () => Promise<void> = () => Promise.resolve()) {
@@ -64,19 +85,93 @@ describe("narrator", () => {
     expect(speech.speak).not.toHaveBeenCalled();
   });
 
-  it("speaks en-US at rate 0.85 without src and picks an en voice", async () => {
+  it("speaks en-US at rate 0.85 without src and falls back to any en voice", async () => {
     const voice = { lang: "en-GB" };
     const speech = fakeSpeech([{ lang: "pt-BR" }, voice]);
     const n = createNarrator({ speech: asSpeech(speech) });
     n.unlock();
     const p = n.play({ text: "the bear" });
-    const u = speech.speak.mock.calls[0][0] as FakeUtterance;
+    await nextTask();
+    const [u] = spoken(speech);
     expect(u.text).toBe("the bear");
     expect(u.lang).toBe("en-US");
     expect(u.rate).toBe(0.85);
     expect(u.voice).toBe(voice);
-    u.onend!();
+    end(speech, u);
     await p;
+  });
+
+  it("prefers an exact en-US voice over other en voices", async () => {
+    const us = { lang: "en_US" }; // some Android builds use an underscore
+    const speech = fakeSpeech([{ lang: "en-GB" }, { lang: "pt-BR" }, us]);
+    const n = createNarrator({ speech: asSpeech(speech) });
+    n.unlock();
+    const p = n.play({ text: "fox" });
+    await nextTask();
+    const [u] = spoken(speech);
+    expect(u.voice).toBe(us);
+    end(speech, u);
+    await p;
+  });
+
+  it("defers speak() to a later task instead of speaking right after cancel()", async () => {
+    const speech = fakeSpeech();
+    const n = createNarrator({ speech: asSpeech(speech) });
+    n.unlock();
+    void n.play({ text: "one" });
+    await nextTask();
+    expect(speech.speaking).toBe(true);
+    void n.play({ text: "two" });
+    expect(speech.cancel).toHaveBeenCalledTimes(1);
+    expect(spoken(speech).map((u) => u.text)).toEqual(["one"]); // not yet: same task as cancel()
+    await nextTask();
+    expect(spoken(speech).map((u) => u.text)).toEqual(["one", "two"]);
+  });
+
+  it("a play interrupted before its deferred speak never speaks", async () => {
+    const speech = fakeSpeech();
+    const n = createNarrator({ speech: asSpeech(speech) });
+    n.unlock();
+    const first = n.play({ text: "one" });
+    void n.play({ text: "two" });
+    await first;
+    await nextTask();
+    expect(spoken(speech).map((u) => u.text)).toEqual(["two"]);
+    const third = n.play({ text: "three" });
+    n.stop();
+    await third;
+    await nextTask();
+    expect(spoken(speech).map((u) => u.text)).toEqual(["two"]);
+  });
+
+  it("does not cancel when the engine is neither speaking nor pending", async () => {
+    const speech = fakeSpeech();
+    const n = createNarrator({ speech: asSpeech(speech) });
+    n.unlock();
+    const first = n.play({ text: "one" });
+    await nextTask();
+    n.stop(); // speaking: cancels
+    await first;
+    expect(speech.cancel).toHaveBeenCalledTimes(1);
+    const second = n.play({ text: "two" });
+    await nextTask();
+    end(speech, spoken(speech)[1]);
+    await second;
+    void n.play({ text: "three" }); // engine idle again
+    n.stop(); // three not spoken yet, engine idle
+    expect(speech.cancel).toHaveBeenCalledTimes(1);
+  });
+
+  it("cancels while the engine is pending", async () => {
+    const speech = fakeSpeech();
+    const n = createNarrator({ speech: asSpeech(speech) });
+    n.unlock();
+    void n.play({ text: "one" });
+    await nextTask();
+    speech.speaking = false;
+    speech.pending = true;
+    n.stop();
+    expect(speech.cancel).toHaveBeenCalledTimes(1);
   });
 
   it("a new play stops the previous one and the old promise resolves", async () => {
@@ -85,6 +180,7 @@ describe("narrator", () => {
     const n = createNarrator({ speech: asSpeech(speech), createAudio: asCreate(audio) });
     n.unlock();
     const first = n.play({ text: "one" });
+    await nextTask();
     const second = n.play({ text: "two", src: "/b.mp3" });
     expect(speech.cancel).toHaveBeenCalled();
     await first;
