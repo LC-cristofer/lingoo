@@ -1,6 +1,7 @@
 import type { Media } from "@/domain/content-schema";
 
 export interface Narrator {
+  /** Call from a user gesture (tap or click): audio stays silent until then. */
   unlock(): void;
   play(media: Media): Promise<void>;
   stop(): void;
@@ -131,7 +132,19 @@ export function createNarrator(deps: NarratorDeps = {}): Narrator {
 
   return {
     unlock() {
+      if (unlocked) return;
       unlocked = true;
+      // iOS Safari only lets speechSynthesis start inside a user gesture: speak a silent,
+      // empty utterance now, so later narration (after navigation or a timer) is allowed.
+      try {
+        const speech = getSpeech();
+        if (!speech || typeof SpeechSynthesisUtterance === "undefined") return;
+        const primer = new SpeechSynthesisUtterance("");
+        primer.volume = 0;
+        speech.speak(primer);
+      } catch {
+        // priming is best-effort
+      }
     },
     play,
     stop,

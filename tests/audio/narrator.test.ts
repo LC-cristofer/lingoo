@@ -4,6 +4,7 @@ import { createNarrator } from "@/audio/narrator";
 class FakeUtterance {
   lang = "";
   rate = 1;
+  volume = 1;
   voice: unknown = null;
   onend: (() => void) | null = null;
   onerror: (() => void) | null = null;
@@ -73,6 +74,32 @@ describe("narrator", () => {
     expect(n.isUnlocked()).toBe(true);
   });
 
+  it("unlock primes the engine with a silent utterance, synchronously, only once", () => {
+    const speech = fakeSpeech();
+    const n = createNarrator({ speech: asSpeech(speech) });
+    n.unlock();
+    // Synchronous: iOS Safari only lets speech start inside the user gesture.
+    expect(speech.speak).toHaveBeenCalledTimes(1);
+    const primer = speech.speak.mock.calls[0][0] as FakeUtterance;
+    expect(primer.text).toBe("");
+    expect(primer.volume).toBe(0);
+    n.unlock();
+    expect(speech.speak).toHaveBeenCalledTimes(1);
+    expect(speech.cancel).not.toHaveBeenCalled();
+  });
+
+  it("unlock never throws (no speech, no SpeechSynthesisUtterance, speak throws)", () => {
+    expect(() => createNarrator({ speech: null }).unlock()).not.toThrow();
+    const throwing = { ...fakeSpeech(), speak: vi.fn(() => { throw new Error("boom"); }) };
+    const n = createNarrator({ speech: asSpeech(throwing) });
+    expect(() => n.unlock()).not.toThrow();
+    expect(n.isUnlocked()).toBe(true);
+    vi.stubGlobal("SpeechSynthesisUtterance", undefined);
+    const speech = fakeSpeech();
+    expect(() => createNarrator({ speech: asSpeech(speech) }).unlock()).not.toThrow();
+    expect(speech.speak).not.toHaveBeenCalled();
+  });
+
   it("plays the audio file when src exists", async () => {
     const audio = fakeAudio();
     const createAudio = vi.fn(() => audio as unknown as HTMLAudioElement);
@@ -84,7 +111,8 @@ describe("narrator", () => {
     expect(audio.play).toHaveBeenCalled();
     audio.onended!();
     await p;
-    expect(speech.speak).not.toHaveBeenCalled();
+    await nextTask();
+    expect(spoken(speech)).toHaveLength(0);
   });
 
   it("speaks en-US at rate 0.85 without src and falls back to any en voice", async () => {
