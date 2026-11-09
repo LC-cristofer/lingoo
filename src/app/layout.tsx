@@ -16,6 +16,8 @@ const nunito = Nunito({
 export const metadata: Metadata = {
   title: "Lingoo",
   description: "Aprenda inglês brincando",
+  manifest: "/manifest.webmanifest",
+  icons: { icon: "/icon.svg" },
 };
 
 export const viewport: Viewport = {
@@ -23,6 +25,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
+  themeColor: "#5CC46B",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
