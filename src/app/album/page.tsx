@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import { narrator } from "@/audio/narrator";
 import { BigButton } from "@/components/BigButton";
 import { ArrowIcon } from "@/components/lesson/icons";
-import { useUnlockOnTouch } from "@/audio/useUnlockOnTouch";
 import { useProgress } from "@/components/ProgressProvider";
 import { getLesson, getWorlds } from "@/domain/content";
 
@@ -27,7 +26,6 @@ function allStickers(): AlbumSticker[] {
 export default function AlbumPage() {
   const router = useRouter();
   const { progress, hydrated } = useProgress();
-  useUnlockOnTouch();
   const stickers = allStickers();
   return (
     <main className="flex flex-1 flex-col gap-6 p-4">

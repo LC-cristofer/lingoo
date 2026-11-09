@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Baloo_2, Nunito } from "next/font/google";
 import "./globals.css";
+import { AudioUnlock } from "@/audio/AudioUnlock";
 import { ProgressProvider } from "@/components/ProgressProvider";
 
 const baloo = Baloo_2({
@@ -31,7 +32,10 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pt-BR" className={`${baloo.variable} ${nunito.variable} h-full`}>
-      <body className="min-h-full flex flex-col bg-cream text-ink font-body"><ProgressProvider>{children}</ProgressProvider></body>
+      <body className="min-h-full flex flex-col bg-cream text-ink font-body">
+        <AudioUnlock />
+        <ProgressProvider>{children}</ProgressProvider>
+      </body>
     </html>
   );
 }

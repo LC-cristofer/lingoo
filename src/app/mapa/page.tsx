@@ -3,7 +3,6 @@
 import { useRouter } from "next/navigation";
 import { BigButton } from "@/components/BigButton";
 import { WorldMap } from "@/components/map/WorldMap";
-import { useUnlockOnTouch } from "@/audio/useUnlockOnTouch";
 import { BookIcon } from "@/components/lesson/icons";
 import { useProgress } from "@/components/ProgressProvider";
 import { getWorlds } from "@/domain/content";
@@ -12,7 +11,6 @@ import { emptyProgress } from "@/domain/progress";
 export default function MapPage() {
   const router = useRouter();
   const { progress, hydrated } = useProgress();
-  useUnlockOnTouch();
   const world = getWorlds()[0];
   return (
     <main className="relative flex-1">
