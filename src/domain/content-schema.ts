@@ -31,7 +31,14 @@ const stepSchema = z.discriminatedUnion("kind", [
   }),
   z.object({ kind: z.literal("drag"), id: z.string().min(1), cardIds: z.array(z.string()).min(1) }),
   z.object({ kind: z.literal("repeat"), id: z.string().min(1), cardIds: z.array(z.string()).min(1) }),
-  z.object({ kind: z.literal("sticker"), id: z.string().min(1), stickerId: z.string(), image: z.string() }),
+  z.object({
+    kind: z.literal("sticker"),
+    id: z.string().min(1),
+    stickerId: z.string(),
+    image: z.string(),
+    /** Said when the child taps the sticker in the album, e.g. "A fox sticker!". */
+    name: mediaSchema,
+  }),
 ]);
 
 export const lessonSchema = z

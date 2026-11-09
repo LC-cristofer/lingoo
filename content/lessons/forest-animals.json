@@ -147,7 +147,10 @@
       "kind": "sticker",
       "id": "sticker",
       "stickerId": "sticker-fox",
-      "image": "/content/forest-animals/sticker-fox.svg"
+      "image": "/content/forest-animals/sticker-fox.svg",
+      "name": {
+        "text": "A fox sticker!"
+      }
     }
   ]
 }

@@ -6,8 +6,9 @@ import { BigButton } from "@/components/BigButton";
 import { ArrowIcon } from "@/components/lesson/icons";
 import { useProgress } from "@/components/ProgressProvider";
 import { getLesson, getWorlds } from "@/domain/content";
+import type { Media } from "@/domain/content-schema";
 
-type AlbumSticker = { id: string; image: string; name: string };
+type AlbumSticker = { id: string; image: string; name: Media };
 
 function allStickers(): AlbumSticker[] {
   const out: AlbumSticker[] = [];
@@ -16,7 +17,7 @@ function allStickers(): AlbumSticker[] {
       if (!place.hasContent) continue;
       const step = getLesson(place.lessonId)?.steps.find((s) => s.kind === "sticker");
       if (step && step.kind === "sticker") {
-        out.push({ id: step.stickerId, image: step.image, name: `A ${step.stickerId.replace(/[-_]/g, " ")} sticker!` });
+        out.push({ id: step.stickerId, image: step.image, name: step.name });
       }
     }
   }
@@ -41,9 +42,9 @@ export default function AlbumPage() {
             <li key={s.id}>
               <button
                 type="button"
-                aria-label={earned ? s.name : "?"}
+                aria-label={earned ? s.name.text : "?"}
                 data-earned={earned ? "true" : "false"}
-                onClick={() => earned && void narrator.play({ text: s.name })}
+                onClick={() => earned && void narrator.play(s.name)}
                 className="flex aspect-square w-full items-center justify-center rounded-3xl bg-white p-4 shadow-md"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}

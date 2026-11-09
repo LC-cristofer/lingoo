@@ -50,6 +50,18 @@ describe("content", () => {
     expect(() => parseLesson(data)).toThrow();
   });
 
+  it("gives the sticker a spoken name for the album", () => {
+    const sticker = getLesson("forest-animals")!.steps.find((s) => s.kind === "sticker");
+    expect(sticker?.kind === "sticker" && sticker.name).toEqual({ text: "A fox sticker!" });
+  });
+
+  it("rejects a sticker step without a name", () => {
+    const data = baseLesson();
+    const sticker = data.steps.find((s: { kind: string }) => s.kind === "sticker");
+    delete sticker.name;
+    expect(() => parseLesson(data)).toThrow();
+  });
+
   it("rejects duplicate step ids", () => {
     const data = baseLesson();
     data.steps[1].id = data.steps[0].id;
