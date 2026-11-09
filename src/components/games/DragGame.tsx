@@ -104,6 +104,7 @@ export function DragGame({ step, cards, onDone }: Props) {
           return (
             <div
               key={card.id}
+              lang="en"
               data-drop-target={card.id}
               data-matched={isMatched ? "true" : "false"}
               style={{ touchAction: "none" }}
@@ -123,6 +124,7 @@ export function DragGame({ step, cards, onDone }: Props) {
             <button
               key={card.id}
               type="button"
+              lang="en"
               aria-label={card.word}
               onPointerDown={(e) => onDown(e, card)}
               onPointerMove={(e) => onMove(e, card)}

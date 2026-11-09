@@ -44,6 +44,13 @@ beforeEach(() => {
 afterEach(() => vi.useRealTimers());
 
 describe("TapGame", () => {
+  it("options are named in English for screen readers (lang=en)", () => {
+    render(<TapGame step={step} cards={cards} onDone={vi.fn()} />);
+    for (const word of ["bear", "fox", "owl"]) {
+      expect(screen.getByRole("button", { name: word })).toHaveAttribute("lang", "en");
+    }
+  });
+
   it("calls onDone once after the 3 correct answers", async () => {
     const onDone = vi.fn();
     render(<TapGame step={step} cards={cards} onDone={onDone} />);

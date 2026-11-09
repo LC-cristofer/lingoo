@@ -62,7 +62,7 @@ export function RepeatGame({ step, cards, onDone }: Props) {
     <div className="flex flex-col items-center gap-6 p-4">
       <Mascot mood={mood} listening={canAdvance || mood === "idle"} />
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={card.image} alt={card.word} width={256} height={256} draggable={false} className="h-64 w-64 rounded-3xl bg-cream object-contain p-4 shadow-md" />
+      <img src={card.image} alt={card.word} lang="en" width={256} height={256} draggable={false} className="h-64 w-64 rounded-3xl bg-cream object-contain p-4 shadow-md" />
       <div className="min-h-16">
         {canAdvance && (
           <BigButton onPress={advance} label="Avançar" color="leaf">

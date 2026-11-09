@@ -89,6 +89,7 @@ export function TapGame({ step, cards, onDone }: Props) {
             <button
               key={id}
               type="button"
+              lang="en"
               aria-label={card.word}
               onClick={() => press(id)}
               className="flex h-32 w-32 min-h-[120px] min-w-[120px] items-center justify-center rounded-3xl bg-cream p-2 shadow-md transition-transform active:scale-95"

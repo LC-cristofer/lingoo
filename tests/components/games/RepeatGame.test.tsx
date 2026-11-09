@@ -14,6 +14,11 @@ beforeEach(() => vi.useFakeTimers());
 afterEach(() => vi.useRealTimers());
 
 describe("RepeatGame", () => {
+  it("the picture is named in English (lang=en)", () => {
+    render(<RepeatGame step={step} cards={cards} onDone={vi.fn()} />);
+    expect(screen.getByRole("img", { name: "bear" })).toHaveAttribute("lang", "en");
+  });
+
   it("shows the advance button only after the timer", async () => {
     render(<RepeatGame step={step} cards={cards} onDone={vi.fn()} />);
     expect(screen.queryByRole("button", { name: "Avançar" })).toBeNull();

@@ -22,6 +22,14 @@ beforeEach(() => vi.useFakeTimers());
 afterEach(() => vi.useRealTimers());
 
 describe("DragGame", () => {
+  it("words and targets are marked as English (lang=en)", () => {
+    const { container } = render(<DragGame step={step} cards={cards} onDone={vi.fn()} />);
+    for (const c of cards) {
+      expect(screen.getByRole("button", { name: c.word })).toHaveAttribute("lang", "en");
+      expect(container.querySelector(`[data-drop-target="${c.id}"]`)).toHaveAttribute("lang", "en");
+    }
+  });
+
   it("matches a word dropped on its image", () => {
     const { container } = render(<DragGame step={step} cards={cards} onDone={vi.fn()} />);
     dragTo("fox", container.querySelector('[data-drop-target="fox"]')!);

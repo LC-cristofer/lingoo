@@ -43,6 +43,7 @@ export default function AlbumPage() {
               <button
                 type="button"
                 aria-label={earned ? s.name.text : "?"}
+                lang={earned ? "en" : undefined}
                 data-earned={earned ? "true" : "false"}
                 onClick={() => earned && void narrator.play(s.name)}
                 className="flex aspect-square w-full items-center justify-center rounded-3xl bg-white p-4 shadow-md"
