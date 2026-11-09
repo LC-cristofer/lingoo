@@ -30,6 +30,21 @@ describe("DragGame", () => {
     expect(mood(container)).toBe("happy");
   });
 
+  it("dragged word ignores pointer events so elementFromPoint sees the target", () => {
+    render(<DragGame step={step} cards={cards} onDone={vi.fn()} />);
+    const btn = screen.getByRole("button", { name: "fox" });
+    fireEvent.pointerDown(btn, { pointerId: 1, clientX: 5, clientY: 5 });
+    expect(btn.style.pointerEvents).toBe("none");
+    fireEvent.pointerUp(btn, { pointerId: 1, clientX: 5, clientY: 5 });
+    expect(btn.style.pointerEvents).not.toBe("none");
+  });
+
+  it("narrates an instruction on mount", async () => {
+    const { narrator } = await import("@/audio/narrator");
+    render(<DragGame step={step} cards={cards} onDone={vi.fn()} />);
+    expect(narrator.play).toHaveBeenCalledWith({ text: "Match the words!" });
+  });
+
   it("dropping outside any target returns the word without an error", () => {
     const { container } = render(<DragGame step={step} cards={cards} onDone={vi.fn()} />);
     dragTo("fox", document.body);

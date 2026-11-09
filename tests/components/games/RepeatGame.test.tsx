@@ -16,11 +16,11 @@ afterEach(() => vi.useRealTimers());
 describe("RepeatGame", () => {
   it("shows the advance button only after the timer", async () => {
     render(<RepeatGame step={step} cards={cards} onDone={vi.fn()} />);
-    expect(screen.queryByRole("button", { name: "next" })).toBeNull();
+    expect(screen.queryByRole("button", { name: "Avançar" })).toBeNull();
     await act(async () => {
       await vi.advanceTimersByTimeAsync(2600);
     });
-    expect(screen.getByRole("button", { name: "next" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Avançar" })).toBeInTheDocument();
   });
 
   it("5 advances call onDone once", async () => {
@@ -30,7 +30,7 @@ describe("RepeatGame", () => {
       await act(async () => {
         await vi.advanceTimersByTimeAsync(2600);
       });
-      fireEvent.click(screen.getByRole("button", { name: "next" }));
+      fireEvent.click(screen.getByRole("button", { name: "Avançar" }));
     }
     expect(onDone).toHaveBeenCalledTimes(1);
   });

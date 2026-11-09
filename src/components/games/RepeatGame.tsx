@@ -65,7 +65,7 @@ export function RepeatGame({ step, cards, onDone }: Props) {
       <img src={card.image} alt={card.word} width={256} height={256} draggable={false} className="h-64 w-64 rounded-3xl bg-cream object-contain p-4 shadow-md" />
       <div className="min-h-16">
         {canAdvance && (
-          <BigButton onPress={advance} label="next" color="leaf">
+          <BigButton onPress={advance} label="Avançar" color="leaf">
             <svg viewBox="0 0 24 24" width="40" height="40" aria-hidden="true">
               <path d="M5 12h13M12 5l7 7-7 7" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
             </svg>

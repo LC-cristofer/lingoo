@@ -24,6 +24,10 @@ export function DragGame({ step, cards, onDone }: Props) {
     onDoneRef.current = onDone;
   });
 
+  useEffect(() => {
+    void narrator.play({ text: "Match the words!" });
+  }, []);
+
   useEffect(
     () => () => {
       if (timerRef.current) clearTimeout(timerRef.current);
@@ -118,6 +122,8 @@ export function DragGame({ step, cards, onDone }: Props) {
               onPointerCancel={() => setDrag(null)}
               style={{
                 touchAction: "none",
+                // Lets elementFromPoint see the target under the finger; capture still delivers move/up.
+                pointerEvents: dragging ? "none" : undefined,
                 transform: dragging ? `translate(${drag.dx}px, ${drag.dy}px)` : undefined,
                 zIndex: dragging ? 10 : undefined,
               }}
