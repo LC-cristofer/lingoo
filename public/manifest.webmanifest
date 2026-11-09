@@ -1,0 +1,13 @@
+{
+  "name": "Lingoo",
+  "short_name": "Lingoo",
+  "description": "Aprenda inglês brincando",
+  "start_url": "/",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "background_color": "#FFF8EC",
+  "theme_color": "#5CC46B",
+  "icons": [
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

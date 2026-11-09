@@ -1,0 +1,49 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-sun: #ffc93c;
+  --color-sky: #4aa8f0;
+  --color-leaf: #5cc46b;
+  --color-coral: #ff7a6b;
+  --color-cream: #fff8ec;
+  --color-ink: #2b2d42;
+  --color-cat: #ff9f43;
+  --font-display: var(--font-baloo), system-ui, sans-serif;
+  --font-body: var(--font-nunito), system-ui, sans-serif;
+}
+
+body {
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Mascot animations (one per mood) */
+@keyframes mascot-bob { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-4px) } }
+@keyframes mascot-talk { 0%,100% { transform: scaleY(1) } 50% { transform: scaleY(1.06) } }
+@keyframes mascot-jump { 0%,100% { transform: translateY(0) } 40% { transform: translateY(-16px) } }
+@keyframes mascot-sway { 0%,100% { transform: rotate(-4deg) } 50% { transform: rotate(4deg) } }
+@keyframes mascot-ear { 0%,100% { transform: rotate(0) } 50% { transform: rotate(-12deg) } }
+.mascot { transform-origin: 50% 90%; }
+.mascot[data-mood="idle"] { animation: mascot-bob 2.4s ease-in-out infinite; }
+.mascot[data-mood="talking"] { animation: mascot-talk 0.5s ease-in-out infinite; }
+.mascot[data-mood="happy"] { animation: mascot-jump 0.6s ease-in-out 2; }
+.mascot[data-mood="encourage"] { animation: mascot-sway 1s ease-in-out infinite; }
+.mascot[data-listening="true"] .mascot-ear { animation: mascot-ear 0.7s ease-in-out infinite; transform-box: fill-box; transform-origin: 50% 100%; }
+@media (prefers-reduced-motion: reduce) { .mascot, .mascot .mascot-ear { animation: none !important; } }
+
+/* Sticker "pop" */
+@keyframes sticker-pop { 0% { transform: scale(0) rotate(-12deg) } 70% { transform: scale(1.15) rotate(4deg) } 100% { transform: scale(1) rotate(0) } }
+.sticker-pop { animation: sticker-pop 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+@media (prefers-reduced-motion: reduce) { .sticker-pop { animation: none; } }
+
+/* Locked place: wobble, no navigation */
+@keyframes place-wobble { 0%,100% { transform: rotate(0) } 25% { transform: rotate(-10deg) } 75% { transform: rotate(10deg) } }
+.place-wobble { animation: place-wobble 0.4s ease-in-out; }
+@media (prefers-reduced-motion: reduce) { .place-wobble { animation: none; } }
+
+/* Open place: gentle pulse (scale only, stays opaque) */
+@keyframes place-pulse { 0%,100% { transform: scale(1) } 50% { transform: scale(1.08) } }
+.place-pulse { animation: place-pulse 1.4s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { .place-pulse { animation: none; } }
