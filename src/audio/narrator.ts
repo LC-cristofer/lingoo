@@ -10,6 +10,7 @@ export interface Narrator {
 export interface NarratorDeps {
   speech?: SpeechSynthesis | null;
   createAudio?: (src: string) => HTMLAudioElement;
+  /** Speech only: after this, play() resolves (the UI moves on) but the speech is not cut off. */
   timeoutMs?: number;
 }
 
@@ -23,6 +24,11 @@ function pickVoice(speech: SpeechSynthesis): SpeechSynthesisVoice | undefined {
   const lang = (v: SpeechSynthesisVoice) => v.lang.replace("_", "-").toLowerCase();
   return voices.find((v) => lang(v) === "en-us") ?? voices.find((v) => lang(v).startsWith("en"));
 }
+
+/** Fallback past a src file's own duration, once its metadata is known. */
+const AUDIO_MARGIN_MS = 2_000;
+/** Fallback for a src file whose duration is unknown. */
+const AUDIO_CAP_MS = 120_000;
 
 export function createNarrator(deps: NarratorDeps = {}): Narrator {
   const createAudio = deps.createAudio ?? ((src: string) => new Audio(src));
@@ -43,58 +49,74 @@ export function createNarrator(deps: NarratorDeps = {}): Narrator {
 
     return new Promise<void>((resolve) => {
       let cleanup: () => void = () => {};
-      let settled = false;
-      const settle = () => {
-        if (settled) return;
-        settled = true;
+      let released = false;
+      let timer: ReturnType<typeof setTimeout> | undefined;
+      // Unblocks whoever awaits play(). On the safety timeout the output keeps going:
+      // stopCurrent stays armed, so a later stop() or play() still silences it.
+      const release = () => {
         clearTimeout(timer);
-        if (stopCurrent === halt) stopCurrent = null;
+        if (released) return;
+        released = true;
         resolve();
       };
-      // Called when interrupted: silence the output and resolve.
+      // The output is over: ended, failed or never started.
+      const finish = () => {
+        if (stopCurrent === halt) stopCurrent = null;
+        release();
+      };
+      // Interrupted by stop() or a newer play(): silence the output, then finish.
       const halt = () => {
         try {
           cleanup();
         } catch {
           // ignore
         }
-        settle();
+        finish();
+      };
+      const safety = (ms: number) => {
+        clearTimeout(timer);
+        timer = setTimeout(release, ms);
       };
       stopCurrent = halt;
-
-      const words = media.text.trim().split(/\s+/).filter(Boolean).length;
-      const timeoutMs = deps.timeoutMs ?? Math.max(4000, 400 * words);
-      const timer = setTimeout(halt, timeoutMs);
 
       try {
         if (media.src) {
           const audio = createAudio(media.src);
           cleanup = () => audio.pause();
-          audio.onended = settle;
-          audio.onerror = settle;
-          Promise.resolve(audio.play()).catch(settle);
+          audio.onended = finish;
+          audio.onerror = finish;
+          // A song file can be long: wait for its real length, never the word-based guess.
+          audio.onloadedmetadata = () => {
+            if (!released && Number.isFinite(audio.duration) && audio.duration > 0) {
+              safety(audio.duration * 1000 + AUDIO_MARGIN_MS);
+            }
+          };
+          safety(AUDIO_CAP_MS);
+          Promise.resolve(audio.play()).catch(finish);
           return;
         }
         const speech = getSpeech();
         if (!speech || typeof SpeechSynthesisUtterance === "undefined") {
-          settle();
+          finish();
           return;
         }
+        const words = media.text.trim().split(/\s+/).filter(Boolean).length;
+        safety(deps.timeoutMs ?? Math.max(4000, 400 * words));
         const utterance = new SpeechSynthesisUtterance(media.text);
         utterance.lang = "en-US";
         utterance.rate = 0.85;
         const voice = pickVoice(speech);
         if (voice) utterance.voice = voice;
-        utterance.onend = settle;
-        utterance.onerror = settle;
+        utterance.onend = finish;
+        utterance.onerror = finish;
         // Chrome and Safari drop an utterance spoken right after cancel(): speak in a later task,
-        // and only if this play has not been interrupted meanwhile.
+        // and only if this play is still the current one.
         const deferred = setTimeout(() => {
-          if (settled || stopCurrent !== halt) return;
+          if (stopCurrent !== halt) return;
           try {
             speech.speak(utterance);
           } catch {
-            settle();
+            finish();
           }
         }, 0);
         cleanup = () => {
@@ -102,7 +124,7 @@ export function createNarrator(deps: NarratorDeps = {}): Narrator {
           if (speech.speaking || speech.pending) speech.cancel();
         };
       } catch {
-        settle();
+        finish();
       }
     });
   }

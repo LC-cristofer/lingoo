@@ -43,8 +43,10 @@ function fakeAudio(playResult: () => Promise<void> = () => Promise.resolve()) {
   const audio = {
     play: vi.fn(playResult),
     pause: vi.fn(),
+    duration: NaN,
     onended: null as (() => void) | null,
     onerror: null as (() => void) | null,
+    onloadedmetadata: null as (() => void) | null,
   };
   return audio;
 }
@@ -220,6 +222,94 @@ describe("narrator", () => {
     expect(done).not.toHaveBeenCalled();
     await vi.advanceTimersByTimeAsync(2);
     expect(done).toHaveBeenCalled();
+  });
+
+  it("on the safety timeout resolves but does not cut the speech off", async () => {
+    vi.useFakeTimers();
+    const speech = fakeSpeech();
+    const n = createNarrator({ speech: asSpeech(speech), timeoutMs: 1000 });
+    n.unlock();
+    const done = vi.fn();
+    n.play({ text: "a long song" }).then(done);
+    await vi.advanceTimersByTimeAsync(1001);
+    expect(done).toHaveBeenCalled();
+    expect(speech.speaking).toBe(true);
+    expect(speech.cancel).not.toHaveBeenCalled();
+  });
+
+  it("after the safety timeout a later play() or stop() still silences it", async () => {
+    vi.useFakeTimers();
+    const speech = fakeSpeech();
+    const n = createNarrator({ speech: asSpeech(speech), timeoutMs: 1000 });
+    n.unlock();
+    void n.play({ text: "one" });
+    await vi.advanceTimersByTimeAsync(1001);
+    void n.play({ text: "two" });
+    expect(speech.cancel).toHaveBeenCalledTimes(1);
+    await vi.advanceTimersByTimeAsync(1001);
+    n.stop();
+    expect(speech.cancel).toHaveBeenCalledTimes(2);
+  });
+
+  it("an utterance that ended after its timeout is not cancelled by the next play", async () => {
+    vi.useFakeTimers();
+    const speech = fakeSpeech();
+    const n = createNarrator({ speech: asSpeech(speech), timeoutMs: 1000 });
+    n.unlock();
+    void n.play({ text: "one" });
+    await vi.advanceTimersByTimeAsync(1001);
+    end(speech, spoken(speech)[0]);
+    speech.speaking = true; // something else is speaking now; "one" must not cancel it
+    n.stop();
+    expect(speech.cancel).not.toHaveBeenCalled();
+  });
+
+  it("src audio is not cut by the word-based timeout and resolves when it ends", async () => {
+    vi.useFakeTimers();
+    const audio = fakeAudio();
+    const n = createNarrator({ speech: null, createAudio: asCreate(audio) });
+    n.unlock();
+    const done = vi.fn();
+    n.play({ text: "song", src: "/song.mp3" }).then(done);
+    await vi.advanceTimersByTimeAsync(30_000);
+    expect(done).not.toHaveBeenCalled();
+    expect(audio.pause).not.toHaveBeenCalled();
+    audio.onended!();
+    await vi.advanceTimersByTimeAsync(0);
+    expect(done).toHaveBeenCalled();
+  });
+
+  it("src audio falls back to its duration plus a margin, without pausing", async () => {
+    vi.useFakeTimers();
+    const audio = fakeAudio();
+    const n = createNarrator({ speech: null, createAudio: asCreate(audio) });
+    n.unlock();
+    const done = vi.fn();
+    n.play({ text: "song", src: "/song.mp3" }).then(done);
+    audio.duration = 45;
+    audio.onloadedmetadata!();
+    await vi.advanceTimersByTimeAsync(45_000 + 1_999);
+    expect(done).not.toHaveBeenCalled();
+    await vi.advanceTimersByTimeAsync(2);
+    expect(done).toHaveBeenCalled();
+    expect(audio.pause).not.toHaveBeenCalled();
+  });
+
+  it("src audio with unknown duration resolves at a 120 s cap, and a later play pauses it", async () => {
+    vi.useFakeTimers();
+    const audio = fakeAudio();
+    const n = createNarrator({ speech: null, createAudio: asCreate(audio) });
+    n.unlock();
+    const done = vi.fn();
+    n.play({ text: "song", src: "/song.mp3" }).then(done);
+    audio.onloadedmetadata!(); // duration stays NaN
+    await vi.advanceTimersByTimeAsync(119_999);
+    expect(done).not.toHaveBeenCalled();
+    await vi.advanceTimersByTimeAsync(2);
+    expect(done).toHaveBeenCalled();
+    expect(audio.pause).not.toHaveBeenCalled();
+    void n.play({ text: "bear" });
+    expect(audio.pause).toHaveBeenCalledTimes(1);
   });
 
   it("resolves when audio.play() rejects (autoplay blocked)", async () => {
