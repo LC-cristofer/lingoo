@@ -18,3 +18,17 @@ body {
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
 }
+
+/* Mascot animations (one per mood) */
+@keyframes mascot-bob { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-4px) } }
+@keyframes mascot-talk { 0%,100% { transform: scaleY(1) } 50% { transform: scaleY(1.06) } }
+@keyframes mascot-jump { 0%,100% { transform: translateY(0) } 40% { transform: translateY(-16px) } }
+@keyframes mascot-sway { 0%,100% { transform: rotate(-4deg) } 50% { transform: rotate(4deg) } }
+@keyframes mascot-ear { 0%,100% { transform: rotate(0) } 50% { transform: rotate(-12deg) } }
+.mascot { transform-origin: 50% 90%; }
+.mascot[data-mood="idle"] { animation: mascot-bob 2.4s ease-in-out infinite; }
+.mascot[data-mood="talking"] { animation: mascot-talk 0.5s ease-in-out infinite; }
+.mascot[data-mood="happy"] { animation: mascot-jump 0.6s ease-in-out 2; }
+.mascot[data-mood="encourage"] { animation: mascot-sway 1s ease-in-out infinite; }
+.mascot[data-listening="true"] .mascot-ear { animation: mascot-ear 0.7s ease-in-out infinite; transform-box: fill-box; transform-origin: 50% 100%; }
+@media (prefers-reduced-motion: reduce) { .mascot, .mascot .mascot-ear { animation: none !important; } }
