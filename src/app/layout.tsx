@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Baloo_2, Nunito } from "next/font/google";
 import "./globals.css";
+import { ProgressProvider } from "@/components/ProgressProvider";
 
 const baloo = Baloo_2({
   variable: "--font-baloo",
@@ -27,7 +28,7 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pt-BR" className={`${baloo.variable} ${nunito.variable} h-full`}>
-      <body className="min-h-full flex flex-col bg-cream text-ink font-body">{children}</body>
+      <body className="min-h-full flex flex-col bg-cream text-ink font-body"><ProgressProvider>{children}</ProgressProvider></body>
     </html>
   );
 }
