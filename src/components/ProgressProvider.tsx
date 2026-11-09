@@ -6,6 +6,8 @@ import { createLocalProgressStore } from "@/domain/progress-local";
 
 type ProgressContextValue = {
   progress: Progress;
+  /** True once stored progress has been loaded (false during SSR and the first client render). */
+  hydrated: boolean;
   finishLesson(lessonId: string, stickerId: string): void;
 };
 
@@ -13,6 +15,7 @@ const ProgressContext = createContext<ProgressContextValue | null>(null);
 
 export function ProgressProvider({ children }: { children: ReactNode }) {
   const [progress, setProgress] = useState<Progress>(emptyProgress);
+  const [hydrated, setHydrated] = useState(false);
   const storeRef = useRef<ProgressStore | null>(null);
 
   // Lazy: the store must exist before any use, whatever the effect order (child effects run first).
@@ -32,6 +35,7 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     // Intentional: localStorage only exists on the client, so load after mount.
     setProgress(getStore().load());
+    setHydrated(true);
   }, [getStore]);
 
   const finishLesson = useCallback(
@@ -45,7 +49,7 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
     [getStore],
   );
 
-  const value = useMemo(() => ({ progress, finishLesson }), [progress, finishLesson]);
+  const value = useMemo(() => ({ progress, hydrated, finishLesson }), [progress, hydrated, finishLesson]);
   return <ProgressContext.Provider value={value}>{children}</ProgressContext.Provider>;
 }
 

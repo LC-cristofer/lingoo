@@ -1,8 +1,12 @@
 import { Suspense } from "react";
+import { getWorlds } from "@/domain/content";
 import { LessonScreen } from "./LessonScreen";
 
 export function generateStaticParams() {
-  return [{ lessonId: "forest-animals" }];
+  return getWorlds()
+    .flatMap((w) => w.places)
+    .filter((p) => p.hasContent)
+    .map((p) => ({ lessonId: p.lessonId }));
 }
 
 async function Lesson({ params }: { params: Promise<{ lessonId: string }> }) {

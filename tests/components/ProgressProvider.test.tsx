@@ -36,4 +36,14 @@ describe("ProgressProvider", () => {
     expect(screen.getByText("new,old")).toBeTruthy();
     expect(Object.keys(JSON.parse(localStorage.getItem("lingoo:progress:v1")!).completedLessons).sort()).toEqual(["new", "old"]);
   });
+  it("reports hydrated only after stored progress is loaded", () => {
+    const seen: boolean[] = [];
+    function H() {
+      seen.push(useProgress().hydrated);
+      return null;
+    }
+    render(<ProgressProvider><H /></ProgressProvider>);
+    expect(seen[0]).toBe(false);
+    expect(seen[seen.length - 1]).toBe(true);
+  });
 });

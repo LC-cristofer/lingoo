@@ -4,7 +4,7 @@ import { LessonPlayer } from "@/components/lesson/LessonPlayer";
 import { getLesson } from "@/domain/content";
 
 const finishLesson = vi.fn();
-vi.mock("@/components/ProgressProvider", () => ({ useProgress: () => ({ progress: {}, finishLesson }) }));
+vi.mock("@/components/ProgressProvider", () => ({ useProgress: () => ({ progress: {}, hydrated: true, finishLesson }) }));
 vi.mock("@/audio/narrator", () => ({
   narrator: { play: vi.fn(() => Promise.resolve()), stop: vi.fn(), unlock: vi.fn(), isUnlocked: () => true },
 }));
