@@ -63,6 +63,27 @@ describe("LessonPlayer", () => {
     expect(onExit).toHaveBeenCalledTimes(1);
   });
 
+  it("no home button during the sticker step, so a seen sticker is always recorded", async () => {
+    const { narrator } = await import("@/audio/narrator");
+    let endSticker: () => void = () => {};
+    vi.mocked(narrator.play).mockImplementation((m) =>
+      m.text === "You got a sticker!" ? new Promise<void>((r) => (endSticker = r)) : Promise.resolve(),
+    );
+    try {
+      render(<LessonPlayer lesson={lesson} onExit={vi.fn()} />);
+      await playThrough();
+      await act(async () => {});
+      expect(screen.getAllByTestId("progress-dot")[5]).toHaveAttribute("aria-current", "step");
+      expect(screen.queryByRole("button", { name: "Voltar ao mapa" })).toBeNull();
+      expect(finishLesson).not.toHaveBeenCalled();
+      await act(async () => endSticker());
+      expect(finishLesson).toHaveBeenCalledTimes(1);
+      expect(screen.getByRole("button", { name: "Voltar ao mapa" })).toBeInTheDocument();
+    } finally {
+      vi.mocked(narrator.play).mockImplementation(() => Promise.resolve());
+    }
+  });
+
   it("story replay button narrates again", async () => {
     const { narrator } = await import("@/audio/narrator");
     render(<LessonPlayer lesson={lesson} onExit={vi.fn()} />);

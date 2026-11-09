@@ -45,9 +45,14 @@ export function LessonPlayer({ lesson, onExit }: Props) {
   return (
     <div className="flex flex-1 flex-col">
       <header className="flex items-center justify-between gap-4 p-4">
-        <BigButton label="Voltar ao mapa" color="sun" onPress={onExit}>
-          <HomeIcon />
-        </BigButton>
+        {/* No way out during the sticker step: leaving before it ends would lose the sticker. */}
+        <div className="min-h-16 min-w-16">
+          {step?.kind !== "sticker" && (
+            <BigButton label="Voltar ao mapa" color="sun" onPress={onExit}>
+              <HomeIcon />
+            </BigButton>
+          )}
+        </div>
         <ol className="flex items-center gap-2" aria-hidden="false">
           {lesson.steps.map((s, i) => (
             <li
