@@ -8,15 +8,11 @@ import { LockIcon, StarIcon } from "@/components/lesson/icons";
 
 type WorldMapProps = { world: World; progress: Progress; onOpen: (lessonId: string) => void };
 
-// Winding path: [x%, y%] of the map box, one per place, top to bottom.
-const POINTS: Array<[number, number]> = [
-  [25, 8],
-  [72, 24],
-  [28, 41],
-  [72, 58],
-  [28, 75],
-  [70, 91],
-];
+// Winding path, [x%, y%] per place. Portrait winds top to bottom, landscape left to right.
+const PORTRAIT: Array<[number, number]> = [[30, 16], [70, 32], [30, 48], [70, 64], [30, 80], [70, 92]];
+const LANDSCAPE: Array<[number, number]> = [[10, 62], [26, 38], [42, 62], [58, 38], [74, 62], [90, 38]];
+
+const toPath = (pts: Array<[number, number]>) => pts.map(([x, y], i) => `${i === 0 ? "M" : "L"}${x} ${y}`).join(" ");
 
 export function WorldMap({ world, progress, onOpen }: WorldMapProps) {
   const [wobbling, setWobbling] = useState<string | null>(null);
@@ -35,24 +31,48 @@ export function WorldMap({ world, progress, onOpen }: WorldMapProps) {
     timer.current = setTimeout(() => setWobbling(null), 500);
   };
 
-  const points = world.places.map((_, i) => POINTS[i % POINTS.length]);
-  const path = points.map(([x, y], i) => `${i === 0 ? "M" : "L"}${x * 3} ${y * 6}`).join(" ");
+  const count = world.places.length;
+  const portrait = world.places.map((_, i) => PORTRAIT[i % PORTRAIT.length]);
+  const landscape = world.places.map((_, i) => LANDSCAPE[i % LANDSCAPE.length]);
+  const strokeProps = {
+    fill: "none",
+    stroke: "#FFC93C",
+    strokeWidth: 14,
+    strokeLinecap: "round" as const,
+    strokeLinejoin: "round" as const,
+    strokeDasharray: "2 22",
+    vectorEffect: "non-scaling-stroke" as const,
+  };
 
   return (
-    <div className="relative mx-auto h-[640px] w-full max-w-sm">
-      <svg viewBox="0 0 300 600" className="absolute inset-0 h-full w-full" aria-hidden="true" preserveAspectRatio="none">
-        <path d={path} fill="none" stroke="#FFC93C" strokeWidth="14" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="2 22" />
+    <div className="relative h-dvh w-full overflow-hidden">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 h-full w-full landscape:hidden" aria-hidden="true">
+        <path d={toPath(portrait.slice(0, count))} {...strokeProps} />
+      </svg>
+      <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 hidden h-full w-full landscape:block" aria-hidden="true">
+        <path d={toPath(landscape.slice(0, count))} {...strokeProps} />
       </svg>
       {world.places.map((place, i) => {
         const status = placeStatus(world, progress, place.lessonId);
-        const [x, y] = points[i];
         const enabled = status === "open" || status === "done";
-        const color = status === "done" ? "bg-sun" : status === "open" ? "bg-leaf" : "bg-ink/20";
+        const color = status === "done" ? "bg-sun" : status === "open" ? "bg-leaf" : "bg-[#d9d6d0]";
+        const style = {
+          "--px": `${portrait[i][0]}%`,
+          "--py": `${portrait[i][1]}%`,
+          "--lx": `${landscape[i][0]}%`,
+          "--ly": `${landscape[i][1]}%`,
+        } as React.CSSProperties;
         return (
-          <div key={place.lessonId} className="absolute -translate-x-1/2 -translate-y-1/2" style={{ left: `${x}%`, top: `${y}%` }}>
+          <div
+            key={place.lessonId}
+            className="absolute left-(--px) top-(--py) -translate-x-1/2 -translate-y-1/2 landscape:left-(--lx) landscape:top-(--ly)"
+            style={style}
+          >
             {status === "open" && (
-              <div className="absolute right-full top-1/2 mr-1 -translate-y-1/2 scale-75">
-                <Mascot mood="idle" />
+              <div className="absolute bottom-full left-1/2 -translate-x-1/2">
+                <div className="origin-bottom scale-[0.6]">
+                  <Mascot mood="idle" />
+                </div>
               </div>
             )}
             <button
@@ -63,7 +83,7 @@ export function WorldMap({ world, progress, onOpen }: WorldMapProps) {
               data-wobble={wobbling === place.lessonId ? "true" : undefined}
               onClick={() => (enabled ? onOpen(place.lessonId) : wobble(place.lessonId))}
               className={`${color} flex h-20 w-20 items-center justify-center rounded-full border-4 border-white text-ink shadow-md transition-transform active:scale-95 ${
-                status === "open" ? "animate-pulse" : ""
+                status === "open" ? "place-pulse" : ""
               } ${wobbling === place.lessonId ? "place-wobble" : ""}`}
             >
               {status === "done" ? <StarIcon /> : status === "open" ? <span className="font-display text-3xl">{i + 1}</span> : <LockIcon />}

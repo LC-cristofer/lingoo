@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { BigButton } from "@/components/BigButton";
 import { WorldMap } from "@/components/map/WorldMap";
-import { useUnlockOnTouch } from "@/components/map/useUnlockOnTouch";
+import { useUnlockOnTouch } from "@/audio/useUnlockOnTouch";
 import { BookIcon } from "@/components/lesson/icons";
 import { useProgress } from "@/components/ProgressProvider";
 import { getWorlds } from "@/domain/content";
@@ -15,8 +15,8 @@ export default function MapPage() {
   useUnlockOnTouch();
   const world = getWorlds()[0];
   return (
-    <main className="relative flex-1 p-4">
-      <div className="absolute right-4 top-4 z-10">
+    <main className="relative flex-1">
+      <div className="fixed right-4 top-4 z-10">
         <BigButton label="Álbum" color="coral" onPress={() => router.push("/album")}>
           <BookIcon />
         </BigButton>

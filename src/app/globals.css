@@ -42,3 +42,8 @@ body {
 @keyframes place-wobble { 0%,100% { transform: rotate(0) } 25% { transform: rotate(-10deg) } 75% { transform: rotate(10deg) } }
 .place-wobble { animation: place-wobble 0.4s ease-in-out; }
 @media (prefers-reduced-motion: reduce) { .place-wobble { animation: none; } }
+
+/* Open place: gentle pulse (scale only, stays opaque) */
+@keyframes place-pulse { 0%,100% { transform: scale(1) } 50% { transform: scale(1.08) } }
+.place-pulse { animation: place-pulse 1.4s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { .place-pulse { animation: none; } }

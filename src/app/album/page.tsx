@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { narrator } from "@/audio/narrator";
 import { BigButton } from "@/components/BigButton";
 import { ArrowIcon } from "@/components/lesson/icons";
-import { useUnlockOnTouch } from "@/components/map/useUnlockOnTouch";
+import { useUnlockOnTouch } from "@/audio/useUnlockOnTouch";
 import { useProgress } from "@/components/ProgressProvider";
 import { getLesson, getWorlds } from "@/domain/content";
 
