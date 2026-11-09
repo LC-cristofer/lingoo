@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-sun: #ffc93c;
+  --color-sky: #4aa8f0;
+  --color-leaf: #5cc46b;
+  --color-coral: #ff7a6b;
+  --color-cream: #fff8ec;
+  --color-ink: #2b2d42;
+  --color-cat: #ff9f43;
+  --font-display: var(--font-baloo), system-ui, sans-serif;
+  --font-body: var(--font-nunito), system-ui, sans-serif;
+}
+
+body {
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
