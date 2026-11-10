@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito:wght@600;800&display=swap" rel="stylesheet">
+<style>
+  :root{--sun:#FFC93C;--sky:#4AA8F0;--leaf:#5CC46B;--coral:#FF7A6B;--cream:#FFF8EC;--ink:#2B2D42;--cat:#FF9F43;--catd:#F0832A;--catl:#FFF1DE}
+  body{margin:0;background:var(--cream);font-family:Nunito,sans-serif;color:var(--ink)}
+  .sheet{width:1200px;padding:32px;box-sizing:border-box}
+  h1{font-family:"Baloo 2";font-size:40px;margin:0 0 4px}
+  h2{font-family:"Baloo 2";font-size:26px;margin:28px 0 8px}
+  .row{display:flex;gap:24px;align-items:flex-end}
+  .card{background:#fff;border-radius:28px;box-shadow:0 6px 0 rgba(43,45,66,.08),0 12px 24px rgba(43,45,66,.08);padding:16px 16px 10px;text-align:center}
+  .card p{margin:6px 0 0;font-weight:800;font-size:18px}
+  .card small{display:block;font-weight:600;opacity:.6}
+</style>
+</head>
+<body>
+<div class="sheet" id="sheet">
+  <h1>Lingoo · amostras de arte</h1>
+  <div>Gatinho (3 expressões) · Urso · Floresta com o mapa da unidade</div>
+
+  <h2>O gatinho</h2>
+  <div class="row" id="cats"></div>
+
+  <h2>Cartão de vocabulário</h2>
+  <div class="row" id="animals"></div>
+
+  <h2>Floresta · mapa da Unidade 1</h2>
+  <div class="card" style="padding:0;overflow:hidden" id="map"></div>
+</div>
+
+<script>
+const C={cat:'#FF9F43',catd:'#EE8226',catl:'#FFF1DE',ink:'#2B2D42',pink:'#FF8FA3',blush:'#FF7A6B'};
+
+function eyes(kind){
+  if(kind==='happy') // olhos fechados sorrindo
+    return `<path d="M62 90 q12 -14 24 0" fill="none" stroke="${C.ink}" stroke-width="6" stroke-linecap="round"/>
+            <path d="M114 90 q12 -14 24 0" fill="none" stroke="${C.ink}" stroke-width="6" stroke-linecap="round"/>`;
+  const look = kind==='point' ? 4 : 0;
+  return `<ellipse cx="${74+look}" cy="88" rx="12" ry="14" fill="${C.ink}"/>
+          <ellipse cx="${126+look}" cy="88" rx="12" ry="14" fill="${C.ink}"/>
+          <circle cx="${78+look}" cy="82" r="4.5" fill="#fff"/><circle cx="${130+look}" cy="82" r="4.5" fill="#fff"/>
+          <circle cx="${71+look}" cy="94" r="2" fill="#fff"/><circle cx="${123+look}" cy="94" r="2" fill="#fff"/>`;
+}
+function mouth(kind){
+  if(kind==='happy')
+    return `<path d="M86 110 q14 22 28 0 z" fill="#B23A48"/><path d="M93 118 q7 6 14 0 q-7 -5 -14 0z" fill="#FF8FA3"/>`;
+  if(kind==='help')
+    return `<path d="M90 110 q10 9 20 0" fill="none" stroke="${C.ink}" stroke-width="4" stroke-linecap="round"/>`;
+  return `<path d="M100 108 q-7 9 -14 3 M100 108 q7 9 14 3" fill="none" stroke="${C.ink}" stroke-width="4" stroke-linecap="round"/>`;
+}
+function cat(kind){
+  // braços por pose
+  let arms='';
+  if(kind==='happy') arms=`
+     <path d="M62 152 q-34 -10 -44 -42" stroke="${C.cat}" stroke-width="18" stroke-linecap="round" fill="none"/>
+     <path d="M138 152 q34 -10 44 -42" stroke="${C.cat}" stroke-width="18" stroke-linecap="round" fill="none"/>
+     <circle cx="17" cy="106" r="11" fill="${C.catl}"/><circle cx="183" cy="106" r="11" fill="${C.catl}"/>`;
+  else if(kind==='point') arms=`
+     <path d="M64 158 q-6 18 4 28" stroke="${C.cat}" stroke-width="18" stroke-linecap="round" fill="none"/>
+     <path d="M136 150 q30 -6 52 -18" stroke="${C.cat}" stroke-width="18" stroke-linecap="round" fill="none"/>
+     <circle cx="190" cy="131" r="11" fill="${C.catl}"/>`;
+  else arms=`
+     <path d="M64 158 q-6 18 4 28" stroke="${C.cat}" stroke-width="18" stroke-linecap="round" fill="none"/>
+     <path d="M136 156 q22 -6 26 -34" stroke="${C.cat}" stroke-width="18" stroke-linecap="round" fill="none"/>
+     <circle cx="162" cy="118" r="11" fill="${C.catl}"/>
+     <path d="M178 92 l4 -10 l4 10 l10 4 l-10 4 l-4 10 l-4 -10 l-10 -4z" fill="#FFC93C"/>
+     <path d="M30 70 l3 -7 l3 7 l7 3 l-7 3 l-3 7 l-3 -7 l-7 -3z" fill="#FFC93C"/>`;
+  const tilt = kind==='help' ? 'rotate(-6 100 95)' : '';
+  return `<svg viewBox="0 -10 210 240" width="220" height="250">
+    <ellipse cx="100" cy="222" rx="58" ry="8" fill="rgba(43,45,66,.12)"/>
+    <path d="M140 196 C192 192 196 132 168 120 C156 115 150 128 160 134 C176 142 172 178 134 182 Z" fill="${C.cat}"/>
+    <path d="M168 120 C156 115 150 128 160 134 C164 128 168 124 168 120Z" fill="${C.catd}"/>
+    <ellipse cx="100" cy="176" rx="46" ry="44" fill="${C.cat}"/>
+    <ellipse cx="100" cy="184" rx="27" ry="30" fill="${C.catl}"/>
+    <ellipse cx="78" cy="216" rx="18" ry="10" fill="${C.cat}"/><ellipse cx="122" cy="216" rx="18" ry="10" fill="${C.cat}"/>
+    <ellipse cx="78" cy="218" rx="10" ry="5" fill="${C.catl}"/><ellipse cx="122" cy="218" rx="10" ry="5" fill="${C.catl}"/>
+    ${arms}
+    <g transform="${tilt}">
+      <path d="M44 66 L40 14 Q42 6 50 10 L88 44 Z" fill="${C.cat}"/>
+      <path d="M52 52 L50 24 L74 44 Z" fill="${C.pink}"/>
+      <path d="M156 66 L160 14 Q158 6 150 10 L112 44 Z" fill="${C.cat}"/>
+      <path d="M148 52 L150 24 L126 44 Z" fill="${C.pink}"/>
+      <ellipse cx="100" cy="92" rx="66" ry="58" fill="${C.cat}"/>
+      <path d="M88 38 q4 12 0 20 M100 36 q4 14 0 24 M112 38 q4 12 0 20" stroke="${C.catd}" stroke-width="6" stroke-linecap="round" fill="none"/>
+      <ellipse cx="100" cy="112" rx="30" ry="21" fill="${C.catl}"/>
+      ${eyes(kind)}
+      <path d="M93 100 h14 q-7 9 -7 9 q0 0 -7 -9z" fill="${C.pink}" stroke="${C.pink}" stroke-width="3" stroke-linejoin="round"/>
+      ${mouth(kind)}
+      <ellipse cx="56" cy="112" rx="11" ry="7" fill="${C.blush}" opacity=".35"/>
+      <ellipse cx="144" cy="112" rx="11" ry="7" fill="${C.blush}" opacity=".35"/>
+      <path d="M40 104 l-18 -4 M40 112 l-18 2 M160 104 l18 -4 M160 112 l18 2" stroke="${C.catd}" stroke-width="3" stroke-linecap="round"/>
+    </g>
+  </svg>`;
+}
+
+function bear(){
+  return `<svg viewBox="0 0 200 210" width="200" height="210">
+    <ellipse cx="100" cy="200" rx="56" ry="7" fill="rgba(43,45,66,.12)"/>
+    <ellipse cx="100" cy="160" rx="54" ry="44" fill="#A06A42"/>
+    <ellipse cx="100" cy="168" rx="32" ry="30" fill="#E9C49B"/>
+    <ellipse cx="66" cy="196" rx="20" ry="11" fill="#A06A42"/><ellipse cx="134" cy="196" rx="20" ry="11" fill="#A06A42"/>
+    <circle cx="48" cy="48" r="24" fill="#A06A42"/><circle cx="48" cy="48" r="13" fill="#E9C49B"/>
+    <circle cx="152" cy="48" r="24" fill="#A06A42"/><circle cx="152" cy="48" r="13" fill="#E9C49B"/>
+    <ellipse cx="100" cy="92" rx="70" ry="60" fill="#B47A4C"/>
+    <ellipse cx="100" cy="118" rx="32" ry="24" fill="#F1D5B2"/>
+    <ellipse cx="100" cy="105" rx="12" ry="9" fill="#3A2A22"/>
+    <circle cx="96" cy="102" r="3" fill="#fff" opacity=".7"/>
+    <path d="M100 114 v6 M100 120 q-8 8 -14 2 M100 120 q8 8 14 2" stroke="#3A2A22" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+    <circle cx="72" cy="84" r="8" fill="${C.ink}"/><circle cx="128" cy="84" r="8" fill="${C.ink}"/>
+    <circle cx="75" cy="81" r="3" fill="#fff"/><circle cx="131" cy="81" r="3" fill="#fff"/>
+    <ellipse cx="58" cy="108" rx="10" ry="6" fill="#FF7A6B" opacity=".3"/><ellipse cx="142" cy="108" rx="10" ry="6" fill="#FF7A6B" opacity=".3"/>
+  </svg>`;
+}
+
+function pine(x,y,s,c1='#2F9E5B',c2='#3DB56B'){
+  return `<g transform="translate(${x} ${y}) scale(${s})">
+    <rect x="-7" y="0" width="14" height="26" rx="4" fill="#8B5A3C"/>
+    <path d="M0 -110 L44 -40 H-44Z" fill="${c2}"/><path d="M0 -80 L54 0 H-54Z" fill="${c1}"/>
+    <path d="M0 -110 L44 -40 H8 L0 -60Z" fill="#000" opacity=".06"/>
+  </g>`;
+}
+function roundTree(x,y,s){
+  return `<g transform="translate(${x} ${y}) scale(${s})">
+    <rect x="-8" y="-10" width="16" height="40" rx="5" fill="#8B5A3C"/>
+    <circle cx="-26" cy="-34" r="30" fill="#4DBA6C"/><circle cx="24" cy="-36" r="32" fill="#4DBA6C"/>
+    <circle cx="0" cy="-62" r="36" fill="#5CC46B"/><circle cx="12" cy="-70" r="12" fill="#fff" opacity=".18"/>
+  </g>`;
+}
+function mushroom(x,y){
+  return `<g transform="translate(${x} ${y})"><rect x="-6" y="-14" width="12" height="16" rx="5" fill="#FFF1DE"/>
+    <path d="M-18 -12 q18 -26 36 0z" fill="#FF7A6B"/><circle cx="-6" cy="-19" r="3" fill="#fff"/><circle cx="6" cy="-16" r="2.5" fill="#fff"/></g>`;
+}
+function flower(x,y,c){
+  return `<g transform="translate(${x} ${y})"><path d="M0 0 v14" stroke="#3B9F57" stroke-width="3"/>
+   ${[0,72,144,216,288].map(a=>`<circle cx="${7*Math.cos(a*Math.PI/180)}" cy="${7*Math.sin(a*Math.PI/180)}" r="5" fill="${c}"/>`).join('')}
+   <circle r="4" fill="#FFC93C"/></g>`;
+}
+const icons={
+  music:`<ellipse cx="-9" cy="10" rx="7" ry="5.5" fill="#fff"/><ellipse cx="10" cy="6" rx="7" ry="5.5" fill="#fff"/><path d="M-3 10 V-12 L16 -16 V6" stroke="#fff" stroke-width="3.5" fill="none" stroke-linejoin="round"/><path d="M-3 -12 L16 -16 V-10 L-3 -6Z" fill="#fff"/>`,
+  star:`<path d="M0 -17 l5 10 l11 1.6 l-8 7.8 l1.9 11 l-9.9 -5.2 l-9.9 5.2 l1.9 -11 l-8 -7.8 l11 -1.6z" fill="#fff"/>`,
+  book:`<path d="M-17 -12 q9 -4 17 2 q8 -6 17 -2 v24 q-9 -4 -17 2 q-8 -6 -17 -2z" fill="#fff"/><path d="M0 -10 v24" stroke="#4AA8F0" stroke-width="2"/>`,
+  trophy:`<path d="M-11 -14 h22 v8 q0 12 -11 14 q-11 -2 -11 -14z M-4 8 h8 v6 h6 v4 h-20 v-4 h6z" fill="#fff"/><path d="M-11 -10 h-6 q0 10 7 10 M11 -10 h6 q0 10 -7 10" stroke="#fff" stroke-width="3" fill="none"/>`,
+  lock:`<rect x="-10" y="-4" width="20" height="16" rx="4" fill="#fff"/><path d="M-6 -4 v-5 a6 6 0 0 1 12 0 v5" stroke="#fff" stroke-width="4" fill="none"/>`
+};
+function stop(x,y,kind,state,label){
+  const fill = state==='locked' ? '#C9CCD3' : ({music:'#FF7A6B',star:'#FFC93C',book:'#4AA8F0',trophy:'#B57EDC'})[kind];
+  const ring = state==='current' ? `<circle r="52" fill="none" stroke="#fff" stroke-width="6" opacity=".9"/><circle r="60" fill="none" stroke="#FFC93C" stroke-width="4" stroke-dasharray="6 8"/>` : '';
+  const done = state==='done' ? `<g transform="translate(30 -30)"><circle r="16" fill="#5CC46B" stroke="#fff" stroke-width="4"/><path d="M-7 0 l5 5 l9 -10" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>` : '';
+  return `<g transform="translate(${x} ${y})">
+    ${ring}
+    <ellipse cx="0" cy="40" rx="38" ry="8" fill="rgba(0,0,0,.12)"/>
+    <circle r="42" fill="${fill}" stroke="#fff" stroke-width="6"/>
+    <circle r="42" fill="#000" opacity=".06" clip-path="inset(50% 0 0 0)"/>
+    <g transform="scale(1.3)">${icons[state==='locked'?'lock':kind]}</g>
+    ${done}
+    <g transform="translate(0 66)"><rect x="-46" y="-14" width="92" height="28" rx="14" fill="#fff" opacity=".92"/>
+      <text text-anchor="middle" y="6" font-family="Nunito" font-weight="800" font-size="16" fill="#2B2D42">${label}</text></g>
+  </g>`;
+}
+
+function map(){
+  const W=1136,H=640;
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}">
+   <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8FD0FF"/><stop offset="1" stop-color="#DDF2FF"/></linearGradient>
+   </defs>
+   <rect width="${W}" height="${H}" fill="url(#sky)"/>
+   <circle cx="800" cy="170" r="52" fill="#FFE27A"/><circle cx="800" cy="170" r="76" fill="#FFE27A" opacity=".25"/>
+   <g fill="#fff" opacity=".95"><ellipse cx="200" cy="110" rx="70" ry="26"/><ellipse cx="240" cy="94" rx="40" ry="30"/><ellipse cx="640" cy="80" rx="60" ry="20"/><ellipse cx="670" cy="68" rx="34" ry="24"/></g>
+   <path d="M0 300 Q180 210 380 280 T780 260 T1136 250 V640 H0Z" fill="#A6DDA3"/>
+   <path d="M0 360 Q240 300 470 350 T900 330 T1136 340 V640 H0Z" fill="#7FCF85"/>
+   <path d="M0 420 Q300 380 600 410 T1136 400 V640 H0Z" fill="#5CC46B"/>
+   ${pine(70,330,1.1)}${pine(140,350,.8,'#33A862','#45BE75')}${roundTree(1060,340,1)}${pine(980,320,.9)}${roundTree(560,300,.7)}${pine(820,300,.7,'#33A862','#45BE75')}
+   <path d="M120 560 C260 560 250 440 380 440 S560 540 690 520 S860 420 1000 430" fill="none" stroke="#F6DDA6" stroke-width="44" stroke-linecap="round"/>
+   <path d="M120 560 C260 560 250 440 380 440 S560 540 690 520 S860 420 1000 430" fill="none" stroke="#fff" stroke-width="5" stroke-dasharray="2 18" stroke-linecap="round" opacity=".8"/>
+   ${mushroom(300,600)}${mushroom(318,606)}${flower(470,600,'#FF8FA3')}${flower(860,560,'#fff')}${flower(890,575,'#FF8FA3')}${mushroom(1080,540)}
+   ${roundTree(40,640,.8)}${pine(1110,640,.9)}
+   ${stop(150,548,'music','done','Música')}
+   ${stop(330,452,'star','done','Lição 1')}
+   ${stop(520,500,'star','current','Lição 2')}
+   ${stop(700,516,'star','locked','Lição 3')}
+   ${stop(860,452,'book','locked','História')}
+   ${stop(1010,430,'trophy','locked','Desafio')}
+   <g transform="translate(560 404) scale(.42)">${cat('point').replace(/<svg[^>]*>|<\/svg>/g,'')}</g>
+   <g transform="translate(24 24)">
+     <rect width="520" height="76" rx="24" fill="#fff" opacity=".95"/>
+     <circle cx="44" cy="38" r="26" fill="#5CC46B"/>${pine(44,52,.32,'#fff','#fff')}
+     <text x="84" y="32" font-family="Nunito" font-weight="800" font-size="15" fill="#2B2D42" opacity=".6">UNIDADE 1</text>
+     <text x="84" y="58" font-family="Baloo 2" font-weight="800" font-size="26" fill="#2B2D42">Animais da floresta</text>
+     <rect x="380" y="28" width="116" height="20" rx="10" fill="#EEF0F3"/><rect x="380" y="28" width="39" height="20" rx="10" fill="#FFC93C"/>
+     <text x="438" y="66" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="13" fill="#2B2D42" opacity=".6">2 de 6</text>
+   </g>
+   <g transform="translate(${W-232} 24)">
+     <rect width="208" height="76" rx="24" fill="#fff" opacity=".95"/>
+     ${['S','T','Q','Q','S','S','D'].map((d,i)=>`<g transform="translate(${26+i*26} 30)"><circle r="10" fill="${i<3?'#FFC93C':'#EEF0F3'}"/>${i<3?'<circle r="4" fill="#fff" opacity=".7"/>':''}<text y="34" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="12" fill="#2B2D42" opacity=".55">${d}</text></g>`).join('')}
+   </g>
+  </svg>`;
+}
+
+document.getElementById('cats').innerHTML =
+  [['happy','Feliz','acertou!'],['point','Apontando','“Qual é o bear?”'],['help','Ajudando','“Vamos tentar de novo!”']]
+  .map(([k,t,s])=>`<div class="card">${cat(k)}<p>${t}</p><small>${s}</small></div>`).join('');
+document.getElementById('animals').innerHTML =
+  `<div class="card" style="width:220px">${bear()}<p style="font-family:'Baloo 2';font-size:30px">bear</p><small>🔊 toque para ouvir</small></div>`;
+document.getElementById('map').innerHTML = map();
+</script>
+</body>
+</html>

@@ -165,12 +165,35 @@ O texto final de cada fala e da letra é escrito no plano de implementação e r
 - **Calendário de dias:** fica no alto do mapa e mostra os 7 dias da semana. Os dias em que a criança brincou ganham um ☀. Não existe contador que zera, nem mensagem de "você perdeu".
 - **Álbum:** uma página por unidade, com espaço para a figurinha da unidade. Tocar numa figurinha fala o nome dela em inglês.
 
-## 6. Imagens e voz no protótipo (antes do conteúdo gerado por IA)
+## 6. Arte e áudio (produção própria, ferramentas gratuitas)
 
-- **Ilustrações dos animais:** usar um conjunto de ilustrações de licença aberta, de traço simples e consistente, em tamanho grande, por exemplo o Twemoji, licença CC-BY 4.0. Os cartões **não** levam a letra inicial, que entregava a resposta. A licença exige atribuição, então os créditos ficam numa tela "Sobre" acessível aos pais. Essas imagens são trocadas pelas ilustrações próprias quando elas existirem.
-- **Cenários** (floresta, mapa e páginas da história): SVG próprio, desenhado com a paleta.
-- **Voz:** a voz do navegador com **duas vozes**: pt-BR para as instruções e en-US para o inglês. Cada fala é uma sequência de trechos, cada trecho com o seu idioma. Quando houver áudio gravado ou gerado, cada trecho ganha um arquivo.
-- **Mascote:** o gatinho atual ganha expressões novas: apontando, comemorando, ouvindo e "ajudando", esta usada no 2º erro.
+Nada vai para a criança como provisório. Toda arte e todo áudio entram já no padrão final, aprovado nas amostras de 2026-11-09 e 2026-11-10.
+
+**Arte: desenhada em vetor (SVG), com traço próprio e original.**
+- **Estilo aprovado:** vetor chapado e arredondado, com a paleta do Lingoo, sombras suaves e olhos grandes com brilho. Cada personagem tem pose e expressão.
+- **Gatinho:** laranja (`#FF9F43`), com focinho creme, orelhas com interior rosa, três listrinhas na testa e bochechas coradas. A especificação original pede que ele seja original e não lembre personagens conhecidos.
+  - Expressões: **feliz** (olhos fechados sorrindo e braços para cima), **apontando**, **ajudando** (cabeça inclinada e brilhinhos), **falando**, **ouvindo** e **parado**.
+- **Animais da Unidade 1:** urso, pássaro, sapo, cobra, aranha e rato, todos no mesmo traço do urso aprovado.
+  - A **aranha** e a **cobra** são desenhadas fofas, sem cara assustadora.
+  - Os cartões **não** levam letra nem palavra que entregue a resposta antes da hora.
+- **Cenários:** floresta (céu, morros, árvores, cogumelos, flores e caminho), as páginas da história, o baú e a figurinha.
+- **Organização:** cada desenho é um componente React em SVG. Assim dá para animar partes separadas (piscar, abanar o rabo, pular) e manter um traço só. Uma folha de personagens (`docs/arte/`) registra o guia de estilo.
+
+**Voz: Chatterbox Multilingual (Resemble AI, licença MIT, uso comercial permitido).**
+- Os áudios são gerados **antes**, por um script do projeto que roda na máquina, e ficam salvos como arquivos MP3 no app. Todo aparelho ouve exatamente a mesma voz.
+- **A voz do gatinho é a "voz 1" aprovada,** a voz padrão do Chatterbox. Ela mantém o mesmo timbre nos dois idiomas, com a pronúncia de cada um: `language_id = "pt"` nas instruções e `"en"` nas palavras e frases em inglês.
+- **Parâmetros fixos,** para todas as falas soarem iguais: `exaggeration 0.6`, `cfg_weight 0.4`, `temperature 0.7`, semente fixa e volume normalizado.
+- **Script de geração:** lê o conteúdo em JSON e gera um arquivo por trecho de fala. O nome do arquivo vem do texto e do idioma, então o script só refaz o que mudou.
+- **Marca d'água:** o Chatterbox insere uma marca inaudível (Perth) que identifica o áudio como gerado por IA. Ela não afeta o uso.
+- **Reserva:** se um arquivo faltar, o app usa a voz do navegador, como na Fase 1, para nunca travar.
+
+**Música da unidade: chant original.**
+- Instrumental composto e sintetizado em código (cordas dedilhadas, baixo e percussão leve).
+- O gatinho fala a letra no ritmo, com a voz do Chatterbox.
+- Se o chant não convencer no teste com crianças, a parada 🎵 sai da unidade sem afetar o resto.
+- Voz cantada de verdade fica para quando houver uma ferramenta gratuita com uso comercial liberado.
+
+**Efeitos sonoros:** acerto, "tente de novo", baú abrindo, estrela e toque. São sintetizados em código, originais e curtos, com volume baixo em relação à voz.
 
 ## 7. Arquitetura (o que muda no código)
 
@@ -191,10 +214,15 @@ O texto final de cada fala e da letra é escrito no plano de implementação e r
 3. **Exercícios:**
    - um componente por tipo, todos dentro de uma `ExerciseShell` comum (balão, barra e faixa de retorno);
    - a lógica de cada tipo continua em funções puras testadas, como na Fase 1.
-4. **Narrador:** passa a tocar `Narration` em sequência, escolhendo a voz pelo idioma de cada trecho.
-5. **Progresso v2:** `completedStops` (id → data), `stickers` e `daysPlayed` (datas). A chave nova no localStorage é `lingoo:progress:v2`, sem migração, porque ninguém tem dados ainda. O desbloqueio é por parada, em sequência dentro da unidade, e por unidade.
-6. **Mapa v2:** cenário em SVG, faixa da unidade, paradas tipadas e unidades trancadas.
-7. **Sai:** o `DragGame` e os passos antigos de "sticker". A figurinha agora é recompensa do desafio.
+4. **Narrador:** passa a tocar uma `Narration` em sequência, trecho por trecho. Cada trecho toca o arquivo gerado. A voz do navegador fica só como reserva, e escolhe pt-BR ou en-US pelo idioma do trecho.
+5. **Gerador de áudio** (`tools/audio/`, em Python, fora do app):
+   - lê todo o conteúdo e gera os MP3 com o Chatterbox em `public/audio/`;
+   - preenche o `src` de cada trecho num arquivo de índice;
+   - tem um teste que falha se algum trecho do conteúdo estiver sem áudio.
+6. **Arte em componentes:** `src/art/` com o gatinho (com as expressões), os animais e os cenários, todos em SVG como componentes React.
+7. **Progresso v2:** `completedStops` (id → data), `stickers` e `daysPlayed` (datas). A chave nova no localStorage é `lingoo:progress:v2`, sem migração, porque ninguém tem dados ainda. O desbloqueio é por parada, em sequência dentro da unidade, e por unidade.
+8. **Mapa v2:** cenário em SVG, faixa da unidade, paradas tipadas e unidades trancadas.
+9. **Sai:** o `DragGame` e os passos antigos de "sticker". A figurinha agora é recompensa do desafio.
 
 ## 8. Testes
 
@@ -202,7 +230,8 @@ O texto final de cada fala e da letra é escrito no plano de implementação e r
 - **Componentes:** cada exercício dentro da `ExerciseShell`, com o narrador simulado.
 - **E2E com a fala gravada:** a criança joga a Unidade 1 inteira. O teste confere:
   - a abertura em português ("Hoje nós vamos aprender…");
-  - a palavra em inglês na voz en-US;
+  - a palavra em inglês tocada pelo trecho em inglês (`en-US`);
+  - nenhum trecho de fala sem arquivo de áudio;
   - "Yes! That's great!" depois de um acerto;
   - "Opa! Vamos tentar de novo" depois de um erro;
   - o baú com a figurinha no fim;
@@ -212,12 +241,13 @@ O texto final de cada fala e da letra é escrito no plano de implementação e r
 ## 9. Fora do escopo deste redesenho
 
 - Unidades 2 a 7, que são só conteúdo novo. O formato já fica pronto.
-- Música cantada de verdade e ilustrações próprias, que dependem da produção com IA.
+- Música com voz cantada de verdade, que depende de uma ferramenta gratuita com uso comercial liberado.
 - Avaliação de pronúncia; pais, login e assinatura (Fases 2 e 3).
 - Estrelas por desempenho, de 1 a 3, que podem entrar numa trilha para 7 e 8 anos.
 
 ## 10. Riscos
 
-- **Voz do navegador em português e inglês:** a qualidade varia entre aparelhos, e alguns tablets não têm voz em pt-BR ou en-US instalada. Mitigação: testar no tablet de teste e priorizar a produção de áudio gravado para a Unidade 1.
-- **Ilustrações de licença aberta:** são temporárias. O visual final depende das ilustrações próprias (guia de estilo da seção 8 da especificação original).
-- **Tamanho do conteúdo:** uma unidade tem cerca de 40 exercícios e 2 roteiros (música e história). Mitigação: o roteiro completo vai no plano e é revisado antes de produzir áudio e imagens.
+- **Tempo de geração da voz:** na CPU, o Chatterbox leva cerca de 1 minuto por trecho. A Unidade 1 tem uns 150 trechos, o que dá de 2 a 3 horas. Mitigação: o script só refaz o que mudou e roda em segundo plano.
+- **Qualidade do português em palavras difíceis:** algumas falas podem sair com pronúncia estranha. Mitigação: ouvir cada fala gerada antes de publicar e refazer com outra semente ou outra frase. A lista de falas aprovadas fica registrada.
+- **Volume de arte:** são 6 animais, 6 expressões do gatinho, a floresta, 5 ou 6 páginas de história, o baú e a figurinha. Mitigação: a folha de personagens e o urso aprovado servem de molde, e cada peça é conferida em captura de tela.
+- **Tamanho do conteúdo:** uma unidade tem cerca de 40 exercícios e 2 roteiros (música e história). Mitigação: o roteiro completo vai no plano e é revisado antes de gerar os áudios.
