@@ -1,0 +1,1480 @@
+{
+  "id": "forest-animals",
+  "title": "Animais da floresta",
+  "banner": [
+    {
+      "lang": "pt-BR",
+      "text": "Unidade um: animais da floresta!"
+    }
+  ],
+  "words": [
+    {
+      "id": "bear",
+      "en": "bear",
+      "pt": "o urso",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "bear!"
+        }
+      ]
+    },
+    {
+      "id": "bird",
+      "en": "bird",
+      "pt": "o pássaro",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "bird!"
+        }
+      ]
+    },
+    {
+      "id": "frog",
+      "en": "frog",
+      "pt": "o sapo",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "frog!"
+        }
+      ]
+    },
+    {
+      "id": "snake",
+      "en": "snake",
+      "pt": "a cobra",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "snake!"
+        }
+      ]
+    },
+    {
+      "id": "spider",
+      "en": "spider",
+      "pt": "a aranha",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "spider!"
+        }
+      ]
+    },
+    {
+      "id": "mouse",
+      "en": "mouse",
+      "pt": "o ratinho",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "mouse!"
+        }
+      ]
+    }
+  ],
+  "stops": [
+    {
+      "kind": "song",
+      "id": "forest-animals/song",
+      "title": "Música",
+      "opening": [
+        {
+          "lang": "pt-BR",
+          "text": "Vamos cantar a música dos animais da floresta! Escute e cante comigo!"
+        }
+      ],
+      "bpm": 100,
+      "introBars": 1,
+      "lyrics": [
+        {
+          "bar": 1,
+          "say": [
+            {
+              "lang": "en-US",
+              "text": "What's this? What's this? It's a bear!"
+            }
+          ],
+          "wordId": "bear"
+        },
+        {
+          "bar": 3,
+          "say": [
+            {
+              "lang": "en-US",
+              "text": "What's this? What's this? It's a bird!"
+            }
+          ],
+          "wordId": "bird"
+        },
+        {
+          "bar": 5,
+          "say": [
+            {
+              "lang": "en-US",
+              "text": "What's this? What's this? It's a frog!"
+            }
+          ],
+          "wordId": "frog"
+        },
+        {
+          "bar": 7,
+          "say": [
+            {
+              "lang": "en-US",
+              "text": "What's this? What's this? It's a snake!"
+            }
+          ],
+          "wordId": "snake"
+        },
+        {
+          "bar": 9,
+          "say": [
+            {
+              "lang": "en-US",
+              "text": "What's this? What's this? It's a spider!"
+            }
+          ],
+          "wordId": "spider"
+        },
+        {
+          "bar": 11,
+          "say": [
+            {
+              "lang": "en-US",
+              "text": "What's this? What's this? It's a mouse!"
+            }
+          ],
+          "wordId": "mouse"
+        },
+        {
+          "bar": 13,
+          "say": [
+            {
+              "lang": "en-US",
+              "text": "Animals, animals, in the forest!"
+            }
+          ]
+        }
+      ],
+      "exercises": [
+        {
+          "kind": "listenTap",
+          "prompt": [
+            {
+              "lang": "pt-BR",
+              "text": "Qual é o"
+            },
+            {
+              "lang": "en-US",
+              "text": "bear?"
+            },
+            {
+              "lang": "pt-BR",
+              "text": "Toque nele!"
+            }
+          ],
+          "optionIds": [
+            "bear",
+            "bird",
+            "frog"
+          ],
+          "answerId": "bear"
+        },
+        {
+          "kind": "listenTap",
+          "prompt": [
+            {
+              "lang": "pt-BR",
+              "text": "Qual é a"
+            },
+            {
+              "lang": "en-US",
+              "text": "snake?"
+            },
+            {
+              "lang": "pt-BR",
+              "text": "Toque nela!"
+            }
+          ],
+          "optionIds": [
+            "snake",
+            "spider",
+            "mouse"
+          ],
+          "answerId": "snake"
+        },
+        {
+          "kind": "listenTap",
+          "prompt": [
+            {
+              "lang": "pt-BR",
+              "text": "Qual é o"
+            },
+            {
+              "lang": "en-US",
+              "text": "mouse?"
+            },
+            {
+              "lang": "pt-BR",
+              "text": "Toque nele!"
+            }
+          ],
+          "optionIds": [
+            "bear",
+            "mouse",
+            "frog"
+          ],
+          "answerId": "mouse"
+        }
+      ],
+      "closing": [
+        {
+          "lang": "en-US",
+          "text": "Great job!"
+        },
+        {
+          "lang": "pt-BR",
+          "text": "Você cantou com os animais da floresta!"
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "forest-animals/lesson-1",
+      "title": "Lição 1",
+      "wordIds": [
+        "bear",
+        "bird",
+        "frog"
+      ],
+      "opening": [
+        {
+          "lang": "pt-BR",
+          "text": "Oi! Hoje nós vamos aprender três animais da floresta!"
+        }
+      ],
+      "exercises": [
+        {
+          "kind": "intro",
+          "wordId": "bear",
+          "say": [
+            {
+              "lang": "pt-BR",
+              "text": "Esse é o urso. Em inglês:"
+            },
+            {
+              "lang": "en-US",
+              "text": "bear."
+            },
+            {
+              "lang": "pt-BR",
+              "text": "Repita comigo:"
+            },
+            {
+              "lang": "en-US",
+              "text": "bear!"
+            }
+          ]
+        },
+        {
+          "kind": "listenTap",
+          "prompt": [
+            {
+              "lang": "pt-BR",
+              "text": "Qual é o"
+            },
+            {
+              "lang": "en-US",
+              "text": "bear?"
+            },
+            {
+              "lang": "pt-BR",
+              "text": "Toque nele!"
+            }
+          ],
+          "optionIds": [
+            "bear",
+            "bird"
+          ],
+          "answerId": "bear"
+        },
+        {
+          "kind": "intro",
+          "wordId": "bird",
+          "say": [
+            {
+              "lang": "pt-BR",
+              "text": "Esse é o pássaro. Em inglês:"
+            },
+            {
+              "lang": "en-US",
+              "text": "bird."
+            },
+            {
+              "lang": "pt-BR",
+              "text": "Repita comigo:"
+            },
+            {
+              "lang": "en-US",
+              "text": "bird!"
+            }
+          ]
+        },
+        {
+          "kind": "listenTap",
+          "prompt": [
+            {
+              "lang": "pt-BR",
+              "text": "Qual é o"
+            },
+            {
+              "lang": "en-US",
+              "text": "bird?"
+            },
+            {
+              "lang": "pt-BR",
+              "text": "Toque nele!"
+            }
+          ],
+          "optionIds": [
+            "bear",
+            "bird"
+          ],
+          "answerId": "bird"
+        },
+        {
+          "kind": "intro",
+          "wordId": "frog",
+          "say": [
+            {
+              "lang": "pt-BR",
+              "text": "Esse é o sapo. Em inglês:"
+            },
+            {
+              "lang": "en-US",
+              "text": "frog."
+            },
+            {
+              "lang": "pt-BR",
+              "text": "Repita comigo:"
+            },
+            {
+              "lang": "en-US",
+              "text": "frog!"
+            }
+          ]
+        },
+        {
+          "kind": "trueFalse",
+          "wordId": "frog",
+          "say": [
+            {
+              "lang": "pt-BR",
+              "text": "Olha!"
+            },
+            {
+              "lang": "en-US",
+              "text": "This is a bird!"
+            },
+            {
+              "lang": "pt-BR",
+              "text": "Certo ou errado?"
+            }
+          ],
+          "isTrue": false
+        },
+        {
+          "kind": "matchPairs",
+          "prompt": [
+            {
+              "lang": "pt-BR",
+              "text": "Ligue cada animal ao nome dele!"
+            }
+          ],
+          "wordIds": [
+            "bear",
+            "bird",
+            "frog"
+          ]
+        },
+        {
+          "kind": "listenTap",
+          "prompt": [
+            {
+              "lang": "pt-BR",
+              "text": "Qual é o"
+            },
+            {
+              "lang": "en-US",
+              "text": "frog?"
+            },
+            {
+              "lang": "pt-BR",
+              "text": "Toque nele!"
+            }
+          ],
+          "optionIds": [
+            "bird",
+            "frog",
+            "bear"
+          ],
+          "answerId": "frog"
+        },
+        {
+          "kind": "trueFalse",
+          "wordId": "bear",
+          "say": [
+            {
+              "lang": "pt-BR",
+              "text": "Olha!"
+            },
+            {
+              "lang": "en-US",
+              "text": "This is a bear!"
+            },
+            {
+              "lang": "pt-BR",
+              "text": "Certo ou errado?"
+            }
+          ],
+          "isTrue": true
+        },
+        {
+          "kind": "tapRepeat",
+          "prompt": [
+            {
+              "lang": "pt-BR",
+              "text": "Toque em cada animal e repita comigo!"
+            }
+          ],
+          "items": [
+            {
+              "wordId": "bear",
+              "say": [
+                {
+                  "lang": "en-US",
+                  "text": "bear!"
+                }
+              ]
+            },
+            {
+              "wordId": "bird",
+              "say": [
+                {
+                  "lang": "en-US",
+                  "text": "bird!"
+                }
+              ]
+            },
+            {
+              "wordId": "frog",
+              "say": [
+                {
+                  "lang": "en-US",
+                  "text": "frog!"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "closing": [
+        {
+          "lang": "en-US",
+          "text": "Great job!"
+        },
+        {
+          "lang": "pt-BR",
+          "text": "Hoje você aprendeu:"
+        },
+        {
+          "lang": "en-US",
+          "text": "bear, bird, frog!"
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "forest-animals/lesson-2",
+      "title": "Lição 2",
+      "wordIds": [
+        "snake",
+        "spider",
+        "mouse"
+      ],
+      "opening": [
+        {
+          "lang": "pt-BR",
+          "text": "Oi! Hoje nós vamos aprender mais três animais da floresta!"
+        }
+      ],
+      "exercises": [
+        {
+          "kind": "intro",
+          "wordId": "snake",
+          "say": [
+            {
+              "lang": "pt-BR",
+              "text": "Essa é a cobra. Em inglês:"
+            },
+            {
+              "lang": "en-US",
+              "text": "snake."
+            },
+            {
+              "lang": "pt-BR",
+              "text": "Repita comigo:"
+            },
+            {
+              "lang": "en-US",
+              "text": "snake!"
+            }
+          ]
+        },
+        {
+          "kind": "listenTap",
+          "prompt": [
+            {
+              "lang": "pt-BR",
+              "text": "Qual é a"
+            },
+            {
+              "lang": "en-US",
+              "text": "snake?"
+            },
+            {
+              "lang": "pt-BR",
+              "text": "Toque nela!"
+            }
+          ],
+          "optionIds": [
+            "snake",
+            "spider"
+          ],
+          "answerId": "snake"
+        },
+        {
+          "kind": "intro",
+          "wordId": "spider",
+          "say": [
+            {
+              "lang": "pt-BR",
+              "text": "Essa é a aranha. Em inglês:"
+            },
+            {
+              "lang": "en-US",
+              "text": "spider."
+            },
+            {
+              "lang": "pt-BR",
+              "text": "Repita comigo:"
+            },
+            {
+              "lang": "en-US",
+              "text": "spider!"
+            }
+          ]
+        },
+        {
+          "kind": "listenTap",
+          "prompt": [
+            {
+              "lang": "pt-BR",
+              "text": "Qual é a"
+            },
+            {
+              "lang": "en-US",
+              "text": "spider?"
+            },
+            {
+              "lang": "pt-BR",
+              "text": "Toque nela!"
+            }
+          ],
+          "optionIds": [
+            "snake",
+            "spider"
+          ],
+          "answerId": "spider"
+        },
+        {
+          "kind": "intro",
+          "wordId": "mouse",
+          "say": [
+            {
+              "lang": "pt-BR",
+              "text": "Esse é o ratinho. Em inglês:"
+            },
+            {
+              "lang": "en-US",
+              "text": "mouse."
+            },
+            {
+              "lang": "pt-BR",
+              "text": "Repita comigo:"
+            },
+            {
+              "lang": "en-US",
+              "text": "mouse!"
+            }
+          ]
+        },
+        {
+          "kind": "trueFalse",
+          "wordId": "mouse",
+          "say": [
+            {
+              "lang": "pt-BR",
+              "text": "Olha!"
+            },
+            {
+              "lang": "en-US",
+              "text": "This is a snake!"
+            },
+            {
+              "lang": "pt-BR",
+              "text": "Certo ou errado?"
+            }
+          ],
+          "isTrue": false
+        },
+        {
+          "kind": "matchPairs",
+          "prompt": [
+            {
+              "lang": "pt-BR",
+              "text": "Ligue cada animal ao nome dele!"
+            }
+          ],
+          "wordIds": [
+            "snake",
+            "spider",
+            "mouse"
+          ]
+        },
+        {
+          "kind": "listenTap",
+          "prompt": [
+            {
+              "lang": "pt-BR",
+              "text": "Qual é o"
+            },
+            {
+              "lang": "en-US",
+              "text": "mouse?"
+            },
+            {
+              "lang": "pt-BR",
+              "text": "Toque nele!"
+            }
+          ],
+          "optionIds": [
+            "spider",
+            "mouse",
+            "snake"
+          ],
+          "answerId": "mouse"
+        },
+        {
+          "kind": "trueFalse",
+          "wordId": "spider",
+          "say": [
+            {
+              "lang": "pt-BR",
+              "text": "Olha!"
+            },
+            {
+              "lang": "en-US",
+              "text": "This is a spider!"
+            },
+            {
+              "lang": "pt-BR",
+              "text": "Certo ou errado?"
+            }
+          ],
+          "isTrue": true
+        },
+        {
+          "kind": "listenTap",
+          "prompt": [
+            {
+              "lang": "pt-BR",
+              "text": "Qual é o"
+            },
+            {
+              "lang": "en-US",
+              "text": "bird?"
+            },
+            {
+              "lang": "pt-BR",
+              "text": "Toque nele!"
+            }
+          ],
+          "optionIds": [
+            "bird",
+            "snake",
+            "frog",
+            "mouse"
+          ],
+          "answerId": "bird"
+        },
+        {
+          "kind": "tapRepeat",
+          "prompt": [
+            {
+              "lang": "pt-BR",
+              "text": "Toque em cada animal e repita comigo!"
+            }
+          ],
+          "items": [
+            {
+              "wordId": "snake",
+              "say": [
+                {
+                  "lang": "en-US",
+                  "text": "snake!"
+                }
+              ]
+            },
+            {
+              "wordId": "spider",
+              "say": [
+                {
+                  "lang": "en-US",
+                  "text": "spider!"
+                }
+              ]
+            },
+            {
+              "wordId": "mouse",
+              "say": [
+                {
+                  "lang": "en-US",
+                  "text": "mouse!"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "closing": [
+        {
+          "lang": "en-US",
+          "text": "Awesome!"
+        },
+        {
+          "lang": "pt-BR",
+          "text": "Hoje você aprendeu:"
+        },
+        {
+          "lang": "en-US",
+          "text": "snake, spider, mouse!"
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "forest-animals/lesson-3",
+      "title": "Lição 3",
+      "wordIds": [
+        "bear",
+        "bird",
+        "frog",
+        "snake",
+        "spider",
+        "mouse"
+      ],
+      "opening": [
+        {
+          "lang": "pt-BR",
+          "text": "Hoje vamos aprender uma frase:"
+        },
+        {
+          "lang": "en-US",
+          "text": "What's this? It's a bear!"
+        }
+      ],
+      "exercises": [
+        {
+          "kind": "tapRepeat",
+          "prompt": [
+            {
+              "lang": "pt-BR",
+              "text": "Toque em cada animal e repita a frase comigo!"
+            }
+          ],
+          "items": [
+            {
+              "wordId": "bear",
+              "say": [
+                {
+                  "lang": "en-US",
+                  "text": "What's this? It's a bear!"
+                }
+              ]
+            },
+            {
+              "wordId": "bird",
+              "say": [
+                {
+                  "lang": "en-US",
+                  "text": "What's this? It's a bird!"
+                }
+              ]
+            },
+            {
+              "wordId": "frog",
+              "say": [
+                {
+                  "lang": "en-US",
+                  "text": "What's this? It's a frog!"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "trueFalse",
+          "wordId": "snake",
+          "say": [
+            {
+              "lang": "en-US",
+              "text": "What's this? It's a snake!"
+            },
+            {
+              "lang": "pt-BR",
+              "text": "Certo ou errado?"
+            }
+          ],
+          "isTrue": true
+        },
+        {
+          "kind": "trueFalse",
+          "wordId": "frog",
+          "say": [
+            {
+              "lang": "en-US",
+              "text": "What's this? It's a mouse!"
+            },
+            {
+              "lang": "pt-BR",
+              "text": "Certo ou errado?"
+            }
+          ],
+          "isTrue": false
+        },
+        {
+          "kind": "listenTap",
+          "prompt": [
+            {
+              "lang": "en-US",
+              "text": "It's a spider!"
+            },
+            {
+              "lang": "pt-BR",
+              "text": "Onde está? Toque!"
+            }
+          ],
+          "optionIds": [
+            "spider",
+            "bird",
+            "mouse",
+            "bear"
+          ],
+          "answerId": "spider"
+        },
+        {
+          "kind": "whatsMissing",
+          "prompt": [
+            {
+              "lang": "pt-BR",
+              "text": "Um animal se escondeu! Quem sumiu?"
+            }
+          ],
+          "shownIds": [
+            "bear",
+            "frog",
+            "snake"
+          ],
+          "missingId": "bird",
+          "optionIds": [
+            "bird",
+            "mouse",
+            "spider"
+          ]
+        },
+        {
+          "kind": "matchPairs",
+          "prompt": [
+            {
+              "lang": "pt-BR",
+              "text": "Ligue cada animal ao nome dele!"
+            }
+          ],
+          "wordIds": [
+            "snake",
+            "spider",
+            "mouse",
+            "bear"
+          ]
+        },
+        {
+          "kind": "listenTap",
+          "prompt": [
+            {
+              "lang": "en-US",
+              "text": "It's a frog!"
+            },
+            {
+              "lang": "pt-BR",
+              "text": "Onde está? Toque!"
+            }
+          ],
+          "optionIds": [
+            "frog",
+            "snake",
+            "bird",
+            "spider"
+          ],
+          "answerId": "frog"
+        },
+        {
+          "kind": "tapRepeat",
+          "prompt": [
+            {
+              "lang": "pt-BR",
+              "text": "Toque em cada animal e repita a frase comigo!"
+            }
+          ],
+          "items": [
+            {
+              "wordId": "snake",
+              "say": [
+                {
+                  "lang": "en-US",
+                  "text": "What's this? It's a snake!"
+                }
+              ]
+            },
+            {
+              "wordId": "spider",
+              "say": [
+                {
+                  "lang": "en-US",
+                  "text": "What's this? It's a spider!"
+                }
+              ]
+            },
+            {
+              "wordId": "mouse",
+              "say": [
+                {
+                  "lang": "en-US",
+                  "text": "What's this? It's a mouse!"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "whatsMissing",
+          "prompt": [
+            {
+              "lang": "pt-BR",
+              "text": "Um animal se escondeu! Quem sumiu?"
+            }
+          ],
+          "shownIds": [
+            "spider",
+            "mouse",
+            "bird"
+          ],
+          "missingId": "frog",
+          "optionIds": [
+            "frog",
+            "bear",
+            "snake"
+          ]
+        }
+      ],
+      "closing": [
+        {
+          "lang": "en-US",
+          "text": "Awesome!"
+        },
+        {
+          "lang": "pt-BR",
+          "text": "Agora você sabe perguntar e responder:"
+        },
+        {
+          "lang": "en-US",
+          "text": "What's this? It's a bear!"
+        }
+      ]
+    },
+    {
+      "kind": "story",
+      "id": "forest-animals/story",
+      "title": "O gatinho na floresta",
+      "opening": [
+        {
+          "lang": "pt-BR",
+          "text": "Hora da história! Primeiro, vamos lembrar os animais."
+        }
+      ],
+      "warmup": {
+        "kind": "matchPairs",
+        "prompt": [
+          {
+            "lang": "pt-BR",
+            "text": "Ligue cada animal ao nome dele!"
+          }
+        ],
+        "wordIds": [
+          "bear",
+          "bird",
+          "frog",
+          "mouse"
+        ]
+      },
+      "pages": [
+        {
+          "scene": "forest-walk",
+          "say": [
+            {
+              "lang": "pt-BR",
+              "text": "Era uma vez um gatinho que foi passear na floresta."
+            },
+            {
+              "lang": "en-US",
+              "text": "Hello, forest!"
+            }
+          ],
+          "hotspots": []
+        },
+        {
+          "scene": "forest-bear",
+          "say": [
+            {
+              "lang": "pt-BR",
+              "text": "Atrás de uma árvore, ele viu um urso."
+            },
+            {
+              "lang": "en-US",
+              "text": "Hello, bear!"
+            }
+          ],
+          "hotspots": [
+            {
+              "wordId": "bear",
+              "x": 0.68,
+              "y": 0.55
+            }
+          ]
+        },
+        {
+          "scene": "forest-bird",
+          "say": [
+            {
+              "lang": "pt-BR",
+              "text": "Num galho bem alto, cantava um pássaro."
+            },
+            {
+              "lang": "en-US",
+              "text": "Hello, bird!"
+            }
+          ],
+          "hotspots": [
+            {
+              "wordId": "bird",
+              "x": 0.62,
+              "y": 0.28
+            }
+          ]
+        },
+        {
+          "scene": "forest-pond",
+          "say": [
+            {
+              "lang": "pt-BR",
+              "text": "Perto do lago, pulava um sapo, e uma cobra tomava sol."
+            },
+            {
+              "lang": "en-US",
+              "text": "Hello, frog! Hello, snake!"
+            }
+          ],
+          "hotspots": [
+            {
+              "wordId": "frog",
+              "x": 0.4,
+              "y": 0.7
+            },
+            {
+              "wordId": "snake",
+              "x": 0.75,
+              "y": 0.72
+            }
+          ]
+        },
+        {
+          "scene": "forest-web",
+          "say": [
+            {
+              "lang": "pt-BR",
+              "text": "Uma aranha fazia sua teia, e um ratinho comia um queijo."
+            },
+            {
+              "lang": "en-US",
+              "text": "Hello, spider! Hello, mouse!"
+            }
+          ],
+          "hotspots": [
+            {
+              "wordId": "spider",
+              "x": 0.3,
+              "y": 0.3
+            },
+            {
+              "wordId": "mouse",
+              "x": 0.7,
+              "y": 0.75
+            }
+          ]
+        },
+        {
+          "scene": "forest-goodbye",
+          "say": [
+            {
+              "lang": "pt-BR",
+              "text": "No fim do dia, todos os amigos se despediram do gatinho."
+            },
+            {
+              "lang": "en-US",
+              "text": "Goodbye, friends!"
+            }
+          ],
+          "hotspots": [
+            {
+              "wordId": "bear",
+              "x": 0.18,
+              "y": 0.62
+            },
+            {
+              "wordId": "bird",
+              "x": 0.32,
+              "y": 0.3
+            },
+            {
+              "wordId": "frog",
+              "x": 0.42,
+              "y": 0.75
+            },
+            {
+              "wordId": "snake",
+              "x": 0.6,
+              "y": 0.76
+            },
+            {
+              "wordId": "spider",
+              "x": 0.74,
+              "y": 0.32
+            },
+            {
+              "wordId": "mouse",
+              "x": 0.84,
+              "y": 0.72
+            }
+          ]
+        }
+      ],
+      "question": {
+        "kind": "listenTap",
+        "prompt": [
+          {
+            "lang": "pt-BR",
+            "text": "Quem o gatinho encontrou primeiro? Toque!"
+          }
+        ],
+        "optionIds": [
+          "bird",
+          "bear",
+          "frog"
+        ],
+        "answerId": "bear"
+      },
+      "closing": [
+        {
+          "lang": "en-US",
+          "text": "Well done!"
+        },
+        {
+          "lang": "pt-BR",
+          "text": "Você ouviu uma história em inglês!"
+        }
+      ]
+    },
+    {
+      "kind": "challenge",
+      "id": "forest-animals/challenge",
+      "title": "Desafio",
+      "wordIds": [
+        "bear",
+        "bird",
+        "frog",
+        "snake",
+        "spider",
+        "mouse"
+      ],
+      "opening": [
+        {
+          "lang": "pt-BR",
+          "text": "É hora do desafio! Mostre tudo o que você aprendeu!"
+        }
+      ],
+      "exercises": [
+        {
+          "kind": "listenTap",
+          "prompt": [
+            {
+              "lang": "pt-BR",
+              "text": "Qual é o"
+            },
+            {
+              "lang": "en-US",
+              "text": "mouse?"
+            },
+            {
+              "lang": "pt-BR",
+              "text": "Toque nele!"
+            }
+          ],
+          "optionIds": [
+            "mouse",
+            "spider",
+            "bird",
+            "frog"
+          ],
+          "answerId": "mouse"
+        },
+        {
+          "kind": "trueFalse",
+          "wordId": "bird",
+          "say": [
+            {
+              "lang": "en-US",
+              "text": "What's this? It's a bird!"
+            },
+            {
+              "lang": "pt-BR",
+              "text": "Certo ou errado?"
+            }
+          ],
+          "isTrue": true
+        },
+        {
+          "kind": "whatsMissing",
+          "prompt": [
+            {
+              "lang": "pt-BR",
+              "text": "Um animal se escondeu! Quem sumiu?"
+            }
+          ],
+          "shownIds": [
+            "bear",
+            "spider",
+            "mouse"
+          ],
+          "missingId": "snake",
+          "optionIds": [
+            "snake",
+            "frog",
+            "bird"
+          ]
+        },
+        {
+          "kind": "matchPairs",
+          "prompt": [
+            {
+              "lang": "pt-BR",
+              "text": "Ligue cada animal ao nome dele!"
+            }
+          ],
+          "wordIds": [
+            "bird",
+            "frog",
+            "snake",
+            "spider"
+          ]
+        },
+        {
+          "kind": "listenTap",
+          "prompt": [
+            {
+              "lang": "pt-BR",
+              "text": "Qual é o"
+            },
+            {
+              "lang": "en-US",
+              "text": "bear?"
+            },
+            {
+              "lang": "pt-BR",
+              "text": "Toque nele!"
+            }
+          ],
+          "optionIds": [
+            "frog",
+            "bear",
+            "snake",
+            "mouse"
+          ],
+          "answerId": "bear"
+        },
+        {
+          "kind": "trueFalse",
+          "wordId": "spider",
+          "say": [
+            {
+              "lang": "en-US",
+              "text": "What's this? It's a frog!"
+            },
+            {
+              "lang": "pt-BR",
+              "text": "Certo ou errado?"
+            }
+          ],
+          "isTrue": false
+        },
+        {
+          "kind": "listenTap",
+          "prompt": [
+            {
+              "lang": "en-US",
+              "text": "It's a snake!"
+            },
+            {
+              "lang": "pt-BR",
+              "text": "Onde está? Toque!"
+            }
+          ],
+          "optionIds": [
+            "spider",
+            "snake",
+            "bear",
+            "bird"
+          ],
+          "answerId": "snake"
+        },
+        {
+          "kind": "whatsMissing",
+          "prompt": [
+            {
+              "lang": "pt-BR",
+              "text": "Um animal se escondeu! Quem sumiu?"
+            }
+          ],
+          "shownIds": [
+            "frog",
+            "bird",
+            "bear"
+          ],
+          "missingId": "mouse",
+          "optionIds": [
+            "mouse",
+            "spider",
+            "snake"
+          ]
+        },
+        {
+          "kind": "tapRepeat",
+          "prompt": [
+            {
+              "lang": "pt-BR",
+              "text": "Toque em cada animal e repita a frase comigo!"
+            }
+          ],
+          "items": [
+            {
+              "wordId": "bear",
+              "say": [
+                {
+                  "lang": "en-US",
+                  "text": "What's this? It's a bear!"
+                }
+              ]
+            },
+            {
+              "wordId": "bird",
+              "say": [
+                {
+                  "lang": "en-US",
+                  "text": "What's this? It's a bird!"
+                }
+              ]
+            },
+            {
+              "wordId": "frog",
+              "say": [
+                {
+                  "lang": "en-US",
+                  "text": "What's this? It's a frog!"
+                }
+              ]
+            },
+            {
+              "wordId": "snake",
+              "say": [
+                {
+                  "lang": "en-US",
+                  "text": "What's this? It's a snake!"
+                }
+              ]
+            },
+            {
+              "wordId": "spider",
+              "say": [
+                {
+                  "lang": "en-US",
+                  "text": "What's this? It's a spider!"
+                }
+              ]
+            },
+            {
+              "wordId": "mouse",
+              "say": [
+                {
+                  "lang": "en-US",
+                  "text": "What's this? It's a mouse!"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "closing": [
+        {
+          "lang": "en-US",
+          "text": "Great job!"
+        },
+        {
+          "lang": "pt-BR",
+          "text": "Você terminou a unidade dos animais da floresta!"
+        }
+      ],
+      "sticker": {
+        "id": "sticker-forest-bear",
+        "art": "bear",
+        "name": [
+          {
+            "lang": "en-US",
+            "text": "A bear sticker!"
+          }
+        ]
+      }
+    }
+  ]
+}

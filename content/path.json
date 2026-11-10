@@ -1,0 +1,51 @@
+[
+  {
+    "unitId": "forest-animals",
+    "world": "floresta",
+    "title": "Animais da floresta",
+    "icon": "🌳",
+    "hasContent": true
+  },
+  {
+    "unitId": "colors",
+    "world": "floresta",
+    "title": "Cores",
+    "icon": "🎨",
+    "hasContent": false
+  },
+  {
+    "unitId": "numbers",
+    "world": "floresta",
+    "title": "Números",
+    "icon": "🔢",
+    "hasContent": false
+  },
+  {
+    "unitId": "hello",
+    "world": "vilarejo",
+    "title": "Hello!",
+    "icon": "👋",
+    "hasContent": false
+  },
+  {
+    "unitId": "family",
+    "world": "vilarejo",
+    "title": "Família",
+    "icon": "👪",
+    "hasContent": false
+  },
+  {
+    "unitId": "home",
+    "world": "vilarejo",
+    "title": "Casa",
+    "icon": "🏠",
+    "hasContent": false
+  },
+  {
+    "unitId": "food",
+    "world": "vilarejo",
+    "title": "Comida",
+    "icon": "🍎",
+    "hasContent": false
+  }
+]

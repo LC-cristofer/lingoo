@@ -1,0 +1,86 @@
+{
+  "praise": [
+    [
+      {
+        "lang": "en-US",
+        "text": "Yes! That's great!"
+      }
+    ],
+    [
+      {
+        "lang": "en-US",
+        "text": "Awesome!"
+      }
+    ],
+    [
+      {
+        "lang": "en-US",
+        "text": "Well done!"
+      }
+    ],
+    [
+      {
+        "lang": "en-US",
+        "text": "Great job!"
+      }
+    ]
+  ],
+  "retry": [
+    {
+      "lang": "pt-BR",
+      "text": "Opa! Vamos tentar de novo."
+    }
+  ],
+  "hint": [
+    {
+      "lang": "pt-BR",
+      "text": "Olha aqui! É esse que está brilhando."
+    }
+  ],
+  "star": [
+    {
+      "lang": "pt-BR",
+      "text": "Você ganhou uma estrela!"
+    }
+  ],
+  "chestPrompt": [
+    {
+      "lang": "pt-BR",
+      "text": "Uau! Você conseguiu! Toque no baú para abrir!"
+    }
+  ],
+  "chestOpen": [
+    {
+      "lang": "pt-BR",
+      "text": "Uma figurinha nova para o seu álbum!"
+    }
+  ],
+  "lockedStop": [
+    {
+      "lang": "pt-BR",
+      "text": "Essa parada ainda está trancada. Termine a anterior primeiro!"
+    }
+  ],
+  "soonUnit": [
+    {
+      "lang": "pt-BR",
+      "text": "Essa aventura está chegando!"
+    }
+  ],
+  "start": [
+    {
+      "lang": "en-US",
+      "text": "Hello!"
+    },
+    {
+      "lang": "pt-BR",
+      "text": "Vamos brincar?"
+    }
+  ],
+  "album": [
+    {
+      "lang": "pt-BR",
+      "text": "Esse é o seu álbum de figurinhas!"
+    }
+  ]
+}
