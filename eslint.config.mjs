@@ -12,6 +12,10 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Python env and caches of the audio tools.
+    "tools/audio/.venv/**",
+    "tools/audio/.cache/**",
+    "**/__pycache__/**",
   ]),
 ]);
 
