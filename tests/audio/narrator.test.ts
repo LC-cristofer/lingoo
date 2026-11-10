@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createNarrator } from "@/audio/narrator";
+import { audioSrc } from "@/domain/trail/audio-id";
 
 class FakeUtterance {
   lang = "";
@@ -354,5 +355,178 @@ describe("narrator", () => {
     const n = createNarrator({ speech: null, createAudio: asCreate(audio) });
     n.unlock();
     await n.play({ text: "bear", src: "/a.mp3" });
+  });
+
+  describe("playNarration and playSfx", () => {
+    const seg = (lang: "pt-BR" | "en-US", text: string) => ({ lang, text });
+    const three = [seg("pt-BR", "Ola"), seg("en-US", "bear"), seg("pt-BR", "Muito bem")];
+
+    function audioFactory() {
+      const made: { src: string; audio: ReturnType<typeof fakeAudio> }[] = [];
+      const createAudio = ((src: string) => {
+        const audio = fakeAudio();
+        made.push({ src, audio });
+        return audio;
+      }) as unknown as (src: string) => HTMLAudioElement;
+      return { made, createAudio };
+    }
+
+    it("plays segments in order, each after the previous one ends", async () => {
+      const { made, createAudio } = audioFactory();
+      const n = createNarrator({ speech: null, createAudio });
+      n.unlock();
+      const done = vi.fn();
+      n.playNarration(three).then(done);
+      expect(made).toHaveLength(1);
+      expect(made[0].src).toBe(audioSrc(three[0]));
+      expect(made[0].src).toMatch(/^\/audio\/[0-9a-f]{16}\.mp3$/);
+      await nextTask();
+      expect(made).toHaveLength(1);
+      made[0].audio.onended!();
+      await nextTask();
+      expect(made).toHaveLength(2);
+      expect(made[1].src).toBe(audioSrc(three[1]));
+      made[1].audio.onended!();
+      await nextTask();
+      expect(made).toHaveLength(3);
+      expect(done).not.toHaveBeenCalled();
+      made[2].audio.onended!();
+      await nextTask();
+      expect(done).toHaveBeenCalled();
+    });
+
+    it("stop() during the first segment resolves and never starts the second", async () => {
+      const { made, createAudio } = audioFactory();
+      const n = createNarrator({ speech: null, createAudio });
+      n.unlock();
+      const p = n.playNarration(three);
+      n.stop();
+      await p;
+      expect(made[0].audio.pause).toHaveBeenCalled();
+      made[0].audio.onended?.();
+      await nextTask();
+      expect(made).toHaveLength(1);
+    });
+
+    it("a newer playNarration cancels the rest of the previous one", async () => {
+      const { made, createAudio } = audioFactory();
+      const n = createNarrator({ speech: null, createAudio });
+      n.unlock();
+      const first = n.playNarration(three);
+      const second = n.playNarration([seg("en-US", "fox")]);
+      await first;
+      expect(made).toHaveLength(2);
+      made[0].audio.onended?.();
+      await nextTask();
+      expect(made).toHaveLength(2);
+      made[1].audio.onended!();
+      await second;
+    });
+
+    it("resolves without playing before unlock", async () => {
+      const { made, createAudio } = audioFactory();
+      const n = createNarrator({ speech: null, createAudio });
+      await n.playNarration(three);
+      expect(made).toHaveLength(0);
+    });
+
+    it("a failed segment falls back to the browser voice in its language, then continues", async () => {
+      vi.useFakeTimers();
+      const ptVoice = { lang: "pt_BR" };
+      const speech = fakeSpeech([{ lang: "en-US" }, ptVoice]);
+      const { made, createAudio } = audioFactory();
+      const n = createNarrator({ speech: asSpeech(speech), createAudio });
+      n.unlock();
+      const done = vi.fn();
+      n.playNarration([three[1], three[2], seg("en-US", "fox")]).then(done);
+      made[0].audio.onended!();
+      await vi.advanceTimersByTimeAsync(0);
+      expect(made).toHaveLength(2);
+      made[1].audio.onerror!(); // 2nd segment (pt-BR) fails
+      await vi.advanceTimersByTimeAsync(0);
+      const [u] = spoken(speech);
+      expect(u.lang).toBe("pt-BR");
+      expect(u.text).toBe("Muito bem");
+      expect(u.voice).toBe(ptVoice);
+      end(speech, u);
+      await vi.advanceTimersByTimeAsync(0);
+      expect(made).toHaveLength(3);
+      made[2].audio.onended!();
+      await vi.advanceTimersByTimeAsync(0);
+      expect(done).toHaveBeenCalled();
+    });
+
+    it("a fallback whose speech never ends moves on within the segment safety timeout", async () => {
+      vi.useFakeTimers();
+      const speech = fakeSpeech();
+      const { made, createAudio } = audioFactory();
+      const n = createNarrator({ speech: asSpeech(speech), createAudio });
+      n.unlock();
+      const done = vi.fn();
+      n.playNarration([seg("en-US", "bear"), seg("en-US", "fox")]).then(done);
+      made[0].audio.onerror!();
+      await vi.advanceTimersByTimeAsync(3999);
+      expect(made).toHaveLength(1);
+      await vi.advanceTimersByTimeAsync(2);
+      expect(made).toHaveLength(2);
+      expect(spoken(speech)[0].lang).toBe("en-US");
+      made[1].audio.onended!();
+      await vi.advanceTimersByTimeAsync(0);
+      expect(done).toHaveBeenCalled();
+    });
+
+    it("a rejected audio.play() also falls back to the voice", async () => {
+      const speech = fakeSpeech();
+      const audio = fakeAudio(() => Promise.reject(new Error("NotAllowed")));
+      const n = createNarrator({ speech: asSpeech(speech), createAudio: asCreate(audio) });
+      n.unlock();
+      const p = n.playNarration([seg("pt-BR", "Oi")]);
+      await nextTask();
+      await nextTask(); // the rejection settles first, then the deferred speak runs
+      const [u] = spoken(speech);
+      expect(u.lang).toBe("pt-BR");
+      end(speech, u);
+      await p;
+    });
+
+    it("picks a voice by lang prefix when there is no exact match", async () => {
+      const pt = { lang: "pt-PT" };
+      const speech = fakeSpeech([{ lang: "en-US" }, pt]);
+      const audio = fakeAudio();
+      const n = createNarrator({ speech: asSpeech(speech), createAudio: asCreate(audio) });
+      n.unlock();
+      const p = n.playNarration([seg("pt-BR", "Oi")]);
+      audio.onerror!();
+      await nextTask();
+      const [u] = spoken(speech);
+      expect(u.voice).toBe(pt);
+      end(speech, u);
+      await p;
+    });
+
+    it("playSfx is a no-op before unlock, then plays without cutting the voice", async () => {
+      const { made, createAudio } = audioFactory();
+      const speech = fakeSpeech();
+      const n = createNarrator({ speech: asSpeech(speech), createAudio });
+      n.playSfx("correct");
+      expect(made).toHaveLength(0);
+      n.unlock();
+      const p = n.playNarration([three[0]]);
+      n.playSfx("correct");
+      expect(made.map((m) => m.src)).toEqual([audioSrc(three[0]), "/audio/sfx/correct.mp3"]);
+      expect(made[1].audio.play).toHaveBeenCalled();
+      expect(made[0].audio.pause).not.toHaveBeenCalled();
+      expect(speech.cancel).not.toHaveBeenCalled();
+      made[0].audio.onended!();
+      await p;
+    });
+
+    it("playSfx ignores a rejected play()", async () => {
+      const audio = fakeAudio(() => Promise.reject(new Error("NotAllowed")));
+      const n = createNarrator({ speech: null, createAudio: asCreate(audio) });
+      n.unlock();
+      expect(() => n.playSfx("tap")).not.toThrow();
+      await nextTask();
+    });
   });
 });
