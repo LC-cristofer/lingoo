@@ -43,6 +43,8 @@ function pickVoice(speech: SpeechSynthesis, wanted: string): SpeechSynthesisVoic
 const AUDIO_MARGIN_MS = 2_000;
 /** Fallback for a src file whose duration is unknown. */
 const AUDIO_CAP_MS = 120_000;
+/** A narration segment whose audio shows no sign of life by now is treated as failed. */
+const AUDIO_LOAD_TIMEOUT_MS = 3_000;
 
 export function createNarrator(deps: NarratorDeps = {}): Narrator {
   const createAudio = deps.createAudio ?? ((src: string) => new Audio(src));
@@ -76,10 +78,12 @@ export function createNarrator(deps: NarratorDeps = {}): Narrator {
       let cleanup: () => void = () => {};
       let released = false;
       let timer: ReturnType<typeof setTimeout> | undefined;
+      let loadTimer: ReturnType<typeof setTimeout> | undefined;
       // Unblocks whoever awaits. On the safety timeout the output keeps going:
       // the halt stays armed, so a later stop() or play() still silences it.
       const release = () => {
         clearTimeout(timer);
+        clearTimeout(loadTimer);
         if (released) return;
         released = true;
         resolve();
@@ -140,8 +144,11 @@ export function createNarrator(deps: NarratorDeps = {}): Narrator {
           const audio = createAudio(item.src);
           let failed = false;
           const failure = () => {
-            if (failed || released || !slot.armed(halt)) return finish();
+            // A failed load fires error AND rejects play(): only the first one counts.
+            if (failed) return;
+            if (released || !slot.armed(halt)) return finish();
             failed = true;
+            clearTimeout(loadTimer);
             if (!item.speechFallback) return finish();
             try {
               audio.pause();
@@ -151,6 +158,7 @@ export function createNarrator(deps: NarratorDeps = {}): Narrator {
             audio.onended = null;
             audio.onerror = null;
             audio.onloadedmetadata = null;
+            audio.onplaying = null;
             try {
               startSpeech();
             } catch {
@@ -161,12 +169,16 @@ export function createNarrator(deps: NarratorDeps = {}): Narrator {
           audio.onended = finish;
           audio.onerror = failure;
           // A song file can be long: wait for its real length, never the word-based guess.
+          const alive = () => clearTimeout(loadTimer);
+          audio.onplaying = alive;
           audio.onloadedmetadata = () => {
+            alive();
             if (!released && Number.isFinite(audio.duration) && audio.duration > 0) {
               safety(audio.duration * 1000 + AUDIO_MARGIN_MS);
             }
           };
           safety(AUDIO_CAP_MS);
+          if (item.speechFallback) loadTimer = setTimeout(failure, AUDIO_LOAD_TIMEOUT_MS);
           try {
             Promise.resolve(audio.play()).catch(failure);
           } catch {

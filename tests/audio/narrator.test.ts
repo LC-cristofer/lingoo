@@ -49,6 +49,7 @@ function fakeAudio(playResult: () => Promise<void> = () => Promise.resolve()) {
     onended: null as (() => void) | null,
     onerror: null as (() => void) | null,
     onloadedmetadata: null as (() => void) | null,
+    onplaying: null as (() => void) | null,
   };
   return audio;
 }
@@ -487,6 +488,60 @@ describe("narrator", () => {
       expect(u.lang).toBe("pt-BR");
       end(speech, u);
       await p;
+    });
+
+    it("error followed by a rejected play() falls back exactly once, then continues", async () => {
+      const speech = fakeSpeech();
+      let rejectPlay!: (e: Error) => void;
+      const first = fakeAudio(() => new Promise<void>((_, rej) => { rejectPlay = rej; }));
+      const second = fakeAudio();
+      const audios = [first, second];
+      const createAudio = (() => audios.shift()) as unknown as (src: string) => HTMLAudioElement;
+      const n = createNarrator({ speech: asSpeech(speech), createAudio });
+      n.unlock();
+      const done = vi.fn();
+      n.playNarration([seg("pt-BR", "Oi"), seg("en-US", "fox")]).then(done);
+      first.onerror!();
+      rejectPlay(new Error("NotSupported"));
+      await nextTask();
+      await nextTask();
+      expect(spoken(speech).map((u) => u.text)).toEqual(["Oi"]);
+      expect(audios).toHaveLength(1); // next segment not started yet
+      end(speech, spoken(speech)[0]);
+      await nextTask();
+      expect(audios).toHaveLength(0);
+      second.onended!();
+      await nextTask();
+      expect(done).toHaveBeenCalled();
+      expect(spoken(speech).map((u) => u.text)).toEqual(["Oi"]);
+    });
+
+    it("audio with no sign of life for 3 s falls back to the voice", async () => {
+      vi.useFakeTimers();
+      const speech = fakeSpeech();
+      const audio = fakeAudio(() => new Promise<void>(() => {}));
+      const n = createNarrator({ speech: asSpeech(speech), createAudio: asCreate(audio) });
+      n.unlock();
+      void n.playNarration([seg("en-US", "bear")]);
+      await vi.advanceTimersByTimeAsync(2999);
+      expect(spoken(speech)).toHaveLength(0);
+      await vi.advanceTimersByTimeAsync(2);
+      expect(spoken(speech).map((u) => u.text)).toEqual(["bear"]);
+      expect(audio.pause).toHaveBeenCalled();
+    });
+
+    it("metadata arriving in time cancels the stall fallback", async () => {
+      vi.useFakeTimers();
+      const speech = fakeSpeech();
+      const audio = fakeAudio();
+      const n = createNarrator({ speech: asSpeech(speech), createAudio: asCreate(audio) });
+      n.unlock();
+      void n.playNarration([seg("en-US", "bear")]);
+      audio.duration = 20;
+      audio.onloadedmetadata!();
+      await vi.advanceTimersByTimeAsync(10_000);
+      expect(spoken(speech)).toHaveLength(0);
+      expect(audio.pause).not.toHaveBeenCalled();
     });
 
     it("picks a voice by lang prefix when there is no exact match", async () => {
