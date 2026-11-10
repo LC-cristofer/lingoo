@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run",
-    "e2e": "playwright test"
+    "e2e": "playwright test",
+    "audio:lines": "tsx tools/audio/extract-lines.ts"
   },
   "dependencies": {
     "next": "16.4.5",
@@ -30,6 +31,7 @@
     "eslint-config-next": "16.4.5",
     "jsdom": "^31.0.0",
     "tailwindcss": "^4",
+    "tsx": "^4.23.15",
     "typescript": "^5",
     "vitest": "^5.1.0"
   }
