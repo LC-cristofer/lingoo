@@ -79,6 +79,7 @@ Cores comuns: tinta `#2B2D42`, sol `#FFC93C` (brilhos, halo do `glow`), céu `#4
 - `glow`: o halo amarelo pulsa e os brilhos piscam. Sem animação, o halo continua visível.
 - **Todas** param com `prefers-reduced-motion: reduce`, e o desenho parado continua completo.
 - Só animamos `transform` e `opacity`, sempre num `<g>` sem atributo `transform` (o CSS substituiria o atributo).
+- **Pivô da animação:** para girar ou pulsar uma forma em torno do próprio centro, use `transform-box: fill-box; transform-origin: center`. Não use `view-box` com porcentagem: o Chromium mede a partir do (0, 0) do espaço do usuário, e não do canto do `viewBox`. Num `viewBox` que começa em negativo, como o `-64 -64 128 128` do `StopIcon`, o pivô vai parar no canto. Com `view-box`, só use coordenadas absolutas do desenho, como a dobradiça do baú (`40px 112px`).
 
 ## 9. Como adicionar um animal
 

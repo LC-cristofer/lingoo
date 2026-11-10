@@ -154,7 +154,9 @@
   animation: art-sticker-pop 0.6s ease-out both;
 }
 
-/* Current stop: the ring breathes and the dashed ring turns slowly. */
+/* Current stop: the ring breathes and the dashed ring turns slowly. Both rings are centred
+   circles, so they pivot on their own box (fill-box). Not view-box + 50%: the StopIcon viewBox
+   starts at -64, and Chromium measures view-box percentages from user-space (0, 0). */
 @keyframes art-stop-pulse {
   0%, 100% { transform: scale(1); opacity: 1; }
   50% { transform: scale(1.07); opacity: 0.8; }
@@ -163,13 +165,13 @@
   to { transform: rotate(360deg); }
 }
 .art-stop-ring {
-  transform-box: view-box;
-  transform-origin: 50% 50%;
+  transform-box: fill-box;
+  transform-origin: center;
   animation: art-stop-pulse 1.6s ease-in-out infinite;
 }
 .art-stop-dash {
-  transform-box: view-box;
-  transform-origin: 50% 50%;
+  transform-box: fill-box;
+  transform-origin: center;
   animation: art-stop-spin 12s linear infinite;
 }
 
