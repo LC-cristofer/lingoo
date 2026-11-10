@@ -58,3 +58,19 @@ export function Sparkle({ x, y, r, fill = SUN, className }: { x: number; y: numb
   const d = `M${x} ${y - r} L${x + i} ${y - i} L${x + r} ${y} L${x + i} ${y + i} L${x} ${y + r} L${x - i} ${y + i} L${x - r} ${y} L${x - i} ${y - i}Z`;
   return <path className={className} d={d} fill={fill} />;
 }
+
+/** Locked-stop grey (stop icons, padlocks on stickers). */
+export const LOCKED = "#C9CCD3";
+
+/**
+ * The approved padlock (arte-fonte.html, icons.lock), centred on (0, 0) in a ~20 × 22 box.
+ * Wrap it in a `<g transform>` to place and scale it.
+ */
+export function Padlock({ fill = WHITE }: { fill?: string }) {
+  return (
+    <g data-padlock="">
+      <rect x="-10" y="-4" width="20" height="16" rx="4" fill={fill} />
+      <path d="M-6 -4 v-5 a6 6 0 0 1 12 0 v5" stroke={fill} strokeWidth="4" fill="none" />
+    </g>
+  );
+}

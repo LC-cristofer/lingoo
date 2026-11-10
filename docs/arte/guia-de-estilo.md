@@ -1,10 +1,11 @@
 # Lingoo: guia de estilo da arte
 
-Este guia vale para o gatinho e para todos os animais. A referência aprovada pelo Lucas está em `amostras-aprovadas/` (o gatinho em 3 poses e o urso). A folha com tudo o que já está desenhado fica em `folha-de-personagens.png`, gerada pelos componentes reais:
+Este guia vale para o gatinho e para todos os animais. A referência aprovada pelo Lucas está em `amostras-aprovadas/` (o gatinho em 3 poses e o urso). Os personagens ficam em `folha-de-personagens.png` e os cenários (floresta, história, baú, figurinhas e paradas) em `folha-de-cenarios.png`. As duas são geradas pelos componentes reais:
 
 ```sh
 npx tsx tools/visual/art-sheet.tsx
 node tools/visual/shots.cjs tools/visual/.out/art-sheet.html docs/arte/folha-de-personagens.png
+node tools/visual/shots.cjs tools/visual/.out/scenes-sheet.html docs/arte/folha-de-cenarios.png
 ```
 
 ## 1. O estilo em uma frase
@@ -96,3 +97,68 @@ Cores comuns: tinta `#2B2D42`, sol `#FFC93C` (brilhos, halo do `glow`), céu `#4
    - a cara é amigável;
    - o desenho parece feito pela mesma mão que o urso.
 7. Atualize a tabela de paleta acima.
+
+## 10. Cenários
+
+A floresta, as cenas da história, o baú, as figurinhas e os ícones das paradas seguem o mapa aprovado (`arte-fonte.html`, funções `map`, `pine`, `roundTree`, `mushroom`, `flower`, `stop` e `icons`). Veja `folha-de-cenarios.png`.
+
+### Onde cada peça mora
+
+| Peça | Arquivo | Notas |
+|---|---|---|
+| Floresta | `src/art/scenes/ForestBackdrop.tsx` | SVG que preenche o contêiner (`preserveAspectRatio="xMidYMid slice"`, `position: absolute; inset: 0`). `variant="map"`: o cenário aprovado (1136 × 640), sem a trilha, as paradas, o gatinho e o cabeçalho, que a tela do mapa desenha por cima. `variant="story"`: 1000 × 625 (16:10), mais calma. |
+| Árvores e enfeites | `ForestBackdrop.tsx` exporta `Pine`, `RoundTree`, `Mushroom`, `Flower` | coordenadas e cores aprovadas. |
+| Cena da história | `src/art/scenes/StoryScene.tsx` | fundo `story` + objetos + gatinho + um `<button>` por hotspot. |
+| Objetos das cenas | `src/art/scenes/props.tsx` | lago, teia, queijo e galho. |
+| Baú | `src/art/scenes/Chest.tsx` | `data-open`. |
+| Figurinha | `src/art/scenes/Sticker.tsx` | `data-earned`. |
+| Ícone da parada | `src/art/StopIcon.tsx` | `data-kind`, `data-state`. `size` é o diâmetro do disco (84 por padrão, como no mapa aprovado). |
+
+### Floresta
+
+- **Céu:** degradê `#8FD0FF` → `#DDF2FF`. É o único degradê da arte. O id vem de `useId`, para duas florestas na mesma página não colidirem.
+- **Sol:** `#FFE27A` com halo do mesmo tom a 25%. **Nuvens:** elipses brancas a 95%.
+- **Morros, de trás para frente:** `#A6DDA3`, `#7FCF85`, `#5CC46B`.
+- **Pinheiros:** `#2F9E5B` / `#3DB56B` (ou `#33A862` / `#45BE75` para variar), com a sombra de 6% na metade direita da copa. **Árvore redonda:** `#4DBA6C` atrás e `#5CC46B` na frente, com brilho branco a 18%. Tronco `#8B5A3C`.
+- **Cogumelo** coral `#FF7A6B` com pintas brancas. **Flores** rosa `#FF8FA3` ou brancas, com miolo `#FFC93C`.
+- Na versão `story`, as árvores ficam **nas bordas e no fundo**, e o meio fica aberto: a grama da frente começa a 56% da altura, onde os personagens pisam.
+
+### Cenas da história
+
+- **Posições** em frações da cena (0–1), medidas até o **centro** da figura. Cada animal é um `<button type="button">` com `aria-label` = palavra em inglês, `lang="en"`, `data-hotspot`, no mínimo 88 × 88 px e largura `max(96px, 22%)`. O gatinho tem `max(88px, 19%)` e é decorativo (`aria-hidden`).
+- **Profundidade:** quem está mais embaixo fica na frente (`z-index` cresce com `y`). Os objetos ficam atrás de todos os personagens.
+- **Composição:**
+
+| Cena | Gatinho | Objetos |
+|---|---|---|
+| `forest-walk` | no meio, `idle`, andando (balança) | nenhum |
+| `forest-bear` | à esquerda, `pointing` | nenhum |
+| `forest-bird` | à esquerda, `pointing` | galho que entra pela direita, logo abaixo dos pés do passarinho |
+| `forest-pond` | à esquerda, `pointing` | lago azul `#6CC3F5` com vitórias-régias e taboas |
+| `forest-web` | à esquerda, `pointing` | teia branca atrás da aranha, com o fio saindo pelo topo; queijo ao lado do ratinho |
+| `forest-goodbye` | no meio, `happy` (acenando) | nenhum; os 6 animais em volta |
+
+- O galho, a teia e o queijo seguem o hotspot do seu animal. Se o conteúdo mudar a posição, eles vão junto.
+- O animal do `glowId` aparece com `glow` (a dica do 2º erro).
+- **Nunca** há texto dentro da cena (há teste para isso).
+
+### Baú
+
+- Madeira `#B9773F`, tampa `#C98549`, tábuas e aro `#9A5F2E`, faixas e fechadura `#FFC93C` / `#F2A71B`, buraco da fechadura em tinta.
+- **Aberto:** a tampa gira 28° na dobradiça da esquerda (`transform` inline, com transição em `art.css`). Aparecem as moedas na borda, os raios de sol a 45% e os brilhos. Os raios acendem e pulsam devagar.
+
+### Figurinha
+
+- Círculo com borda branca grossa e sombra no chão. Fundo claro por animal: urso `#FFE6C7`, passarinho `#D9F0FF`, sapo `#E4F6CF`, cobra `#FFF1C2`, aranha `#EDE3FB`, ratinho `#FFE3EA`. Tem um reflexo branco no alto, à esquerda.
+- **Ainda não ganhou:** silhueta cinza (`filter: grayscale(1) brightness(.55)`, opacidade 0,6) com um cadeado branco num selo `#9AA0AD`. **Ganhou:** colorida, e entra com um "pop".
+
+### Ícones das paradas
+
+- Disco de 84 com borda branca de 6, sombra embaixo e a metade de baixo 6% mais escura.
+- Cores: música coral `#FF7A6B`, lição sol `#FFC93C`, história céu `#4AA8F0`, desafio lilás `#B57EDC`. Bloqueada: cinza `#C9CCD3` com cadeado.
+- `done`: selo verde `#5CC46B` com ✓ no canto. `current`: anel branco e anel tracejado amarelo, que respira e gira devagar.
+- O nome da parada **não** faz parte do ícone: a tela do mapa escreve em HTML.
+
+### Animações novas
+
+`art-walk` (gatinho andando), transição da tampa do baú, `art-chest-rays`, `art-sticker-pop`, `art-stop-ring` e `art-stop-dash`. Todas param com `prefers-reduced-motion: reduce`.

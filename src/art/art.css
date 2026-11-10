@@ -1,4 +1,5 @@
-/* Lingoo art: animations for the gatinho (src/art/Cat.tsx) and the animals (src/art/Animal.tsx).
+/* Lingoo art: animations for the gatinho (src/art/Cat.tsx), the animals (src/art/Animal.tsx),
+   the scenes (src/art/scenes) and the stop icons (src/art/StopIcon.tsx).
    Imported by src/app/globals.css and inlined by tools/visual/art-sheet.tsx.
    Every animation is switched off under prefers-reduced-motion; the drawings stay complete. */
 
@@ -86,6 +87,92 @@
   animation-delay: 0.8s;
 }
 
+/* ---- Scenes (src/art/scenes) and stop icons (src/art/StopIcon.tsx) ---- */
+
+/* Story hotspots: the animal is the button. The Animal svg scales to the button's width. */
+.art-hotspot {
+  display: block;
+  padding: 0;
+  border: 0;
+  border-radius: 28px;
+  background: transparent;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.art-hotspot > span,
+.art-scene-cat > svg {
+  display: block;
+}
+.art-hotspot svg,
+.art-scene-cat > svg {
+  width: 100%;
+  height: auto;
+}
+.art-hotspot:focus-visible {
+  outline: 5px solid #4AA8F0;
+  outline-offset: 2px;
+}
+.art-hotspot:active > span {
+  transform: scale(0.94);
+}
+
+/* forest-walk: the gatinho bobs along. */
+@keyframes art-walk {
+  0%, 100% { transform: translate(-50%, -50%) rotate(-2deg); }
+  50% { transform: translate(-50%, calc(-50% - 6px)) rotate(2deg); }
+}
+.art-walk {
+  animation: art-walk 0.7s ease-in-out infinite;
+}
+
+/* Chest: the lid swings up on its hinge (the rotation itself is inline), the light fades in. */
+.art-chest-lid {
+  transform-box: view-box;
+  transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes art-chest-shine {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes art-chest-glow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+.art-chest-rays {
+  animation: art-chest-shine 0.6s ease-out 0.2s both, art-chest-glow 2s ease-in-out 0.8s infinite;
+}
+
+/* Sticker: pops in when earned. */
+@keyframes art-sticker-pop {
+  0% { transform: scale(0.4); opacity: 0; }
+  60% { transform: scale(1.12); opacity: 1; }
+  100% { transform: scale(1); }
+}
+.art-sticker-pop {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: art-sticker-pop 0.6s ease-out both;
+}
+
+/* Current stop: the ring breathes and the dashed ring turns slowly. */
+@keyframes art-stop-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.07); opacity: 0.8; }
+}
+@keyframes art-stop-spin {
+  to { transform: rotate(360deg); }
+}
+.art-stop-ring {
+  transform-box: view-box;
+  transform-origin: 50% 50%;
+  animation: art-stop-pulse 1.6s ease-in-out infinite;
+}
+.art-stop-dash {
+  transform-box: view-box;
+  transform-origin: 50% 50%;
+  animation: art-stop-spin 12s linear infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .blink,
   .art-cat-tail,
@@ -94,7 +181,15 @@
   .art-cat-mouth,
   .art-cat-ear-twitch,
   .art-glow-halo,
-  .art-glow-sparkle {
+  .art-glow-sparkle,
+  .art-walk,
+  .art-chest-rays,
+  .art-sticker-pop,
+  .art-stop-ring,
+  .art-stop-dash {
     animation: none !important;
+  }
+  .art-chest-lid {
+    transition: none !important;
   }
 }
