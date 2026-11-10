@@ -50,3 +50,6 @@ next-env.d.ts
 tools/audio/.venv/
 tools/audio/.cache/
 __pycache__/
+
+# visual tools output
+tools/visual/.out/

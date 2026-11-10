@@ -1,4 +1,6 @@
 @import "tailwindcss";
+/* Gatinho and animal art animations (blink, tail, jump, glow). */
+@import "../art/art.css";
 
 @theme inline {
   --color-sun: #ffc93c;
