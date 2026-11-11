@@ -50,3 +50,8 @@ body {
 @keyframes place-pulse { 0%,100% { transform: scale(1) } 50% { transform: scale(1.08) } }
 .place-pulse { animation: place-pulse 1.4s ease-in-out infinite; }
 @media (prefers-reduced-motion: reduce) { .place-pulse { animation: none; } }
+
+/* Exercise card "shake" on a mismatched pair (400 ms, matches SHAKE_MS) */
+@keyframes card-shake { 0%,100% { transform: translateX(0) } 20%,60% { transform: translateX(-8px) } 40%,80% { transform: translateX(8px) } }
+.card-shake { animation: card-shake 0.4s ease-in-out; }
+@media (prefers-reduced-motion: reduce) { .card-shake { animation: none; } }
