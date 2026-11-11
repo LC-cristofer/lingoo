@@ -128,6 +128,14 @@ describe("ListenTap", () => {
     expect(card(container, "bear")).toBeEnabled();
   });
 
+  it('phase="hint": a wrong tap does not lock the cards, the right tap still reports true', async () => {
+    const { container, onAnswer } = setup(listenTap, "hint");
+    await flush();
+    fireEvent.click(card(container, "bird"));
+    fireEvent.click(card(container, "bear"));
+    expect(onAnswer).toHaveBeenLastCalledWith(true);
+  });
+
   it("stops the narration on unmount", async () => {
     const { unmount } = setup(listenTap);
     await flush();
@@ -162,6 +170,14 @@ describe("TrueFalse", () => {
     setup(trueFalseFalse);
     await flush();
     expect(screen.getByRole("button", { name: "Certo" }).className).toMatch(/min-h-\[96px\]/);
+  });
+
+  it('phase="hint": wrong thumb then right thumb → onAnswer(true)', async () => {
+    const { onAnswer } = setup(trueFalseFalse, "hint");
+    await flush();
+    fireEvent.click(screen.getByRole("button", { name: "Certo" }));
+    fireEvent.click(screen.getByRole("button", { name: "Errado" }));
+    expect(onAnswer).toHaveBeenLastCalledWith(true);
   });
 
   it("hint highlights the correct thumb", async () => {
@@ -215,6 +231,21 @@ describe("MatchPairs", () => {
     fireEvent.click(wordButton(container, "frog"));
     fireEvent.click(card(container, "frog"));
     expect(onAnswer.mock.calls).toEqual([[false], [true]]);
+  });
+
+  it('phase="hint": a mismatch does not lock; the glowing pair matches and the flow completes', async () => {
+    const { container, onAnswer } = setup(matchPairs, "hint");
+    await flush();
+    fireEvent.click(card(container, "bear"));
+    fireEvent.click(wordButton(container, "frog"));
+    expect(onAnswer).toHaveBeenLastCalledWith(false);
+    for (const id of ["bear", "bird", "frog"]) {
+      fireEvent.click(card(container, id));
+      fireEvent.click(wordButton(container, id));
+      expect(card(container, id)).toHaveAttribute("data-matched", "true");
+    }
+    expect(onAnswer).toHaveBeenLastCalledWith(true);
+    expect(onAnswer.mock.calls.filter(([c]) => c === true)).toHaveLength(1);
   });
 
   it("hint glows the next unmatched image and its word", async () => {

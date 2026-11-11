@@ -16,22 +16,26 @@ export function sayFor(words: Word[], id: ArtId): Narration {
 }
 
 /**
- * Guards against rapid taps: after one attempt is reported, further taps are ignored until the
- * session moves `phase` back to "answering" or "hint" (the parent changes it right after onAnswer).
+ * Guards against rapid taps: after an attempt that moves the session (any attempt while
+ * "answering", or the right one during the "hint"), further taps are ignored until `phase` changes
+ * back to "answering" or "hint". A wrong tap during the hint leaves the gate open: the session
+ * ignores it and keeps `phase === "hint"`, so no phase change would ever unlock it.
  */
 export function useAnswerGate(phase: Phase, onAnswer: (correct: boolean) => void) {
   const locked = useRef(!isInteractive(phase));
+  const phaseRef = useRef(phase);
   const onAnswerRef = useRef(onAnswer);
   useEffect(() => {
     onAnswerRef.current = onAnswer;
   }, [onAnswer]);
   useEffect(() => {
+    phaseRef.current = phase;
     locked.current = !isInteractive(phase);
   }, [phase]);
   const isLocked = useCallback(() => locked.current, []);
   const report = useCallback((correct: boolean) => {
     if (locked.current) return;
-    locked.current = true;
+    if (correct || phaseRef.current === "answering") locked.current = true;
     onAnswerRef.current(correct);
   }, []);
   return { isLocked, report };
