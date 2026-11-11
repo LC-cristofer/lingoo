@@ -33,3 +33,11 @@ export function SpeakerIcon({ size = 36 }: { size?: number }) {
     </svg>
   );
 }
+
+export function PlayIcon({ size = 56 }: { size?: number }) {
+  return (
+    <svg {...base} width={size} height={size}>
+      <path d="M8 4.5v15l12-7.5z" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+    </svg>
+  );
+}

@@ -56,7 +56,10 @@ export function ExerciseShell({ ratio, prompt, catExpression, feedback, onExit, 
 
       <main className="flex flex-1 items-center justify-center p-4">{children}</main>
 
-      {feedback ? <FeedbackBanner kind={feedback.kind} line={feedback.line} onContinue={feedback.onContinue} /> : null}
+      {/* The strip's height is always reserved, so the cards never jump when it appears. */}
+      <div data-testid="feedback-area" className="flex min-h-[calc(6rem+env(safe-area-inset-bottom))] flex-col justify-end">
+        {feedback ? <FeedbackBanner kind={feedback.kind} line={feedback.line} onContinue={feedback.onContinue} /> : null}
+      </div>
     </div>
   );
 }
