@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { Progress } from "@/domain/trail/progress";
 
@@ -17,6 +17,16 @@ let progress: Progress = { completedStops: {}, stickers: {}, daysPlayed: [] };
 vi.mock("@/components/trail/TrailProgressProvider", () => ({
   useTrailProgress: () => ({ progress, hydrated, markToday, finishStop }),
 }));
+const seenRecord = vi.hoisted(() => [] as (boolean | undefined)[]);
+vi.mock("@/components/trail/StopPlayer", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/components/trail/StopPlayer")>();
+  return {
+    StopPlayer: (props: ComponentProps<typeof actual.StopPlayer>) => {
+      seenRecord.push(props.record);
+      return <actual.StopPlayer {...props} />;
+    },
+  };
+});
 vi.mock("@/audio/narrator", () => ({
   narrator: {
     playNarration: vi.fn(() => Promise.resolve()),
@@ -27,6 +37,7 @@ vi.mock("@/audio/narrator", () => ({
   },
 }));
 
+import type { ComponentProps } from "react";
 import { StopScreen } from "@/app/parada/[unitId]/[stopSlug]/StopScreen";
 import { stopHref } from "@/domain/trail/routes";
 
@@ -87,5 +98,24 @@ describe("StopScreen", () => {
     expect(replace).not.toHaveBeenCalled();
     expect(screen.getByRole("button", { name: "Começar" })).toBeInTheDocument();
     expect(markToday).not.toHaveBeenCalled();
+  });
+
+  it("review mode: the player gets record=false (so finishing saves nothing) and the exit goes to /revisao", () => {
+    search = "revisao=1";
+    render(<StopScreen stopId="forest-animals/challenge" />);
+    expect(seenRecord.at(-1)).toBe(false);
+    fireEvent.click(screen.getByRole("button", { name: "Começar" }));
+    fireEvent.click(screen.getByRole("button", { name: "Sair" }));
+    expect(push).toHaveBeenCalledWith("/revisao");
+    expect(finishStop).not.toHaveBeenCalled();
+  });
+
+  it("normal mode: the player records, and the exit goes to /mapa", () => {
+    progress = DONE;
+    render(<StopScreen stopId="forest-animals/lesson-1" />);
+    expect(seenRecord.at(-1)).toBe(true);
+    fireEvent.click(screen.getByRole("button", { name: "Começar" }));
+    fireEvent.click(screen.getByRole("button", { name: "Sair" }));
+    expect(push).toHaveBeenCalledWith("/mapa");
   });
 });

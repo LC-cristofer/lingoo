@@ -41,6 +41,16 @@ describe("ProgressBar", () => {
   });
 });
 
+describe("FeedbackBanner text", () => {
+  it.each(["correct", "retry", "hint"] as const)("%s: navy bold text, English not highlighted in sky, still lang=en", (kind) => {
+    const { container } = render(<FeedbackBanner kind={kind} line={[{ lang: "en-US", text: "Great!" }]} />);
+    const en = container.querySelector('[lang="en"]')!;
+    expect(en).toBeInTheDocument();
+    expect(en.className).not.toContain("text-sky");
+    expect(container.querySelector("p")!.className).toContain("text-ink");
+  });
+});
+
 describe("FeedbackBanner", () => {
   it("correct shows Continuar and calls onContinue", async () => {
     const onContinue = vi.fn();

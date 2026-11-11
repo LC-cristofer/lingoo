@@ -7,7 +7,7 @@ export function generateStaticParams() {
     .filter((u) => u.hasContent)
     .flatMap((u) => {
       const unit = getUnit(u.unitId);
-      return (unit?.stops ?? []).map((s) => ({ unitId: unit!.id, stopSlug: s.id.slice(unit!.id.length + 1) }));
+      return (unit?.stops ?? []).filter((s) => s.id.startsWith(`${unit!.id}/`)).map((s) => ({ unitId: unit!.id, stopSlug: s.id.slice(unit!.id.length + 1) }));
     });
 }
 

@@ -63,7 +63,7 @@ export function TapRepeat({ exercise, phase, onAnswer, onCatExpression }: TapRep
         ))}
       </div>
       <div className="min-h-16">
-        {complete ? (
+        {complete && isInteractive(phase) ? (
           <BigButton label="Continuar" color="leaf" onPress={() => report(true)}>
             <span aria-hidden="true" className="font-display text-2xl font-bold">
               Continuar

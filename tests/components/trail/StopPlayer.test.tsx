@@ -16,6 +16,7 @@ vi.mock("@/components/trail/TrailProgressProvider", () => ({
   useTrailProgress: () => ({ progress: { completedStops: {}, stickers: {}, daysPlayed: [] }, hydrated: true, finishStop, markToday: vi.fn() }),
 }));
 
+import { ChestReward } from "@/components/trail/ChestReward";
 import { StopPlayer } from "@/components/trail/StopPlayer";
 import { getLines, getUnit } from "@/domain/trail/content";
 
@@ -71,19 +72,15 @@ describe("StopPlayer opening", () => {
     expect(screen.getByRole("progressbar")).toBeInTheDocument();
   });
 
-  it("with audio locked on mount, the first ▶ unlocks and replays the opening, the second starts", async () => {
+  it("with audio locked on mount, ONE tap on ▶ unlocks and shows the first exercise", async () => {
     narratorMock.isUnlocked.mockReturnValue(false);
     renderPlayer();
     await flush();
-    const opening = narratorMock.playNarration.mock.calls.filter(([n]) => n === lesson.opening).length;
     fireEvent.click(screen.getByRole("button", { name: "Começar" }));
     await flush();
     expect(narratorMock.unlock).toHaveBeenCalled();
-    expect(narratorMock.playNarration.mock.calls.filter(([n]) => n === lesson.opening)).toHaveLength(opening + 1);
-    expect(screen.queryByRole("progressbar")).not.toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: "Começar" }));
-    await flush();
     expect(screen.getByRole("progressbar")).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Começar" })).not.toBeInTheDocument();
   });
 });
 
@@ -162,20 +159,71 @@ describe("StopPlayer session", () => {
     expect(finishStop).toHaveBeenCalledTimes(1);
   });
 
-  it("the progress bar never goes backwards when a review is queued", async () => {
+  it("the progress bar never goes backwards, not even right after a review is queued", async () => {
     renderPlayer();
     await startAndFinishIntro();
     const value = () => Number(screen.getByRole("progressbar").getAttribute("aria-valuenow"));
     const before = value();
+    expect(before).toBe(50);
     fireEvent.click(card("bird"));
     await flush();
-    fireEvent.click(card("bird"));
+    expect(value()).toBeGreaterThanOrEqual(before);
+    fireEvent.click(card("bird")); // 2nd wrong: the review is queued (3 items), raw ratio 1/3
     await flush();
+    expect(within(feedback()).getByRole("status")).toHaveAttribute("data-kind", "hint");
+    expect(value()).toBeGreaterThanOrEqual(before);
     fireEvent.click(card("bear"));
     await flush();
     fireEvent.click(within(feedback()).getByRole("button", { name: "Continuar" }));
     await flush();
     expect(value()).toBeGreaterThanOrEqual(before);
+  });
+
+  describe("gatinho expression", () => {
+    const expression = () => document.querySelector("[data-expression]")!.getAttribute("data-expression");
+    const tapRepeatStop: LessonStop = {
+      ...full,
+      exercises: [full.exercises.find((e) => e.kind === "tapRepeat")!, full.exercises[0]],
+    };
+
+    it("pointing while answering, happy on correct, helping on retry and on hint", async () => {
+      renderPlayer();
+      await startAndFinishIntro();
+      expect(expression()).toBe("pointing");
+      let endRetry: () => void = () => {};
+      narratorMock.playNarration.mockImplementation((n) =>
+        JSON.stringify(n) === JSON.stringify(lines.retry) ? new Promise<void>((r) => (endRetry = r)) : Promise.resolve(),
+      );
+      fireEvent.click(card("bird"));
+      await flush();
+      expect(expression()).toBe("helping");
+      endRetry();
+      await flush();
+      expect(expression()).toBe("pointing");
+      fireEvent.click(card("bird"));
+      await flush();
+      expect(expression()).toBe("helping"); // hint
+      fireEvent.click(card("bear"));
+      await flush();
+      expect(expression()).toBe("happy");
+    });
+
+    it("an override from the exercise applies, and is reset when the exercise changes", async () => {
+      renderPlayer(tapRepeatStop);
+      fireEvent.click(screen.getByRole("button", { name: "Começar" }));
+      await flush();
+      expect(expression()).toBe("pointing");
+      const items = (tapRepeatStop.exercises[0] as Extract<LessonStop["exercises"][number], { kind: "tapRepeat" }>).items;
+      fireEvent.click(document.querySelector(`button[data-card="${items[0].wordId}"]`)!);
+      expect(expression()).toBe("listening");
+      for (const it of items.slice(1)) fireEvent.click(document.querySelector(`button[data-card="${it.wordId}"]`)!);
+      fireEvent.click(screen.getByRole("button", { name: "Continuar" }));
+      await flush();
+      expect(expression()).toBe("happy");
+      fireEvent.click(within(feedback()).getByRole("button", { name: "Continuar" }));
+      await flush();
+      expect(expression()).toBe("pointing"); // next exercise: override gone
+    });
   });
 
   it("✕ in the middle calls onExit without finishStop", async () => {
@@ -199,27 +247,54 @@ describe("StopPlayer session", () => {
   });
 });
 
+async function finishChallenge(record?: boolean) {
+  const r = renderPlayer(challenge, record === undefined ? {} : { record });
+  await startAndFinishIntro();
+  fireEvent.click(card("bear"));
+  await flush();
+  fireEvent.click(within(feedback()).getByRole("button", { name: "Continuar" }));
+  await flush();
+  return r;
+}
+
 describe("StopPlayer challenge", () => {
-  it("shows the sticker only after the chest is tapped, and records it", async () => {
-    const { onExit } = renderPlayer(challenge);
-    await startAndFinishIntro();
-    fireEvent.click(card("bear"));
-    await flush();
-    fireEvent.click(within(feedback()).getByRole("button", { name: "Continuar" }));
-    await flush();
+  it("records the stop and its sticker once, on entering the closing, before any chest tap", async () => {
+    await finishChallenge();
+    const sticker = challenge.sticker!;
+    expect(finishStop).toHaveBeenCalledTimes(1);
+    expect(finishStop).toHaveBeenCalledWith(challenge.id, sticker.id);
+  });
+
+  it("the chest is presentation only: sticker appears on tap, no further finishStop", async () => {
+    const { onExit } = await finishChallenge();
     fireEvent.click(screen.getByRole("button", { name: "Continuar" })); // closing -> chest
     await flush();
     expect(narratorMock.playNarration).toHaveBeenCalledWith(lines.chestPrompt);
     expect(document.querySelector("svg.art-sticker")).not.toBeInTheDocument();
-    expect(finishStop).not.toHaveBeenCalledWith(challenge.id, expect.anything());
     fireEvent.click(screen.getByRole("button", { name: "Abrir o baú" }));
     await flush();
     const sticker = challenge.sticker!;
     expect(narratorMock.playSfx).toHaveBeenCalledWith("chest");
     expect(narratorMock.playNarration).toHaveBeenCalledWith([...lines.chestOpen, ...sticker.name]);
     expect(document.querySelector("svg.art-sticker")).toBeInTheDocument();
-    expect(finishStop).toHaveBeenLastCalledWith(challenge.id, sticker.id);
+    expect(finishStop).toHaveBeenCalledTimes(1);
     fireEvent.click(screen.getByRole("button", { name: "Voltar ao mapa" }));
     expect(onExit).toHaveBeenCalledTimes(1);
+  });
+
+  it("with record false nothing is saved, not even when the chest opens", async () => {
+    await finishChallenge(false);
+    fireEvent.click(screen.getByRole("button", { name: "Continuar" }));
+    await flush();
+    fireEvent.click(screen.getByRole("button", { name: "Abrir o baú" }));
+    await flush();
+    expect(finishStop).not.toHaveBeenCalled();
+  });
+
+  it("a challenge without a sticker still offers the way back", () => {
+    const onBack = vi.fn();
+    render(<ChestReward stop={{ ...challenge, sticker: undefined }} lines={lines} onBack={onBack} />);
+    fireEvent.click(screen.getByRole("button", { name: "Voltar ao mapa" }));
+    expect(onBack).toHaveBeenCalledTimes(1);
   });
 });

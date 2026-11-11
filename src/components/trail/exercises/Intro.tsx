@@ -56,7 +56,7 @@ export function Intro({ exercise, words, phase, onAnswer }: IntroProps) {
         <NarrationText narration={[{ lang: "en-US", text: word?.en ?? ART_WORDS[exercise.wordId] }]} />
       </p>
       <div className="min-h-16">
-        {ready ? (
+        {ready && isInteractive(phase) ? (
           <BigButton label="Continuar" color="leaf" onPress={() => report(true)}>
             <span aria-hidden="true" className="font-display text-2xl font-bold">
               Já repeti!

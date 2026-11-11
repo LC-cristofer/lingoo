@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Animal, ART_WORDS } from "@/art/Animal";
 import { Cat, type CatExpression } from "@/art/Cat";
 import { narrator } from "@/audio/narrator";
@@ -91,8 +91,11 @@ export function StopPlayer({ unit, stop, onExit, record = true }: StopPlayerProp
   const [shown, setShown] = useState(0);
   const [correctCount, setCorrectCount] = useState(0);
   const [override, setOverride] = useState<{ key: string; expression: CatExpression } | null>(null);
-  const lockedOnMount = useRef(!narrator.isUnlocked());
-  const [openingReplayed, setOpeningReplayed] = useState(false);
+
+  // High-water mark: the bar never goes backwards (a queued review lowers the raw ratio).
+  const rawRatio = progressRatio(session);
+  if (rawRatio > shown) setShown(rawRatio);
+  const ratio = Math.max(shown, rawRatio);
 
   const item = session.items[Math.min(session.index, session.items.length - 1)];
   const { phase, index } = session;
@@ -145,12 +148,6 @@ export function StopPlayer({ unit, stop, onExit, record = true }: StopPlayerProp
 
   const start = () => {
     narrator.unlock();
-    if (lockedOnMount.current && !openingReplayed) {
-      // The opening could not be heard: say it now that the touch unlocked audio, then wait for another ▶.
-      setOpeningReplayed(true);
-      void narrator.playNarration(stop.opening);
-      return;
-    }
     setStep("session");
   };
 
@@ -162,14 +159,15 @@ export function StopPlayer({ unit, stop, onExit, record = true }: StopPlayerProp
   };
 
   const onContinue = () => {
-    const ratio = Math.max(shown, progressRatio(session));
-    setShown(ratio);
     const after = next(session);
     setSession(after);
     if (after.finished) {
-      setShown(1);
       setStep("closing");
-      if (record) finishStop(stop.id);
+      // The stop and (for the challenge) its sticker are granted together: never behind a tap.
+      if (record) {
+        if (stop.kind === "challenge" && stop.sticker) finishStop(stop.id, stop.sticker.id);
+        else finishStop(stop.id);
+      }
     }
   };
 
@@ -219,7 +217,7 @@ export function StopPlayer({ unit, stop, onExit, record = true }: StopPlayerProp
   }
 
   if (step === "chest") {
-    return <ChestReward stop={stop} lines={lines} record={record} onBack={onExit} />;
+    return <ChestReward stop={stop} lines={lines} onBack={onExit} />;
   }
 
   const overrideKey = `${index}:${phase}`;
@@ -235,7 +233,7 @@ export function StopPlayer({ unit, stop, onExit, record = true }: StopPlayerProp
 
   return (
     <ExerciseShell
-      ratio={Math.max(shown, progressRatio(session))}
+      ratio={ratio}
       prompt={questionOf(item.exercise)}
       catExpression={catExpression}
       feedback={feedback}

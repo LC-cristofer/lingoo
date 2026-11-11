@@ -318,6 +318,15 @@ describe("TapRepeat", () => {
     expect(onAnswer).toHaveBeenCalledExactlyOnceWith(true);
   });
 
+  it('hides its own "Continuar" once the phase is no longer answering (the strip has one)', async () => {
+    const { container, setPhase } = setup(tapRepeat);
+    await flush();
+    for (const item of tapRepeat.items) fireEvent.click(card(container, item.wordId));
+    expect(screen.getByRole("button", { name: "Continuar" })).toBeInTheDocument();
+    setPhase("correct");
+    expect(screen.queryByRole("button", { name: "Continuar" })).not.toBeInTheDocument();
+  });
+
   it("each tap sets the cat to listening for 1.5 s, then pointing", async () => {
     const { container, onCatExpression } = setup(tapRepeat);
     await flush();
@@ -355,6 +364,14 @@ describe("Intro", () => {
     fireEvent.click(button);
     fireEvent.click(button);
     expect(onAnswer).toHaveBeenCalledExactlyOnceWith(true);
+  });
+
+  it('hides "Já repeti!" once the phase is no longer answering', async () => {
+    const { setPhase } = setup(intro);
+    await flush();
+    expect(screen.getByRole("button", { name: "Continuar" })).toBeInTheDocument();
+    setPhase("correct");
+    expect(screen.queryByRole("button", { name: "Continuar" })).not.toBeInTheDocument();
   });
 
   it("ignores the narration ending after unmount and stops it", async () => {

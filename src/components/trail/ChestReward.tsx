@@ -6,20 +6,16 @@ import { Sticker } from "@/art/scenes/Sticker";
 import { narrator } from "@/audio/narrator";
 import { BigButton } from "@/components/BigButton";
 import type { Lines, LessonStop } from "@/domain/trail/schema";
-import { useTrailProgress } from "./TrailProgressProvider";
 import { NarrationText } from "./NarrationText";
 
 type ChestRewardProps = {
   stop: LessonStop;
   lines: Lines;
-  /** False in review mode: nothing is saved. */
-  record?: boolean;
   onBack: () => void;
 };
 
-/** The challenge's prize: a closed chest to tap, then the sticker pops out. */
-export function ChestReward({ stop, lines, record = true, onBack }: ChestRewardProps) {
-  const { finishStop } = useTrailProgress();
+/** The challenge's prize, presentation only (the sticker is recorded on entering the closing). */
+export function ChestReward({ stop, lines, onBack }: ChestRewardProps) {
   const [open, setOpen] = useState(false);
   const sticker = stop.sticker;
 
@@ -28,14 +24,23 @@ export function ChestReward({ stop, lines, record = true, onBack }: ChestRewardP
     return () => narrator.stop();
   }, [lines.chestPrompt]);
 
-  if (!sticker) return null;
+  if (!sticker) {
+    return (
+      <div className="flex min-h-dvh flex-col items-center justify-center bg-cream p-4 text-ink">
+        <BigButton label="Voltar ao mapa" color="leaf" onPress={onBack}>
+          <span aria-hidden="true" className="font-display text-2xl font-bold">
+            Voltar ao mapa
+          </span>
+        </BigButton>
+      </div>
+    );
+  }
 
   const openChest = () => {
     if (open) return;
     setOpen(true);
     narrator.playSfx("chest");
     void narrator.playNarration([...lines.chestOpen, ...sticker.name]);
-    if (record) finishStop(stop.id, sticker.id);
   };
 
   return (

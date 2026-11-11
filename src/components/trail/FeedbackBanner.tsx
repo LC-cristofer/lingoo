@@ -23,8 +23,8 @@ export function FeedbackBanner({ kind, line, onContinue }: FeedbackBannerProps) 
     >
       {kind === "correct" ? <CheckIcon /> : null}
       {kind === "hint" ? <MagnifierIcon /> : null}
-      <p className="flex-1 font-bold">
-        <NarrationText narration={line} />
+      <p className="flex-1 font-bold text-ink">
+        <NarrationText narration={line} tone="plain" />
       </p>
       {kind === "correct" ? (
         <BigButton label="Continuar" color="sun" onPress={() => onContinue?.()}>
