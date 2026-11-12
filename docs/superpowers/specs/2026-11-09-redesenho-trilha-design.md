@@ -29,6 +29,9 @@ O protótipo da Fase 1 funcionou tecnicamente, mas não entregou a experiência 
 | Base didática | Vocabulário da lista **Cambridge Pre A1 Starters**. Sequência de ensino dos livros infantis: ouvir → apontar → dizer → praticar → revisar. Rotina previsível. |
 | Escopo do protótipo | **Uma unidade completa**, "Animais da floresta", com as 6 paradas. As outras unidades aparecem no mapa com nome e ícone, trancadas. |
 | Jogo de arrastar | **Sai.** O 🔗 "Ligar pares" cumpre o mesmo papel e é mais fácil para dedos pequenos. |
+| Formatos de tela | **Celular em pé e tablet deitado, por igual.** Desenha-se primeiro para o celular em pé. |
+| Visual das telas | **Aprovado em 2026-11-12:** mapa em trilha vertical, fundo de floresta ilustrada, botões e cartões "de apertar", painel de acerto e erro. Imagens em `docs/arte/telas-aprovadas/`. |
+| Memorização | **Treino de memória:** cartão que vira e o app confere; aparece no fim de cada lição e volta nos dias seguintes (1, 3, 7, 14 e 30 dias), numa aba "Memória". |
 
 ## 3. Base didática (pesquisa)
 
@@ -64,33 +67,34 @@ O protótipo constrói só a Unidade 1. As outras ficam listadas aqui para que o
 
 ## 5. A experiência da criança
 
-### 5.1 Mapa
+### 5.1 Mapa em trilha (visual aprovado em 2026-11-12)
 
-```
-┌──────────────────────────────────────────────────────────────┐
-│ ☀☀☀○○○○  dias que brincou                      [📒 Álbum]    │
-│ ┌──────────────────────────────────────────────┐             │
-│ │ 🌳 Unidade 1 · Animais da floresta     2/6 ⭐ │  ← faixa    │
-│ └──────────────────────────────────────────────┘             │
-│      🌲      (🎵)⭐ ── (⭐)⭐ ── (⭐)🐱 ── (⭐)🔒              │
-│   🌲    🌳   Música   Lição 1   Lição 2   Lição 3        🌲   │
-│                                              │                │
-│        🍄          (🏆)🔒 ── (📖)🔒 ─────────┘     🌳         │
-│                    Desafio   História                         │
-│ ──────────── 🔒 Unidade 2 · Cores ────────────               │
-└──────────────────────────────────────────────────────────────┘
-```
+O mapa é uma **trilha em coluna que rola para baixo**, sobre a floresta ilustrada. As imagens aprovadas estão em `docs/arte/telas-aprovadas/` (`1-celular-mapa.png` e `4-tablet-mapa-inicio.png`), e o desenho de referência está em `tools/visual/mockups.tsx`.
 
-- **Cenário ilustrado:** céu, morros e árvores da Floresta, desenhados em SVG com a paleta. Nada de fundo branco.
-- **Faixa da unidade:** nome, ícone e progresso. Tocar nela faz o gatinho dizer "Unidade 1: animais da floresta!".
-- **Paradas:** o **ícone mostra o tipo** (🎵 ⭐ 📖 🏆) e há um rótulo curto embaixo ("Música", "Lição 1"). Cada uma tem um estado:
-  - concluída: ⭐ dourada;
-  - atual: pulsando, com o gatinho ao lado;
-  - futura: cadeado.
-- **Unidades seguintes:** aparecem depois, como faixas trancadas com nome e ícone. A criança vê que a aventura continua.
-- **No celular deitado**, o mapa rola na horizontal. No tablet, a unidade inteira cabe na tela.
+- **Fundo:** a floresta ilustrada (versão A): céu e morros no alto e grama por toda a descida, com árvores, cogumelos, flores e bichos espiando. Nenhuma tela usa fundo creme ou branco de ponta a ponta.
+- **Caminho:** uma trilha de terra clara, larga, com pontilhado branco no meio, que serpenteia de uma parada à outra.
+- **Placa da unidade:** uma placa de madeira pendurada no topo, com "Unidade 1", o nome e o progresso ("2 de 6"). Tocar nela faz o gatinho dizer o nome da unidade.
+- **Paradas:** botões redondos grandes, com "degrau" embaixo (cara de botão de apertar), em zigue-zague. O **ícone e a cor mostram o tipo**: música (coral), lição (amarelo), história (azul), desafio (lilás). Cada parada tem um rótulo curto ao lado ("Música", "Lição 1").
+  - concluída: selo verde de ✓;
+  - atual: maior, com anel tracejado, e o gatinho ao lado com um balão ("Lição 2 · Vamos!");
+  - futura: cinza, com cadeado.
+- **Fim da unidade:** um baú ao lado do desafio.
+- **Unidades seguintes:** continuam na mesma trilha, cada uma com sua placa trancada e paradas cinzas. A criança vê que a aventura continua.
+- **Barra de cima:** estrelas ganhas e os dias da semana em que a criança brincou.
+- **Barra de baixo:** as abas **Trilha**, **Memória** e **Álbum**.
+- **Dois formatos, por igual:**
+  - **celular em pé** (referência 390×844): a trilha ocupa a largura da tela;
+  - **tablet deitado** (referência 1024×768): a trilha fica no meio, com a placa no canto e a floresta, o lago e os bichos em volta; a barra de baixo vira uma pílula centralizada.
+  - Celular deitado e tablet em pé precisam funcionar sem quebrar, mas não são o alvo do acabamento.
 
 ### 5.2 Estrutura comum da lição (todas as paradas usam a mesma "casca")
+
+> **Visual aprovado em 2026-11-12** (`docs/arte/telas-aprovadas/2-celular-licao.png`, `3-celular-abertura-inicio.png` e `5-tablet-licao.png`). O desenho abaixo continua valendo para a **estrutura**; a aparência é a das imagens:
+> - fundo de céu e grama, nunca creme;
+> - cartões de resposta grandes, brancos, com borda grossa e "degrau" embaixo: 2 por linha no celular e até 4 por linha no tablet;
+> - barra de progresso gordinha, botão ✕ redondo e o gatinho maior, com o balão;
+> - acerto e erro como um **painel que sobe de baixo**: verde-escuro com texto branco e botão amarelo "Continuar" no acerto; laranja com texto azul-marinho no erro e na dica;
+> - o botão principal de cada tela é sempre o amarelo.
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
@@ -165,6 +169,32 @@ O texto final de cada fala e da letra é escrito no plano de implementação e r
 - **Calendário de dias:** fica no alto do mapa e mostra os 7 dias da semana. Os dias em que a criança brincou ganham um ☀. Não existe contador que zera, nem mensagem de "você perdeu".
 - **Álbum:** uma página por unidade, com espaço para a figurinha da unidade. Tocar numa figurinha fala o nome dela em inglês.
 
+### 5.7 Treino de memória
+
+É a parte de memorização pedida pelo Lucas, no espírito dos cartões de repetição espaçada (como o Memhack da Fluency), com nome, visual e regras próprios para crianças.
+
+**Um treino tem três momentos:**
+1. **Lembrar.** Aparece a figura num cartão grande e o gatinho pergunta "Como se fala em inglês?". A criança fala em voz alta e toca no cartão, que **vira** e mostra a palavra, com o gatinho falando.
+2. **Conferir.** Depois de passar por todos os cartões, vem uma rodada rápida de "Ouça e toque", um cartão de cada vez e em outra ordem: "Qual é o *bear*? Toque nele!". Erros seguem a regra das lições: o gatinho ajuda e a criança sempre termina acertando.
+3. **Fim.** "Você lembrou de 3 palavras!" e o treino termina.
+
+**Quando aparece:**
+- **No fim de cada lição** (Lição 1, 2 e 3), antes da estrela: os cartões das palavras novas daquela lição, mais até 3 cartões antigos que estejam na hora de revisar. Se a lição não tem palavra nova, entram até 6 cartões prontos; se nenhum está pronto, os 3 de nível mais baixo.
+- **Na aba "Memória":** mostra quantos cartões estão prontos hoje e um botão grande "Treinar". Cada treino tem no máximo 8 cartões. Sem cartões prontos, a tela diz "Tudo em dia!" e em quantos dias volta o próximo.
+
+**Agenda de cada cartão** (níveis de 0 a 5):
+- Cartão novo entra no nível 0.
+- **Acertou de primeira** na conferência: sobe um nível e volta em **1, 3, 7, 14 e 30 dias** (níveis 1 a 5). No nível 5, continua voltando a cada 30 dias.
+- **Precisou de ajuda** (errou ao menos uma vez na conferência): vai para o nível 1 e volta **amanhã**.
+- Cartão atrasado só espera. Não existe contagem que zera, nem aviso de perda.
+- As datas usam o dia local do aparelho. Se o relógio do aparelho voltar no tempo, o cartão continua válido e só aparece quando a data chegar.
+
+**Outras regras:**
+- Um cartão por palavra. As frases ("What's this? It's a bear!") continuam sendo praticadas nas lições.
+- Sair no meio do treino grava só os cartões já conferidos.
+- No modo de revisão (`/revisao`) o treino funciona, mas não grava nada.
+- Terminar um treino marca o dia no calendário de dias.
+
 ## 6. Arte e áudio (produção própria, ferramentas gratuitas)
 
 Nada vai para a criança como provisório. Toda arte e todo áudio entram já no padrão final, aprovado nas amostras de 2026-11-09 e 2026-11-10.
@@ -224,6 +254,12 @@ Nada vai para a criança como provisório. Toda arte e todo áudio entram já no
 8. **Mapa v2:** cenário em SVG, faixa da unidade, paradas tipadas e unidades trancadas.
 9. **Sai:** o `DragGame` e os passos antigos de "sticker". A figurinha agora é recompensa do desafio.
 
+**Acrescentado em 2026-11-12:**
+- **Kit visual** (`src/components/trail/kit/`): fundo de floresta, botão de apertar, cartão de resposta, barra de cima, balão, painel de resposta, placa de madeira e botão de parada. As telas usam o kit; nenhuma define cor ou sombra própria.
+- **Mapa em trilha vertical** no lugar da cena horizontal, com barra de baixo de três abas.
+- **Treino de memória:** regras puras em `src/domain/trail/memory.ts`; a conferência reaproveita o motor de sessão e o exercício "Ouça e toque"; o progresso ganha o campo `memory` (cartão → nível e data), compatível com quem já tem progresso salvo; página `/memoria`.
+- O manifesto do PWA deixa de travar a orientação.
+
 ## 8. Testes
 
 - **Funções puras** (motor da lição v2, cada tipo de exercício, desbloqueio v2): todos os casos de acerto, erro, segundo erro com ajuda, revisão no fim e toque duplo.
@@ -236,7 +272,8 @@ Nada vai para a criança como provisório. Toda arte e todo áudio entram já no
   - "Opa! Vamos tentar de novo" depois de um erro;
   - o baú com a figurinha no fim;
   - o progresso salvo depois de recarregar a página.
-- **Capturas de tela** do mapa e de cada tipo de exercício no tablet deitado e no celular, conferidas antes de entregar.
+- **Capturas de tela** de todas as telas no celular em pé (390×844) e no tablet deitado (1024×768), comparadas com as imagens aprovadas antes de entregar.
+- **Treino de memória:** regras de nível e data (virada de dia, cartão atrasado, relógio do aparelho alterado, sair no meio), o treino depois da Lição 1 e, com o relógio do teste adiantado um dia, os cartões prontos na aba Memória.
 
 ## 9. Fora do escopo deste redesenho
 

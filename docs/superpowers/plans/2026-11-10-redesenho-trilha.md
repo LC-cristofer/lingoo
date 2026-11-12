@@ -37,6 +37,16 @@
 - Code, identifiers and file names are in English. Child-facing copy is pt-BR/en-US as specified.
 - Commits follow the repository's existing format and attribution.
 
+## Changes approved on 2026-11-12 (they override earlier text where they differ)
+
+- **Execution order from here:** Task 11 (done) → **Task 15** (visual kit) → Task 12 → Task 13 → **Task 16** (memory training) → Task 14 → final review.
+- **Approved look:** the pictures in `docs/arte/telas-aprovadas/` and their source `tools/visual/mockups.tsx` (markup and CSS) are the visual reference for every screen. Background version A (illustrated forest). No screen has a cream or white full-page background.
+- **Two form factors, equally:** phone portrait (reference 390×844) first, tablet landscape (reference 1024×768) adapted. Phone landscape and tablet portrait must work without breaking (no clipped controls, no horizontal page scroll) but are not polished.
+- **Pressable style:** buttons, answer tiles and stops have a flat darker "edge" under them (`box-shadow: 0 Npx 0 <darker colour>`), never a blurred grey shadow. The main action of a screen is always the sun-yellow button.
+- **Feedback sheet:** correct = deep green `#2F9E5B` with white text and the yellow "Continuar" button; retry and hint = orange `#FFA94D` with navy text. Never red.
+- **Bottom navigation:** three tabs, in this order: Trilha, Memória, Álbum.
+- **Review Focus 5 changes to:** phone portrait (390×844) and tablet landscape (1024×768): the map, an exercise with 4 tiles and the story fit with no horizontal scrolling, every button is at least 64 px and every answer tile at least 120 px.
+
 ## Review Focus
 
 1. **An audio file is missing or fails mid-sequence** (404, bad decode). The narration should carry on with the browser voice for that segment and then the next one, with no gap of several seconds. Tested in Task 4.
@@ -632,6 +642,13 @@ In Task 13 the Phase 1 child experience is removed: `content/lessons`, `content/
 **Interfaces:**
 - Consumes: `ForestBackdrop`, `StopIcon`, `Cat` and `Sticker` (Tasks 5 and 6), `stopStatus`, `unitStatus` and `weekDays` (Task 8), `getPath`, `getUnit` and `getLines` (Task 1), `narrator` (Task 4).
 - Produces:
+  - **Map layout (overrides the bullets below where they differ):** the map is the **vertical trail** of `docs/arte/telas-aprovadas/1-celular-mapa.png` and `4-tablet-mapa-inicio.png`: one tall scrolling column per world, built with the kit (Task 15): `ForestScene`, `WoodSign`, `StopButton`, `TopChips`, `BottomNav`.
+    - The page scrolls **vertically**; stops zigzag down a dirt trail; each stop has its side label; the current stop is larger, with the dashed ring and the gatinho beside it with a bubble (`<stop title> · Vamos!`).
+    - A chest sits beside the challenge stop. After a unit, the next units follow on the same trail: a locked `WoodSign` and grey ghost stops (4 each).
+    - On open, the map scrolls the current stop into view.
+    - Tablet landscape: the trail runs down the middle (wider zigzag), the unit sign sits at the top-left, the forest fills the sides (pond, animals), and the bottom nav is a centred pill.
+    - `BottomNav` has three tabs: Trilha, Memória (links to `/memoria`; until Task 16 it shows the tab disabled), Álbum.
+    - `public/manifest.webmanifest`: remove the fixed `orientation` (use `"any"`).
   - **TrailMap({ path, units, progress, onOpenStop }):**
     - `ForestBackdrop variant="map"` fills the screen;
     - **unit strip** at the top: icon + "UNIDADE 1" + title + a bar showing `n de 6` (`aria-label="Unidade 1, Animais da floresta"`); tapping it plays `unit.banner`;
@@ -686,7 +703,8 @@ In Task 13 the Phase 1 child experience is removed: `content/lessons`, `content/
   - The map shows 6 ✓, and the album has the sticker earned.
   - Reloading keeps everything.
   - At no point is the browser voice used (the fake records 0 `speak`), which proves every line has a file.
-- [ ] **Step 4: Responsiveness check, Review Focus 5.** In the same e2e, on the 390×844 and 844×390 viewports, open the map and a lesson with 4 cards:
+- [ ] **Step 3b: Memory training in the e2e.** After Lição 1 the memory round appears (3 cards: flip each, then the check) before the star. Then, with `page.clock` set one day ahead, the Memória tab shows the badge and `/memoria` lists the cards as ready; play the round to the end.
+- [ ] **Step 4: Responsiveness check, Review Focus 5.** In the same e2e, on the 390×844 (phone portrait) and 1024×768 (tablet landscape) viewports, open the map and a lesson with 4 tiles:
   - `document.scrollingElement.scrollWidth <= innerWidth`;
   - every button in the visible area is at least 64 px;
   - every exercise card is at least 120 px.
@@ -702,6 +720,90 @@ In Task 13 the Phase 1 child experience is removed: `content/lessons`, `content/
 - [ ] **Step 7:** Commit `test(trail): full unit e2e, audio completeness and screen captures`.
 
 ---
+
+### Task 15: Visual kit and restyle of the lesson screens
+
+**Files:**
+- Create: `src/components/trail/kit/{ForestScene,ChunkyButton,AnswerTile,LessonTopBar,Bubble,FeedbackSheet,WoodSign,StopButton,TopChips,BottomNav}.tsx`, `src/components/trail/kit/kit.css` (imported from `src/app/globals.css`), `tools/visual/screens.cjs`
+- Modify: `src/components/trail/{ExerciseShell,FeedbackBanner,ProgressBar,StopPlayer,ChestReward}.tsx`, `src/components/trail/exercises/*.tsx` (markup and classes only), `src/app/globals.css`
+- Test: `tests/components/trail/kit.test.tsx`; existing tests under `tests/components/trail/` and `tests/app/` keep passing (update selectors only where the markup changed)
+
+**Interfaces:**
+- Consumes: the approved reference `tools/visual/mockups.tsx` (its CSS block and components `TrailNode`, `WoodSign`, `TopChips`, `BottomNav`, `Bubble`, `Tile`, `LessonTop`, `Sheet`, `TrailScene`, `LessonScene`) — port them, do not reinvent them. Art from Tasks 5–6.
+- Produces (all in `src/components/trail/kit/`):
+  ```ts
+  ForestScene({ variant }: { variant: "trail" | "lesson" | "start" })      // absolutely-positioned SVG backdrop that fills its parent; "trail" repeats the meadow for any height
+  ChunkyButton({ onPress, label, children, tone?, size?, disabled? })       // tone: "sun" | "leaf" | "sky" | "white"; size: "md" | "lg" | "round"; label → aria-label; min 64 px
+  AnswerTile({ id, onPress, state?, disabled?, label, lang? })              // state: "idle" | "correct" | "wrong" | "dim" | "hint"; a <button>; min 120 px; data-card={id}
+  LessonTopBar({ ratio, onExit, title? })                                    // ✕ (aria-label "Sair") + thick progress bar (role progressbar) or a title pill
+  Bubble({ children, tail?, onReplay? })                                     // white bubble; tail "left" | "down"; onReplay renders the 🔊 round button (aria-label "Ouvir de novo")
+  FeedbackSheet({ kind, line, onContinue? })                                 // kind "correct" | "retry" | "hint"; data-kind; replaces the strip look
+  WoodSign({ unitLabel, title, done?, total?, locked?, onPress? })
+  StopButton({ kind, state, label, labelSide, onPress, size? })              // chunky disc; data-kind, data-state; aria-label = label; aria-disabled when locked
+  TopChips({ stars, week })                                                  // week: { date, played, isToday }[] from weekDays()
+  BottomNav({ active, memoryDue?, memoryEnabled? })                          // tabs Trilha (/mapa), Memória (/memoria), Álbum (/album); badge with memoryDue
+  ```
+  `ExerciseShell`, `FeedbackBanner` and `ProgressBar` keep their props and exported names (later tasks and tests use them) and render the kit inside.
+- Layout rules: phone portrait first (tiles 2 per row, sheet button full width); from `min-width: 900px` and landscape: tiles up to 4 per row at ~200 px, bubble larger, sheet with the button at the right. The lesson screen never scrolls the page at 390×844 or 1024×768; the reserved sheet area stays.
+- Restyle with the kit: the exercise shell, the 6 exercises (cards become `AnswerTile`; TrueFalse thumbs and MatchPairs word buttons become `ChunkyButton`), the stop opening (like `3-celular-abertura-inicio.png`: title pill, bubble, big gatinho, word tiles with the English word, yellow "Começar"), the closing (star, words learned, yellow "Continuar"), and the chest screen (forest backdrop, larger chest and sticker).
+- Behaviour, aria-labels, `data-*` hooks and narration do not change.
+
+- [ ] **Step 1: Failing tests** in `kit.test.tsx`: `ChunkyButton` renders a button with the aria-label, calls `onPress`, is at least 64 px (`min-h-16 min-w-16` or the kit class that sets it) and does not call `onPress` when disabled; `AnswerTile` exposes `data-card`, `data-state`, the English `aria-label` with `lang="en"`, shows the glow only in `hint`; `FeedbackSheet` has `data-kind`, the "Continuar" button only for `correct`, and no class or inline colour of the red family; `StopButton` sets `data-kind`/`data-state`, and a locked one has `aria-disabled="true"` and does not call `onPress`; `BottomNav` renders three links in order (Trilha, Memória, Álbum), marks the active one with `aria-current="page"`, shows the `memoryDue` badge, and renders Memória disabled when `memoryEnabled` is false.
+- [ ] **Step 2:** `npm test -- trail/kit`. Expected: FAIL.
+- [ ] **Step 3:** Implement the kit by porting `tools/visual/mockups.tsx`, then restyle the screens listed above.
+- [ ] **Step 4:** `npm test`, `npx tsc --noEmit`, `npm run lint`, `npm run build`. Expected: all green.
+- [ ] **Step 5: Visual check.** `tools/visual/screens.cjs` starts from a running `next start` and captures, at 390×844 and 1024×768 (deviceScaleFactor 1 for checking): the stop opening, an exercise with 4 tiles answering, the correct sheet, the retry sheet, the hint, a MatchPairs exercise, the closing, the chest open. **Look at every capture next to the approved picture** and fix differences (empty areas, clipped elements, wrong colours, page scroll).
+- [ ] **Step 6:** Commit `feat(trail): visual kit and restyled lesson screens`.
+
+### Task 16: Memory training (spaced repetition)
+
+**Files:**
+- Create: `src/domain/trail/memory.ts`, `src/components/trail/memory/{FlipCard,MemoryRound,MemoryHome}.tsx`, `src/app/memoria/page.tsx`
+- Modify: `src/domain/trail/schema.ts` and `content/units/forest-animals.json` (each `Word` gains `ask: Narration`), `content/lines.json` and its schema (memory lines), `src/domain/trail/progress.ts`, `src/domain/trail/progress-store.ts`, `src/components/trail/TrailProgressProvider.tsx`, `src/components/trail/StopPlayer.tsx`, `src/components/trail/kit/BottomNav.tsx` (Memória enabled, badge), `src/app/mapa/page.tsx` and `src/app/album/page.tsx` (pass the badge)
+- Test: `tests/domain/trail/memory.test.ts`, `tests/components/trail/memory.test.tsx`, `tests/app/MemoriaPage.test.tsx`, additions to `tests/domain/trail/content.test.ts`, `tests/domain/trail/progress-store.test.ts`, `tests/components/trail/StopPlayer.test.tsx`
+
+**Interfaces:**
+- Consumes: session engine (`startSession`, `answer`, `resume`, `next`) and `ExerciseView`/ListenTap for the check phase; `ExerciseShell`; the kit; `useTrailProgress`; `dateKey` logic from `progress.ts` (export it).
+- Produces:
+  ```ts
+  // memory.ts
+  type CardId = string;                                  // `${unitId}:${wordId}`
+  type CardState = { box: number; due: string };         // box 0..5; due = local "YYYY-MM-DD"
+  type MemoryState = Record<CardId, CardState>;
+  const INTERVAL_DAYS = [0, 1, 3, 7, 14, 30] as const;   // index = box after a first-try correct answer
+  const ROUND_LIMIT = 8;
+  cardId(unitId: string, wordId: ArtId): CardId
+  addCards(m: MemoryState, ids: CardId[], today: string): MemoryState        // new cards enter at box 0, due today; existing ones untouched; same reference if nothing new
+  dueCards(m: MemoryState, today: string, limit?: number): CardId[]          // due <= today, lowest box first, then oldest due; stable
+  grade(m: MemoryState, id: CardId, firstTry: boolean, today: string): MemoryState
+  //   firstTry → box = min(box + 1, 5), due = today + INTERVAL_DAYS[box]; otherwise → box 1, due = today + 1
+  nextDue(m: MemoryState, today: string): string | null                       // earliest due date after today, or null
+  lessonRound(m: MemoryState, newIds: CardId[], today: string): CardId[]      // new cards + up to 3 due older ones; if no new cards: up to 6 due; if none due: the 3 lowest-box cards
+  // progress.ts
+  type Progress = { completedStops; stickers; daysPlayed; memory: MemoryState }   // a stored v2 payload without `memory` loads with {}
+  // TrailProgressProvider
+  useTrailProgress(): { …, gradeCards(results: { id: CardId; firstTry: boolean }[]): void, addMemoryCards(ids: CardId[]): void }
+  // components
+  FlipCard({ word, flipped, onFlip })                    // front: big Animal + "?"; back: Animal + the English word (lang="en"); a <button>, aria-label "Virar o cartão"; 3D flip, plain swap under reduced motion
+  MemoryRound({ unit, cardIds, record, onDone })         // intro → recall (flip each card) → check (ListenTap per card, shuffled) → summary; calls gradeCards per card as it is checked when record is true
+  MemoryHome()                                           // the /memoria screen
+  ```
+- Content: `Word.ask` for each word is the existing listenTap wording, as three segments (`pt: Qual é {o|a}` · `en: W?` · `pt: Toque {nele|nela}!`), so no new audio is needed for it. New lines in `lines.json`: `memoryIntro` (`pt: Hora de treinar a memória!`), `memoryAsk` (`pt: Como se fala em inglês?`), `memoryFlip` (`pt: Toque no cartão para virar!`), `memoryDone` (`pt: Sua memória está ficando forte!`), `memoryEmpty` (`pt: Tudo em dia! Volte outro dia para treinar de novo.`), `memoryHome` (`pt: Vamos treinar a memória?`).
+- The check exercise for a card is built in code: `{ kind: "listenTap", prompt: word.ask, optionIds, answerId }` with 3 options when the unit has at least 3 known cards (the card plus 2 distractors chosen deterministically from the other cards in the child's memory, falling back to the unit's words), in a deterministic shuffled order.
+- A card counts as `firstTry` only if the first answer in its check was correct (no retry, no hint).
+- `StopPlayer`: for `kind === "lesson"`, after the session finishes and before the closing: `addMemoryCards(cards of stop.wordIds that are new)` then `MemoryRound` with `lessonRound(...)`. With `record === false` nothing is saved. Song, story and challenge have no memory round.
+- `/memoria`: forest backdrop, gatinho, the number of cards ready today (`dueCards(...).length`, capped text "8 ou mais" is not needed — show the real number), yellow "Treinar" button starting `MemoryRound` with `dueCards(m, today, ROUND_LIMIT)`; when nothing is due: `memoryEmpty` and "o próximo cartão volta em N dia(s)" from `nextDue`; below, the child's cards grouped by box as five rows of small tiles. Finishing a round calls `markToday()`. `BottomNav` shows the badge on every screen that has it.
+
+- [ ] **Step 1: Failing tests:**
+  - `memory.ts`: a new card is due today at box 0; `grade(firstTry)` walks boxes 1→5 with due dates +1, +3, +7, +14, +30 and stays at 5 (+30); `grade(not firstTry)` from any box → box 1, due tomorrow; `dueCards` returns only cards with `due <= today`, lowest box first, and respects the limit; a card due in the past is still due (overdue waits, nothing resets); if `today` is earlier than the stored `due` (clock moved back) the card is simply not due; month and year rollovers produce valid date keys; `lessonRound` covers its three cases; all functions return the same reference on no-ops.
+  - store: a stored v2 payload without `memory` loads with `memory: {}` and keeps its stops and stickers; a malformed `memory` loads as `{}` without discarding the rest.
+  - `MemoryRound`: recall phase shows one card at a time, flipping plays the word and reveals the English word, "Continuar" appears only after the flip; the check phase asks each card once in a different order from the recall; a wrong first answer then right → that card is graded `firstTry: false`; right first → `true`; `gradeCards` is called as each card is checked (leaving mid-round keeps the ones already checked); with `record: false` it is never called; the summary says how many were remembered first try.
+  - `StopPlayer`: a lesson shows the memory round between the last exercise and the closing; the challenge does not.
+  - `/memoria`: with 2 cards due it shows "2" and "Treinar"; with none due it shows the empty state with the days until the next card; finishing a round calls `markToday`.
+- [ ] **Step 2:** run the focused tests. Expected: FAIL.
+- [ ] **Step 3:** Implement. Generate the new voice lines (`npm run audio:lines`, then `tools/audio/generate.py` and `verify.py` for the missing ids) and commit the MP3s.
+- [ ] **Step 4:** `npm test`, `npx tsc --noEmit`, `npm run lint`, `npm run build`; capture `/memoria` (with and without due cards), a card front, a card back and the check at 390×844 and 1024×768, and look at them.
+- [ ] **Step 5:** Commit `feat(trail): memory training with spaced repetition`.
 
 ## Out of this plan
 
