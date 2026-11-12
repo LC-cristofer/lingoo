@@ -11,7 +11,7 @@ const LILAC = "#B57EDC";
 
 const COLORS: Record<Stop["kind"], string> = { song: CORAL, lesson: SUN, story: SKY, challenge: LILAC };
 
-function Glyph({ kind }: { kind: Stop["kind"] }) {
+export function Glyph({ kind }: { kind: Stop["kind"] }) {
   switch (kind) {
     case "song":
       return (

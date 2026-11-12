@@ -4,8 +4,9 @@ import { useEffect, useState } from "react";
 import { Chest } from "@/art/scenes/Chest";
 import { Sticker } from "@/art/scenes/Sticker";
 import { narrator } from "@/audio/narrator";
-import { BigButton } from "@/components/BigButton";
 import type { Lines, LessonStop } from "@/domain/trail/schema";
+import { ChunkyButton } from "./kit/ChunkyButton";
+import { ForestScene } from "./kit/ForestScene";
 import { NarrationText } from "./NarrationText";
 
 type ChestRewardProps = {
@@ -26,12 +27,13 @@ export function ChestReward({ stop, lines, onBack }: ChestRewardProps) {
 
   if (!sticker) {
     return (
-      <div className="flex min-h-dvh flex-col items-center justify-center bg-cream p-4 text-ink">
-        <BigButton label="Voltar ao mapa" color="leaf" onPress={onBack}>
-          <span aria-hidden="true" className="font-display text-2xl font-bold">
+      <div className="k-screen">
+        <ForestScene variant="lesson" />
+        <div className="k-stage justify-center">
+          <ChunkyButton label="Voltar ao mapa" tone="sun" size="lg" onPress={onBack}>
             Voltar ao mapa
-          </span>
-        </BigButton>
+          </ChunkyButton>
+        </div>
       </div>
     );
   }
@@ -44,30 +46,31 @@ export function ChestReward({ stop, lines, onBack }: ChestRewardProps) {
   };
 
   return (
-    <div className="flex min-h-dvh flex-col items-center justify-center gap-6 bg-cream p-4 text-ink">
-      <p className="text-center font-display text-3xl font-bold">
-        <NarrationText narration={open ? [...lines.chestOpen, ...sticker.name] : lines.chestPrompt} />
-      </p>
-      <div className="relative flex items-center justify-center gap-6">
-        <button
-          type="button"
-          aria-label="Abrir o baú"
-          disabled={open}
-          onClick={openChest}
-          className="min-h-16 min-w-16 rounded-3xl p-2 active:scale-95 disabled:active:scale-100"
-        >
-          <Chest open={open} size={220} />
-        </button>
-        {open ? <Sticker art={sticker.art} earned size={160} /> : null}
-      </div>
-      <div className="min-h-16">
-        {open ? (
-          <BigButton label="Voltar ao mapa" color="leaf" onPress={onBack}>
-            <span aria-hidden="true" className="font-display text-2xl font-bold">
+    <div className="k-screen">
+      <ForestScene variant="lesson" trees />
+      <div className="k-stage">
+        <p className="k-star-line" style={{ marginTop: 24 }}>
+          <NarrationText narration={open ? [...lines.chestOpen, ...sticker.name] : lines.chestPrompt} />
+        </p>
+        <div className="k-prize" style={{ flex: 1, flexWrap: "wrap" }}>
+          <button
+            type="button"
+            aria-label="Abrir o baú"
+            disabled={open}
+            onClick={openChest}
+            className="k-prize-open min-h-16 min-w-16"
+          >
+            <Chest open={open} size={open ? 240 : 300} />
+          </button>
+          {open ? <Sticker art={sticker.art} earned size={200} /> : null}
+        </div>
+        <div className="k-cta min-h-16" style={{ display: "flex", justifyContent: "center" }}>
+          {open ? (
+            <ChunkyButton label="Voltar ao mapa" tone="sun" size="lg" onPress={onBack} className="w-full">
               Voltar ao mapa
-            </span>
-          </BigButton>
-        ) : null}
+            </ChunkyButton>
+          ) : null}
+        </div>
       </div>
     </div>
   );

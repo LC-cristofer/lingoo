@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Animal, ART_WORDS } from "@/art/Animal";
+import { ART_WORDS } from "@/art/Animal";
 import { narrator } from "@/audio/narrator";
-import { BigButton } from "@/components/BigButton";
 import type { Exercise, Word } from "@/domain/trail/schema";
 import type { Phase } from "@/domain/trail/session";
 import { NarrationText } from "../NarrationText";
+import { AnswerTile } from "../kit/AnswerTile";
+import { ChunkyButton } from "../kit/ChunkyButton";
 import { isInteractive, sayFor, useAnswerGate } from "./shared";
 
 type IntroProps = {
@@ -40,28 +41,24 @@ export function Intro({ exercise, words, phase, onAnswer }: IntroProps) {
   };
 
   return (
-    <div className="flex flex-col items-center gap-4">
-      <button
-        type="button"
-        data-card={exercise.wordId}
-        aria-label={ART_WORDS[exercise.wordId]}
+    <div className="flex flex-col items-center gap-5">
+      <AnswerTile
+        id={exercise.wordId}
+        label={ART_WORDS[exercise.wordId]}
         lang="en"
         disabled={!isInteractive(phase)}
-        onClick={replay}
-        className="inline-flex min-h-[120px] min-w-[120px] items-center justify-center rounded-3xl bg-white p-3 shadow-md active:scale-95"
-      >
-        <Animal id={exercise.wordId} size={240} />
-      </button>
-      <p className="font-display text-6xl font-bold">
+        onPress={replay}
+        artSize={240}
+        className="is-big"
+      />
+      <p className="k-big-word">
         <NarrationText narration={[{ lang: "en-US", text: word?.en ?? ART_WORDS[exercise.wordId] }]} />
       </p>
       <div className="min-h-16">
         {ready && isInteractive(phase) ? (
-          <BigButton label="Continuar" color="leaf" onPress={() => report(true)}>
-            <span aria-hidden="true" className="font-display text-2xl font-bold">
-              Já repeti!
-            </span>
-          </BigButton>
+          <ChunkyButton label="Continuar" tone="sun" onPress={() => report(true)}>
+            Já repeti!
+          </ChunkyButton>
         ) : null}
       </div>
     </div>

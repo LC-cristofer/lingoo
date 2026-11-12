@@ -3,11 +3,12 @@
 import { useRef, useState } from "react";
 import { narrator } from "@/audio/narrator";
 import type { CatExpression } from "@/art/Cat";
-import { BigButton } from "@/components/BigButton";
 import { repeatTap, type RepeatState } from "@/domain/trail/exercises";
 import type { ArtId, Exercise } from "@/domain/trail/schema";
 import type { Phase } from "@/domain/trail/session";
-import { ArtCard, CARD_ROW, isInteractive, useAnswerGate, useTimers } from "./shared";
+import { ChunkyButton } from "../kit/ChunkyButton";
+import { TileGrid } from "../kit/AnswerTile";
+import { ArtCard, isInteractive, useAnswerGate, useTimers } from "./shared";
 
 /** How long the gatinho stays "listening" (sua vez) after each tap. */
 export const LISTEN_MS = 1500;
@@ -49,7 +50,7 @@ export function TapRepeat({ exercise, phase, onAnswer, onCatExpression }: TapRep
 
   return (
     <div className="flex flex-col items-center gap-6">
-      <div className={CARD_ROW}>
+      <TileGrid dense={exercise.items.length % 3 === 0} six={exercise.items.length === 6}>
         {exercise.items.map((item) => (
           <ArtCard
             key={item.wordId}
@@ -57,18 +58,16 @@ export function TapRepeat({ exercise, phase, onAnswer, onCatExpression }: TapRep
             onTap={() => tap(item)}
             disabled={!isInteractive(phase)}
             glow={phase === "hint" && item.wordId === nextUntapped}
-            className={tapped.includes(item.wordId) ? "ring-4 ring-leaf" : ""}
+            className={tapped.includes(item.wordId) ? "is-tapped" : ""}
             data={{ "data-tapped": tapped.includes(item.wordId) ? "true" : undefined }}
           />
         ))}
-      </div>
+      </TileGrid>
       <div className="min-h-16">
         {complete && isInteractive(phase) ? (
-          <BigButton label="Continuar" color="leaf" onPress={() => report(true)}>
-            <span aria-hidden="true" className="font-display text-2xl font-bold">
-              Continuar
-            </span>
-          </BigButton>
+          <ChunkyButton label="Continuar" tone="sun" onPress={() => report(true)}>
+            Continuar
+          </ChunkyButton>
         ) : null}
       </div>
     </div>

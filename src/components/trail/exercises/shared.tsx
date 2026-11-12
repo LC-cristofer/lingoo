@@ -1,9 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useRef } from "react";
-import { Animal, ART_WORDS } from "@/art/Animal";
+import { ART_WORDS } from "@/art/Animal";
 import type { ArtId, Narration, Word } from "@/domain/trail/schema";
 import type { Phase } from "@/domain/trail/session";
+import { AnswerTile, type TileState } from "../kit/AnswerTile";
 
 /** Cards take taps only while the child is answering (or being helped by a hint). */
 export function isInteractive(phase: Phase): boolean {
@@ -101,29 +102,23 @@ type ArtCardProps = {
   onTap: () => void;
   disabled: boolean;
   glow?: boolean;
-  size?: number;
+  /** What the tile shows after an attempt; the hint glow wins over it. */
+  state?: TileState;
   className?: string;
   data?: Record<`data-${string}`, string | undefined>;
 };
 
 /** A tappable picture card: no visible text, the English word as its accessible name. */
-export function ArtCard({ id, onTap, disabled, glow = false, size = 112, className = "", data }: ArtCardProps) {
+export function ArtCard({ id, onTap, disabled, glow = false, state = "idle", className = "", data }: ArtCardProps) {
   return (
-    <button
-      type="button"
-      data-card={id}
-      aria-label={ART_WORDS[id]}
-      lang="en"
-      disabled={disabled}
-      onClick={onTap}
-      {...data}
-      className={`inline-flex min-h-[120px] min-w-[120px] items-center justify-center rounded-3xl bg-white p-2 shadow-md transition-transform active:scale-95 disabled:active:scale-100 ${
-        glow ? "ring-4 ring-sun" : ""
-      } ${className}`}
-    >
-      <Animal id={id} size={size} glow={glow} />
-    </button>
+    <AnswerTile id={id} label={ART_WORDS[id]} lang="en" onPress={onTap} disabled={disabled} state={glow ? "hint" : state} className={className} data={data} />
   );
 }
 
-export const CARD_ROW = "flex flex-wrap items-center justify-center gap-4";
+/** What a tile shows once the child picked `picked`: the right one green and the others dim; a wrong pick orange. */
+export function pickedState(phase: Phase, id: ArtId, picked: ArtId | null, answerId: ArtId): TileState {
+  if (picked === null) return "idle";
+  if (phase === "correct") return id === answerId ? "correct" : "dim";
+  if (phase === "retry" && id === picked) return "wrong";
+  return "idle";
+}

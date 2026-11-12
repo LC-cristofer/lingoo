@@ -6,7 +6,8 @@ import { narrator } from "@/audio/narrator";
 import { whatsMissingCheck } from "@/domain/trail/exercises";
 import type { ArtId, Exercise, Word } from "@/domain/trail/schema";
 import type { Phase } from "@/domain/trail/session";
-import { ArtCard, CARD_ROW, hashSeed, isInteractive, sayFor, useAnswerGate, useTimers } from "./shared";
+import { TileGrid } from "../kit/AnswerTile";
+import { ArtCard, hashSeed, pickedState, isInteractive, sayFor, useAnswerGate, useTimers } from "./shared";
 
 /** How long every animal is shown before one hides. */
 export const SHOW_MS = 2000;
@@ -24,7 +25,7 @@ type WhatsMissingProps = {
 
 function Bush() {
   return (
-    <svg viewBox="0 0 120 100" width={120} height={100} aria-hidden="true" className="absolute inset-0 m-auto">
+    <svg viewBox="0 0 120 100" width={120} height={100} aria-hidden="true" style={{ width: "84%", height: "auto" }}>
       <ellipse cx="60" cy="92" rx="52" ry="6" fill="rgba(43,45,66,.12)" />
       <circle cx="34" cy="62" r="28" fill="#4BAF5A" />
       <circle cx="86" cy="62" r="28" fill="#4BAF5A" />
@@ -41,6 +42,7 @@ export function WhatsMissing({ exercise, words, phase, onAnswer }: WhatsMissingP
   const { isLocked, report } = useAnswerGate(phase, onAnswer);
   const { later } = useTimers();
   const [step, setStep] = useState<Step>("show");
+  const [picked, setPicked] = useState<ArtId | null>(null);
 
   // The missing animal sits at a fixed, exercise-derived spot among the shown ones.
   const lineup = useMemo<ArtId[]>(() => {
@@ -62,6 +64,7 @@ export function WhatsMissing({ exercise, words, phase, onAnswer }: WhatsMissingP
     narrator.playSfx("tap");
     void narrator.playNarration(sayFor(words, id));
     const correct = whatsMissingCheck(exercise, id);
+    setPicked(id);
     if (correct) setStep("found");
     report(correct);
   };
@@ -70,7 +73,7 @@ export function WhatsMissing({ exercise, words, phase, onAnswer }: WhatsMissingP
 
   return (
     <div className="flex flex-col items-center gap-6">
-      <div data-row="shown" className={CARD_ROW}>
+      <TileGrid data-row="shown" dense={slots.length === 3} small={slots.length !== 3}>
         {slots.map((id) => {
           const covered = step === "hiding" && id === exercise.missingId;
           return (
@@ -78,22 +81,22 @@ export function WhatsMissing({ exercise, words, phase, onAnswer }: WhatsMissingP
               key={id}
               data-slot={id}
               data-hidden={covered ? "true" : undefined}
-              className="relative inline-flex min-h-[120px] min-w-[120px] items-center justify-center rounded-3xl bg-white p-2 shadow-md transition-all duration-500"
+              className="k-slot min-h-[120px] min-w-[120px]"
             >
-              <div aria-hidden={covered ? "true" : undefined} className={covered ? "invisible" : ""}>
+              <div aria-hidden={covered ? "true" : undefined} className={covered ? "invisible contents" : "contents"}>
                 <Animal id={id} size={112} />
               </div>
               {covered ? (
-                <div data-bush="true" className="absolute inset-0">
+                <div data-bush="true" className="k-bush">
                   <Bush />
                 </div>
               ) : null}
             </div>
           );
         })}
-      </div>
+      </TileGrid>
       {step === "choose" || step === "found" ? (
-        <div data-row="options" className={CARD_ROW}>
+        <TileGrid data-row="options" dense={exercise.optionIds.length === 3} small={exercise.optionIds.length !== 3}>
           {exercise.optionIds.map((id) => (
             <ArtCard
               key={id}
@@ -101,9 +104,10 @@ export function WhatsMissing({ exercise, words, phase, onAnswer }: WhatsMissingP
               onTap={() => choose(id)}
               disabled={!isInteractive(phase) || step === "found"}
               glow={phase === "hint" && id === exercise.missingId}
+              state={pickedState(phase, id, picked, exercise.missingId)}
             />
           ))}
-        </div>
+        </TileGrid>
       ) : null}
     </div>
   );

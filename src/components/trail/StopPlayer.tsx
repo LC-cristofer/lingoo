@@ -1,16 +1,20 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Animal, ART_WORDS } from "@/art/Animal";
+import { ART_WORDS } from "@/art/Animal";
 import { Cat, type CatExpression } from "@/art/Cat";
 import { narrator } from "@/audio/narrator";
-import { BigButton } from "@/components/BigButton";
 import { getLines } from "@/domain/trail/content";
 import type { Exercise, LessonStop, Narration, Unit, Word } from "@/domain/trail/schema";
 import { answer, next, progressRatio, resume, startSession, type Phase } from "@/domain/trail/session";
 import { ChestReward } from "./ChestReward";
 import { ExerciseShell } from "./ExerciseShell";
 import { ExerciseView } from "./exercises/ExerciseView";
+import { AnswerTile, TileGrid } from "./kit/AnswerTile";
+import { Bubble } from "./kit/Bubble";
+import { ChunkyButton } from "./kit/ChunkyButton";
+import { ForestScene } from "./kit/ForestScene";
+import { LessonTopBar } from "./kit/LessonTopBar";
 import { PlayIcon } from "./icons";
 import { NarrationText } from "./NarrationText";
 import { useTrailProgress } from "./TrailProgressProvider";
@@ -41,35 +45,39 @@ function catFor(phase: Phase): CatExpression {
   return "helping";
 }
 
+/** The stop's words as tiles with the English word under each (tap to hear it). */
 function WordCards({ words, ids }: { words: Word[]; ids: Word["id"][] }) {
   return (
-    <div className="flex flex-wrap items-center justify-center gap-4">
-      {ids.map((id) => {
-        const word = words.find((w) => w.id === id);
-        return (
-          <button
-            key={id}
-            type="button"
-            data-word={id}
-            aria-label={ART_WORDS[id]}
-            lang="en"
-            onClick={() => {
-              narrator.playSfx("tap");
-              void narrator.playNarration(word?.say ?? [{ lang: "en-US", text: ART_WORDS[id] }]);
-            }}
-            className="inline-flex min-h-[120px] min-w-[120px] items-center justify-center rounded-3xl bg-white p-2 shadow-md transition-transform active:scale-95"
-          >
-            <Animal id={id} size={130} />
-          </button>
-        );
-      })}
+    <div className="k-words">
+      <TileGrid dense={ids.length % 3 === 0} six={ids.length === 6}>
+        {ids.map((id) => {
+          const word = words.find((w) => w.id === id);
+          return (
+            <div key={id} className="k-word">
+              <AnswerTile
+                id={id}
+                label={ART_WORDS[id]}
+                lang="en"
+                data={{ "data-word": id }}
+                onPress={() => {
+                  narrator.playSfx("tap");
+                  void narrator.playNarration(word?.say ?? [{ lang: "en-US", text: ART_WORDS[id] }]);
+                }}
+              />
+              <b lang="en" className="k-word-en">
+                {word?.en ?? ART_WORDS[id]}
+              </b>
+            </div>
+          );
+        })}
+      </TileGrid>
     </div>
   );
 }
 
 function Star() {
   return (
-    <svg viewBox="-60 -60 120 120" width={120} height={120} role="img" aria-label="Estrela" data-testid="star">
+    <svg viewBox="-60 -60 120 120" width={80} height={80} role="img" aria-label="Estrela" data-testid="star">
       <g className="art-sticker-pop">
         <path
           d="M0 -48 l14 30 l33 4 l-24 22 l7 32 l-30 -17 l-30 17 l7 -32 l-24 -22 l33 -4z"
@@ -173,17 +181,24 @@ export function StopPlayer({ unit, stop, onExit, record = true }: StopPlayerProp
 
   if (step === "opening") {
     return (
-      <div className="flex min-h-dvh flex-col items-center justify-center gap-6 bg-cream p-4 text-ink">
-        <div className="flex items-center gap-3">
-          <Cat expression="happy" size={150} />
-          <p className="max-w-md rounded-3xl bg-white px-5 py-3 font-display text-2xl font-semibold leading-snug shadow-md">
-            <NarrationText narration={stop.opening} />
-          </p>
+      <div className="k-screen">
+        <ForestScene variant="lesson" trees />
+        <div className="k-stage">
+          <LessonTopBar ratio={0} onExit={onExit} title={stop.title} />
+          <div className="k-hello">
+            <Bubble tail="down">
+              <NarrationText narration={stop.opening} />
+            </Bubble>
+            <span className="k-cat">
+              <Cat expression="happy" size={170} />
+            </span>
+          </div>
+          <WordCards words={unit.words} ids={stop.wordIds} />
+          <ChunkyButton label="Começar" tone="sun" size="lg" className="k-cta" onPress={start}>
+            Começar
+            <PlayIcon size={28} />
+          </ChunkyButton>
         </div>
-        <WordCards words={unit.words} ids={stop.wordIds} />
-        <BigButton label="Começar" color="leaf" onPress={start}>
-          <PlayIcon />
-        </BigButton>
       </div>
     );
   }
@@ -191,27 +206,34 @@ export function StopPlayer({ unit, stop, onExit, record = true }: StopPlayerProp
   if (step === "closing") {
     const isChallenge = stop.kind === "challenge";
     return (
-      <div className="flex min-h-dvh flex-col items-center justify-center gap-5 bg-cream p-4 text-ink">
-        <div className="flex items-center gap-3">
-          <Cat expression="happy" size={130} />
-          <p className="max-w-md rounded-3xl bg-white px-5 py-3 font-display text-2xl font-semibold leading-snug shadow-md">
-            <NarrationText narration={stop.closing} />
-          </p>
-        </div>
-        <Star />
-        <p className="font-display text-2xl font-bold">
-          <NarrationText narration={lines.star} />
-        </p>
-        <WordCards words={unit.words} ids={stop.wordIds} />
-        <BigButton
-          label={isChallenge ? "Continuar" : "Voltar ao mapa"}
-          color="leaf"
-          onPress={isChallenge ? () => setStep("chest") : onExit}
-        >
-          <span aria-hidden="true" className="font-display text-2xl font-bold">
+      <div className="k-screen">
+        <ForestScene variant="lesson" trees />
+        <div className="k-stage is-closing">
+          <div className="k-hello">
+            <Bubble tail="down">
+              <NarrationText narration={stop.closing} />
+            </Bubble>
+            <span className="k-cat">
+              <Cat expression="happy" size={120} />
+            </span>
+          </div>
+          <div className="k-reward">
+            <Star />
+            <p className="k-star-line">
+              <NarrationText narration={lines.star} />
+            </p>
+          </div>
+          <WordCards words={unit.words} ids={stop.wordIds} />
+          <ChunkyButton
+            label={isChallenge ? "Continuar" : "Voltar ao mapa"}
+            tone="sun"
+            size="lg"
+            className="k-cta"
+            onPress={isChallenge ? () => setStep("chest") : onExit}
+          >
             {isChallenge ? "Continuar" : "Voltar ao mapa"}
-          </span>
-        </BigButton>
+          </ChunkyButton>
+        </div>
       </div>
     );
   }

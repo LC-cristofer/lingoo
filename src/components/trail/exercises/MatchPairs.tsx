@@ -7,7 +7,9 @@ import { matchSelect, type MatchState } from "@/domain/trail/exercises";
 import type { ArtId, Exercise, Word } from "@/domain/trail/schema";
 import type { Phase } from "@/domain/trail/session";
 import { SpeakerIcon } from "../icons";
-import { ArtCard, CARD_ROW, hashSeed, isInteractive, sayFor, seededShuffle, useAnswerGate, useTimers } from "./shared";
+import { TileGrid } from "../kit/AnswerTile";
+import { ChunkyButton } from "../kit/ChunkyButton";
+import { ArtCard, hashSeed, isInteractive, sayFor, seededShuffle, useAnswerGate, useTimers } from "./shared";
 
 export const SHAKE_MS = 400;
 const START: MatchState = { selected: null, matched: [] };
@@ -65,13 +67,14 @@ export function MatchPairs({ exercise, words, phase, onAnswer }: MatchPairsProps
         "data-selected": selected ? "true" : undefined,
         "data-shake": shake ? "true" : undefined,
       },
-      className: `${matched ? "bg-leaf/30 ring-4 ring-leaf" : selected ? "ring-4 ring-sky" : ""} ${shake ? "card-shake" : ""}`,
+      selected,
+      className: `${selected ? "is-selected" : ""} ${shake ? "card-shake" : ""}`,
     };
   };
 
   return (
     <div className="flex flex-col items-center gap-6">
-      <div className={CARD_ROW}>
+      <TileGrid dense={exercise.wordIds.length === 3} small={exercise.wordIds.length !== 3}>
         {artOrder.map((id) => {
           const f = flags("art", id);
           return (
@@ -81,32 +84,31 @@ export function MatchPairs({ exercise, words, phase, onAnswer }: MatchPairsProps
               onTap={() => select("art", id)}
               disabled={!interactive || f.matched}
               glow={hintId === id}
+              state={f.matched ? "correct" : "idle"}
               className={f.className}
               data={f.data}
             />
           );
         })}
-      </div>
-      <div className={CARD_ROW}>
+      </TileGrid>
+      <div className="flex flex-wrap items-center justify-center gap-3">
         {exercise.wordIds.map((id) => {
           const f = flags("word", id);
           const glow = hintId === id;
           return (
-            <button
+            <ChunkyButton
               key={id}
-              type="button"
-              data-word={id}
-              data-glow={glow ? "true" : undefined}
-              {...f.data}
+              label={words.find((w) => w.id === id)?.en ?? ART_WORDS[id]}
+              lang="en"
+              tone="white"
               disabled={!interactive || f.matched}
-              onClick={() => select("word", id)}
-              className={`inline-flex min-h-16 min-w-[120px] items-center justify-center gap-2 rounded-3xl bg-white px-4 py-2 font-display text-2xl font-bold text-ink shadow-md transition-transform active:scale-95 disabled:active:scale-100 ${
-                glow ? "animate-pulse ring-4 ring-sun" : ""
-              } ${f.className}`}
+              onPress={() => select("word", id)}
+              data={{ "data-word": id, "data-glow": glow ? "true" : undefined, ...f.data }}
+              className={`min-w-[120px] ${f.matched ? "is-matched" : ""} ${f.selected ? "is-selected" : ""} ${glow ? "is-glow" : ""} ${f.className}`}
             >
-              <SpeakerIcon />
+              <SpeakerIcon size={30} />
               <span lang="en">{words.find((w) => w.id === id)?.en ?? ART_WORDS[id]}</span>
-            </button>
+            </ChunkyButton>
           );
         })}
       </div>

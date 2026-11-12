@@ -42,12 +42,13 @@ describe("ProgressBar", () => {
 });
 
 describe("FeedbackBanner text", () => {
-  it.each(["correct", "retry", "hint"] as const)("%s: navy bold text, English not highlighted in sky, still lang=en", (kind) => {
+  // Approved 2026-11-12: correct = deep green with white text; retry and hint = orange with navy text.
+  it.each(["correct", "retry", "hint"] as const)("%s: readable text (white on green, navy on orange), English not highlighted in sky, still lang=en", (kind) => {
     const { container } = render(<FeedbackBanner kind={kind} line={[{ lang: "en-US", text: "Great!" }]} />);
     const en = container.querySelector('[lang="en"]')!;
     expect(en).toBeInTheDocument();
     expect(en.className).not.toContain("text-sky");
-    expect(container.querySelector("p")!.className).toContain("text-ink");
+    expect(container.querySelector("p")!.className).toContain(kind === "correct" ? "text-white" : "text-ink");
   });
 });
 

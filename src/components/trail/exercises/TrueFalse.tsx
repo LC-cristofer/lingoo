@@ -5,6 +5,7 @@ import { Animal } from "@/art/Animal";
 import { narrator } from "@/audio/narrator";
 import type { Exercise } from "@/domain/trail/schema";
 import type { Phase } from "@/domain/trail/session";
+import { ChunkyButton } from "../kit/ChunkyButton";
 import { isInteractive, useAnswerGate } from "./shared";
 
 type TrueFalseProps = {
@@ -29,32 +30,31 @@ export function TrueFalse({ exercise, phase, onAnswer }: TrueFalseProps) {
   };
 
   const thumbs = [
-    { choice: true, label: "Certo", emoji: "👍", color: "bg-leaf" },
-    { choice: false, label: "Errado", emoji: "👎", color: "bg-coral" },
+    { choice: true, label: "Certo", emoji: "👍", tone: "leaf" as const },
+    { choice: false, label: "Errado", emoji: "👎", tone: "coral" as const },
   ];
 
   return (
     <div className="flex flex-col items-center gap-6">
-      <div className="rounded-3xl bg-white p-3 shadow-md">
+      <div className="k-slot k-slot-art">
         <Animal id={exercise.wordId} size={200} />
       </div>
       <div className="flex items-center justify-center gap-8">
-        {thumbs.map(({ choice, label, emoji, color }) => {
+        {thumbs.map(({ choice, label, emoji, tone }) => {
           const glow = phase === "hint" && choice === exercise.isTrue;
           return (
-            <button
+            <ChunkyButton
               key={label}
-              type="button"
-              aria-label={label}
-              data-glow={glow ? "true" : undefined}
+              label={label}
+              tone={tone}
+              size="round"
               disabled={!isInteractive(phase)}
-              onClick={() => choose(choice)}
-              className={`${color} inline-flex min-h-[96px] min-w-[96px] items-center justify-center rounded-full text-5xl shadow-md transition-transform active:scale-95 disabled:active:scale-100 ${
-                glow ? "animate-pulse ring-8 ring-sun" : ""
-              }`}
+              onPress={() => choose(choice)}
+              data={{ "data-glow": glow ? "true" : undefined }}
+              className={`min-h-[96px] min-w-[96px] ${glow ? "is-glow" : ""}`}
             >
               <span aria-hidden="true">{emoji}</span>
-            </button>
+            </ChunkyButton>
           );
         })}
       </div>
