@@ -1,29 +1,32 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { BigButton } from "@/components/BigButton";
-import { WorldMap } from "@/components/map/WorldMap";
-import { BookIcon } from "@/components/lesson/icons";
-import { useProgress } from "@/components/ProgressProvider";
-import { getWorlds } from "@/domain/content";
-import { emptyProgress } from "@/domain/progress";
+import { useMemo } from "react";
+import { TrailMap } from "@/components/trail/TrailMap";
+import { useTrailProgress } from "@/components/trail/TrailProgressProvider";
+import { getPath, getUnit } from "@/domain/trail/content";
+import { stopHref } from "@/domain/trail/routes";
+import type { Unit } from "@/domain/trail/schema";
 
 export default function MapPage() {
   const router = useRouter();
-  const { progress, hydrated } = useProgress();
-  const world = getWorlds()[0];
+  const { progress, hydrated } = useTrailProgress();
+  const path = useMemo(() => getPath(), []);
+  const units = useMemo(() => {
+    const out: Record<string, Unit> = {};
+    for (const u of path) {
+      if (!u.hasContent) continue;
+      const unit = getUnit(u.unitId);
+      if (unit) out[u.unitId] = unit;
+    }
+    return out;
+  }, [path]);
+
+  // Draw the map once saved progress is known, so the stops never flash locked first.
+  if (!hydrated) return <main className="k-screen" aria-busy="true" />;
   return (
-    <main className="relative flex-1">
-      <div className="fixed right-4 top-4 z-10">
-        <BigButton label="Álbum" color="coral" onPress={() => router.push("/album")}>
-          <BookIcon />
-        </BigButton>
-      </div>
-      <WorldMap
-        world={world}
-        progress={hydrated ? progress : emptyProgress()}
-        onOpen={(id) => router.push(`/licao/${id}`)}
-      />
+    <main>
+      <TrailMap path={path} units={units} progress={progress} onOpenStop={(id) => router.push(stopHref(id))} />
     </main>
   );
 }

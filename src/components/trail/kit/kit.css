@@ -167,8 +167,42 @@
 .k-story .k-bubble { max-width: 640px; }
 .k-story-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px; }
 
+/* ---------- trail map ---------- */
+.k-map-page { position: relative; width: 100%; overflow: hidden; padding-bottom: calc(96px + env(safe-area-inset-bottom)); font-family: var(--font-nunito), system-ui, sans-serif; color: #2b2d42; }
+.k-map { position: relative; width: 100%; margin: 0 auto; }
+.k-map-layer { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.k-placed { position: absolute; transform: translate(-50%, -50%); z-index: 1; }
+.k-peek, .k-ghost { pointer-events: none; }
+.k-map-sign { position: absolute; z-index: 2; }
+.k-map-top { position: fixed; top: 0; left: 0; right: 0; height: 0; z-index: 4; }
+.k-guide { position: absolute; z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 2px; pointer-events: none; white-space: nowrap; }
+.k-guide.is-right-of { transform: translate(52px, -30px); }
+.k-guide.is-left-of { transform: translate(calc(-100% - 52px), -30px); }
+.k-guide .k-bubble { font-size: 19px; padding: 8px 14px 6px; margin-bottom: 4px; }
+.k-guide .k-bubble b { color: #2c82cc; }
+
+/* ---------- start screen ---------- */
+.k-decos { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.k-start { position: relative; min-height: 100dvh; display: flex; flex-direction: column; align-items: center; padding: 86px 24px calc(44px + env(safe-area-inset-bottom)); text-align: center; }
+.k-logo { margin: 0; font-family: var(--font-baloo), system-ui, sans-serif; font-weight: 800; font-size: 92px; line-height: 0.9; color: #fff; text-shadow: 0 4px 0 #2c82cc, 0 9px 0 rgba(31, 60, 40, 0.22); letter-spacing: -1px; }
+.k-tagline { margin: 10px 0 0; font-family: var(--font-baloo), system-ui, sans-serif; font-weight: 700; font-size: 23px; color: #1f5e96; }
+.k-start-cast { position: relative; margin-top: auto; display: flex; align-items: flex-end; justify-content: center; }
+.k-start-cast .k-cast-l { margin-right: -22px; margin-bottom: 6px; }
+.k-start-cast .k-cast-r { margin-left: -18px; margin-bottom: 2px; }
+/* Phone: logo, tagline, the cast, then Jogar at the bottom (the text block dissolves into the column). */
+.k-start-text { display: contents; }
+.k-start-cast { order: 2; }
+.k-start .k-start-play { order: 3; margin-top: 26px; width: 100%; max-width: 520px; }
+
 /* ---------- wide landscape (tablet) ---------- */
 @media (min-width: 900px) and (orientation: landscape) {
+  .k-nav { left: 50%; right: auto; transform: translateX(-50%); width: 380px; bottom: 14px; border-radius: 26px; box-shadow: 0 6px 0 rgba(31, 60, 40, 0.2); }
+  .k-start { flex-direction: row; justify-content: center; gap: 70px; padding: 60px; text-align: left; }
+  .k-start-text { display: flex; flex-direction: column; align-items: flex-start; }
+  .k-logo { font-size: 132px; }
+  .k-tagline { font-size: 32px; margin-bottom: 34px; }
+  .k-start-cast { margin-top: 120px; order: 0; }
+  .k-start .k-start-play { margin-top: 0; width: auto; min-width: 300px; }
   .k-lyrics li.is-current { font-size: 34px; }
   .k-lesson { padding: 18px 28px 0; gap: 14px; }
   .k-ask { max-width: 820px; margin: 0 auto; width: 100%; }

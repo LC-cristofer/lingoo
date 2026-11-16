@@ -17,13 +17,10 @@ test("plays the whole forest-animals lesson and earns the fox sticker", async ({
     Object.defineProperty(window, "speechSynthesis", { value: undefined, configurable: true });
   });
 
-  await page.goto("/");
+  // Since the v2 trail map took over "/" and "/mapa", the phase 1 lesson is reached by URL only
+  // (this spec is removed with the phase 1 flow).
+  await page.goto("/licao/forest-animals");
   await page.getByRole("button", { name: "Começar" }).click();
-  await expect(page).toHaveURL(/\/mapa$/);
-
-  const place = page.getByRole("button", { name: "Animais da floresta" });
-  await place.click();
-  await expect(page).toHaveURL(/\/licao\/forest-animals$/);
 
   const advance = page.getByRole("button", { name: "Avançar" });
 
@@ -52,18 +49,14 @@ test("plays the whole forest-animals lesson and earns the fox sticker", async ({
   // sticker -> final screen
   const back = page.getByRole("button", { name: "Voltar ao mapa" });
   await expect(back).toBeVisible({ timeout: 10_000 });
+  // The phase 1 map and album were replaced by the v2 trail: check the phase 1 progress itself.
+  const v1 = () => page.evaluate(() => JSON.parse(localStorage.getItem("lingoo:progress:v1") ?? "null"));
+  await expect.poll(async () => Object.keys((await v1())?.stickers ?? {})).toEqual(["sticker-fox"]);
+  expect(Object.keys((await v1()).completedLessons)).toEqual(["forest-animals"]);
   await back.click();
   await expect(page).toHaveURL(/\/mapa$/);
-  await expect(page.getByRole("button", { name: "Animais da floresta" })).toHaveAttribute("data-status", "done");
-
-  await page.getByRole("button", { name: "Álbum" }).click();
-  await expect(page).toHaveURL(/\/album$/);
-  const slot = page.locator('[data-earned="true"]');
-  await expect(slot).toHaveCount(1);
 
   // progress survives a reload
   await page.reload();
-  await expect(page.locator('[data-earned="true"]')).toHaveCount(1);
-  await page.goto("/mapa");
-  await expect(page.getByRole("button", { name: "Animais da floresta" })).toHaveAttribute("data-status", "done");
+  expect(Object.keys((await v1()).stickers)).toEqual(["sticker-fox"]);
 });

@@ -9,6 +9,8 @@ type StopButtonProps = {
   label: string;
   labelSide: "left" | "right";
   onPress: () => void;
+  /** Called instead of onPress when a locked stop is tapped (to say it is locked). */
+  onLockedPress?: () => void;
   /** Diameter of the disc in px (the current stop is drawn 14 px larger). */
   size?: number;
 };
@@ -22,7 +24,7 @@ const COLORS: Record<Stop["kind"], [string, string]> = {
 const LOCKED: [string, string] = ["#D5D9E0", "#AEB4BF"];
 
 /** A chunky, pressable stop: a disc on a darker edge, its name beside it. */
-export function StopButton({ kind, state, label, labelSide, onPress, size = 76 }: StopButtonProps) {
+export function StopButton({ kind, state, label, labelSide, onPress, onLockedPress, size = 76 }: StopButtonProps) {
   const locked = state === "locked";
   const [fill, edge] = locked ? LOCKED : COLORS[kind];
   const s = state === "current" ? size + 14 : size;
@@ -35,6 +37,7 @@ export function StopButton({ kind, state, label, labelSide, onPress, size = 76 }
       aria-disabled={locked ? "true" : undefined}
       onClick={() => {
         if (!locked) onPress();
+        else onLockedPress?.();
       }}
       className="k-stop"
       style={{ width: s, height: s }}

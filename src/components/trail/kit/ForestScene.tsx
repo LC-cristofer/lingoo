@@ -88,10 +88,15 @@ export function ForestScene({ variant, trees = false }: { variant: Variant; tree
       <svg className="k-scene-meadow" width="100%" height="100%">
         <defs>
           <pattern id={`k-meadow-${variant}`} width="390" height="300" patternUnits="userSpaceOnUse">
-            <ellipse cx="86" cy="60" rx="133" ry="46" fill="#52B861" />
-            <ellipse cx="304" cy="130" rx="117" ry="38" fill="#68CE77" />
-            <ellipse cx="312" cy="210" rx="133" ry="46" fill="#52B861" />
-            <ellipse cx="78" cy="280" rx="117" ry="38" fill="#68CE77" />
+            {/* Each patch is drawn again one tile to the left and right, so the tiles meet without a seam. */}
+            {[-390, 0, 390].map((dx) => (
+              <g key={dx} transform={`translate(${dx} 0)`}>
+                <ellipse cx="86" cy="60" rx="133" ry="46" fill="#52B861" />
+                <ellipse cx="304" cy="130" rx="117" ry="38" fill="#68CE77" />
+                <ellipse cx="312" cy="210" rx="133" ry="46" fill="#52B861" />
+                <ellipse cx="78" cy="280" rx="117" ry="38" fill="#68CE77" />
+              </g>
+            ))}
           </pattern>
         </defs>
         <rect width="100%" height="100%" fill={`url(#k-meadow-${variant})`} />

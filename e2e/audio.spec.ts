@@ -29,14 +29,7 @@ test("a lesson opened by URL asks for one ▶ tap, then the song is heard", asyn
   expect(entries).toContain(`speak:${SONG}`);
 });
 
-test("opening /mapa directly: the first tap anywhere unlocks audio for the lesson", async ({ page }) => {
-  await page.addInitScript(installFakeSpeech, { holdMs: 50 });
-  await page.goto("/mapa", { waitUntil: "networkidle" });
-  await page.getByRole("button", { name: "Animais da floresta" }).click();
-  await expect(page).toHaveURL(/\/licao\/forest-animals$/);
-  await expect.poll(() => spoken(page)).toContain(SONG);
-  await expect(page.getByRole("button", { name: "Começar" })).toHaveCount(0);
-});
+// "Opening /mapa directly: the first tap anywhere unlocks audio" moved to e2e/trail-map.spec.ts (v2 map).
 
 test("tap game: wrong, then right 100 ms later, says 'Great job!' and does not re-ask", async ({ page }) => {
   await page.addInitScript(installFakeSpeech, { holdMs: 50 });

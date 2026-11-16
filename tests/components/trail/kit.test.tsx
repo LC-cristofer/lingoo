@@ -124,9 +124,25 @@ describe("StopButton", () => {
     await userEvent.click(button);
     expect(onPress).not.toHaveBeenCalled();
   });
+
+  it("a locked one calls onLockedPress instead, when given", async () => {
+    const onPress = vi.fn();
+    const onLockedPress = vi.fn();
+    render(<StopButton kind="story" state="locked" label="História" labelSide="left" onPress={onPress} onLockedPress={onLockedPress} />);
+    await userEvent.click(screen.getByRole("button", { name: "História" }));
+    expect(onLockedPress).toHaveBeenCalledOnce();
+    expect(onPress).not.toHaveBeenCalled();
+  });
 });
 
 describe("BottomNav", () => {
+  it("hides Memória entirely with showMemory={false}", () => {
+    render(<BottomNav active="trilha" showMemory={false} />);
+    const links = screen.getAllByRole("link");
+    expect(links.map((l) => l.textContent)).toEqual(["Trilha", "Álbum"]);
+    expect(screen.queryByText("Memória")).not.toBeInTheDocument();
+  });
+
   it("has Trilha, Memória, Álbum in order and marks the active one", () => {
     render(<BottomNav active="memoria" />);
     const links = screen.getAllByRole("link");

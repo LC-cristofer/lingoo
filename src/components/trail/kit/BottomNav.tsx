@@ -3,7 +3,13 @@ import type { ReactNode } from "react";
 
 type Tab = "trilha" | "memoria" | "album";
 
-type BottomNavProps = { active: Tab; memoryDue?: number; memoryEnabled?: boolean };
+type BottomNavProps = {
+  active: Tab;
+  memoryDue?: number;
+  memoryEnabled?: boolean;
+  /** False leaves the Memória tab out entirely (no disabled placeholder). */
+  showMemory?: boolean;
+};
 
 const TrailIcon = (
   <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true">
@@ -26,12 +32,13 @@ const AlbumIcon = (
 );
 
 /** The three tabs, always in this order: Trilha, Memória, Álbum. */
-export function BottomNav({ active, memoryDue = 0, memoryEnabled = true }: BottomNavProps) {
-  const tabs: { id: Tab; href: string; label: string; icon: ReactNode }[] = [
+export function BottomNav({ active, memoryDue = 0, memoryEnabled = true, showMemory = true }: BottomNavProps) {
+  const all: { id: Tab; href: string; label: string; icon: ReactNode }[] = [
     { id: "trilha", href: "/mapa", label: "Trilha", icon: TrailIcon },
     { id: "memoria", href: "/memoria", label: "Memória", icon: MemoryIcon },
     { id: "album", href: "/album", label: "Álbum", icon: AlbumIcon },
   ];
+  const tabs = showMemory ? all : all.filter((t) => t.id !== "memoria");
   return (
     <nav aria-label="Navegação" className="k-nav">
       {tabs.map((t) => {
