@@ -161,6 +161,12 @@
 .k-lyrics li.is-next { display: block; font-size: 19px; background: rgba(255, 255, 255, 0.72); color: #5e6475; }
 .k-sing-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px; }
 
+/* ---------- story ---------- */
+.k-story { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; width: 100%; }
+.k-story-scene { width: min(100%, calc((100dvh - 340px) * 1.6)); aspect-ratio: 16 / 10; border-radius: 26px; overflow: hidden; border: 5px solid #fff; box-shadow: 0 8px 0 rgba(31, 60, 40, 0.18); }
+.k-story .k-bubble { max-width: 640px; }
+.k-story-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px; }
+
 /* ---------- wide landscape (tablet) ---------- */
 @media (min-width: 900px) and (orientation: landscape) {
   .k-lyrics li.is-current { font-size: 34px; }

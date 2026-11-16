@@ -94,6 +94,14 @@ describe("StopScreen", () => {
     expect(screen.getByText("Vamos cantar", { exact: false })).toBeInTheDocument();
   });
 
+  it("opens the story player for a story stop", () => {
+    search = "revisao=1";
+    render(<StopScreen stopId="forest-animals/story" />);
+    expect(screen.queryByText("Em construção")).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Começar" })).toBeInTheDocument();
+    expect(screen.getByText("O gatinho na floresta")).toBeInTheDocument();
+  });
+
   it("review mode renders a locked stop without marking the day", () => {
     search = "revisao=1";
     render(<StopScreen stopId="forest-animals/lesson-1" />);
