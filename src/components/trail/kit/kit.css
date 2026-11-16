@@ -208,6 +208,10 @@
 .k-story { height: 100dvh; min-height: 0; overflow: hidden; gap: 10px; padding-bottom: calc(14px + env(safe-area-inset-bottom)); }
 .k-book { width: 100%; max-width: 560px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
 .k-book-frame { width: 100%; aspect-ratio: 4 / 3; max-height: 40dvh; border-radius: 28px; border: 6px solid #fff; box-shadow: 0 8px 0 rgba(31, 60, 40, 0.28); overflow: hidden; background: #cfeedd; }
+/* A phone held upright has room for a taller page: the picture fills it instead of leaving green empty. */
+@media (max-width: 899px) and (orientation: portrait) {
+  .k-book-frame { aspect-ratio: 1 / 1; max-height: 44dvh; }
+}
 .k-dots { display: flex; gap: 8px; }
 .k-dots > i { width: 12px; height: 12px; border-radius: 50%; background: rgba(255, 255, 255, 0.55); display: block; }
 .k-dots > i.is-done { background: #fff; }

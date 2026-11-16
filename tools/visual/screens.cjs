@@ -11,6 +11,7 @@ const { chromium } = require("playwright");
 const unit = require("../../content/units/forest-animals.json");
 
 const OUT = path.resolve(process.argv[2] ?? "tools/visual/.out/screens");
+const SCALE = Number(process.env.SCALE ?? 1); // deviceScaleFactor: 1 to check, 2 for the committed captures
 const ONLY = process.env.ONLY; // "phone" or "tablet" to capture a single form factor
 const BASE = process.argv[3] ?? "http://localhost:3220";
 const VIEWPORTS = [
@@ -108,11 +109,36 @@ async function solve(page, ex, capture) {
   }
 }
 
-/** An exercise answered wrong comes back at the end: play the repeats (listenTap only) until `done` shows. */
+/** The memory round after a lesson: flip every card, check every card, leave the summary. */
+async function memoryThrough(page) {
+  const total = Number((await page.getByText(/^1 de \d+$/).textContent()).match(/de (\d+)/)[1]);
+  for (let i = 0; i < total; i++) {
+    await page.getByRole("button", { name: "Virar o cartão" }).click();
+    await page.getByRole("button", { name: "Próximo" }).click();
+  }
+  for (let i = 0; i < total; i++) {
+    await page.locator("button[data-card]").first().waitFor();
+    const asked = (await page.locator(".k-bubble b[lang='en']").first().textContent()).replace(/[^a-z]/gi, "");
+    await card(page, asked).click();
+    await continueSheet(page);
+  }
+  await page.getByRole("button", { name: "Continuar" }).click();
+}
+
+/** An exercise answered wrong comes back at the end (listenTap only); a lesson then runs its memory round.
+ *  Loops until `done` shows. */
 async function finishRepeats(page, done) {
-  for (let i = 0; i < 6; i++) {
+  for (let i = 0; i < 8; i++) {
     if (await done.isVisible()) return;
-    const target = await page.locator(".k-bubble b[lang='en']").first().textContent({ timeout: 3000 });
+    if (await page.getByRole("button", { name: "Virar o cartão" }).isVisible()) {
+      await memoryThrough(page);
+      continue;
+    }
+    const target = await page.locator(".k-bubble b[lang='en']").first().textContent({ timeout: 3000 }).catch(() => null);
+    if (target === null) {
+      await page.waitForTimeout(400);
+      continue;
+    }
     await card(page, target.replace(/[^a-z]/gi, "")).click();
     await continueSheet(page);
   }
@@ -126,6 +152,123 @@ async function play(page, prefix, slug) {
   return stop;
 }
 
+
+const pad = (n) => String(n).padStart(2, "0");
+const dayKey = (offset) => {
+  const d = new Date();
+  d.setDate(d.getDate() + offset);
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+};
+const WORDS = ["bear", "bird", "frog", "snake", "spider"];
+const progressOf = ({ stops = [], stickers = {}, memory = {} }) => ({
+  completedStops: Object.fromEntries(stops.map((slug) => [`forest-animals/${slug}`, dayKey(0)])),
+  stickers,
+  daysPlayed: [dayKey(0)],
+  memory,
+});
+const cards = (words, box, due) => Object.fromEntries(words.map((w) => [`forest-animals:${w}`, { box, due }]));
+
+/** A fresh context whose progress is stored before the app loads. */
+async function withProgress(browser, vp, progress) {
+  const ctx = await browser.newContext({ viewport: { width: vp.width, height: vp.height }, deviceScaleFactor: SCALE });
+  if (progress) await ctx.addInitScript(([k, v]) => localStorage.setItem(k, v), ["lingoo:progress:v2", JSON.stringify(progress)]);
+  return { ctx, page: await ctx.newPage() };
+}
+
+/** Start, map, song, story, album and the memory screens. */
+async function extras(browser, vp) {
+  const P = vp.prefix;
+  const open = async (page, url, ready) => {
+    await page.goto(`${BASE}${url}`, { waitUntil: "networkidle" });
+    if (ready) await ready();
+  };
+  console.log(`\n== ${P} start, map, song, story, album, memory`);
+  let { ctx, page } = await withProgress(browser, vp, null);
+  await open(page, "/");
+  await shot(page, P, "start");
+  await open(page, "/mapa");
+  await shot(page, P, "map-new");
+  await ctx.close();
+
+  ({ ctx, page } = await withProgress(browser, vp, progressOf({ stops: ["song", "lesson-1"], memory: cards(WORDS.slice(0, 3), 1, dayKey(1)) })));
+  await open(page, "/mapa");
+  await shot(page, P, "map-progress");
+  await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+  await shot(page, P, "map-next-unit");
+  await ctx.close();
+
+  // The song: karaoke (the line being sung) after the start.
+  ({ ctx, page } = await withProgress(browser, vp, progressOf({})));
+  await open(page, "/parada/forest-animals/song");
+  await page.getByRole("button", { name: "Cantar" }).click();
+  await page.locator('[data-state="current"][data-line]').waitFor({ timeout: 30000 }).catch(() => {});
+  await shot(page, P, "song-karaoke");
+  await ctx.close();
+
+  // The story: the page with a hotspot (page 2).
+  ({ ctx, page } = await withProgress(browser, vp, progressOf({})));
+  await play(page, P, "story");
+  await page.getByRole("button", { name: "Começar" }).click();
+  const story = stopOf("story");
+  await solve(page, story.warmup, async () => {});
+  await continueSheet(page);
+  await page.getByRole("button", { name: "Avançar" }).click({ timeout: 90000 });
+  await page.locator("[data-hotspot]").first().waitFor();
+  await page.getByRole("button", { name: "Avançar" }).waitFor({ timeout: 60000 }); // the page has been read: both buttons show
+  await shot(page, P, "story-page");
+  await ctx.close();
+
+  // Album: nothing earned, then the sticker earned.
+  ({ ctx, page } = await withProgress(browser, vp, progressOf({})));
+  await open(page, "/album");
+  await shot(page, P, "album-empty");
+  await ctx.close();
+  ({ ctx, page } = await withProgress(browser, vp, progressOf({ stops: ["song", "lesson-1", "lesson-2", "lesson-3", "story", "challenge"], stickers: { "sticker-forest-bear": dayKey(0) } })));
+  await open(page, "/album");
+  await shot(page, P, "album-earned");
+  await ctx.close();
+
+  // Memory tab: none, due (with the round), ready tomorrow, ready later.
+  ({ ctx, page } = await withProgress(browser, vp, progressOf({})));
+  await open(page, "/memoria");
+  await shot(page, P, "mem-none");
+  await ctx.close();
+  ({ ctx, page } = await withProgress(browser, vp, progressOf({ stops: ["song", "lesson-1"], memory: cards(WORDS.slice(0, 3), 1, dayKey(1)) })));
+  await open(page, "/memoria");
+  await shot(page, P, "mem-tomorrow");
+  await ctx.close();
+  ({ ctx, page } = await withProgress(browser, vp, progressOf({ stops: ["song", "lesson-1"], memory: cards(WORDS.slice(0, 3), 2, dayKey(3)) })));
+  await open(page, "/memoria");
+  await shot(page, P, "mem-later");
+  await ctx.close();
+
+  ({ ctx, page } = await withProgress(browser, vp, progressOf({ stops: ["song", "lesson-1", "lesson-2"], memory: cards(WORDS, 1, dayKey(-1)) })));
+  await open(page, "/memoria");
+  await shot(page, P, "mem-due");
+  await page.getByRole("button", { name: "Treinar" }).click();
+  await page.getByRole("button", { name: "Virar o cartão" }).waitFor();
+  await shot(page, P, "mem-front");
+  await page.getByRole("button", { name: "Virar o cartão" }).click();
+  await page.getByRole("button", { name: "Próximo" }).waitFor();
+  await shot(page, P, "mem-back");
+  await page.getByRole("button", { name: "Próximo" }).click();
+  for (let i = 1; i < WORDS.length; i++) {
+    await page.getByRole("button", { name: "Virar o cartão" }).click();
+    await page.getByRole("button", { name: "Próximo" }).click();
+  }
+  const asked = async () => (await page.locator(".k-bubble b[lang='en']").first().textContent()).replace(/[^a-z]/gi, "");
+  await card(page, await asked()).waitFor();
+  await shot(page, P, "mem-check");
+  for (let i = 0; i < WORDS.length; i++) {
+    await card(page, await asked()).click();
+    if (i === 0) await shot(page, P, "mem-sheet");
+    await continueSheet(page);
+  }
+  await page.getByRole("button", { name: "Continuar" }).waitFor();
+  await shot(page, P, "mem-summary");
+  await ctx.close();
+}
+
 async function run() {
   fs.mkdirSync(OUT, { recursive: true });
   const sandboxChromium = process.env.PW_CHROMIUM_PATH ?? "/opt/pw-browsers/chromium";
@@ -133,8 +276,9 @@ async function run() {
   try {
     for (const vp of VIEWPORTS) {
       if (ONLY && vp.prefix !== ONLY) continue;
-      console.log(`\n== ${vp.prefix} ${vp.width}x${vp.height}`);
-      const ctx = await browser.newContext({ viewport: { width: vp.width, height: vp.height }, deviceScaleFactor: 1 });
+      await extras(browser, vp);
+      console.log(`\n== ${vp.prefix} ${vp.width}x${vp.height} lessons`);
+      const ctx = await browser.newContext({ viewport: { width: vp.width, height: vp.height }, deviceScaleFactor: SCALE });
       const page = await ctx.newPage();
       const P = vp.prefix;
 
