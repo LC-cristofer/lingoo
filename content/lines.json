@@ -198,5 +198,43 @@
       "lang": "en-US",
       "text": "A fox sticker!"
     }
-  ]
+  ],
+  "stopGo": {
+    "song": [
+      {
+        "lang": "pt-BR",
+        "text": "Música. Vamos!"
+      }
+    ],
+    "lesson-1": [
+      {
+        "lang": "pt-BR",
+        "text": "Lição um. Vamos!"
+      }
+    ],
+    "lesson-2": [
+      {
+        "lang": "pt-BR",
+        "text": "Lição dois. Vamos!"
+      }
+    ],
+    "lesson-3": [
+      {
+        "lang": "pt-BR",
+        "text": "Lição três. Vamos!"
+      }
+    ],
+    "story": [
+      {
+        "lang": "pt-BR",
+        "text": "História. Vamos!"
+      }
+    ],
+    "challenge": [
+      {
+        "lang": "pt-BR",
+        "text": "Desafio. Vamos!"
+      }
+    ]
+  }
 }

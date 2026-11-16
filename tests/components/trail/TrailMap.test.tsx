@@ -12,7 +12,7 @@ vi.mock("@/audio/narrator", () => ({
     playSfx: vi.fn(),
     stop: vi.fn(),
     unlock: vi.fn(),
-    isUnlocked: () => true,
+    isUnlocked: vi.fn(() => true),
   },
 }));
 import { narrator } from "@/audio/narrator";
@@ -36,6 +36,8 @@ function renderMap(progress: Progress, onOpenStop = vi.fn()) {
 
 beforeEach(() => {
   vi.mocked(narrator.playNarration).mockClear();
+  vi.mocked(narrator.unlock).mockClear();
+  vi.mocked(narrator.isUnlocked).mockReturnValue(true);
 });
 
 describe("TrailMap", () => {
@@ -52,6 +54,37 @@ describe("TrailMap", () => {
     expect(screen.getByRole("button", { name: "Música" })).toHaveAttribute("data-state", "done");
     expect(screen.getByRole("button", { name: "Lição 1" })).toHaveAttribute("data-state", "current");
     expect(screen.getByText(/Vamos!/)).toBeInTheDocument();
+  });
+
+  describe("the cat's bubble is narrated", () => {
+    const afterSong = { ...emptyProgress(), completedStops: { "forest-animals/song": "2026-01-01T00:00:00.000Z" } };
+
+    it("every stop has a line, and what it says matches the bubble's label", () => {
+      const ids = units["forest-animals"].stops.map((s) => s.id.split("/")[1]);
+      expect(Object.keys(lines.stopGo).sort()).toEqual([...ids].sort());
+      expect(lines.stopGo["lesson-2"][0].text).toBe("Lição dois. Vamos!");
+    });
+
+    it("says it once when the map opens, if audio is already unlocked", () => {
+      renderMap(afterSong);
+      expect(narrator.playNarration).toHaveBeenCalledTimes(1);
+      // ifIdle: it never cuts off the greeting or closing that is still playing.
+      expect(narrator.playNarration).toHaveBeenCalledWith(lines.stopGo["lesson-1"], { ifIdle: true });
+    });
+
+    it("does not try before the first touch", () => {
+      vi.mocked(narrator.isUnlocked).mockReturnValue(false);
+      renderMap(afterSong);
+      expect(narrator.playNarration).not.toHaveBeenCalled();
+    });
+
+    it("the bubble's speaker button unlocks audio and says it again", () => {
+      vi.mocked(narrator.isUnlocked).mockReturnValue(false);
+      renderMap(emptyProgress());
+      fireEvent.click(screen.getByRole("button", { name: "Ouvir de novo" }));
+      expect(narrator.unlock).toHaveBeenCalled();
+      expect(narrator.playNarration).toHaveBeenCalledWith(lines.stopGo.song);
+    });
   });
 
   it("opens the tapped open stop, done ones included", () => {

@@ -200,6 +200,11 @@
     "text": "Oi! Hoje nós vamos aprender mais três animais da floresta!"
   },
   {
+    "id": "522fba53b560f569",
+    "lang": "pt-BR",
+    "text": "História. Vamos!"
+  },
+  {
     "id": "5444e9a66da61e4c",
     "lang": "en-US",
     "text": "What's this? What's this? It's a snake!"
@@ -268,6 +273,11 @@
     "id": "65a3924d437ecc01",
     "lang": "pt-BR",
     "text": "Você lembrou de quatro palavras!"
+  },
+  {
+    "id": "67e1d58cbecff5d1",
+    "lang": "pt-BR",
+    "text": "Lição um. Vamos!"
   },
   {
     "id": "6919702ffd785314",
@@ -340,6 +350,11 @@
     "text": "Como se fala em inglês?"
   },
   {
+    "id": "83dcf8b19fc4a335",
+    "lang": "pt-BR",
+    "text": "Música. Vamos!"
+  },
+  {
     "id": "855ce6604ef18d1f",
     "lang": "en-US",
     "text": "This is a bear!"
@@ -400,6 +415,11 @@
     "text": "It's a spider!"
   },
   {
+    "id": "9223c4a674db5240",
+    "lang": "pt-BR",
+    "text": "Desafio. Vamos!"
+  },
+  {
     "id": "9b7831478dbfa5e5",
     "lang": "pt-BR",
     "text": "Você lembrou de três palavras!"
@@ -408,6 +428,11 @@
     "id": "9bc682680c7eaadd",
     "lang": "pt-BR",
     "text": "Certo ou errado?"
+  },
+  {
+    "id": "9d35cc417177df53",
+    "lang": "pt-BR",
+    "text": "Lição três. Vamos!"
   },
   {
     "id": "9fa5fd1380deebf0",
@@ -583,5 +608,10 @@
     "id": "f7c8107ad27a6161",
     "lang": "en-US",
     "text": "What's this? What's this? It's a spider!"
+  },
+  {
+    "id": "f7d2b12c4bfe82d2",
+    "lang": "pt-BR",
+    "text": "Lição dois. Vamos!"
   }
 ]

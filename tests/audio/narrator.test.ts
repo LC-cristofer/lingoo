@@ -392,6 +392,22 @@ describe("narrator", () => {
       await p;
     });
 
+    it("ifIdle drops a narration instead of interrupting one that is playing, and plays when idle", async () => {
+      const { made, createAudio } = audioFactory();
+      const n = createNarrator({ speech: null, createAudio });
+      n.unlock();
+      const first = n.playNarration([three[0]]);
+      await n.playNarration([three[2]], { ifIdle: true });
+      expect(made).toHaveLength(1); // the second was dropped...
+      expect(made[0].audio.pause).not.toHaveBeenCalled(); // ...and the first was not cut
+      made[0].audio.onended!();
+      await first;
+      const second = n.playNarration([three[2]], { ifIdle: true });
+      expect(made).toHaveLength(2);
+      made[1].audio.onended!();
+      await second;
+    });
+
     it("stop() pauses a sound effect that is still playing, but a new narration does not", async () => {
       const { made, createAudio } = audioFactory();
       const n = createNarrator({ speech: null, createAudio });

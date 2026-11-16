@@ -198,6 +198,8 @@ export const linesSchema = z.object({
   memoryEmpty: narrationSchema,
   memoryEmptyLater: narrationSchema,
   memoryNone: narrationSchema,
+  /** The map cat's "Vamos!" bubble, keyed by the stop's last id segment (song, lesson-1, story, challenge...). */
+  stopGo: z.record(z.string(), narrationSchema),
   /** The album section that keeps phase 1 stickers. */
   legacySection: narrationSchema,
   /** The name of the phase 1 fox sticker, kept in the album for children who earned it. */

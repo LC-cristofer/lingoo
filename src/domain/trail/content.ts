@@ -83,6 +83,7 @@ export function allNarrations(): Narration[] {
   const l = getLines();
   out.push(...l.praise, l.retry, l.hint, l.star, l.chestOpen, l.chestPrompt, l.lockedStop, l.soonUnit, l.start, l.album);
   out.push(l.memoryIntro, l.memoryAsk, l.memoryFlip, l.memoryPraise, ...l.memoryDone, l.memoryHome, l.memoryEmpty, l.memoryEmptyLater, l.memoryNone);
+  out.push(...Object.values(l.stopGo));
   out.push(l.legacySection, l.legacyFox);
   return out;
 }

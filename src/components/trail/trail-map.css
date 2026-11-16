@@ -18,7 +18,9 @@
 .k-guide { left: var(--g-phone); position: absolute; z-index: 3; display: flex; flex-direction: column; align-items: center; gap: 2px; pointer-events: none; }
 .k-guide[data-edge="right"] { left: auto; right: 2%; }
 .k-trailmap[data-guide="right"] .k-peek-bird { display: none; }
-.k-guide .k-bubble { font-size: 19px; padding: 9px 14px; white-space: nowrap; }
+.k-guide .k-bubble { font-size: 19px; padding: 9px 14px; white-space: nowrap; display: flex; align-items: center; gap: 8px; }
+/* The guide lets taps through to the trail, except on the speaker that says the bubble again. */
+.k-guide .k-round { pointer-events: auto; }
 .k-peek { position: absolute; display: block; z-index: 1; pointer-events: none; }
 .k-peek-bird { left: 78%; top: 232px; }
 .k-peek-frog { left: calc(50% - 300px); top: 486px; }

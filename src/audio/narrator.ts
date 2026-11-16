@@ -6,8 +6,11 @@ export type SfxName = "correct" | "retry" | "star" | "chest" | "tap";
 export interface Narrator {
   /** Call from a user gesture (tap or click): audio stays silent until then. */
   unlock(): void;
-  /** Plays each segment in order. A newer playNarration or stop() cancels the rest. */
-  playNarration(narration: Narration): Promise<void>;
+  /**
+   * Plays each segment in order. A newer playNarration or stop() cancels the rest.
+   * With `ifIdle`, it is dropped instead when another narration is still going (it never interrupts one).
+   */
+  playNarration(narration: Narration, options?: { ifIdle?: boolean }): Promise<void>;
   /** Fire-and-forget sound effect on top of the voice; a no-op before unlock. */
   playSfx(name: SfxName): void;
   /** Silences the voice and any sound effect that is still playing. */
@@ -209,9 +212,13 @@ export function createNarrator(deps: NarratorDeps = {}): Narrator {
     });
   }
 
-  async function playNarration(narration: Narration): Promise<void> {
+  async function playNarration(narration: Narration, options?: { ifIdle?: boolean }): Promise<void> {
+    if (!unlocked) {
+      stopVoice();
+      return;
+    }
+    if (options?.ifIdle && stopCurrent) return;
     stopVoice();
-    if (!unlocked) return;
     let cancelled = false;
     let inner: (() => void) | null = null;
     const halt = () => {

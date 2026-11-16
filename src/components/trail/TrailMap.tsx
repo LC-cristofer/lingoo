@@ -45,7 +45,7 @@ type Layout = {
   spots: Spot[];
   points: [number, number][];
   height: number;
-  current: { x: number; y: number; label: string } | null;
+  current: { x: number; y: number; label: string; stopId: string } | null;
   chest: { x: number; y: number } | null;
   bears: { x: number; y: number }[];
 };
@@ -85,7 +85,7 @@ function buildLayout(path: PathUnit[], units: Record<string, Unit>, progress: Pr
         // The challenge writes its name on the left so the chest can sit on the right.
         const side = stop.kind === "challenge" ? "left" : bendSide;
         spots.push({ key: stop.id, type: "stop", x, y, stop, status, label, side });
-        if (status === "current") current = { x, y, label };
+        if (status === "current") current = { x, y, label, stopId: stop.id };
         if (stop.kind === "challenge") chest = { x: x + 24, y: y - 18 };
       } else {
         spots.push({ key: `ghost-${entry.unitId}-${i}`, type: "ghost", x, y, kind: i === 0 ? "song" : "lesson", unitTitle: entry.title });
@@ -160,6 +160,7 @@ export function TrailMap({ path, units, progress, onOpenStop }: TrailMapProps) {
   const rootRef = useRef<HTMLDivElement>(null);
   const [shaking, setShaking] = useState<string | null>(null);
   const layout = useMemo(() => buildLayout(path, units, progress), [path, units, progress]);
+  const cat = layout.current;
   const first = path[0];
   const firstUnit = first && Object.hasOwn(units, first.unitId) ? units[first.unitId] : undefined;
   const firstDone = firstUnit ? firstUnit.stops.filter((s) => Object.hasOwn(progress.completedStops, s.id)).length : 0;
@@ -176,9 +177,20 @@ export function TrailMap({ path, units, progress, onOpenStop }: TrailMapProps) {
     return () => clearTimeout(t);
   }, [shaking]);
 
+  // The cat's bubble is on-screen text, so it is narrated: once when the map opens (a no-op before the
+  // first touch, and it never cuts off the greeting or the closing still playing) and again whenever its
+  // speaker button is tapped.
+  const goLine = cat ? lines.stopGo[cat.stopId.split("/").pop() ?? ""] : undefined;
+  useEffect(() => {
+    if (goLine && narrator.isUnlocked()) void narrator.playNarration(goLine, { ifIdle: true });
+  }, [goLine]);
+  const sayGo = () => {
+    narrator.unlock();
+    if (goLine) void narrator.playNarration(goLine);
+  };
+
   const soon = () => void narrator.playNarration(lines.soonUnit);
   const decor = useMemo(() => sideDecor(layout.height), [layout.height]);
-  const cat = layout.current;
 
   return (
     <div ref={rootRef} className="k-screen k-trailmap" data-guide={cat && cat.x < 50 ? "right" : "left"}>
@@ -279,7 +291,7 @@ export function TrailMap({ path, units, progress, onOpenStop }: TrailMapProps) {
                 ["--g-tablet" as string]: cat.x >= 50 ? `calc(${cat.x}% + 56px)` : "72%",
               }}
             >
-              <Bubble tail="down">
+              <Bubble tail="down" onReplay={goLine ? sayGo : undefined}>
                 <b>{cat.label}</b> · Vamos!
               </Bubble>
               <Cat expression="pointing" size={92} />
