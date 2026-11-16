@@ -25,12 +25,21 @@ const DECOR: ScatterItem[] = [
   { kind: "pine", x: 96, y: 900, s: 1 },
 ];
 
+/** Phase 1 stickers the album still knows how to show; the earned ones come from progress.legacy. */
+const LEGACY_STICKERS: Record<string, { image: string; name: (lines: ReturnType<typeof getLines>) => Narration }> = {
+  "sticker-fox": { image: "/content/forest-animals/sticker-fox.svg", name: (l) => l.legacyFox },
+};
+
 type AlbumUnit = { unitId: string; number: number; title: string; sticker: { id: string; art: ArtId; name: Narration } | null };
 
 export default function AlbumPage() {
   const { progress, hydrated } = useTrailProgress();
   const shown = hydrated ? progress : EMPTY;
   const today = useToday();
+  const lines = useMemo(() => getLines(), []);
+  const legacy = Object.keys(shown.legacy?.stickers ?? {})
+    .filter((id) => Object.hasOwn(LEGACY_STICKERS, id))
+    .map((id) => ({ id, image: LEGACY_STICKERS[id].image, name: LEGACY_STICKERS[id].name(lines) }));
 
   useEffect(() => {
     void narrator.playNarration(getLines().album);
@@ -87,6 +96,40 @@ export default function AlbumPage() {
             </section>
           );
         })}
+        {legacy.length > 0 ? (
+          <section className="k-album-unit k-album-legacy" aria-label="Figurinhas especiais">
+            <button
+              type="button"
+              className="k-pill k-album-legacy-title"
+              onClick={() => {
+                narrator.unlock();
+                void narrator.playNarration(lines.legacySection);
+              }}
+            >
+              Figurinhas especiais
+            </button>
+            <div className="k-album-legacy-grid">
+              {legacy.map(({ id, image, name }) => (
+                <button
+                  key={id}
+                  type="button"
+                  data-sticker={id}
+                  data-earned="true"
+                  aria-label={name.map((seg) => seg.text).join(" ")}
+                  lang="en"
+                  className="k-album-sticker"
+                  onClick={() => {
+                    narrator.unlock();
+                    void narrator.playNarration(name);
+                  }}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element -- a fixed local SVG kept from phase 1 */}
+                  <img src={image} alt="" width={160} height={160} />
+                </button>
+              ))}
+            </div>
+          </section>
+        ) : null}
         {soon.length > 0 ? (
           <div className="k-album-soon">
             {soon.map((u) => (

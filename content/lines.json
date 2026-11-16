@@ -186,5 +186,17 @@
       "lang": "pt-BR",
       "text": "Termine uma lição para ganhar cartões!"
     }
+  ],
+  "legacySection": [
+    {
+      "lang": "pt-BR",
+      "text": "Figurinhas especiais!"
+    }
+  ],
+  "legacyFox": [
+    {
+      "lang": "en-US",
+      "text": "A fox sticker!"
+    }
   ]
 }

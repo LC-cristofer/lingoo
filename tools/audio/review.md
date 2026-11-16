@@ -13,3 +13,10 @@ so a listen by ear is still worth it. (`verify.py` deletes this file when it fin
 | `877452f6431192be` | en-US | bird. | 48 | bird |
 | `d40bf44a51bcc56c` | en-US | Hello! | 46 | Hello? |
 | `e5c40c3ad07cc81c` | en-US | mouse. | 48 | mouse |
+
+Phase 1 sticker lines (progress v3 migration), checked with `verify.py --only 8a7fab2ccfc72e13,b015410eb0043b37`:
+
+| id | lang | text | seed kept | heard |
+| --- | --- | --- | --- | --- |
+| `8a7fab2ccfc72e13` | pt-BR | Figurinhas especiais! | 42 | Figurinhas especiais! |
+| `b015410eb0043b37` | en-US | A fox sticker! | 44 | a Fox sticker. |

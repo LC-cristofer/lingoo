@@ -46,6 +46,9 @@
 .k-album-sticker:active:not([aria-disabled="true"]) { transform: scale(0.96); }
 .k-album-sticker[aria-disabled="true"] { cursor: default; }
 .k-album-sticker svg { display: block; filter: drop-shadow(0 6px 0 rgba(31, 60, 40, 0.18)); }
+.k-album-legacy-title { min-height: 64px; padding: 12px 24px 10px; border: 0; color: #2b2d42; cursor: pointer; font-size: 24px; }
+.k-album-legacy-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; }
+.k-album-legacy .k-album-sticker img { display: block; width: 160px; height: 160px; filter: drop-shadow(0 6px 0 rgba(31, 60, 40, 0.18)); }
 .k-album-soon { width: 100%; max-width: 430px; display: flex; flex-direction: column; gap: 40px; padding-top: 10px; }
 
 /* ---------- wide landscape (tablet) ---------- */
