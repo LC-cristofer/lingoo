@@ -18,7 +18,7 @@ const root = resolve(here, "../..");
 const outDir = resolve(here, ".out");
 
 type Variant = "forest" | "blocks";
-type Kind = "song" | "lesson" | "story" | "challenge";
+export type Kind = "song" | "lesson" | "story" | "challenge";
 type State = "done" | "current" | "locked";
 
 const KIND_COLOR: Record<Kind, [string, string]> = {
@@ -31,7 +31,7 @@ const LOCKED: [string, string] = ["#D5D9E0", "#AEB4BF"];
 
 /* ---------- small pieces ---------- */
 
-function Glyph({ kind, locked }: { kind: Kind; locked?: boolean }) {
+export function Glyph({ kind, locked }: { kind: Kind; locked?: boolean }) {
   if (locked)
     return (
       <g>
@@ -136,7 +136,7 @@ function Clouds({ w }: { w: number }) {
 }
 
 /** Tall forest scene for the trail: sky and hills on top, meadow all the way down. */
-function TrailScene({ w, h, skyless, sun = true, clouds = true }: { w: number; h: number; skyless?: boolean; sun?: boolean; clouds?: boolean }) {
+export function TrailScene({ w, h, skyless, sun = true, clouds = true }: { w: number; h: number; skyless?: boolean; sun?: boolean; clouds?: boolean }) {
   const patches: ReactNode[] = [];
   for (let y = skyless ? 40 : 420; y < h + 80; y += 150) {
     const i = Math.round(y / 150);
@@ -175,7 +175,7 @@ function BlocksScene({ w, h, color, blob }: { w: number; h: number; color: strin
   );
 }
 
-function Trees({ items, w, h }: { items: ["pine" | "round" | "mush" | "flower", number, number, number?][]; w: number; h: number }) {
+export function Trees({ items, w, h }: { items: ["pine" | "round" | "mush" | "flower", number, number, number?][]; w: number; h: number }) {
   return (
     <svg className="layer" viewBox={`0 0 ${w} ${h}`} width={w} height={h} aria-hidden="true">
       {items.map(([t, x, y, s], i) =>
@@ -193,7 +193,7 @@ function Trees({ items, w, h }: { items: ["pine" | "round" | "mush" | "flower", 
   );
 }
 
-function StarIcon({ size = 22 }: { size?: number }) {
+export function StarIcon({ size = 22 }: { size?: number }) {
   return (
     <svg viewBox="-12 -12 24 24" width={size} height={size} aria-hidden="true">
       <path d="M0 -11 l3.3 6.8 l7.5 1 l-5.4 5.2 l1.3 7.4 l-6.7 -3.5 l-6.7 3.5 l1.3 -7.4 l-5.4 -5.2 l7.5 -1z" fill="#FFC93C" stroke="#DE9F12" strokeWidth="1.6" strokeLinejoin="round" />
@@ -201,7 +201,7 @@ function StarIcon({ size = 22 }: { size?: number }) {
   );
 }
 
-function TopChips({ stars, days }: { stars: number; days: number }) {
+export function TopChips({ stars, days }: { stars: number; days: number }) {
   return (
     <div className="chips">
       <span className="chip">
@@ -220,7 +220,7 @@ function TopChips({ stars, days }: { stars: number; days: number }) {
   );
 }
 
-function WoodSign({ unit, title, done, total, locked, style, compact }: { unit: string; title: string; done?: number; total?: number; locked?: boolean; style?: CSSProperties; compact?: boolean }) {
+export function WoodSign({ unit, title, done, total, locked, style, compact }: { unit: string; title: string; done?: number; total?: number; locked?: boolean; style?: CSSProperties; compact?: boolean }) {
   return (
     <div className={`sign ${locked ? "is-locked" : ""} ${compact ? "is-compact" : ""}`} style={style}>
       <span className="sign-post sign-post-l" />
@@ -273,7 +273,7 @@ function BottomNav({ wide }: { wide?: boolean }) {
   );
 }
 
-function Bubble({ children, tail = "left", style }: { children: ReactNode; tail?: "left" | "down"; style?: CSSProperties }) {
+export function Bubble({ children, tail = "left", style }: { children: ReactNode; tail?: "left" | "down"; style?: CSSProperties }) {
   return (
     <div className={`bubble tail-${tail}`} style={style}>
       {children}
@@ -281,7 +281,7 @@ function Bubble({ children, tail = "left", style }: { children: ReactNode; tail?
   );
 }
 
-function SpeakerButton() {
+export function SpeakerButton() {
   return (
     <span className="round-btn is-sky">
       <svg viewBox="0 0 32 32" width="26" height="26" aria-hidden="true">
@@ -292,7 +292,7 @@ function SpeakerButton() {
   );
 }
 
-function CloseButton() {
+export function CloseButton() {
   return (
     <span className="round-btn is-white">
       <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
@@ -302,7 +302,7 @@ function CloseButton() {
   );
 }
 
-function Tile({ id, size, state }: { id: ArtId; size: number; state?: "correct" | "wrong" | "dim" | "hint" }) {
+export function Tile({ id, size, state }: { id: ArtId; size: number; state?: "correct" | "wrong" | "dim" | "hint" }) {
   return (
     <div className={`tile ${state ? `is-${state}` : ""}`} style={{ width: size, height: size }}>
       <Animal id={id} size={size * 0.74} glow={state === "hint"} />
@@ -317,7 +317,7 @@ function Tile({ id, size, state }: { id: ArtId; size: number; state?: "correct" 
   );
 }
 
-function LessonTop({ ratio }: { ratio: number }) {
+export function LessonTop({ ratio }: { ratio: number }) {
   return (
     <div className="lesson-top">
       <CloseButton />
@@ -328,7 +328,7 @@ function LessonTop({ ratio }: { ratio: number }) {
   );
 }
 
-function LessonScene({ w, h, variant }: { w: number; h: number; variant: Variant }) {
+export function LessonScene({ w, h, variant }: { w: number; h: number; variant: Variant }) {
   if (variant === "blocks") return <BlocksScene w={w} h={h} color="#4AA8F0" blob="#3F9CE6" />;
   const g = h * 0.44;
   return (
@@ -349,7 +349,7 @@ function LessonScene({ w, h, variant }: { w: number; h: number; variant: Variant
   );
 }
 
-function Sheet({ kind, children, button, wide }: { kind: "correct" | "retry"; children: ReactNode; button?: string; wide?: boolean }) {
+export function Sheet({ kind, children, button, wide }: { kind: "correct" | "retry"; children: ReactNode; button?: string; wide?: boolean }) {
   return (
     <div className={`sheet is-${kind} ${wide ? "is-wide" : ""}`}>
       <p className="sheet-text">{children}</p>
@@ -360,8 +360,8 @@ function Sheet({ kind, children, button, wide }: { kind: "correct" | "retry"; ch
 
 /* ---------- phone screens (390 × 844) ---------- */
 
-const PW = 390;
-const PH = 844;
+export const PW = 390;
+export const PH = 844;
 
 const P_POINTS: [number, number][] = [
   [118, 236],
@@ -627,8 +627,8 @@ function PhoneStart() {
 
 /* ---------- tablet screens (1024 × 768) ---------- */
 
-const TW = 1024;
-const TH = 768;
+export const TW = 1024;
+export const TH = 768;
 const T_POINTS: [number, number][] = [
   [540, 128],
   [680, 226],
@@ -771,7 +771,7 @@ function TabletStart() {
 
 /* ---------- page ---------- */
 
-function Device({ kind, name, children }: { kind: "phone" | "tablet"; name: string; children: ReactNode }) {
+export function Device({ kind, name, children }: { kind: "phone" | "tablet"; name: string; children: ReactNode }) {
   return (
     <figure className={`device is-${kind}`}>
       <div className="screen">{children}</div>
@@ -851,7 +851,7 @@ function Page() {
   );
 }
 
-const css = `
+export const css = `
 *{box-sizing:border-box}
 body{margin:0;background:#EEF1F6;font-family:Nunito,system-ui,sans-serif;color:#2B2D42}
 main{padding:36px;display:flex;flex-direction:column;gap:48px;width:max-content}
@@ -980,13 +980,21 @@ h2{font-family:"Baloo 2";font-weight:800;font-size:34px;margin:0 0 20px}
 .start.is-tablet .btn{min-width:300px}
 `;
 
-const artCss = readFileSync(resolve(root, "src/art/art.css"), "utf8");
+export const artCss = readFileSync(resolve(root, "src/art/art.css"), "utf8");
+export const fontsLink =
+  '<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">';
+export { outDir };
+
+// Only write the page when run directly, so other generators can import the pieces above.
+const isMain = process.argv[1] !== undefined && resolve(process.argv[1]) === fileURLToPath(import.meta.url);
 const html = `<!doctype html>
 <html lang="pt-BR"><head><meta charset="utf-8">
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+${fontsLink}
 <style>${artCss}</style><style>${css}</style></head>
 <body>${renderToStaticMarkup(<Page />)}</body></html>`;
 
-mkdirSync(outDir, { recursive: true });
-writeFileSync(resolve(outDir, "mockups.html"), html);
-console.log(`wrote ${resolve(outDir, "mockups.html")}`);
+if (isMain) {
+  mkdirSync(outDir, { recursive: true });
+  writeFileSync(resolve(outDir, "mockups.html"), html);
+  console.log(`wrote ${resolve(outDir, "mockups.html")}`);
+}
