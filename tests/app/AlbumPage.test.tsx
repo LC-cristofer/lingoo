@@ -68,6 +68,28 @@ describe("/album", () => {
     expect(slot()).toBeNull();
   });
 
+  it("keeps the phase 1 fox sticker in a special section, saying its name", () => {
+    progress = {
+      ...emptyProgress(),
+      legacy: { completedLessons: { "forest-animals": "2026-11-01T12:00:00.000Z" }, stickers: { "sticker-fox": "2026-11-01T12:00:00.000Z" } },
+    };
+    render(<AlbumPage />);
+    expect(screen.getByRole("region", { name: "Figurinhas especiais" })).toBeInTheDocument();
+    const fox = document.querySelector('[data-sticker="sticker-fox"]') as HTMLElement;
+    expect(fox).toHaveAttribute("data-earned", "true");
+    narratorMock.playNarration.mockClear();
+    fireEvent.click(fox);
+    expect(narratorMock.playNarration).toHaveBeenCalledWith(getLines().legacyFox);
+    fireEvent.click(screen.getByRole("button", { name: "Figurinhas especiais" }));
+    expect(narratorMock.playNarration).toHaveBeenLastCalledWith(getLines().legacySection);
+  });
+
+  it("has no special section without phase 1 stickers", () => {
+    render(<AlbumPage />);
+    expect(screen.queryByRole("region", { name: "Figurinhas especiais" })).not.toBeInTheDocument();
+    expect(document.querySelector('[data-sticker="sticker-fox"]')).toBeNull();
+  });
+
   it("has the Trilha and Álbum tabs, with Álbum active", () => {
     render(<AlbumPage />);
     const links = screen.getAllByRole("link");

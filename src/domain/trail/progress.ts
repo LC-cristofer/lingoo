@@ -1,12 +1,21 @@
 import type { PathUnit, Unit } from "./schema";
 
+/** What the phase 1 app saved (`lingoo:progress:v1`), carried as it was: it grants no v2 stop. */
+export type LegacyV1 = {
+  completedLessons: Record<string, string>;
+  stickers: Record<string, string>;
+};
+
 export type Progress = {
+  version: 3;
   /** stopId -> ISO date of the first completion */
   completedStops: Record<string, string>;
   /** stickerId -> ISO date it was earned */
   stickers: Record<string, string>;
   /** Local dates "YYYY-MM-DD", ascending, last 60 only */
   daysPlayed: string[];
+  /** The phase 1 progress found on this device, kept for its stickers; null when there was none. */
+  legacy: LegacyV1 | null;
 };
 
 export type StopStatus = "done" | "current" | "locked";
@@ -15,7 +24,7 @@ export type UnitStatus = "done" | "current" | "locked" | "soon";
 const MAX_DAYS = 60;
 
 export function emptyProgress(): Progress {
-  return { completedStops: {}, stickers: {}, daysPlayed: [] };
+  return { version: 3, completedStops: {}, stickers: {}, daysPlayed: [], legacy: null };
 }
 
 export function completeStop(p: Progress, stopId: string, now: Date, stickerId?: string): Progress {

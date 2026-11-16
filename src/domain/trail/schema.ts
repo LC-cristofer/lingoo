@@ -186,6 +186,10 @@ export const linesSchema = z.object({
   soonUnit: narrationSchema,
   start: narrationSchema,
   album: narrationSchema,
+  /** The album section that keeps phase 1 stickers. */
+  legacySection: narrationSchema,
+  /** The name of the phase 1 fox sticker, kept in the album for children who earned it. */
+  legacyFox: narrationSchema,
 });
 
 export type Lang = z.infer<typeof langSchema>;

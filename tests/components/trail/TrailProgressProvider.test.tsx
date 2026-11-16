@@ -3,7 +3,9 @@ import { useEffect } from "react";
 import { beforeEach, describe, expect, it } from "vitest";
 import { TrailProgressProvider, useTrailProgress } from "@/components/trail/TrailProgressProvider";
 
-const KEY = "lingoo:progress:v2";
+/** The provider persists to v3; the seed below is a v2 value that the store migrates. */
+const KEY = "lingoo:progress:v3";
+const V2_KEY = "lingoo:progress:v2";
 
 function Probe() {
   const { progress, finishStop, markToday } = useTrailProgress();
@@ -41,7 +43,7 @@ describe("TrailProgressProvider", () => {
   });
   it("does not lose stored progress when a child finishes a stop in its mount effect", () => {
     localStorage.setItem(
-      KEY,
+      V2_KEY,
       JSON.stringify({ completedStops: { old: "2026-01-01T00:00:00.000Z" }, stickers: {}, daysPlayed: [] }),
     );
     function Early() {

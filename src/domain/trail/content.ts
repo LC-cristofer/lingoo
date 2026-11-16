@@ -79,6 +79,6 @@ export function allNarrations(): Narration[] {
     }
   }
   const l = getLines();
-  out.push(...l.praise, l.retry, l.hint, l.star, l.chestOpen, l.chestPrompt, l.lockedStop, l.soonUnit, l.start, l.album);
+  out.push(...l.praise, l.retry, l.hint, l.star, l.chestOpen, l.chestPrompt, l.lockedStop, l.soonUnit, l.start, l.album, l.legacySection, l.legacyFox);
   return out;
 }

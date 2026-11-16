@@ -82,5 +82,17 @@
       "lang": "pt-BR",
       "text": "Esse é o seu álbum de figurinhas!"
     }
+  ],
+  "legacySection": [
+    {
+      "lang": "pt-BR",
+      "text": "Figurinhas especiais!"
+    }
+  ],
+  "legacyFox": [
+    {
+      "lang": "en-US",
+      "text": "A fox sticker!"
+    }
   ]
 }
