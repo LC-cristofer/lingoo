@@ -5,6 +5,7 @@ import {
   parseLines,
   parsePath,
   parseUnit,
+  type ArtId,
   type Exercise,
   type Lines,
   type Narration,
@@ -35,6 +36,13 @@ export function getStop(stopId: string): { unit: Unit; stop: Stop; index: number
 
 export function getLines(): Lines {
   return parseLines(linesJson);
+}
+
+/** The words a stop shows on its opening and closing cards (song and story have no `wordIds`). */
+export function stopWordIds(stop: Stop): ArtId[] {
+  if (stop.kind === "song") return [...new Set(stop.lyrics.flatMap((l) => (l.wordId ? [l.wordId] : [])))];
+  if (stop.kind === "story") return [...new Set(stop.pages.flatMap((p) => p.hotspots.map((h) => h.wordId)))];
+  return stop.wordIds;
 }
 
 function exerciseNarrations(ex: Exercise): Narration[] {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { allNarrations, getLines, getPath, getStop, getUnit } from "@/domain/trail/content";
+import { allNarrations, getLines, getPath, getStop, getUnit, stopWordIds } from "@/domain/trail/content";
 import { parseLines, parsePath, parseUnit } from "@/domain/trail/schema";
 import unitJson from "../../../content/units/forest-animals.json";
 
@@ -104,5 +104,28 @@ describe("trail content", () => {
   it("parsePath / parseLines throw on garbage", () => {
     expect(() => parsePath({})).toThrow();
     expect(() => parseLines({})).toThrow();
+  });
+});
+
+describe("stopWordIds", () => {
+  const unit = getUnit("forest-animals")!;
+  const stop = (slug: string) => unit.stops.find((s) => s.id === `forest-animals/${slug}`)!;
+
+  it("is the wordIds of a lesson or challenge", () => {
+    const lesson = stop("lesson-1");
+    expect(lesson.kind).toBe("lesson");
+    expect(stopWordIds(lesson)).toEqual(lesson.kind === "lesson" ? lesson.wordIds : []);
+  });
+
+  it("is the song's lyric words in order, without repeats", () => {
+    expect(stopWordIds(stop("song"))).toEqual(["bear", "bird", "frog", "snake", "spider", "mouse"]);
+  });
+
+  it("is the story's hotspot words in order of first appearance", () => {
+    const story = stop("story");
+    if (story.kind !== "story") throw new Error("not a story");
+    const expected = [...new Set(story.pages.flatMap((p) => p.hotspots.map((h) => h.wordId)))];
+    expect(stopWordIds(story)).toEqual(expected);
+    expect(expected.length).toBe(6);
   });
 });
