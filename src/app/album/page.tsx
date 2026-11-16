@@ -43,6 +43,7 @@ export default function AlbumPage() {
 
   useEffect(() => {
     void narrator.playNarration(getLines().album);
+    return () => narrator.stop();
   }, []);
 
   const { withContent, soon } = useMemo(() => {

@@ -35,6 +35,13 @@ describe("AlbumPage", () => {
     expect(narrator.playNarration).toHaveBeenCalledWith(getLines().album);
   });
 
+  it("silences the album line when the child leaves the page", () => {
+    const view = render(<AlbumPage />);
+    vi.mocked(narrator.stop).mockClear();
+    view.unmount();
+    expect(narrator.stop).toHaveBeenCalled();
+  });
+
   it("an earned sticker is coloured and says its name when tapped", () => {
     progress = { ...emptyProgress(), stickers: { "sticker-forest-bear": "2026-01-01T00:00:00.000Z" } };
     render(<AlbumPage />);
