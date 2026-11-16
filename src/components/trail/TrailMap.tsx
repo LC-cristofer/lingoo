@@ -12,7 +12,7 @@ import type { PathUnit, Stop, Unit } from "@/domain/trail/schema";
 import { DaysCalendar } from "./DaysCalendar";
 import { useToday } from "./useToday";
 import { BottomNav } from "./kit/BottomNav";
-import { Bubble } from "./kit/Bubble";
+import { SpeakerIcon } from "./icons";
 import { ForestScene } from "./kit/ForestScene";
 import { Scatter, type ScatterItem } from "./kit/Scatter";
 import { StopButton } from "./kit/StopButton";
@@ -291,9 +291,15 @@ export function TrailMap({ path, units, progress, onOpenStop }: TrailMapProps) {
                 ["--g-tablet" as string]: cat.x >= 50 ? `calc(${cat.x}% + 56px)` : "72%",
               }}
             >
-              <Bubble tail="down" onReplay={goLine ? sayGo : undefined}>
-                <b>{cat.label}</b> · Vamos!
-              </Bubble>
+              {/* The whole bubble is the replay button (a 64 px target) with a small speaker inside, so it
+                  stays as narrow as the approved picture and the cat never lands on the next stops. */}
+              <button type="button" aria-label="Ouvir de novo" className="k-guide-say" onClick={sayGo} disabled={!goLine}>
+                <span className="k-bubble k-tail-down">
+                  <span className="k-bubble-text">
+                    <b>{cat.label}</b> · Vamos! <span className="k-guide-speaker" aria-hidden="true"><SpeakerIcon size={18} /></span>
+                  </span>
+                </span>
+              </button>
               <Cat expression="pointing" size={92} />
             </div>
           ) : null}
