@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 
 type Tab = "trilha" | "memoria" | "album";
 
-type BottomNavProps = { active: Tab; memoryDue?: number; memoryEnabled?: boolean };
+type BottomNavProps = { active: Tab; /** Cards ready today: a coral badge on Memória when above 0. */ memoryDue?: number };
 
 const TrailIcon = (
   <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true">
@@ -13,9 +13,10 @@ const TrailIcon = (
   </svg>
 );
 const MemoryIcon = (
-  <svg viewBox="-20 -20 40 40" width="30" height="30" aria-hidden="true">
-    <rect x="-16" y="-14" width="22" height="28" rx="5" fill="none" stroke="currentColor" strokeWidth="3.5" />
-    <rect x="-6" y="-10" width="22" height="28" rx="5" fill="none" stroke="currentColor" strokeWidth="3.5" transform="translate(0 -2)" />
+  <svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true">
+    <rect x="9" y="3" width="18" height="23" rx="4" fill="none" stroke="currentColor" strokeWidth="3.4" transform="rotate(10 18 14)" />
+    <rect x="4" y="7" width="18" height="23" rx="4" fill="currentColor" />
+    <path d="M10 15 a3 3 0 1 1 4 3 v2" stroke="#fff" strokeWidth="2.6" fill="none" strokeLinecap="round" />
   </svg>
 );
 const AlbumIcon = (
@@ -26,7 +27,7 @@ const AlbumIcon = (
 );
 
 /** The three tabs, always in this order: Trilha, Memória, Álbum. */
-export function BottomNav({ active, memoryDue = 0, memoryEnabled = false }: BottomNavProps) {
+export function BottomNav({ active, memoryDue = 0 }: BottomNavProps) {
   const tabs: { id: Tab; href: string; label: string; icon: ReactNode }[] = [
     { id: "trilha", href: "/mapa", label: "Trilha", icon: TrailIcon },
     { id: "memoria", href: "/memoria", label: "Memória", icon: MemoryIcon },
@@ -34,25 +35,18 @@ export function BottomNav({ active, memoryDue = 0, memoryEnabled = false }: Bott
   ];
   return (
     <nav aria-label="Navegação" className="k-nav">
-      {tabs.map((t) => {
-        const disabled = t.id === "memoria" && !memoryEnabled;
-        return (
-          <Link
-            key={t.id}
-            href={t.href}
-            prefetch={disabled ? false : undefined}
-            aria-current={active === t.id ? "page" : undefined}
-            aria-disabled={disabled ? "true" : undefined}
-            tabIndex={disabled ? -1 : undefined}
-            onClick={disabled ? (e) => e.preventDefault() : undefined}
-            className={`k-tab min-h-16 ${active === t.id ? "is-active" : ""} ${disabled ? "is-disabled" : ""}`}
-          >
-            {t.icon}
-            {t.label}
-            {t.id === "memoria" && memoryDue > 0 ? <span className="k-badge">{memoryDue}</span> : null}
-          </Link>
-        );
-      })}
+      {tabs.map((t) => (
+        <Link
+          key={t.id}
+          href={t.href}
+          aria-current={active === t.id ? "page" : undefined}
+          className={`k-tab min-h-16 ${active === t.id ? "is-active" : ""} ${active === t.id && t.id === "memoria" ? "is-sky" : ""}`}
+        >
+          {t.icon}
+          {t.label}
+          {t.id === "memoria" && memoryDue > 0 ? <span className="k-badge">{memoryDue}</span> : null}
+        </Link>
+      ))}
     </nav>
   );
 }

@@ -16,15 +16,17 @@ type ExerciseShellProps = {
   catExpression: CatExpression;
   feedback: { kind: FeedbackKind; line: Narration; onContinue?: () => void } | null;
   onExit: () => void;
+  /** "2 de 5": the memory training's blue bar and count pill. */
+  count?: string;
   children: ReactNode;
 };
 
-export function ExerciseShell({ ratio, prompt, catExpression, feedback, onExit, children }: ExerciseShellProps) {
+export function ExerciseShell({ ratio, prompt, catExpression, feedback, onExit, count, children }: ExerciseShellProps) {
   return (
     <div className="k-screen">
       <ForestScene variant="lesson" />
       <div className="k-lesson">
-        <LessonTopBar ratio={ratio} onExit={onExit} />
+        <LessonTopBar ratio={ratio} onExit={onExit} count={count} />
         <div className="k-ask">
           <span className="k-cat">
             <Cat expression={catExpression} size={104} />

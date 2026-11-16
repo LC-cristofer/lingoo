@@ -12,8 +12,18 @@ const narratorMock = vi.hoisted(() => ({
 vi.mock("@/audio/narrator", () => ({ narrator: narratorMock }));
 
 const finishStop = vi.fn();
+const addMemoryCards = vi.fn();
+const gradeCards = vi.fn();
+let storedMemory: Record<string, { box: number; due: string }> = {};
 vi.mock("@/components/trail/TrailProgressProvider", () => ({
-  useTrailProgress: () => ({ progress: { completedStops: {}, stickers: {}, daysPlayed: [] }, hydrated: true, finishStop, markToday: vi.fn() }),
+  useTrailProgress: () => ({
+    progress: { completedStops: {}, stickers: {}, daysPlayed: [], memory: storedMemory },
+    hydrated: true,
+    finishStop,
+    markToday: vi.fn(),
+    addMemoryCards,
+    gradeCards,
+  }),
 }));
 
 import { ChestReward } from "@/components/trail/ChestReward";
@@ -33,6 +43,28 @@ const flush = async () => {
   await act(async () => {});
 };
 const feedback = () => screen.getByTestId("feedback-area");
+const askedWord = () => {
+  const text = document.querySelector(".k-bubble b[lang='en']")!.textContent!;
+  return unit.words.find((w) => `${w.en}?` === text)!.id;
+};
+
+/** Goes through the memory round: flip every card, answer every check right, leave the summary. */
+async function finishMemoryRound(cards = 3) {
+  for (let i = 0; i < cards; i++) {
+    fireEvent.click(screen.getByRole("button", { name: "Virar o cartão" }));
+    await flush();
+    fireEvent.click(screen.getByRole("button", { name: "Próximo" }));
+    await flush();
+  }
+  for (let i = 0; i < cards; i++) {
+    fireEvent.click(screen.getByRole("button", { name: askedWord() }));
+    await flush();
+    fireEvent.click(within(feedback()).getByRole("button", { name: "Continuar" }));
+    await flush();
+  }
+  fireEvent.click(screen.getByRole("button", { name: "Continuar" }));
+  await flush();
+}
 const card = (id: string) => screen.getByRole("button", { name: id });
 
 function renderPlayer(stop: LessonStop = lesson, extra: { record?: boolean } = {}) {
@@ -56,6 +88,9 @@ beforeEach(() => {
   narratorMock.isUnlocked.mockReturnValue(true);
   narratorMock.playNarration.mockImplementation(() => Promise.resolve());
   finishStop.mockClear();
+  addMemoryCards.mockClear();
+  gradeCards.mockClear();
+  storedMemory = {};
 });
 afterEach(() => vi.useRealTimers());
 
@@ -119,6 +154,10 @@ describe("StopPlayer session", () => {
     await flush();
     expect(finishStop).toHaveBeenCalledTimes(1);
     expect(finishStop).toHaveBeenCalledWith(lesson.id);
+    // The memory round comes between the last exercise and the closing.
+    expect(screen.queryByTestId("star")).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Virar o cartão" })).toBeInTheDocument();
+    await finishMemoryRound();
     expect(narratorMock.playSfx).toHaveBeenCalledWith("star");
     expect(narratorMock.playNarration).toHaveBeenCalledWith([...lesson.closing, ...lines.star]);
     expect(screen.getByTestId("star")).toBeInTheDocument();
@@ -242,8 +281,55 @@ describe("StopPlayer session", () => {
     await flush();
     fireEvent.click(within(feedback()).getByRole("button", { name: "Continuar" }));
     await flush();
+    await finishMemoryRound();
     expect(screen.getByRole("button", { name: "Voltar ao mapa" })).toBeInTheDocument();
     expect(finishStop).not.toHaveBeenCalled();
+    expect(addMemoryCards).not.toHaveBeenCalled();
+    expect(gradeCards).not.toHaveBeenCalled();
+  });
+});
+
+describe("StopPlayer memory round", () => {
+  async function finishLessonExercises(extra: { record?: boolean } = {}) {
+    const view = renderPlayer(lesson, extra);
+    await startAndFinishIntro();
+    fireEvent.click(card("bear"));
+    await flush();
+    fireEvent.click(within(feedback()).getByRole("button", { name: "Continuar" }));
+    await flush();
+    return view;
+  }
+
+  it("a lesson adds the cards of its new words and trains them, with the intro line", async () => {
+    await finishLessonExercises();
+    expect(addMemoryCards).toHaveBeenCalledTimes(1);
+    expect(addMemoryCards).toHaveBeenCalledWith(lesson.wordIds.map((id) => `forest-animals:${id}`));
+    expect(narratorMock.playNarration).toHaveBeenCalledWith([...lines.memoryIntro, ...lines.memoryAsk, ...lines.memoryFlip]);
+    expect(screen.getByText(`1 de ${lesson.wordIds.length}`)).toBeInTheDocument();
+  });
+
+  it("cards the child already has are not added again; old due ones join the round", async () => {
+    storedMemory = {
+      "forest-animals:bear": { box: 1, due: "2000-01-01" },
+      "forest-animals:snake": { box: 0, due: "2000-01-01" },
+    };
+    await finishLessonExercises();
+    expect(addMemoryCards).toHaveBeenCalledWith(["forest-animals:bird", "forest-animals:frog"]);
+    // 2 new + the old due ones (bear, snake) = 4 cards
+    expect(screen.getByText("1 de 4")).toBeInTheDocument();
+  });
+
+  it("with record=false nothing is added", async () => {
+    await finishLessonExercises({ record: false });
+    expect(addMemoryCards).not.toHaveBeenCalled();
+    expect(screen.getByRole("button", { name: "Virar o cartão" })).toBeInTheDocument();
+  });
+
+  it("✕ in the memory round leaves; the stop was already recorded", async () => {
+    const { onExit } = await finishLessonExercises();
+    fireEvent.click(screen.getByRole("button", { name: "Sair" }));
+    expect(onExit).toHaveBeenCalledTimes(1);
+    expect(finishStop).toHaveBeenCalledTimes(1);
   });
 });
 

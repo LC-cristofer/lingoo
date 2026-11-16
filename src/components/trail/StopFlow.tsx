@@ -173,10 +173,18 @@ type ExerciseLoopProps = {
   onExit: () => void;
   /** The last exercise (and its review) is done and the child pressed "Continuar". */
   onFinished: () => void;
+  /** The line said (and shown) for a right answer; the lessons rotate their praise lines. */
+  praise?: Narration;
+  /** Memory check: the bar and the "N de M" pill count cards, not the session's exercises. */
+  topBar?: { ratio: number; count: string };
+  /** Memory check: a card answered wrong is not asked again at the end. */
+  noReview?: boolean;
+  /** Every attempt (right or wrong), as it happens. */
+  onAttempt?: (correct: boolean) => void;
 };
 
 /** Exercises with retry, hint and review, the feedback sheet and the gatinho's reactions. */
-export function ExerciseLoop({ exercises, sessionId, words, onExit, onFinished }: ExerciseLoopProps) {
+export function ExerciseLoop({ exercises, sessionId, words, onExit, onFinished, praise, topBar, noReview = false, onAttempt }: ExerciseLoopProps) {
   const lines = useMemo(() => getLines(), []);
   const [session, setSession] = useState(() => startSession(exercises, sessionId));
   const [shown, setShown] = useState(0);
@@ -190,7 +198,7 @@ export function ExerciseLoop({ exercises, sessionId, words, onExit, onFinished }
 
   const item = session.items[Math.min(session.index, session.items.length - 1)];
   const { phase, index } = session;
-  const praiseLine = lines.praise[Math.max(0, correctCount - 1) % lines.praise.length];
+  const praiseLine = praise ?? lines.praise[Math.max(0, correctCount - 1) % lines.praise.length];
 
   // A new exercise: the kinds that do not speak for themselves are read to the child.
   useEffect(() => {
@@ -223,8 +231,10 @@ export function ExerciseLoop({ exercises, sessionId, words, onExit, onFinished }
   }, [phase, index]);
 
   const onAnswer = (correct: boolean) => {
-    const after = answer(session, correct);
+    let after = answer(session, correct);
     if (after === session) return;
+    if (noReview && after.items.length > session.items.length) after = { ...after, items: session.items };
+    onAttempt?.(correct);
     if (after.phase === "correct") setCorrectCount((n) => n + 1);
     setSession(after);
   };
@@ -248,7 +258,8 @@ export function ExerciseLoop({ exercises, sessionId, words, onExit, onFinished }
 
   return (
     <ExerciseShell
-      ratio={ratio}
+      ratio={topBar ? topBar.ratio : ratio}
+      count={topBar?.count}
       prompt={questionOf(item.exercise)}
       catExpression={catExpression}
       feedback={feedback}

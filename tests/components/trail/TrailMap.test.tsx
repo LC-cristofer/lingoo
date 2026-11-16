@@ -157,3 +157,17 @@ describe("DaysCalendar", () => {
     expect(days.map((d) => d.classList.contains("is-today"))).toEqual([false, false, false, true, false, false, false]);
   });
 });
+
+describe("memory badge on the tabs", () => {
+  it("the map shows the number of cards due today on Memória, and nothing when none are due", () => {
+    const today = new Date();
+    const key = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+    const { unmount } = render(
+      <TrailMap path={path} units={units} progress={{ ...emptyProgress(), memory: { "forest-animals:bear": { box: 0, due: key }, "forest-animals:bird": { box: 0, due: "2000-01-01" }, "forest-animals:frog": { box: 2, due: "2999-01-01" } } }} onOpenStop={vi.fn()} />,
+    );
+    expect(within(screen.getByRole("link", { name: /Memória/ })).getByText("2")).toHaveClass("k-badge");
+    unmount();
+    render(<TrailMap path={path} units={units} progress={emptyProgress()} onOpenStop={vi.fn()} />);
+    expect(document.querySelector(".k-badge")).toBeNull();
+  });
+});

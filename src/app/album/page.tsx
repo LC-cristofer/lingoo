@@ -4,12 +4,14 @@ import { useEffect, useMemo } from "react";
 import { narrator } from "@/audio/narrator";
 import { Sticker } from "@/art/scenes/Sticker";
 import { DaysCalendar } from "@/components/trail/DaysCalendar";
+import { useToday } from "@/components/trail/useToday";
 import { useTrailProgress } from "@/components/trail/TrailProgressProvider";
 import { BottomNav } from "@/components/trail/kit/BottomNav";
 import { ForestScene } from "@/components/trail/kit/ForestScene";
 import { Scatter, type ScatterItem } from "@/components/trail/kit/Scatter";
 import { WoodSign } from "@/components/trail/kit/WoodSign";
 import { getLines, getPath, getUnit } from "@/domain/trail/content";
+import { dueCards } from "@/domain/trail/memory";
 import { emptyProgress } from "@/domain/trail/progress";
 import type { ArtId, Narration } from "@/domain/trail/schema";
 
@@ -28,6 +30,7 @@ type AlbumUnit = { unitId: string; number: number; title: string; sticker: { id:
 export default function AlbumPage() {
   const { progress, hydrated } = useTrailProgress();
   const shown = hydrated ? progress : EMPTY;
+  const today = useToday();
 
   useEffect(() => {
     void narrator.playNarration(getLines().album);
@@ -92,7 +95,7 @@ export default function AlbumPage() {
           </div>
         ) : null}
       </main>
-      <BottomNav active="album" />
+      <BottomNav active="album" memoryDue={today ? dueCards(shown.memory, today).length : 0} />
     </div>
   );
 }

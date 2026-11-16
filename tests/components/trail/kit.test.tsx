@@ -128,30 +128,34 @@ describe("StopButton", () => {
 
 describe("BottomNav", () => {
   it("has Trilha, Memória, Álbum in order and marks the active one", () => {
-    render(<BottomNav active="memoria" memoryEnabled />);
+    render(<BottomNav active="memoria" />);
     const links = screen.getAllByRole("link");
     expect(links.map((l) => l.textContent)).toEqual(["Trilha", "Memória", "Álbum"]);
     expect(links.map((l) => l.getAttribute("href"))).toEqual(["/mapa", "/memoria", "/album"]);
     expect(links.map((l) => l.getAttribute("aria-current"))).toEqual([null, "page", null]);
   });
 
-  it("shows the memoryDue badge", () => {
-    render(<BottomNav active="trilha" memoryDue={4} memoryEnabled />);
-    expect(screen.getByText("4")).toBeInTheDocument();
+  it("Memória is enabled, and sky blue when active", () => {
+    render(<BottomNav active="memoria" />);
+    const memory = screen.getByRole("link", { name: "Memória" });
+    expect(memory).not.toHaveAttribute("aria-disabled");
+    expect(memory).toHaveClass("is-active", "is-sky");
+    expect(screen.getByRole("link", { name: "Trilha" })).not.toHaveClass("is-sky");
   });
 
-  it("renders Memória disabled when memory is not enabled", async () => {
-    render(<BottomNav active="trilha" memoryEnabled={false} />);
-    const memory = screen.getByRole("link", { name: "Memória" });
-    expect(memory).toHaveAttribute("aria-disabled", "true");
-    expect(screen.getByRole("link", { name: "Trilha" })).not.toHaveAttribute("aria-disabled");
+  it("shows the memoryDue badge only when there is something due", () => {
+    const { rerender } = render(<BottomNav active="trilha" memoryDue={4} />);
+    expect(screen.getByText("4")).toHaveClass("k-badge");
+    rerender(<BottomNav active="trilha" memoryDue={0} />);
+    expect(document.querySelector(".k-badge")).toBeNull();
   });
 });
 
-describe("BottomNav default", () => {
-  it("keeps Memória disabled until the memory page exists", () => {
-    render(<BottomNav active="trilha" />);
-    expect(screen.getByRole("link", { name: "Memória" })).toHaveAttribute("aria-disabled", "true");
+describe("LessonTopBar count", () => {
+  it("shows the 'N de M' pill beside a blue bar when a count is given", () => {
+    render(<LessonTopBar ratio={0.4} onExit={() => {}} count="2 de 5" />);
+    expect(screen.getByText("2 de 5")).toHaveClass("k-pill");
+    expect(screen.getByRole("progressbar")).toHaveClass("is-sky");
   });
 });
 

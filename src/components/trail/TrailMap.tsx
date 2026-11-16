@@ -6,9 +6,11 @@ import { Cat } from "@/art/Cat";
 import { Chest } from "@/art/scenes/Chest";
 import { narrator } from "@/audio/narrator";
 import { getLines } from "@/domain/trail/content";
+import { dueCards } from "@/domain/trail/memory";
 import { stopStatus, unitStatus, type Progress, type StopStatus } from "@/domain/trail/progress";
 import type { PathUnit, Stop, Unit } from "@/domain/trail/schema";
 import { DaysCalendar } from "./DaysCalendar";
+import { useToday } from "./useToday";
 import { BottomNav } from "./kit/BottomNav";
 import { Bubble } from "./kit/Bubble";
 import { ForestScene } from "./kit/ForestScene";
@@ -154,6 +156,7 @@ const TABLET_DECOR: ScatterItem[] = [
  */
 export function TrailMap({ path, units, progress, onOpenStop }: TrailMapProps) {
   const lines = getLines();
+  const today = useToday();
   const rootRef = useRef<HTMLDivElement>(null);
   const [shaking, setShaking] = useState<string | null>(null);
   const layout = useMemo(() => buildLayout(path, units, progress), [path, units, progress]);
@@ -285,7 +288,7 @@ export function TrailMap({ path, units, progress, onOpenStop }: TrailMapProps) {
         </div>
       </main>
 
-      <BottomNav active="trilha" />
+      <BottomNav active="trilha" memoryDue={today ? dueCards(progress.memory, today).length : 0} />
     </div>
   );
 }

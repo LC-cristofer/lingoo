@@ -3,8 +3,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { narrator } from "@/audio/narrator";
 import { getLines } from "@/domain/trail/content";
+import { addCards, cardId, lessonRound, todayKey, type CardId } from "@/domain/trail/memory";
 import type { LessonStop, Unit } from "@/domain/trail/schema";
 import { ChestReward } from "./ChestReward";
+import { MemoryRound } from "./memory/MemoryRound";
 import { ExerciseLoop, StopClosing, StopOpening } from "./StopFlow";
 import { useTrailProgress } from "./TrailProgressProvider";
 
@@ -16,12 +18,13 @@ type StopPlayerProps = {
   record?: boolean;
 };
 
-type Step = "opening" | "session" | "closing" | "chest";
+type Step = "opening" | "session" | "memory" | "closing" | "chest";
 
 export function StopPlayer({ unit, stop, onExit, record = true }: StopPlayerProps) {
   const lines = useMemo(() => getLines(), []);
-  const { finishStop } = useTrailProgress();
+  const { progress, finishStop, addMemoryCards } = useTrailProgress();
   const [step, setStep] = useState<Step>("opening");
+  const [round, setRound] = useState<CardId[]>([]);
 
   // Leaving the player (any way) silences the narrator.
   useEffect(() => () => narrator.stop(), []);
@@ -40,6 +43,10 @@ export function StopPlayer({ unit, stop, onExit, record = true }: StopPlayerProp
         onExit={onExit}
       />
     );
+  }
+
+  if (step === "memory") {
+    return <MemoryRound unit={unit} cardIds={round} record={record} intro onDone={() => setStep("closing")} onExit={onExit} />;
   }
 
   if (step === "closing") {
@@ -66,7 +73,19 @@ export function StopPlayer({ unit, stop, onExit, record = true }: StopPlayerProp
       words={unit.words}
       onExit={onExit}
       onFinished={() => {
-        setStep("closing");
+        // A lesson ends with the memory round: its new words become cards, plus a few old ones that are due.
+        let next: Step = "closing";
+        if (stop.kind === "lesson") {
+          const today = todayKey();
+          const newIds = stop.wordIds.map((id) => cardId(unit.id, id)).filter((id) => !Object.hasOwn(progress.memory, id));
+          const cards = lessonRound(addCards(progress.memory, newIds, today), newIds, today);
+          if (cards.length > 0) {
+            if (record && newIds.length > 0) addMemoryCards(newIds);
+            setRound(cards);
+            next = "memory";
+          }
+        }
+        setStep(next);
         // The stop and (for the challenge) its sticker are granted together: never behind a tap.
         if (record) {
           if (stop.kind === "challenge" && stop.sticker) finishStop(stop.id, stop.sticker.id);
