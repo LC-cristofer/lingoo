@@ -1,22 +1,11 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { ART_WORDS } from "@/art/Animal";
-import { Cat, type CatExpression } from "@/art/Cat";
 import { narrator } from "@/audio/narrator";
 import { getLines } from "@/domain/trail/content";
-import type { Exercise, LessonStop, Narration, Unit, Word } from "@/domain/trail/schema";
-import { answer, next, progressRatio, resume, startSession, type Phase } from "@/domain/trail/session";
+import type { LessonStop, Unit } from "@/domain/trail/schema";
 import { ChestReward } from "./ChestReward";
-import { ExerciseShell } from "./ExerciseShell";
-import { ExerciseView } from "./exercises/ExerciseView";
-import { AnswerTile, TileGrid } from "./kit/AnswerTile";
-import { Bubble } from "./kit/Bubble";
-import { ChunkyButton } from "./kit/ChunkyButton";
-import { ForestScene } from "./kit/ForestScene";
-import { LessonTopBar } from "./kit/LessonTopBar";
-import { PlayIcon } from "./icons";
-import { NarrationText } from "./NarrationText";
+import { ExerciseLoop, StopClosing, StopOpening } from "./StopFlow";
 import { useTrailProgress } from "./TrailProgressProvider";
 
 type StopPlayerProps = {
@@ -29,212 +18,40 @@ type StopPlayerProps = {
 
 type Step = "opening" | "session" | "closing" | "chest";
 
-/** The narration an exercise is asked with: `say` for intro/trueFalse, `prompt` for the rest. */
-function questionOf(ex: Exercise): Narration {
-  return ex.kind === "intro" || ex.kind === "trueFalse" ? ex.say : ex.prompt;
-}
-
-/** These exercises play their own question when they mount; the others need the player to. */
-function playsOwnQuestion(ex: Exercise): boolean {
-  return ex.kind === "intro" || ex.kind === "listenTap" || ex.kind === "trueFalse";
-}
-
-function catFor(phase: Phase): CatExpression {
-  if (phase === "answering") return "pointing";
-  if (phase === "correct") return "happy";
-  return "helping";
-}
-
-/** The stop's words as tiles with the English word under each (tap to hear it). */
-function WordCards({ words, ids }: { words: Word[]; ids: Word["id"][] }) {
-  return (
-    <div className="k-words">
-      <TileGrid dense={ids.length % 3 === 0} six={ids.length === 6}>
-        {ids.map((id) => {
-          const word = words.find((w) => w.id === id);
-          return (
-            <div key={id} className="k-word">
-              <AnswerTile
-                id={id}
-                label={ART_WORDS[id]}
-                lang="en"
-                data={{ "data-word": id }}
-                onPress={() => {
-                  narrator.playSfx("tap");
-                  void narrator.playNarration(word?.say ?? [{ lang: "en-US", text: ART_WORDS[id] }]);
-                }}
-              />
-              <b lang="en" className="k-word-en">
-                {word?.en ?? ART_WORDS[id]}
-              </b>
-            </div>
-          );
-        })}
-      </TileGrid>
-    </div>
-  );
-}
-
-function Star() {
-  return (
-    <svg viewBox="-60 -60 120 120" width={80} height={80} role="img" aria-label="Estrela" data-testid="star">
-      <g className="art-sticker-pop">
-        <path
-          d="M0 -48 l14 30 l33 4 l-24 22 l7 32 l-30 -17 l-30 17 l7 -32 l-24 -22 l33 -4z"
-          fill="#FFC93C"
-          stroke="#F2A71B"
-          strokeWidth="5"
-          strokeLinejoin="round"
-        />
-      </g>
-    </svg>
-  );
-}
-
 export function StopPlayer({ unit, stop, onExit, record = true }: StopPlayerProps) {
   const lines = useMemo(() => getLines(), []);
   const { finishStop } = useTrailProgress();
   const [step, setStep] = useState<Step>("opening");
-  const [session, setSession] = useState(() => startSession(stop.exercises, stop.id));
-  const [shown, setShown] = useState(0);
-  const [correctCount, setCorrectCount] = useState(0);
-  const [override, setOverride] = useState<{ key: string; expression: CatExpression } | null>(null);
-
-  // High-water mark: the bar never goes backwards (a queued review lowers the raw ratio).
-  const rawRatio = progressRatio(session);
-  if (rawRatio > shown) setShown(rawRatio);
-  const ratio = Math.max(shown, rawRatio);
-
-  const item = session.items[Math.min(session.index, session.items.length - 1)];
-  const { phase, index } = session;
-  const praiseLine = lines.praise[Math.max(0, correctCount - 1) % lines.praise.length];
 
   // Leaving the player (any way) silences the narrator.
   useEffect(() => () => narrator.stop(), []);
 
-  // Opening: the gatinho says it. (With audio still locked this stays silent until the ▶ tap.)
-  useEffect(() => {
-    if (step === "opening") void narrator.playNarration(stop.opening);
-  }, [step, stop.opening]);
-
-  // A new exercise: the kinds that do not speak for themselves are read to the child.
-  useEffect(() => {
-    if (step !== "session" || session.finished) return;
-    if (!playsOwnQuestion(item.exercise)) void narrator.playNarration(questionOf(item.exercise));
-  }, [step, index, item.exercise, session.finished]);
-
-  // Feedback sounds and the retry that hands the exercise back after the narration.
-  useEffect(() => {
-    if (step !== "session" || session.finished) return;
-    let alive = true;
-    if (phase === "correct") {
-      narrator.playSfx("correct");
-      void narrator.playNarration(praiseLine);
-    } else if (phase === "retry") {
-      narrator.playSfx("retry");
-      void narrator.playNarration(lines.retry).then(() => {
-        if (!alive) return;
-        setSession((s) => resume(s));
-        void narrator.playNarration(questionOf(item.exercise));
-      });
-    } else if (phase === "hint") {
-      void narrator.playNarration(lines.hint);
-    }
-    return () => {
-      alive = false;
-    };
-    // Re-run only when the phase or the exercise changes, not when the praise rotates.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [step, phase, index]);
-
-  // Closing: the star and the gatinho's words.
-  useEffect(() => {
-    if (step !== "closing") return;
-    narrator.playSfx("star");
-    void narrator.playNarration([...stop.closing, ...lines.star]);
-  }, [step, stop.closing, lines.star]);
-
-  const start = () => {
-    narrator.unlock();
-    setStep("session");
-  };
-
-  const onAnswer = (correct: boolean) => {
-    const after = answer(session, correct);
-    if (after === session) return;
-    if (after.phase === "correct") setCorrectCount((n) => n + 1);
-    setSession(after);
-  };
-
-  const onContinue = () => {
-    const after = next(session);
-    setSession(after);
-    if (after.finished) {
-      setStep("closing");
-      // The stop and (for the challenge) its sticker are granted together: never behind a tap.
-      if (record) {
-        if (stop.kind === "challenge" && stop.sticker) finishStop(stop.id, stop.sticker.id);
-        else finishStop(stop.id);
-      }
-    }
-  };
-
   if (step === "opening") {
     return (
-      <div className="k-screen">
-        <ForestScene variant="lesson" trees />
-        <div className="k-stage">
-          <LessonTopBar ratio={0} onExit={onExit} title={stop.title} />
-          <div className="k-hello">
-            <Bubble tail="down">
-              <NarrationText narration={stop.opening} />
-            </Bubble>
-            <span className="k-cat">
-              <Cat expression="happy" size={170} />
-            </span>
-          </div>
-          <WordCards words={unit.words} ids={stop.wordIds} />
-          <ChunkyButton label="Começar" tone="sun" size="lg" className="k-cta" onPress={start}>
-            Começar
-            <PlayIcon size={28} />
-          </ChunkyButton>
-        </div>
-      </div>
+      <StopOpening
+        title={stop.title}
+        opening={stop.opening}
+        words={unit.words}
+        wordIds={stop.wordIds}
+        onStart={() => {
+          narrator.unlock();
+          setStep("session");
+        }}
+        onExit={onExit}
+      />
     );
   }
 
   if (step === "closing") {
     const isChallenge = stop.kind === "challenge";
     return (
-      <div className="k-screen">
-        <ForestScene variant="lesson" trees />
-        <div className="k-stage is-closing">
-          <div className="k-hello">
-            <Bubble tail="down">
-              <NarrationText narration={stop.closing} />
-            </Bubble>
-            <span className="k-cat">
-              <Cat expression="happy" size={120} />
-            </span>
-          </div>
-          <div className="k-reward">
-            <Star />
-            <p className="k-star-line">
-              <NarrationText narration={lines.star} />
-            </p>
-          </div>
-          <WordCards words={unit.words} ids={stop.wordIds} />
-          <ChunkyButton
-            label={isChallenge ? "Continuar" : "Voltar ao mapa"}
-            tone="sun"
-            size="lg"
-            className="k-cta"
-            onPress={isChallenge ? () => setStep("chest") : onExit}
-          >
-            {isChallenge ? "Continuar" : "Voltar ao mapa"}
-          </ChunkyButton>
-        </div>
-      </div>
+      <StopClosing
+        closing={stop.closing}
+        words={unit.words}
+        wordIds={stop.wordIds}
+        isChallenge={isChallenge}
+        onContinue={isChallenge ? () => setStep("chest") : onExit}
+      />
     );
   }
 
@@ -242,34 +59,20 @@ export function StopPlayer({ unit, stop, onExit, record = true }: StopPlayerProp
     return <ChestReward stop={stop} lines={lines} onBack={onExit} />;
   }
 
-  const overrideKey = `${index}:${phase}`;
-  const catExpression = override && override.key === overrideKey ? override.expression : catFor(phase);
-  const feedback =
-    phase === "correct"
-      ? { kind: "correct" as const, line: praiseLine, onContinue }
-      : phase === "retry"
-        ? { kind: "retry" as const, line: lines.retry }
-        : phase === "hint"
-          ? { kind: "hint" as const, line: lines.hint }
-          : null;
-
   return (
-    <ExerciseShell
-      ratio={ratio}
-      prompt={questionOf(item.exercise)}
-      catExpression={catExpression}
-      feedback={feedback}
+    <ExerciseLoop
+      exercises={stop.exercises}
+      sessionId={stop.id}
+      words={unit.words}
       onExit={onExit}
-    >
-      <ExerciseView
-        key={`${item.key}:${index}`}
-        exercise={item.exercise}
-        words={unit.words}
-        phase={phase}
-        onAnswer={onAnswer}
-        onDone={() => {}}
-        onCatExpression={(expression) => setOverride({ key: overrideKey, expression })}
-      />
-    </ExerciseShell>
+      onFinished={() => {
+        setStep("closing");
+        // The stop and (for the challenge) its sticker are granted together: never behind a tap.
+        if (record) {
+          if (stop.kind === "challenge" && stop.sticker) finishStop(stop.id, stop.sticker.id);
+          else finishStop(stop.id);
+        }
+      }}
+    />
   );
 }

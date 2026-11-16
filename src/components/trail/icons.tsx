@@ -41,3 +41,28 @@ export function PlayIcon({ size = 56 }: { size?: number }) {
     </svg>
   );
 }
+
+export function PauseIcon({ size = 40 }: { size?: number }) {
+  return (
+    <svg {...base} width={size} height={size}>
+      <path d="M7 5v14M17 5v14" fill="none" stroke="currentColor" strokeWidth="5" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+export function ReplayIcon({ size = 36 }: { size?: number }) {
+  return (
+    <svg {...base} width={size} height={size}>
+      <path d="M5 12a7 7 0 1 0 2.2-5.1" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" />
+      <path d="M4 3.5v5h5" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+export function ArrowIcon({ size = 36 }: { size?: number }) {
+  return (
+    <svg {...base} width={size} height={size}>
+      <path d="M5 12h13M12 5l7 7-7 7" fill="none" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}

@@ -3,5 +3,5 @@ export function stopHref(stopId: string): string {
   return `/parada/${stopId}`;
 }
 
-/** Task 12 flips this to true when the song and story players exist (the review page links them then). */
-export const SONG_AND_STORY_READY = false;
+/** The song and story players exist: the review page links them. */
+export const SONG_AND_STORY_READY = true;
