@@ -100,7 +100,8 @@ async function solve(page: Page, ex: Exercise) {
 
 /** The memory round: flip every card, then check every card right on the first tap. Returns the card count. */
 async function memoryRound(page: Page): Promise<number> {
-  const pill = page.getByText(/^1 de \d+$/);
+  // Only the visible memory pill: the map's sign ("1 de 6") can still be in the page, hidden, as the lesson starts.
+  const pill = page.locator(".k-pill-count:visible", { hasText: /^1 de \d+$/ });
   await expect(pill).toBeVisible({ timeout: 20_000 });
   const total = Number((await pill.textContent())!.match(/de (\d+)/)![1]);
   for (let i = 0; i < total; i++) {
