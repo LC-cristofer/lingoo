@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { addCards, grade, todayKey, type CardId } from "@/domain/trail/memory";
 import { completeStop, emptyProgress, markDay, type Progress } from "@/domain/trail/progress";
 import { createTrailProgressStore, type TrailProgressStore } from "@/domain/trail/progress-store";
 
@@ -11,6 +12,10 @@ type TrailProgressContextValue = {
   finishStop(stopId: string, stickerId?: string): void;
   /** Records today as a day played, without finishing any stop. */
   markToday(): void;
+  /** New memory cards: box 0, due today. Existing ones are left alone. */
+  addMemoryCards(ids: CardId[]): void;
+  /** Schedules each card from how its check went (first try or not). */
+  gradeCards(results: { id: CardId; firstTry: boolean }[]): void;
 };
 
 const TrailProgressContext = createContext<TrailProgressContextValue | null>(null);
@@ -57,9 +62,27 @@ export function TrailProgressProvider({ children }: { children: ReactNode }) {
   );
   const markToday = useCallback(() => apply((p) => markDay(p, new Date())), [apply]);
 
+  const addMemoryCards = useCallback(
+    (ids: CardId[]) =>
+      apply((p) => {
+        const memory = addCards(p.memory, ids, todayKey());
+        return memory === p.memory ? p : { ...p, memory };
+      }),
+    [apply],
+  );
+  const gradeCards = useCallback(
+    (results: { id: CardId; firstTry: boolean }[]) =>
+      apply((p) => {
+        const today = todayKey();
+        const memory = results.reduce((m, r) => grade(m, r.id, r.firstTry, today), p.memory);
+        return memory === p.memory ? p : { ...p, memory };
+      }),
+    [apply],
+  );
+
   const value = useMemo(
-    () => ({ progress, hydrated, finishStop, markToday }),
-    [progress, hydrated, finishStop, markToday],
+    () => ({ progress, hydrated, finishStop, markToday, addMemoryCards, gradeCards }),
+    [progress, hydrated, finishStop, markToday, addMemoryCards, gradeCards],
   );
   return <TrailProgressContext.Provider value={value}>{children}</TrailProgressContext.Provider>;
 }

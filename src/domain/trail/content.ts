@@ -56,7 +56,7 @@ export function allNarrations(): Narration[] {
   const out: Narration[] = [];
   for (const id of Object.keys(unitFiles)) {
     const unit = getUnit(id)!;
-    out.push(unit.banner, ...unit.words.map((w) => w.say));
+    out.push(unit.banner, ...unit.words.map((w) => w.say), ...unit.words.map((w) => w.ask));
     for (const stop of unit.stops) {
       out.push(stop.opening);
       if (stop.kind === "song") {
@@ -72,5 +72,6 @@ export function allNarrations(): Narration[] {
   }
   const l = getLines();
   out.push(...l.praise, l.retry, l.hint, l.star, l.chestOpen, l.chestPrompt, l.lockedStop, l.soonUnit, l.start, l.album);
+  out.push(l.memoryIntro, l.memoryAsk, l.memoryFlip, l.memoryPraise, ...l.memoryDone, l.memoryHome, l.memoryEmpty, l.memoryEmptyLater, l.memoryNone);
   return out;
 }

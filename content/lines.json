@@ -82,5 +82,109 @@
       "lang": "pt-BR",
       "text": "Esse é o seu álbum de figurinhas!"
     }
+  ],
+  "memoryIntro": [
+    {
+      "lang": "pt-BR",
+      "text": "Hora de treinar a memória!"
+    }
+  ],
+  "memoryAsk": [
+    {
+      "lang": "pt-BR",
+      "text": "Como se fala em inglês?"
+    }
+  ],
+  "memoryFlip": [
+    {
+      "lang": "pt-BR",
+      "text": "Toque para virar"
+    }
+  ],
+  "memoryPraise": [
+    {
+      "lang": "en-US",
+      "text": "Yes! You remembered!"
+    }
+  ],
+  "memoryDone": [
+    [
+      {
+        "lang": "pt-BR",
+        "text": "Você treinou a memória!"
+      }
+    ],
+    [
+      {
+        "lang": "pt-BR",
+        "text": "Você lembrou de uma palavra!"
+      }
+    ],
+    [
+      {
+        "lang": "pt-BR",
+        "text": "Você lembrou de duas palavras!"
+      }
+    ],
+    [
+      {
+        "lang": "pt-BR",
+        "text": "Você lembrou de três palavras!"
+      }
+    ],
+    [
+      {
+        "lang": "pt-BR",
+        "text": "Você lembrou de quatro palavras!"
+      }
+    ],
+    [
+      {
+        "lang": "pt-BR",
+        "text": "Você lembrou de cinco palavras!"
+      }
+    ],
+    [
+      {
+        "lang": "pt-BR",
+        "text": "Você lembrou de seis palavras!"
+      }
+    ],
+    [
+      {
+        "lang": "pt-BR",
+        "text": "Você lembrou de sete palavras!"
+      }
+    ],
+    [
+      {
+        "lang": "pt-BR",
+        "text": "Você lembrou de oito palavras!"
+      }
+    ]
+  ],
+  "memoryHome": [
+    {
+      "lang": "pt-BR",
+      "text": "Tem cartões para treinar!"
+    }
+  ],
+  "memoryEmpty": [
+    {
+      "lang": "pt-BR",
+      "text": "Tudo em dia! Amanhã tem mais cartões."
+    }
+  ],
+  "memoryEmptyLater": [
+    {
+      "lang": "pt-BR",
+      "text": "Tudo em dia!"
+    }
+  ],
+  "memoryNone": [
+    {
+      "lang": "pt-BR",
+      "text": "Termine uma lição para ganhar cartões!"
+    }
   ]
 }

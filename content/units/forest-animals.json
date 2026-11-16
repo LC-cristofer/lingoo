@@ -17,6 +17,20 @@
           "lang": "en-US",
           "text": "bear!"
         }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Qual é o"
+        },
+        {
+          "lang": "en-US",
+          "text": "bear?"
+        },
+        {
+          "lang": "pt-BR",
+          "text": "Toque nele!"
+        }
       ]
     },
     {
@@ -27,6 +41,20 @@
         {
           "lang": "en-US",
           "text": "bird!"
+        }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Qual é o"
+        },
+        {
+          "lang": "en-US",
+          "text": "bird?"
+        },
+        {
+          "lang": "pt-BR",
+          "text": "Toque nele!"
         }
       ]
     },
@@ -39,6 +67,20 @@
           "lang": "en-US",
           "text": "frog!"
         }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Qual é o"
+        },
+        {
+          "lang": "en-US",
+          "text": "frog?"
+        },
+        {
+          "lang": "pt-BR",
+          "text": "Toque nele!"
+        }
       ]
     },
     {
@@ -49,6 +91,20 @@
         {
           "lang": "en-US",
           "text": "snake!"
+        }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Qual é a"
+        },
+        {
+          "lang": "en-US",
+          "text": "snake?"
+        },
+        {
+          "lang": "pt-BR",
+          "text": "Toque nela!"
         }
       ]
     },
@@ -61,6 +117,20 @@
           "lang": "en-US",
           "text": "spider!"
         }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Qual é a"
+        },
+        {
+          "lang": "en-US",
+          "text": "spider?"
+        },
+        {
+          "lang": "pt-BR",
+          "text": "Toque nela!"
+        }
       ]
     },
     {
@@ -71,6 +141,20 @@
         {
           "lang": "en-US",
           "text": "mouse!"
+        }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Qual é o"
+        },
+        {
+          "lang": "en-US",
+          "text": "mouse?"
+        },
+        {
+          "lang": "pt-BR",
+          "text": "Toque nele!"
         }
       ]
     }

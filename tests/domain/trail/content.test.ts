@@ -101,6 +101,42 @@ describe("trail content", () => {
     expect(() => parseUnit(u)).toThrow();
   });
 
+  it("every word has an ask (Qual é o/a, the English word, Toque nele/nela) that is voiced", () => {
+    for (const w of unit.words) {
+      expect(w.ask.map((x) => x.lang)).toEqual(["pt-BR", "en-US", "pt-BR"]);
+      expect(w.ask[1].text).toBe(`${w.en}?`);
+      expect(w.ask[0].text).toMatch(/^Qual é (o|a)$/);
+      expect(w.ask[2].text).toMatch(/^Toque (nele|nela)!$/);
+    }
+    const all = allNarrations();
+    for (const w of unit.words) expect(all).toContainEqual(w.ask);
+  });
+
+  it("an ask matches the lesson listenTap wording, so its audio already exists", () => {
+    const prompts = unit.stops.flatMap((s) => (s.kind === "lesson" ? s.exercises : [])).flatMap((e) => (e.kind === "listenTap" ? [e.prompt] : []));
+    for (const w of unit.words) {
+      const same = prompts.find((p) => p[1].text === `${w.en}?`);
+      if (same) expect(w.ask).toEqual(same);
+    }
+  });
+
+  it("the memory lines exist and are voiced", () => {
+    const l = getLines();
+    expect(l.memoryPraise).toEqual([{ lang: "en-US", text: "Yes! You remembered!" }]);
+    expect(l.memoryHome[0].text).toBe("Tem cartões para treinar!");
+    expect(l.memoryEmpty[0].text).toBe("Tudo em dia! Amanhã tem mais cartões.");
+    expect(l.memoryEmptyLater[0].text).toBe("Tudo em dia!");
+    expect(l.memoryNone[0].text).toBe("Termine uma lição para ganhar cartões!");
+    expect(l.memoryIntro[0].text).toBe("Hora de treinar a memória!");
+    expect(l.memoryDone).toHaveLength(9);
+    expect(l.memoryDone[0][0].text).toBe("Você treinou a memória!");
+    expect(l.memoryDone[3][0].text).toBe("Você lembrou de três palavras!");
+    const all = allNarrations();
+    for (const n of [l.memoryIntro, l.memoryAsk, l.memoryFlip, l.memoryPraise, l.memoryHome, l.memoryEmpty, l.memoryEmptyLater, l.memoryNone, ...l.memoryDone]) {
+      expect(all).toContainEqual(n);
+    }
+  });
+
   it("parsePath / parseLines throw on garbage", () => {
     expect(() => parsePath({})).toThrow();
     expect(() => parseLines({})).toThrow();

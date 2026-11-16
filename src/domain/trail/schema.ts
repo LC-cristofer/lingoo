@@ -22,6 +22,8 @@ const wordSchema = z.object({
   en: z.string().min(1),
   pt: z.string().min(1),
   say: narrationSchema,
+  /** The memory check question ("Qual é o bear? Toque nele!"). */
+  ask: narrationSchema,
 });
 
 const exerciseSchema = z.discriminatedUnion("kind", [
@@ -186,6 +188,16 @@ export const linesSchema = z.object({
   soonUnit: narrationSchema,
   start: narrationSchema,
   album: narrationSchema,
+  memoryIntro: narrationSchema,
+  memoryAsk: narrationSchema,
+  memoryFlip: narrationSchema,
+  memoryPraise: narrationSchema,
+  /** Index = how many words were remembered (0..8). */
+  memoryDone: z.array(narrationSchema).length(9),
+  memoryHome: narrationSchema,
+  memoryEmpty: narrationSchema,
+  memoryEmptyLater: narrationSchema,
+  memoryNone: narrationSchema,
 });
 
 export type Lang = z.infer<typeof langSchema>;

@@ -1,3 +1,4 @@
+import type { MemoryState } from "./memory";
 import type { PathUnit, Unit } from "./schema";
 
 export type Progress = {
@@ -7,6 +8,8 @@ export type Progress = {
   stickers: Record<string, string>;
   /** Local dates "YYYY-MM-DD", ascending, last 60 only */
   daysPlayed: string[];
+  /** The memory-training cards. A stored payload without it loads as {}. */
+  memory: MemoryState;
 };
 
 export type StopStatus = "done" | "current" | "locked";
@@ -15,7 +18,7 @@ export type UnitStatus = "done" | "current" | "locked" | "soon";
 const MAX_DAYS = 60;
 
 export function emptyProgress(): Progress {
-  return { completedStops: {}, stickers: {}, daysPlayed: [] };
+  return { completedStops: {}, stickers: {}, daysPlayed: [], memory: {} };
 }
 
 export function completeStop(p: Progress, stopId: string, now: Date, stickerId?: string): Progress {
@@ -30,7 +33,8 @@ export function completeStop(p: Progress, stopId: string, now: Date, stickerId?:
   };
 }
 
-function dateKey(d: Date): string {
+/** A local date as "YYYY-MM-DD". */
+export function dateKey(d: Date): string {
   const m = String(d.getMonth() + 1).padStart(2, "0");
   const day = String(d.getDate()).padStart(2, "0");
   return `${d.getFullYear()}-${m}-${day}`;

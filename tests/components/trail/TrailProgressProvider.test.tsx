@@ -36,6 +36,26 @@ describe("TrailProgressProvider", () => {
     expect(stored.completedStops).toEqual({});
     expect(stored.daysPlayed).toHaveLength(1);
   });
+  it("addMemoryCards enters new cards due today and gradeCards schedules them, persisted", () => {
+    function M() {
+      const { progress, addMemoryCards, gradeCards } = useTrailProgress();
+      return (
+        <>
+          <button onClick={() => addMemoryCards(["u:a", "u:b"])}>add</button>
+          <button onClick={() => gradeCards([{ id: "u:a", firstTry: true }, { id: "u:b", firstTry: false }])}>grade</button>
+          <p data-testid="mem">{JSON.stringify(Object.fromEntries(Object.entries(progress.memory).map(([k, v]) => [k, v.box])))}</p>
+        </>
+      );
+    }
+    render(<TrailProgressProvider><M /></TrailProgressProvider>);
+    act(() => screen.getByText("add").click());
+    expect(screen.getByTestId("mem").textContent).toBe('{"u:a":0,"u:b":0}');
+    act(() => screen.getByText("grade").click());
+    expect(screen.getByTestId("mem").textContent).toBe('{"u:a":1,"u:b":1}');
+    const stored = JSON.parse(localStorage.getItem(KEY)!);
+    expect(stored.memory["u:a"].box).toBe(1);
+    expect(stored.memory["u:a"].due).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+  });
   it("throws outside the provider", () => {
     expect(() => renderHook(() => useTrailProgress())).toThrow(/TrailProgressProvider/);
   });
