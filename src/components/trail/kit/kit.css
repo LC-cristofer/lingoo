@@ -181,6 +181,14 @@
 .k-guide .k-bubble { font-size: 19px; padding: 8px 14px 6px; margin-bottom: 4px; }
 .k-guide .k-bubble b { color: #2c82cc; }
 
+/* ---------- album ---------- */
+.k-album { padding-bottom: calc(110px + env(safe-area-inset-bottom)); gap: 18px; }
+.k-album-page { display: flex; flex-direction: column; align-items: center; gap: 18px; width: 100%; max-width: 560px; }
+.k-album-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; }
+.k-album-slot { padding: 0; border: 0; background: none; cursor: pointer; border-radius: 50%; }
+.k-album-slot[data-earned="false"] { cursor: default; }
+.k-album-slot:active[data-earned="true"] { transform: scale(0.96); }
+
 /* ---------- start screen ---------- */
 .k-decos { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
 .k-start { position: relative; min-height: 100dvh; display: flex; flex-direction: column; align-items: center; padding: 86px 24px calc(44px + env(safe-area-inset-bottom)); text-align: center; }

@@ -57,6 +57,23 @@ test("progress shows on the map: done stops, the current one, the sign and the s
   await expect(page.getByLabel("2 estrelas")).toBeVisible();
 });
 
+test("the album, reached from the map's tab, shows the sticker won in the chest", async ({ page }) => {
+  const done = unit.stops.map((s) => s.id);
+  await seedStorage(page, { [V2_KEY]: v2Progress(done, ["sticker-forest-bear"]) });
+  const audio = recordAudio(page);
+  await page.goto("/mapa", { waitUntil: "networkidle" });
+  await page.getByRole("link", { name: "Álbum" }).click();
+  await expect(page).toHaveURL(/\/album$/);
+  const sticker = page.locator('[data-sticker="sticker-forest-bear"]');
+  await expect(sticker).toHaveAttribute("data-earned", "true");
+  await sticker.click();
+  const challenge = unit.stops.find((s) => s.kind === "challenge");
+  if (!challenge || challenge.kind !== "challenge" || !challenge.sticker) throw new Error("no challenge sticker");
+  await expect.poll(() => audio()).toContain(audioSrc(challenge.sticker.name[0]));
+  const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+  expect(overflow).toBeLessThanOrEqual(0);
+});
+
 test("the map never scrolls sideways", async ({ page }) => {
   await page.goto("/mapa", { waitUntil: "networkidle" });
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
