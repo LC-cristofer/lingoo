@@ -170,7 +170,7 @@ test("one full unit: song, three lessons, story, challenge, memory and persisten
 
   await test.step("start screen to the map", async () => {
     await page.goto("/");
-    await page.getByRole("button", { name: "Começar" }).click();
+    await page.getByRole("button", { name: "Jogar" }).click();
     await expect(page).toHaveURL(/\/mapa$/);
     await expect(page.getByRole("button", { name: labelOf(stopOf("song")), exact: true })).toBeVisible();
     // A locked stop does not open.

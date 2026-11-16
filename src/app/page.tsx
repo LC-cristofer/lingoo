@@ -58,7 +58,7 @@ export default function Home() {
           </span>
         </div>
         <div className="k-start-cta">
-          <ChunkyButton label="Começar" tone="sun" size="lg" onPress={start}>
+          <ChunkyButton label="Jogar" tone="sun" size="lg" onPress={start}>
             Jogar
             <PlayArrow />
           </ChunkyButton>
