@@ -319,6 +319,14 @@ describe("StopPlayer memory round", () => {
     expect(screen.getByText("1 de 4")).toBeInTheDocument();
   });
 
+  it("cards that are not due today are shown as practice only and never graded", async () => {
+    storedMemory = Object.fromEntries(lesson.wordIds.map((id) => [`forest-animals:${id}`, { box: 3, due: "2999-12-31" }]));
+    await finishLessonExercises();
+    expect(addMemoryCards).not.toHaveBeenCalled();
+    await finishMemoryRound(lesson.wordIds.length);
+    expect(gradeCards).not.toHaveBeenCalled();
+  });
+
   it("with record=false nothing is added", async () => {
     await finishLessonExercises({ record: false });
     expect(addMemoryCards).not.toHaveBeenCalled();

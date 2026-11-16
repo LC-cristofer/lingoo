@@ -5,7 +5,7 @@ import { Animal } from "@/art/Animal";
 import { Cat } from "@/art/Cat";
 import { narrator } from "@/audio/narrator";
 import { getLines } from "@/domain/trail/content";
-import { cardId, pickDistractors, unitOfCard, wordOfCard, type CardId } from "@/domain/trail/memory";
+import { cardId, pickDistractors, todayKey, unitOfCard, wordOfCard, type CardId } from "@/domain/trail/memory";
 import type { ArtId, Exercise, Unit, Word } from "@/domain/trail/schema";
 import { hashSeed, seededShuffle } from "../exercises/shared";
 import { PlayIcon } from "../icons";
@@ -44,6 +44,12 @@ export function MemoryRound({ unit, cardIds, record, intro = false, onDone, onEx
   const [checkIndex, setCheckIndex] = useState(0);
   const [results, setResults] = useState<Record<CardId, boolean>>({});
   const attempted = useRef(new Set<CardId>());
+  // Only cards that are new or due today are graded; a card that is not due yet is practice only
+  // (a first-try answer must not push it up a box). Decided once, when the round starts.
+  const [gradeable] = useState<Set<CardId>>(() => {
+    const today = todayKey();
+    return new Set(cardIds.filter((id) => !progress.memory[id] || progress.memory[id].due <= today));
+  });
 
   const cards = useMemo(
     () =>
@@ -162,7 +168,7 @@ export function MemoryRound({ unit, cardIds, record, intro = false, onDone, onEx
           if (attempted.current.has(item.id)) return;
           attempted.current.add(item.id);
           setResults((r) => ({ ...r, [item.id]: correct }));
-          if (record) gradeCards([{ id: item.id, firstTry: correct }]);
+          if (record && gradeable.has(item.id)) gradeCards([{ id: item.id, firstTry: correct }]);
         }}
         onExit={onExit}
         onFinished={() => {

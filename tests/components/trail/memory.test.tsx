@@ -217,6 +217,18 @@ describe("MemoryRound check", () => {
     expect(screen.getByText("2 de 3")).toBeInTheDocument();
   });
 
+  it("a card that is not due yet is practice only: it is never graded, due ones still are", async () => {
+    memory = { ...memory, "forest-animals:bear": { box: 2, due: "2999-12-31" } };
+    await toCheck();
+    for (let i = 0; i < 3; i++) {
+      fireEvent.click(tile(asked()));
+      await flush();
+      fireEvent.click(within(sheet()).getByRole("button", { name: "Continuar" }));
+      await flush();
+    }
+    expect(gradeCards.mock.calls.map((c) => c[0][0].id).sort()).toEqual(["forest-animals:bird", "forest-animals:frog"]);
+  });
+
   it("leaving in the middle keeps what was graded and calls onExit", async () => {
     const { onExit } = await toCheck();
     fireEvent.click(tile(asked()));
