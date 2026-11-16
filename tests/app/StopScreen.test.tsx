@@ -87,9 +87,11 @@ describe("StopScreen", () => {
     expect(markToday).toHaveBeenCalledTimes(1);
   });
 
-  it("shows a placeholder for a song until Task 12", () => {
+  it("opens the song player for a song stop", () => {
     render(<StopScreen stopId="forest-animals/song" />);
-    expect(screen.getByText("Em construção")).toBeInTheDocument();
+    expect(screen.queryByText("Em construção")).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Começar" })).toBeInTheDocument();
+    expect(screen.getByText("Vamos cantar", { exact: false })).toBeInTheDocument();
   });
 
   it("review mode renders a locked stop without marking the day", () => {

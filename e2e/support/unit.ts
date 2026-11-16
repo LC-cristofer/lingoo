@@ -69,18 +69,27 @@ async function answerWrong(page: Page, ex: Exercise) {
 
 export type PlayResult = { answered: number; hintSeen: boolean };
 
-/**
- * Taps "Começar" and answers the stop's exercises in order, then the reviews the app queues.
- * `wrongTwiceAt` answers that exercise wrong twice (retry, then hint) before the right answer, so
- * it must come back once at the end. `stopAfter` returns after that many answered exercises.
- */
+/** Taps "Começar" and plays the stop's exercises (see playExercises). */
 export async function playStop(
   page: Page,
   stop: LessonStop,
   opts: { wrongTwiceAt?: number; stopAfter?: number } = {},
 ): Promise<PlayResult> {
   await page.getByRole("button", { name: "Começar", exact: true }).click();
-  const queue = stop.exercises.map((ex, i) => ({ ex, wrongTwice: i === opts.wrongTwiceAt }));
+  return playExercises(page, stop.exercises, opts);
+}
+
+/**
+ * Answers the exercises in order, then the reviews the app queues. `wrongTwiceAt` answers that
+ * exercise wrong twice (retry, then hint) before the right answer, so it must come back once at
+ * the end. `stopAfter` returns after that many answered exercises.
+ */
+export async function playExercises(
+  page: Page,
+  exercises: Exercise[],
+  opts: { wrongTwiceAt?: number; stopAfter?: number } = {},
+): Promise<PlayResult> {
+  const queue = exercises.map((ex, i) => ({ ex, wrongTwice: i === opts.wrongTwiceAt }));
   let hintSeen = false;
   let answered = 0;
   for (let i = 0; i < queue.length; i++) {

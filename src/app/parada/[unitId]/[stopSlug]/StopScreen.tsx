@@ -3,6 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useRef } from "react";
 import { BigButton } from "@/components/BigButton";
+import { SongStop } from "@/components/trail/SongStop";
 import { StopPlayer } from "@/components/trail/StopPlayer";
 import { useTrailProgress } from "@/components/trail/TrailProgressProvider";
 import { getStop } from "@/domain/trail/content";
@@ -32,7 +33,10 @@ export function StopScreen({ stopId }: { stopId: string }) {
   if (!hydrated || !found || !allowed) return null;
   const { unit, stop } = found;
 
-  if (stop.kind === "song" || stop.kind === "story") {
+  if (stop.kind === "song") {
+    return <SongStop unit={unit} stop={stop} record={!review} onExit={() => router.push(back)} />;
+  }
+  if (stop.kind === "story") {
     // Task 12 replaces this placeholder with the song and story players.
     return (
       <main className="flex min-h-dvh flex-col items-center justify-center gap-6 bg-cream p-4 text-ink">
