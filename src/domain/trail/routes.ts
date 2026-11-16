@@ -2,6 +2,3 @@
 export function stopHref(stopId: string): string {
   return `/parada/${stopId}`;
 }
-
-/** The song and story players exist: the review page links them. */
-export const SONG_AND_STORY_READY = true;
