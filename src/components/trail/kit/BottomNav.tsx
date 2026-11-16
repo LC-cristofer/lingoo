@@ -26,7 +26,7 @@ const AlbumIcon = (
 );
 
 /** The three tabs, always in this order: Trilha, Memória, Álbum. */
-export function BottomNav({ active, memoryDue = 0, memoryEnabled = true }: BottomNavProps) {
+export function BottomNav({ active, memoryDue = 0, memoryEnabled = false }: BottomNavProps) {
   const tabs: { id: Tab; href: string; label: string; icon: ReactNode }[] = [
     { id: "trilha", href: "/mapa", label: "Trilha", icon: TrailIcon },
     { id: "memoria", href: "/memoria", label: "Memória", icon: MemoryIcon },
@@ -40,6 +40,7 @@ export function BottomNav({ active, memoryDue = 0, memoryEnabled = true }: Botto
           <Link
             key={t.id}
             href={t.href}
+            prefetch={disabled ? false : undefined}
             aria-current={active === t.id ? "page" : undefined}
             aria-disabled={disabled ? "true" : undefined}
             tabIndex={disabled ? -1 : undefined}

@@ -9,6 +9,10 @@ type StopButtonProps = {
   label: string;
   labelSide: "left" | "right";
   onPress: () => void;
+  /** Called instead of onPress when the stop is locked (the map shakes it and says why). */
+  onLockedPress?: () => void;
+  /** Draws the name beside the disc (default). A ghost stop keeps its aria-label but shows none. */
+  showLabel?: boolean;
   /** Diameter of the disc in px (the current stop is drawn 14 px larger). */
   size?: number;
 };
@@ -22,7 +26,7 @@ const COLORS: Record<Stop["kind"], [string, string]> = {
 const LOCKED: [string, string] = ["#D5D9E0", "#AEB4BF"];
 
 /** A chunky, pressable stop: a disc on a darker edge, its name beside it. */
-export function StopButton({ kind, state, label, labelSide, onPress, size = 76 }: StopButtonProps) {
+export function StopButton({ kind, state, label, labelSide, onPress, onLockedPress, showLabel = true, size = 76 }: StopButtonProps) {
   const locked = state === "locked";
   const [fill, edge] = locked ? LOCKED : COLORS[kind];
   const s = state === "current" ? size + 14 : size;
@@ -34,7 +38,8 @@ export function StopButton({ kind, state, label, labelSide, onPress, size = 76 }
       aria-label={label}
       aria-disabled={locked ? "true" : undefined}
       onClick={() => {
-        if (!locked) onPress();
+        if (locked) onLockedPress?.();
+        else onPress();
       }}
       className="k-stop"
       style={{ width: s, height: s }}
@@ -59,7 +64,7 @@ export function StopButton({ kind, state, label, labelSide, onPress, size = 76 }
           </svg>
         </span>
       ) : null}
-      {state !== "current" ? (
+      {state !== "current" && showLabel ? (
         <span aria-hidden="true" className={`k-stop-label is-${labelSide} ${locked ? "is-locked" : ""}`}>
           {label}
         </span>

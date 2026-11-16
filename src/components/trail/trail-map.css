@@ -1,0 +1,71 @@
+/* The map, start screen and album: ported from tools/visual/mockups.tsx (PhoneMap, TabletMap, PhoneStart, TabletStart).
+   Imported by src/app/globals.css. Phone portrait first; wide landscape (tablet) adapts at the end. */
+
+/* ---------- map ---------- */
+.k-trailmap { min-height: 100dvh; }
+.k-fixed-chips { position: fixed; left: 0; right: 0; top: 0; height: 70px; z-index: 6; pointer-events: none; }
+.k-trailmap-body { position: relative; padding: 66px 0 130px; }
+.k-trailmap-sign { padding: 0 20px; margin-bottom: 10px; position: relative; z-index: 2; }
+.k-trail { position: relative; width: 100%; max-width: 430px; margin: 0 auto; }
+.k-trail-path { position: absolute; left: 0; top: 0; display: block; overflow: visible; }
+.k-trail-stop { position: absolute; z-index: 2; }
+.k-trail-stop.is-shake { animation: k-shake 0.45s ease-in-out; }
+.k-trail-at { position: absolute; display: block; transform: translate(-50%, -50%); z-index: 1; }
+.k-trail-sign { position: absolute; left: 50%; width: 76%; max-width: 330px; transform: translate(-50%, -50%); z-index: 2; }
+.k-guide { left: var(--g-phone); position: absolute; z-index: 3; display: flex; flex-direction: column; align-items: center; gap: 2px; pointer-events: none; }
+.k-guide[data-edge="right"] { left: auto; right: 2%; }
+.k-trailmap[data-guide="right"] .k-peek-bird { display: none; }
+.k-guide .k-bubble { font-size: 19px; padding: 9px 14px; white-space: nowrap; }
+.k-peek { position: absolute; display: block; z-index: 1; pointer-events: none; }
+.k-peek-bird { left: 78%; top: 232px; }
+.k-peek-frog { left: calc(50% - 300px); top: 486px; }
+.k-peek-bear { left: calc(50% - 352px); top: 360px; }
+.k-pond { position: absolute; left: calc(50% - 440px); top: 500px; display: block; pointer-events: none; }
+.k-only-tablet { display: none; }
+@keyframes k-shake { 0%, 100% { transform: translateX(0); } 20% { transform: translateX(-9px); } 40% { transform: translateX(8px); } 60% { transform: translateX(-6px); } 80% { transform: translateX(4px); } }
+
+/* ---------- start screen ---------- */
+.k-start { position: relative; min-height: 100dvh; display: flex; flex-direction: column; align-items: center; padding: 86px 24px calc(44px + env(safe-area-inset-bottom)); }
+.k-logo { margin: 0; font-family: var(--font-baloo), system-ui, sans-serif; font-weight: 800; font-size: 92px; line-height: 0.9; color: #fff; text-shadow: 0 4px 0 #2c82cc, 0 9px 0 rgba(31, 60, 40, 0.22); letter-spacing: -1px; }
+.k-tagline { margin: 10px 0 0; font-family: var(--font-baloo), system-ui, sans-serif; font-weight: 700; font-size: 23px; color: #1f5e96; }
+.k-start-cast { position: relative; margin-top: auto; display: flex; align-items: flex-end; justify-content: center; }
+.k-cast-l { display: block; margin-right: -22px; margin-bottom: 6px; position: relative; z-index: 1; }
+.k-cast-r { display: block; margin-left: -18px; margin-bottom: 2px; position: relative; z-index: 1; }
+.k-start-cta { margin-top: 26px; width: 100%; max-width: 520px; }
+.k-start-cta .k-btn { width: 100%; }
+.k-start-text { display: flex; flex-direction: column; align-items: center; }
+
+/* ---------- album ---------- */
+.k-album { position: relative; min-height: 100dvh; padding: 70px 20px 130px; display: flex; flex-direction: column; align-items: center; gap: 56px; }
+.k-album-unit { width: 100%; max-width: 430px; display: flex; flex-direction: column; align-items: center; gap: 22px; }
+.k-album-sign { width: 100%; padding-top: 24px; }
+.k-album-sticker { display: grid; place-items: center; padding: 0; border: 0; background: none; cursor: pointer; min-width: 64px; min-height: 64px; transition: transform 0.08s; }
+.k-album-sticker:active:not([aria-disabled="true"]) { transform: scale(0.96); }
+.k-album-sticker[aria-disabled="true"] { cursor: default; }
+.k-album-sticker svg { display: block; filter: drop-shadow(0 6px 0 rgba(31, 60, 40, 0.18)); }
+.k-album-soon { width: 100%; max-width: 430px; display: flex; flex-direction: column; gap: 40px; padding-top: 10px; }
+
+/* ---------- wide landscape (tablet) ---------- */
+@media (min-width: 900px) and (orientation: landscape) {
+  .k-only-phone { display: none; }
+  .k-only-tablet { display: block; }
+  .k-trailmap-body { padding-top: 44px; }
+  .k-trailmap-sign { position: absolute; left: 28px; top: 84px; width: 380px; padding: 0; margin: 0; }
+  .k-trail { width: 520px; max-width: none; margin: 0 0 0 calc(50% - 200px); }
+  .k-guide, .k-guide[data-edge="right"] { left: var(--g-tablet); right: auto; }
+  .k-trailmap[data-guide="right"] .k-peek-bird { display: block; }
+  .k-peek-bird { left: calc(50% - 130px); top: 236px; }
+  .k-start { display: grid; grid-template-columns: auto auto; grid-template-areas: "text cast" "cta cast"; grid-template-rows: 1fr 1fr; justify-content: center; column-gap: 70px; row-gap: 0; padding: 60px; align-items: center; }
+  .k-start-text { grid-area: text; align-items: flex-start; align-self: end; }
+  .k-start-cast { grid-area: cast; align-self: center; }
+  .k-start-cta { grid-area: cta; align-self: start; margin-top: 34px; }
+  .k-logo { font-size: 132px; }
+  .k-tagline { font-size: 32px; }
+  .k-start-cta { width: 300px; justify-self: start; }
+  .k-start-cast .art-cat { width: 300px; height: auto; }
+  .k-cast-l svg { width: 130px; height: auto; }
+  .k-cast-r svg { width: 110px; height: auto; }
+  .k-album-unit { max-width: 520px; }
+  .k-album-soon { max-width: 520px; }
+}
+@media (prefers-reduced-motion: reduce) { .k-trail-stop.is-shake { animation: none; } .k-album-sticker { transition: none; } }

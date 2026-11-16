@@ -128,7 +128,7 @@ describe("StopButton", () => {
 
 describe("BottomNav", () => {
   it("has Trilha, Memória, Álbum in order and marks the active one", () => {
-    render(<BottomNav active="memoria" />);
+    render(<BottomNav active="memoria" memoryEnabled />);
     const links = screen.getAllByRole("link");
     expect(links.map((l) => l.textContent)).toEqual(["Trilha", "Memória", "Álbum"]);
     expect(links.map((l) => l.getAttribute("href"))).toEqual(["/mapa", "/memoria", "/album"]);
@@ -136,7 +136,7 @@ describe("BottomNav", () => {
   });
 
   it("shows the memoryDue badge", () => {
-    render(<BottomNav active="trilha" memoryDue={4} />);
+    render(<BottomNav active="trilha" memoryDue={4} memoryEnabled />);
     expect(screen.getByText("4")).toBeInTheDocument();
   });
 
@@ -145,6 +145,24 @@ describe("BottomNav", () => {
     const memory = screen.getByRole("link", { name: "Memória" });
     expect(memory).toHaveAttribute("aria-disabled", "true");
     expect(screen.getByRole("link", { name: "Trilha" })).not.toHaveAttribute("aria-disabled");
+  });
+});
+
+describe("BottomNav default", () => {
+  it("keeps Memória disabled until the memory page exists", () => {
+    render(<BottomNav active="trilha" />);
+    expect(screen.getByRole("link", { name: "Memória" })).toHaveAttribute("aria-disabled", "true");
+  });
+});
+
+describe("StopButton locked press", () => {
+  it("calls onLockedPress (not onPress) for a locked stop", async () => {
+    const onPress = vi.fn();
+    const onLockedPress = vi.fn();
+    render(<StopButton kind="lesson" state="locked" label="Lição 3" labelSide="right" onPress={onPress} onLockedPress={onLockedPress} />);
+    await userEvent.click(screen.getByRole("button", { name: "Lição 3" }));
+    expect(onLockedPress).toHaveBeenCalledOnce();
+    expect(onPress).not.toHaveBeenCalled();
   });
 });
 

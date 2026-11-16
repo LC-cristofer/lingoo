@@ -3,6 +3,7 @@
 @import "../art/art.css";
 /* The visual kit of the approved look (buttons, tiles, sheets, signs, nav, scenes). */
 @import "../components/trail/kit/kit.css";
+@import "../components/trail/trail-map.css";
 
 @theme inline {
   --color-sun: #ffc93c;

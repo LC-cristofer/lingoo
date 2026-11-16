@@ -1,65 +1,98 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useEffect, useMemo } from "react";
 import { narrator } from "@/audio/narrator";
-import { BigButton } from "@/components/BigButton";
-import { ArrowIcon } from "@/components/lesson/icons";
-import { useProgress } from "@/components/ProgressProvider";
-import { getLesson, getWorlds } from "@/domain/content";
-import type { Media } from "@/domain/content-schema";
+import { Sticker } from "@/art/scenes/Sticker";
+import { DaysCalendar } from "@/components/trail/DaysCalendar";
+import { useTrailProgress } from "@/components/trail/TrailProgressProvider";
+import { BottomNav } from "@/components/trail/kit/BottomNav";
+import { ForestScene } from "@/components/trail/kit/ForestScene";
+import { Scatter, type ScatterItem } from "@/components/trail/kit/Scatter";
+import { WoodSign } from "@/components/trail/kit/WoodSign";
+import { getLines, getPath, getUnit } from "@/domain/trail/content";
+import { emptyProgress } from "@/domain/trail/progress";
+import type { ArtId, Narration } from "@/domain/trail/schema";
 
-type AlbumSticker = { id: string; image: string; name: Media };
+const EMPTY = emptyProgress();
 
-function allStickers(): AlbumSticker[] {
-  const out: AlbumSticker[] = [];
-  for (const world of getWorlds()) {
-    for (const place of world.places) {
-      if (!place.hasContent) continue;
-      const step = getLesson(place.lessonId)?.steps.find((s) => s.kind === "sticker");
-      if (step && step.kind === "sticker") {
-        out.push({ id: step.stickerId, image: step.image, name: step.name });
-      }
-    }
-  }
-  return out;
-}
+const DECOR: ScatterItem[] = [
+  { kind: "pine", x: 4, y: 330, s: 0.9 },
+  { kind: "round", x: 95, y: 520, s: 0.7 },
+  { kind: "flower", x: 8, y: 640, color: "#FF8FA3" },
+  { kind: "mush", x: 92, y: 760 },
+  { kind: "pine", x: 96, y: 900, s: 1 },
+];
+
+type AlbumUnit = { unitId: string; number: number; title: string; sticker: { id: string; art: ArtId; name: Narration } | null };
 
 export default function AlbumPage() {
-  const router = useRouter();
-  const { progress, hydrated } = useProgress();
-  const stickers = allStickers();
+  const { progress, hydrated } = useTrailProgress();
+  const shown = hydrated ? progress : EMPTY;
+
+  useEffect(() => {
+    void narrator.playNarration(getLines().album);
+  }, []);
+
+  const { withContent, soon } = useMemo(() => {
+    const withContent: AlbumUnit[] = [];
+    const soon: AlbumUnit[] = [];
+    getPath().forEach((entry, index) => {
+      const unit = entry.hasContent ? getUnit(entry.unitId) : null;
+      if (!unit) {
+        soon.push({ unitId: entry.unitId, number: index + 1, title: entry.title, sticker: null });
+        return;
+      }
+      const challenge = unit.stops.find((s) => s.kind === "challenge");
+      withContent.push({
+        unitId: entry.unitId,
+        number: index + 1,
+        title: entry.title,
+        sticker: challenge && challenge.kind === "challenge" && challenge.sticker ? challenge.sticker : null,
+      });
+    });
+    return { withContent, soon };
+  }, []);
+
   return (
-    <main className="flex flex-1 flex-col gap-6 p-4">
-      <div className="-scale-x-100 self-start">
-        <BigButton label="Voltar" color="sky" onPress={() => router.push("/mapa")}>
-          <ArrowIcon />
-        </BigButton>
+    <div className="k-screen">
+      <ForestScene variant="trail" />
+      <Scatter items={DECOR} />
+      <div className="k-fixed-chips">
+        <DaysCalendar progress={shown} />
       </div>
-      <ul className="grid grid-cols-2 gap-4 sm:grid-cols-3">
-        {stickers.map((s) => {
-          const earned = hydrated && Object.hasOwn(progress.stickers, s.id);
+      <main className="k-album">
+        {withContent.map((u) => {
+          const earned = u.sticker ? Object.hasOwn(shown.stickers, u.sticker.id) : false;
+          const sticker = u.sticker;
           return (
-            <li key={s.id}>
-              <button
-                type="button"
-                aria-label={earned ? s.name.text : "?"}
-                lang={earned ? "en" : undefined}
-                data-earned={earned ? "true" : "false"}
-                onClick={() => earned && void narrator.play(s.name)}
-                className="flex aspect-square w-full items-center justify-center rounded-3xl bg-white p-4 shadow-md"
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={s.image}
-                  alt=""
-                  className="h-full w-full object-contain"
-                  style={earned ? undefined : { filter: "grayscale(1) brightness(0.6)", opacity: 0.4 }}
-                />
-              </button>
-            </li>
+            <section key={u.unitId} className="k-album-unit" aria-label={`Unidade ${u.number}, ${u.title}`}>
+              <div className="k-album-sign">
+                <WoodSign unitLabel={`Unidade ${u.number}`} title={u.title} done={earned ? 1 : 0} total={1} />
+              </div>
+              {sticker ? (
+                <button
+                  type="button"
+                  className="k-album-sticker"
+                  aria-disabled={earned ? undefined : "true"}
+                  onClick={() => {
+                    if (earned) void narrator.playNarration(sticker.name);
+                  }}
+                >
+                  <Sticker art={sticker.art} earned={earned} size={200} />
+                </button>
+              ) : null}
+            </section>
           );
         })}
-      </ul>
-    </main>
+        {soon.length > 0 ? (
+          <div className="k-album-soon">
+            {soon.map((u) => (
+              <WoodSign key={u.unitId} unitLabel={`Unidade ${u.number}`} title={u.title} locked />
+            ))}
+          </div>
+        ) : null}
+      </main>
+      <BottomNav active="album" />
+    </div>
   );
 }

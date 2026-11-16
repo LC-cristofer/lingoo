@@ -5,6 +5,8 @@ type WoodSignProps = {
   total?: number;
   locked?: boolean;
   onPress?: () => void;
+  /** Name for screen readers when the sign is pressable (its text is split in three parts). */
+  ariaLabel?: string;
 };
 
 function Lock() {
@@ -17,7 +19,7 @@ function Lock() {
 }
 
 /** The wooden unit sign: unit label, title and "n de m" progress, or a lock. */
-export function WoodSign({ unitLabel, title, done = 0, total = 1, locked = false, onPress }: WoodSignProps) {
+export function WoodSign({ unitLabel, title, done = 0, total = 1, locked = false, onPress, ariaLabel }: WoodSignProps) {
   const body = (
     <>
       <span className="k-sign-post k-sign-post-l" />
@@ -46,7 +48,7 @@ export function WoodSign({ unitLabel, title, done = 0, total = 1, locked = false
   );
   const className = `k-sign ${locked ? "is-locked" : ""}`;
   return onPress ? (
-    <button type="button" onClick={onPress} className={`${className} min-h-16`}>
+    <button type="button" aria-label={ariaLabel} onClick={onPress} className={`${className} min-h-16`}>
       {body}
     </button>
   ) : (

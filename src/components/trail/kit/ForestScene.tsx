@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { useId, type ReactNode } from "react";
 import { Flower, Mushroom, Pine, RoundTree } from "@/art/scenes/ForestBackdrop";
 
 type Variant = "trail" | "lesson" | "start";
@@ -43,6 +43,8 @@ function Hills({ g, h, clouds }: { g: number; h: number; clouds?: boolean }) {
  * a map of any height.
  */
 export function ForestScene({ variant, trees = false }: { variant: Variant; trees?: boolean }) {
+  // Several scenes may share a page, so the pattern id must be unique (useId has colons: strip them).
+  const meadowId = `k-meadow-${useId().replace(/:/g, "")}`;
   if (variant === "lesson") {
     return (
       <div className="k-scene" aria-hidden="true">
@@ -87,14 +89,17 @@ export function ForestScene({ variant, trees = false }: { variant: Variant; tree
       </svg>
       <svg className="k-scene-meadow" width="100%" height="100%">
         <defs>
-          <pattern id={`k-meadow-${variant}`} width="390" height="300" patternUnits="userSpaceOnUse">
-            <ellipse cx="86" cy="60" rx="133" ry="46" fill="#52B861" />
-            <ellipse cx="304" cy="130" rx="117" ry="38" fill="#68CE77" />
-            <ellipse cx="312" cy="210" rx="133" ry="46" fill="#52B861" />
-            <ellipse cx="78" cy="280" rx="117" ry="38" fill="#68CE77" />
+          {/* Every patch lies fully inside its tile, so a wide screen never shows a seam. */}
+          <pattern id={meadowId} width="780" height="300" patternUnits="userSpaceOnUse">
+            <ellipse cx="140" cy="62" rx="130" ry="46" fill="#52B861" />
+            <ellipse cx="400" cy="120" rx="120" ry="38" fill="#68CE77" />
+            <ellipse cx="640" cy="70" rx="130" ry="46" fill="#52B861" />
+            <ellipse cx="130" cy="200" rx="110" ry="38" fill="#68CE77" />
+            <ellipse cx="410" cy="225" rx="140" ry="40" fill="#52B861" />
+            <ellipse cx="660" cy="215" rx="100" ry="38" fill="#68CE77" />
           </pattern>
         </defs>
-        <rect width="100%" height="100%" fill={`url(#k-meadow-${variant})`} />
+        <rect width="100%" height="100%" fill={`url(#${meadowId})`} />
       </svg>
     </div>
   );
