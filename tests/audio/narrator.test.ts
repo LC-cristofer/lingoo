@@ -76,6 +76,16 @@ describe("narrator", () => {
     expect(n.isUnlocked()).toBe(true);
   });
 
+  it("playNarration before unlock is dropped, not queued: nothing plays when unlock comes later", async () => {
+    const speech = fakeSpeech();
+    const n = createNarrator({ speech: asSpeech(speech), createAudio: () => { throw new Error("no audio before unlock"); } });
+    await n.playNarration([{ lang: "pt-BR", text: "Oi" }]);
+    n.unlock();
+    await nextTask();
+    await nextTask();
+    expect(spoken(speech)).toHaveLength(0);
+  });
+
   it("unlock primes the engine with a silent utterance, synchronously, only once", () => {
     const speech = fakeSpeech();
     const n = createNarrator({ speech: asSpeech(speech) });

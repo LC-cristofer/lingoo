@@ -36,7 +36,7 @@ const TAIL = 70;
 
 type Spot =
   | { type: "stop"; key: string; x: number; y: number; stop: Stop; status: StopStatus; label: string; side: "left" | "right" }
-  | { type: "ghost"; key: string; x: number; y: number; kind: Stop["kind"] }
+  | { type: "ghost"; key: string; x: number; y: number; kind: Stop["kind"]; unitTitle: string }
   | { type: "sign"; key: string; y: number; unitNumber: number; title: string };
 
 type Layout = {
@@ -86,7 +86,7 @@ function buildLayout(path: PathUnit[], units: Record<string, Unit>, progress: Pr
         if (status === "current") current = { x, y, label };
         if (stop.kind === "challenge") chest = { x: x + 24, y: y - 18 };
       } else {
-        spots.push({ key: `ghost-${entry.unitId}-${i}`, type: "ghost", x, y, kind: i === 0 ? "song" : "lesson" });
+        spots.push({ key: `ghost-${entry.unitId}-${i}`, type: "ghost", x, y, kind: i === 0 ? "song" : "lesson", unitTitle: entry.title });
         if (i === 0) bears.push({ x: x >= 52 ? x - 26 : x + 26, y: y - 10 });
       }
       points.push([x, y]);
@@ -259,7 +259,7 @@ export function TrailMap({ path, units, progress, onOpenStop }: TrailMapProps) {
                     }}
                   />
                 ) : (
-                  <StopButton kind={spot.kind} state="locked" label="Em breve" labelSide="right" showLabel={false} onPress={soon} onLockedPress={soon} />
+                  <StopButton kind={spot.kind} state="locked" label={`Em breve, ${spot.unitTitle}`} labelSide="right" showLabel={false} onPress={soon} onLockedPress={soon} />
                 )}
               </div>
             );

@@ -1,5 +1,6 @@
-import { fireEvent, render, screen, within } from "@testing-library/react";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { act, fireEvent, render, screen, within } from "@testing-library/react";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import MapPage from "@/app/mapa/page";
 import { DaysCalendar } from "@/components/trail/DaysCalendar";
 import { TrailMap } from "@/components/trail/TrailMap";
 import { getLines, getPath, getUnit } from "@/domain/trail/content";
@@ -15,6 +16,13 @@ vi.mock("@/audio/narrator", () => ({
   },
 }));
 import { narrator } from "@/audio/narrator";
+
+let storedProgress: Progress = emptyProgress();
+let isHydrated = true;
+vi.mock("@/components/trail/TrailProgressProvider", () => ({
+  useTrailProgress: () => ({ progress: storedProgress, hydrated: isHydrated, finishStop: vi.fn(), markToday: vi.fn() }),
+}));
+vi.mock("next/navigation", () => ({ useRouter: () => ({ push: vi.fn() }) }));
 
 const path = getPath();
 const units = { "forest-animals": getUnit("forest-animals")! };
@@ -76,8 +84,10 @@ describe("TrailMap", () => {
     const sign = screen.getByRole("button", { name: `Unidade 2, ${soon[0].title}` });
     fireEvent.click(sign);
     expect(narrator.playNarration).toHaveBeenLastCalledWith(lines.soonUnit);
-    const ghosts = screen.getAllByRole("button", { name: "Em breve" });
+    const ghosts = screen.getAllByRole("button", { name: /^Em breve, / });
     expect(ghosts).toHaveLength(soon.length * 4);
+    // Each ghost names its unit, so the four of a unit are not identical to a screen reader.
+    expect(screen.getAllByRole("button", { name: `Em breve, ${soon[0].title}` })).toHaveLength(4);
     fireEvent.click(ghosts[0]);
     expect(narrator.playNarration).toHaveBeenLastCalledWith(lines.soonUnit);
   });
@@ -91,6 +101,48 @@ describe("TrailMap", () => {
     renderMap(emptyProgress());
     const nav = screen.getByRole("navigation", { name: "Navegação" });
     expect(within(nav).getAllByRole("link").map((l) => l.textContent)).toEqual(["Trilha", "Memória", "Álbum"]);
+  });
+});
+
+describe("TrailMap behaviour", () => {
+  afterEach(() => {
+    vi.useRealTimers();
+    // @ts-expect-error remove the stub added by a test
+    delete Element.prototype.scrollIntoView;
+  });
+
+  it("scrolls the current stop to the centre when it opens", () => {
+    const scrollIntoView = vi.fn();
+    Element.prototype.scrollIntoView = scrollIntoView;
+    renderMap({ ...emptyProgress(), completedStops: { "forest-animals/song": "x" } });
+    expect(scrollIntoView).toHaveBeenCalledWith({ block: "center" });
+    expect(scrollIntoView.mock.instances[0]).toBe(screen.getByRole("button", { name: "Lição 1" }));
+  });
+
+  it("tapping a locked stop shakes it, and the shake clears after 500 ms", () => {
+    vi.useFakeTimers();
+    renderMap(emptyProgress());
+    const holder = screen.getByRole("button", { name: "Lição 3" }).closest(".k-trail-stop")!;
+    expect(holder).not.toHaveClass("is-shake");
+    fireEvent.click(screen.getByRole("button", { name: "Lição 3" }));
+    expect(holder).toHaveClass("is-shake");
+    act(() => void vi.advanceTimersByTime(499));
+    expect(holder).toHaveClass("is-shake");
+    act(() => void vi.advanceTimersByTime(2));
+    expect(holder).not.toHaveClass("is-shake");
+  });
+
+  it("the /mapa page shows no stored progress (no done stop, the song current) before it has loaded", () => {
+    storedProgress = { ...emptyProgress(), completedStops: { "forest-animals/song": "x", "forest-animals/lesson-1": "x" } };
+    isHydrated = false;
+    const { container, unmount } = render(<MapPage />);
+    expect(container.querySelector('[data-state="done"]')).toBeNull();
+    expect(container.querySelector('[data-state="current"]')).toHaveAttribute("aria-label", "Música");
+    unmount();
+    isHydrated = true;
+    const second = render(<MapPage />);
+    expect(second.container.querySelector('[data-state="done"]')).not.toBeNull();
+    storedProgress = emptyProgress();
   });
 });
 

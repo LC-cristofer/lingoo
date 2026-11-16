@@ -4,6 +4,9 @@
 /* ---------- map ---------- */
 .k-trailmap { min-height: 100dvh; }
 .k-fixed-chips { position: fixed; left: 0; right: 0; top: 0; height: 70px; z-index: 6; pointer-events: none; }
+/* A soft sky strip behind the chips, so stop labels scrolling under them are not read through the chips. */
+.k-fixed-chips::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 70px; background: linear-gradient(to bottom, #8fd0ff 0%, #8fd0ff 55%, rgba(143, 208, 255, 0) 100%); pointer-events: none; }
+.k-trail-stop, .k-stop { scroll-margin-top: 90px; }
 .k-trailmap-body { position: relative; padding: 66px 0 130px; }
 .k-trailmap-sign { padding: 0 20px; margin-bottom: 10px; position: relative; z-index: 2; }
 .k-trail { position: relative; width: 100%; max-width: 430px; margin: 0 auto; }
@@ -55,14 +58,16 @@
   .k-guide, .k-guide[data-edge="right"] { left: var(--g-tablet); right: auto; }
   .k-trailmap[data-guide="right"] .k-peek-bird { display: block; }
   .k-peek-bird { left: calc(50% - 130px); top: 236px; }
-  .k-start { display: grid; grid-template-columns: auto auto; grid-template-areas: "text cast" "cta cast"; grid-template-rows: 1fr 1fr; justify-content: center; column-gap: 70px; row-gap: 0; padding: 60px; align-items: center; }
+  .k-start { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "text cast" "cta cast"; grid-template-rows: 1fr 1fr; column-gap: 40px; row-gap: 0; padding: 60px 56px 60px 28px; align-items: center; }
   .k-start-text { grid-area: text; align-items: flex-start; align-self: end; }
-  .k-start-cast { grid-area: cast; align-self: center; }
+  .k-start-cast { grid-area: cast; align-self: center; justify-self: end; }
   .k-start-cta { grid-area: cta; align-self: start; margin-top: 34px; }
-  .k-logo { font-size: 132px; }
+  .k-logo { font-size: clamp(96px, 13vw, 132px); }
   .k-tagline { font-size: 32px; }
   .k-start-cta { width: 300px; justify-self: start; }
   .k-start-cast .art-cat { width: 300px; height: auto; }
+  .k-cast-l { margin-right: 6px; }
+  .k-cast-r { margin-left: 6px; }
   .k-cast-l svg { width: 130px; height: auto; }
   .k-cast-r svg { width: 110px; height: auto; }
   .k-album-unit { max-width: 520px; }
