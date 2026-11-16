@@ -10,3 +10,11 @@ npm run dev      # servidor de desenvolvimento em http://localhost:3000
 npm test         # testes unitários (Vitest)
 npm run e2e      # testes de ponta a ponta (Playwright)
 ```
+
+## Como o app é organizado
+
+- **Tela inicial** (`/`): o gatinho e o botão "Jogar".
+- **Mapa** (`/mapa`): uma trilha vertical por mundo, com as paradas da unidade (música, três lições, história e desafio) e as próximas unidades bloqueadas.
+- **Paradas** (`/parada/<unidade>/<parada>`): cada parada é uma sequência curta de exercícios narrados.
+- **Álbum** (`/album`): as figurinhas ganhas nos desafios.
+- O conteúdo fica em `content/` (`path.json`, `units/`, `lines.json`) e a arte em `src/art/`. A aparência aprovada está em `docs/arte/telas-aprovadas/`.

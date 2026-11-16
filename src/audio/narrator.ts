@@ -1,6 +1,8 @@
-import type { Media } from "@/domain/content-schema";
 import { audioSrc } from "@/domain/trail/audio-id";
 import type { Narration, Segment } from "@/domain/trail/schema";
+
+/** A single English word or phrase, with an optional recorded file. */
+export type Media = { text: string; src?: string };
 
 export type SfxName = "correct" | "retry" | "star" | "chest" | "tap";
 
