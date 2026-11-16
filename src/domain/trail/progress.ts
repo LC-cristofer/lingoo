@@ -1,7 +1,14 @@
 import type { MemoryState } from "./memory";
 import type { PathUnit, Unit } from "./schema";
 
+/** What the phase 1 app saved (`lingoo:progress:v1`), carried as it was: it grants no trail stop. */
+export type LegacyV1 = {
+  completedLessons: Record<string, string>;
+  stickers: Record<string, string>;
+};
+
 export type Progress = {
+  version: 3;
   /** stopId -> ISO date of the first completion */
   completedStops: Record<string, string>;
   /** stickerId -> ISO date it was earned */
@@ -10,6 +17,8 @@ export type Progress = {
   daysPlayed: string[];
   /** The memory-training cards. A stored payload without it loads as {}. */
   memory: MemoryState;
+  /** The phase 1 progress found on this device, kept for its stickers; null when there was none. */
+  legacy: LegacyV1 | null;
 };
 
 export type StopStatus = "done" | "current" | "locked";
@@ -18,7 +27,7 @@ export type UnitStatus = "done" | "current" | "locked" | "soon";
 const MAX_DAYS = 60;
 
 export function emptyProgress(): Progress {
-  return { completedStops: {}, stickers: {}, daysPlayed: [], memory: {} };
+  return { version: 3, completedStops: {}, stickers: {}, daysPlayed: [], memory: {}, legacy: null };
 }
 
 export function completeStop(p: Progress, stopId: string, now: Date, stickerId?: string): Progress {

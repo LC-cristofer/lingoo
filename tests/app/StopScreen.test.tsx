@@ -13,7 +13,7 @@ vi.mock("next/navigation", () => ({
 const markToday = vi.fn();
 const finishStop = vi.fn();
 let hydrated = true;
-let progress: Progress = { completedStops: {}, stickers: {}, daysPlayed: [], memory: {} };
+let progress: Progress = { completedStops: {}, stickers: {}, daysPlayed: [], memory: {}, version: 3, legacy: null };
 vi.mock("@/components/trail/TrailProgressProvider", () => ({
   useTrailProgress: () => ({ progress, hydrated, markToday, finishStop }),
 }));
@@ -46,6 +46,8 @@ const DONE: Progress = {
   stickers: {},
   daysPlayed: [],
   memory: {},
+  version: 3,
+  legacy: null,
 };
 
 beforeEach(() => {
@@ -55,7 +57,7 @@ beforeEach(() => {
   finishStop.mockClear();
   hydrated = true;
   search = "";
-  progress = { completedStops: {}, stickers: {}, daysPlayed: [], memory: {} };
+  progress = { completedStops: {}, stickers: {}, daysPlayed: [], memory: {}, version: 3, legacy: null };
 });
 
 describe("stopHref", () => {

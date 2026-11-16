@@ -1,71 +1,61 @@
-import type { MemoryState } from "./memory";
-import { emptyProgress, type Progress } from "./progress";
+import type { Progress } from "./progress";
+import { migrateProgress, type RawProgress } from "./progress-migrate";
 
-const KEY = "lingoo:progress:v2";
+export const V1_KEY = "lingoo:progress:v1";
+export const V2_KEY = "lingoo:progress:v2";
+export const V3_KEY = "lingoo:progress:v3";
+/** Where a corrupt v3 value is copied before it is rebuilt; later ones get a timestamp suffix. */
+export const BACKUP_KEY = "lingoo:progress:v3:backup";
 
 export type TrailProgressStore = { load(): Progress; save(p: Progress): void };
 
-function isRecord(v: unknown): v is Record<string, string> {
-  return (
-    typeof v === "object" &&
-    v !== null &&
-    !Array.isArray(v) &&
-    Object.values(v).every((x) => typeof x === "string")
-  );
-}
-
-const DATE = /^\d{4}-\d{2}-\d{2}$/;
-
-/** Valid cards only; anything that is not a record of cards gives {}. */
-function parseMemory(v: unknown): MemoryState {
-  if (typeof v !== "object" || v === null || Array.isArray(v)) return {};
-  const out: MemoryState = {};
-  for (const [id, card] of Object.entries(v)) {
-    if (typeof card !== "object" || card === null) continue;
-    const { box, due } = card as Record<string, unknown>;
-    if (typeof box !== "number" || !Number.isInteger(box) || box < 0 || box > 5) continue;
-    if (typeof due !== "string" || !DATE.test(due)) continue;
-    out[id] = { box, due };
-  }
-  return out;
-}
-
-function parse(raw: string | null): Progress | null {
-  if (raw === null) return null;
+function read(storage: Storage | null | undefined, key: string): string | null {
   try {
-    const data: unknown = JSON.parse(raw);
-    if (typeof data !== "object" || data === null) return null;
-    const { completedStops, stickers, daysPlayed, memory } = data as Record<string, unknown>;
-    if (!isRecord(completedStops) || !isRecord(stickers)) return null;
-    if (!Array.isArray(daysPlayed) || !daysPlayed.every((d) => typeof d === "string")) return null;
-    return { completedStops, stickers, daysPlayed: daysPlayed as string[], memory: parseMemory(memory) };
+    return storage ? storage.getItem(key) : null;
   } catch {
     return null;
   }
 }
 
-/** Never throws: if storage is missing, blocked or corrupted, progress lives in memory only. */
+function write(storage: Storage | null | undefined, key: string, value: string): boolean {
+  if (!storage) return false;
+  try {
+    storage.setItem(key, value);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Progress lives under `lingoo:progress:v3`. The first load migrates what earlier builds left
+ * (v2 trail progress with its memory cards, v1 phase 1 progress) without ever touching their keys:
+ * this store never removes a key and never writes v1 or v2. A corrupt v3 is copied to a backup key
+ * before it is rebuilt; if that copy fails, the corrupt value is left alone and progress stays in
+ * memory. Never throws: if storage is missing, blocked or full, progress lives in memory only.
+ */
 export function createTrailProgressStore(storage?: Storage | null): TrailProgressStore {
   let memory: Progress | null = null;
+  let writable = true;
+
+  const backup = (value: string): boolean => {
+    const key = read(storage, BACKUP_KEY) === null ? BACKUP_KEY : `${BACKUP_KEY}:${Date.now()}`;
+    return write(storage, key, value);
+  };
+
   return {
     load() {
       if (memory) return memory;
-      let raw: string | null = null;
-      try {
-        raw = storage ? storage.getItem(KEY) : null;
-      } catch {
-        raw = null;
-      }
-      memory = parse(raw) ?? emptyProgress();
+      const raw: RawProgress = { v3: read(storage, V3_KEY), v2: read(storage, V2_KEY), v1: read(storage, V1_KEY) };
+      const { progress, source, corruptV3 } = migrateProgress(raw);
+      if (corruptV3 && raw.v3 !== null) writable = backup(raw.v3);
+      if (source !== "v3" && writable) write(storage, V3_KEY, JSON.stringify(progress));
+      memory = progress;
       return memory;
     },
     save(p) {
       memory = p;
-      try {
-        storage?.setItem(KEY, JSON.stringify(p));
-      } catch {
-        // storage unavailable: keep in memory
-      }
+      if (writable) write(storage, V3_KEY, JSON.stringify(p));
     },
   };
 }

@@ -108,3 +108,17 @@ describe("weekDays", () => {
     expect(w[6].isToday).toBe(true);
   });
 });
+
+describe("progress v3 fields", () => {
+  const legacy = { completedLessons: { "forest-animals": "2026-11-01T12:00:00.000Z" }, stickers: { "sticker-fox": "2026-11-01T12:00:00.000Z" } };
+  it("empty progress is version 3 with no legacy", () => {
+    expect(emptyProgress()).toMatchObject({ version: 3, legacy: null });
+  });
+  it("finishing a stop and marking a day keep the version and the legacy stickers", () => {
+    const p = { ...emptyProgress(), legacy };
+    const q = markDay(completeStop(p, "forest-animals/song", new Date(2026, 10, 16)), new Date(2026, 10, 16));
+    expect(q.version).toBe(3);
+    expect(q.legacy).toBe(legacy);
+    expect(Object.keys(q.completedStops)).toEqual(["forest-animals/song"]);
+  });
+});

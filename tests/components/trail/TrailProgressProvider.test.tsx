@@ -3,7 +3,8 @@ import { useEffect } from "react";
 import { beforeEach, describe, expect, it } from "vitest";
 import { TrailProgressProvider, useTrailProgress } from "@/components/trail/TrailProgressProvider";
 
-const KEY = "lingoo:progress:v2";
+const KEY = "lingoo:progress:v3";
+const V2_KEY = "lingoo:progress:v2";
 
 function Probe() {
   const { progress, finishStop, markToday } = useTrailProgress();
@@ -60,10 +61,8 @@ describe("TrailProgressProvider", () => {
     expect(() => renderHook(() => useTrailProgress())).toThrow(/TrailProgressProvider/);
   });
   it("does not lose stored progress when a child finishes a stop in its mount effect", () => {
-    localStorage.setItem(
-      KEY,
-      JSON.stringify({ completedStops: { old: "2026-01-01T00:00:00.000Z" }, stickers: {}, daysPlayed: [] }),
-    );
+    const v2 = JSON.stringify({ completedStops: { old: "2026-01-01T00:00:00.000Z" }, stickers: {}, daysPlayed: [] });
+    localStorage.setItem(V2_KEY, v2);
     function Early() {
       const { progress, finishStop } = useTrailProgress();
       useEffect(() => finishStop("new"), [finishStop]);
@@ -72,6 +71,7 @@ describe("TrailProgressProvider", () => {
     render(<TrailProgressProvider><Early /></TrailProgressProvider>);
     expect(screen.getByText("new,old")).toBeTruthy();
     expect(Object.keys(JSON.parse(localStorage.getItem(KEY)!).completedStops).sort()).toEqual(["new", "old"]);
+    expect(localStorage.getItem(V2_KEY)).toBe(v2);
   });
   it("reports hydrated only after load", () => {
     const seen: boolean[] = [];
