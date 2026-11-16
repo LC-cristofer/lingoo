@@ -5,6 +5,11 @@
     "text": "Awesome!"
   },
   {
+    "id": "066f6cdd4191a7ee",
+    "lang": "pt-BR",
+    "text": "Toque para virar"
+  },
+  {
     "id": "07aa50d68684a4af",
     "lang": "pt-BR",
     "text": "Você terminou a unidade dos animais da floresta!"
@@ -70,6 +75,11 @@
     "text": "What's this? It's a snake!"
   },
   {
+    "id": "27e4966c8dd2752b",
+    "lang": "en-US",
+    "text": "Yes! You remembered!"
+  },
+  {
     "id": "2c5b47baca1fce7e",
     "lang": "en-US",
     "text": "It's a snake!"
@@ -78,6 +88,11 @@
     "id": "31e1bd6d73282709",
     "lang": "en-US",
     "text": "Hello, spider! Hello, mouse!"
+  },
+  {
+    "id": "32139a997787e482",
+    "lang": "pt-BR",
+    "text": "Você lembrou de duas palavras!"
   },
   {
     "id": "34c19f856995a46b",
@@ -113,6 +128,31 @@
     "id": "3994987ee213e71a",
     "lang": "pt-BR",
     "text": "Você cantou com os animais da floresta!"
+  },
+  {
+    "id": "3a25e3197e6943ea",
+    "lang": "pt-BR",
+    "text": "Tem cartões para treinar!"
+  },
+  {
+    "id": "3a4cf53aef1a4738",
+    "lang": "pt-BR",
+    "text": "Você lembrou de oito palavras!"
+  },
+  {
+    "id": "3a73d26ee505e947",
+    "lang": "pt-BR",
+    "text": "Termine uma lição para ganhar cartões!"
+  },
+  {
+    "id": "3e3b6df188ee27c0",
+    "lang": "pt-BR",
+    "text": "Tudo em dia! Amanhã tem mais cartões."
+  },
+  {
+    "id": "3e54b2d5951c81b2",
+    "lang": "pt-BR",
+    "text": "Você lembrou de sete palavras!"
   },
   {
     "id": "42dc1dd9c456f5ff",
@@ -165,6 +205,11 @@
     "text": "What's this? What's this? It's a snake!"
   },
   {
+    "id": "552cdb3c0df24a97",
+    "lang": "pt-BR",
+    "text": "Você lembrou de uma palavra!"
+  },
+  {
     "id": "56073ff19b79ce4b",
     "lang": "pt-BR",
     "text": "Quem o gatinho encontrou primeiro? Toque!"
@@ -173,6 +218,11 @@
     "id": "5766161c4ce17d13",
     "lang": "en-US",
     "text": "bear, bird, frog!"
+  },
+  {
+    "id": "57ecf7c70d3bdfb5",
+    "lang": "pt-BR",
+    "text": "Você lembrou de seis palavras!"
   },
   {
     "id": "58f30618a6638c65",
@@ -213,6 +263,11 @@
     "id": "657a3de316459a24",
     "lang": "pt-BR",
     "text": "Uau! Você conseguiu! Toque no baú para abrir!"
+  },
+  {
+    "id": "65a3924d437ecc01",
+    "lang": "pt-BR",
+    "text": "Você lembrou de quatro palavras!"
   },
   {
     "id": "6919702ffd785314",
@@ -280,6 +335,11 @@
     "text": "Atrás de uma árvore, ele viu um urso."
   },
   {
+    "id": "7f3d5f00cc9162e9",
+    "lang": "pt-BR",
+    "text": "Como se fala em inglês?"
+  },
+  {
     "id": "855ce6604ef18d1f",
     "lang": "en-US",
     "text": "This is a bear!"
@@ -325,9 +385,19 @@
     "text": "Hoje vamos aprender uma frase:"
   },
   {
+    "id": "8d62b3bdbec7e8e1",
+    "lang": "pt-BR",
+    "text": "Você lembrou de cinco palavras!"
+  },
+  {
     "id": "8ede4eaa1e48d67b",
     "lang": "en-US",
     "text": "It's a spider!"
+  },
+  {
+    "id": "9b7831478dbfa5e5",
+    "lang": "pt-BR",
+    "text": "Você lembrou de três palavras!"
   },
   {
     "id": "9bc682680c7eaadd",
@@ -353,6 +423,11 @@
     "id": "a8b596a137fc95ca",
     "lang": "pt-BR",
     "text": "Essa aventura está chegando!"
+  },
+  {
+    "id": "aa0ae38b6a0302c1",
+    "lang": "pt-BR",
+    "text": "Hora de treinar a memória!"
   },
   {
     "id": "b29a819da7d8816a",
@@ -403,6 +478,11 @@
     "id": "cc8a4fbb95e56695",
     "lang": "en-US",
     "text": "Hello, bird!"
+  },
+  {
+    "id": "cffce40942906875",
+    "lang": "pt-BR",
+    "text": "Tudo em dia!"
   },
   {
     "id": "d158a760cab3938a",
@@ -483,6 +563,11 @@
     "id": "ec7327e589e84777",
     "lang": "en-US",
     "text": "Hello, forest!"
+  },
+  {
+    "id": "eeb5a4b00ae508bc",
+    "lang": "pt-BR",
+    "text": "Você treinou a memória!"
   },
   {
     "id": "f7c8107ad27a6161",
