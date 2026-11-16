@@ -1,19 +1,16 @@
 import { audioSrc } from "@/domain/trail/audio-id";
 import type { Narration, Segment } from "@/domain/trail/schema";
 
-/** A single English word or phrase, with an optional recorded file. */
-export type Media = { text: string; src?: string };
-
 export type SfxName = "correct" | "retry" | "star" | "chest" | "tap";
 
 export interface Narrator {
   /** Call from a user gesture (tap or click): audio stays silent until then. */
   unlock(): void;
-  play(media: Media): Promise<void>;
-  /** Plays each segment in order. A newer playNarration, play or stop() cancels the rest. */
+  /** Plays each segment in order. A newer playNarration or stop() cancels the rest. */
   playNarration(narration: Narration): Promise<void>;
   /** Fire-and-forget sound effect on top of the voice; a no-op before unlock. */
   playSfx(name: SfxName): void;
+  /** Silences the voice and any sound effect that is still playing. */
   stop(): void;
   isUnlocked(): boolean;
 }
@@ -21,7 +18,7 @@ export interface Narrator {
 export interface NarratorDeps {
   speech?: SpeechSynthesis | null;
   createAudio?: (src: string) => HTMLAudioElement;
-  /** Speech only: after this, play() resolves (the UI moves on) but the speech is not cut off. */
+  /** Speech only: after this, the narration resolves (the UI moves on) but the speech is not cut off. */
   timeoutMs?: number;
 }
 
@@ -55,10 +52,27 @@ export function createNarrator(deps: NarratorDeps = {}): Narrator {
 
   const getSpeech = () => (deps.speech !== undefined ? deps.speech : defaultSpeech());
 
-  function stop() {
+  /** Sound effects still sounding, so stop() can cut them. */
+  const sfxPlaying = new Set<HTMLAudioElement>();
+
+  /** Silences the voice only. A new narration calls this, so the effect played just before it keeps sounding. */
+  function stopVoice() {
     const fn = stopCurrent;
     stopCurrent = null;
     fn?.();
+  }
+
+  /** Silences the voice and every sound effect (leaving a screen). */
+  function stop() {
+    stopVoice();
+    for (const audio of sfxPlaying) {
+      try {
+        audio.pause();
+      } catch {
+        // best-effort
+      }
+    }
+    sfxPlaying.clear();
   }
 
   interface Item {
@@ -68,7 +82,7 @@ export function createNarrator(deps: NarratorDeps = {}): Narrator {
     /** On audio failure, speak the text instead (narration segments). */
     speechFallback: boolean;
   }
-  /** How a running item registers its halt: play() uses stopCurrent, a narration its own slot. */
+  /** How a running item registers its halt: a narration registers its halt in its own slot. */
   interface Slot {
     arm(halt: () => void): void;
     disarm(halt: () => void): void;
@@ -82,7 +96,7 @@ export function createNarrator(deps: NarratorDeps = {}): Narrator {
       let timer: ReturnType<typeof setTimeout> | undefined;
       let loadTimer: ReturnType<typeof setTimeout> | undefined;
       // Unblocks whoever awaits. On the safety timeout the output keeps going:
-      // the halt stays armed, so a later stop() or play() still silences it.
+      // the halt stays armed, so a later stop() or narration still silences it.
       const release = () => {
         clearTimeout(timer);
         clearTimeout(loadTimer);
@@ -95,7 +109,7 @@ export function createNarrator(deps: NarratorDeps = {}): Narrator {
         slot.disarm(halt);
         release();
       };
-      // Interrupted by stop() or a newer play(): silence the output, then finish.
+      // Interrupted by stop() or a newer narration: silence the output, then finish.
       const halt = () => {
         try {
           cleanup();
@@ -195,23 +209,8 @@ export function createNarrator(deps: NarratorDeps = {}): Narrator {
     });
   }
 
-  function play(media: Media): Promise<void> {
-    stop();
-    if (!unlocked) return Promise.resolve();
-    const slot: Slot = {
-      arm: (halt) => {
-        stopCurrent = halt;
-      },
-      disarm: (halt) => {
-        if (stopCurrent === halt) stopCurrent = null;
-      },
-      armed: (halt) => stopCurrent === halt,
-    };
-    return run({ text: media.text, src: media.src, lang: "en-US", speechFallback: false }, slot);
-  }
-
   async function playNarration(narration: Narration): Promise<void> {
-    stop();
+    stopVoice();
     if (!unlocked) return;
     let cancelled = false;
     let inner: (() => void) | null = null;
@@ -248,7 +247,11 @@ export function createNarrator(deps: NarratorDeps = {}): Narrator {
     if (!unlocked) return;
     try {
       const audio = createAudio(`/audio/sfx/${name}.mp3`);
-      Promise.resolve(audio.play()).catch(() => {});
+      sfxPlaying.add(audio);
+      const done = () => void sfxPlaying.delete(audio);
+      audio.onended = done;
+      audio.onerror = done;
+      Promise.resolve(audio.play()).catch(done);
     } catch {
       // sound effects are best-effort
     }
@@ -270,7 +273,6 @@ export function createNarrator(deps: NarratorDeps = {}): Narrator {
         // priming is best-effort
       }
     },
-    play,
     playNarration,
     playSfx,
     stop,
