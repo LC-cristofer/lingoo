@@ -116,7 +116,7 @@ export function StoryStop({ unit, stop, onExit, record = true }: StoryStopProps)
   }
 
   if (step === "closing") {
-    return <StopClosing closing={stop.closing} words={unit.words} wordIds={wordIds} onContinue={onExit} />;
+    return <StopClosing closing={stop.closing} words={unit.words} wordIds={wordIds} record={record} onContinue={onExit} />;
   }
 
   const current = stop.pages[page];

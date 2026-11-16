@@ -125,19 +125,22 @@ type StopClosingProps = {
   closing: Narration;
   words: Word[];
   wordIds: ArtId[];
-  /** Challenge: "Continuar" leads to the chest. Otherwise "Voltar ao mapa" leaves. */
+  /** Challenge: "Continuar" leads to the chest. Otherwise "Voltar ao mapa" leaves ("Voltar" in review mode). */
   isChallenge?: boolean;
+  /** False in review mode: nothing is saved and the way out goes back to the review list. */
+  record?: boolean;
   onContinue: () => void;
 };
 
 /** The star, the gatinho's last words and the way out. */
-export function StopClosing({ closing, words, wordIds, isChallenge = false, onContinue }: StopClosingProps) {
+export function StopClosing({ closing, words, wordIds, isChallenge = false, record = true, onContinue }: StopClosingProps) {
   const lines = useMemo(() => getLines(), []);
   useEffect(() => {
     narrator.playSfx("star");
     void narrator.playNarration([...closing, ...lines.star]);
   }, [closing, lines.star]);
-  const label = isChallenge ? "Continuar" : "Voltar ao mapa";
+  // In review mode the way out is the review list, not the map.
+  const label = isChallenge ? "Continuar" : record ? "Voltar ao mapa" : "Voltar";
   return (
     <div className="k-screen">
       <ForestScene variant="lesson" trees />

@@ -199,7 +199,7 @@ export function SongStop({ unit, stop, onExit, record = true, createAudio = (src
   }
 
   if (step === "closing") {
-    return <StopClosing closing={stop.closing} words={unit.words} wordIds={wordIds} onContinue={onExit} />;
+    return <StopClosing closing={stop.closing} words={unit.words} wordIds={wordIds} record={record} onContinue={onExit} />;
   }
 
   if (step === "session") {

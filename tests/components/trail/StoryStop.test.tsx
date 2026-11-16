@@ -152,6 +152,8 @@ describe("StoryStop", () => {
     fireEvent.click(feedbackContinue());
     await flush();
     expect(finishStop).not.toHaveBeenCalled();
+    expect(screen.getByRole("button", { name: "Voltar" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Voltar ao mapa" })).not.toBeInTheDocument();
   });
 
   it("stops the narration on ✕", async () => {

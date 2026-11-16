@@ -282,7 +282,9 @@ describe("StopPlayer session", () => {
     fireEvent.click(within(feedback()).getByRole("button", { name: "Continuar" }));
     await flush();
     await finishMemoryRound();
-    expect(screen.getByRole("button", { name: "Voltar ao mapa" })).toBeInTheDocument();
+    // Review mode leaves to the review list, so the button does not say "mapa".
+    expect(screen.getByRole("button", { name: "Voltar" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Voltar ao mapa" })).not.toBeInTheDocument();
     expect(finishStop).not.toHaveBeenCalled();
     expect(addMemoryCards).not.toHaveBeenCalled();
     expect(gradeCards).not.toHaveBeenCalled();

@@ -57,6 +57,7 @@ export function StopPlayer({ unit, stop, onExit, record = true }: StopPlayerProp
         words={unit.words}
         wordIds={stop.wordIds}
         isChallenge={isChallenge}
+        record={record}
         onContinue={isChallenge ? () => setStep("chest") : onExit}
       />
     );
