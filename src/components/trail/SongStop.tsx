@@ -48,6 +48,8 @@ export function SongStop({ unit, stop, onExit, record = true, createAudio = (src
   const speechToken = useRef(0);
   const currentRef = useRef(-1);
   const speechMode = useRef(false);
+  /** Identifies the latest play() request: leaving, pausing or replaying invalidates older ones. */
+  const playId = useRef(0);
 
   const starts = useMemo(() => stop.lyrics.map((l) => lineStart(stop, l.bar)), [stop]);
   const wordIds = useMemo(() => [...new Set(stop.lyrics.flatMap((l) => (l.wordId ? [l.wordId] : [])))] as ArtId[], [stop]);
@@ -59,6 +61,7 @@ export function SongStop({ unit, stop, onExit, record = true, createAudio = (src
 
   /** Silences everything: the file, the voice and any running line-by-line fallback. */
   const silence = useCallback(() => {
+    playId.current += 1;
     speechToken.current += 1;
     detachRef.current();
     detachRef.current = () => {};
@@ -92,15 +95,17 @@ export function SongStop({ unit, stop, onExit, record = true, createAudio = (src
   const playAudio = useCallback(
     (audio: HTMLAudioElement) => {
       setPlaying(true);
+      const id = ++playId.current;
+      // A rejection only means "the music failed" while this request is still the current one
+      // (a pause, ✕ or unmount aborts play() on purpose).
+      const failed = () => {
+        if (id === playId.current) void speakLines(Math.max(0, currentRef.current));
+      };
       try {
         const result = audio.play();
-        if (result && typeof result.catch === "function") {
-          result.catch(() => {
-            if (audioRef.current === audio) void speakLines(Math.max(0, currentRef.current));
-          });
-        }
+        if (result && typeof result.catch === "function") result.catch(failed);
       } catch {
-        void speakLines(Math.max(0, currentRef.current));
+        failed();
       }
     },
     [speakLines],
@@ -158,6 +163,7 @@ export function SongStop({ unit, stop, onExit, record = true, createAudio = (src
     const audio = audioRef.current;
     if (!audio) return;
     if (playing) {
+      playId.current += 1;
       audio.pause();
       setPlaying(false);
     } else {

@@ -160,4 +160,55 @@ describe("StoryStop", () => {
     expect(onExit).toHaveBeenCalled();
     expect(narratorMock.stop).toHaveBeenCalled();
   });
+
+  it("a hotspot tap during the page narration does not unlock Avançar; the page is read again after the word", async () => {
+    renderStory();
+    await doWarmup();
+    fireEvent.click(feedbackContinue());
+    await flush();
+    const pending: (() => void)[] = [];
+    narratorMock.playNarration.mockImplementation((n) =>
+      n === story.pages[1].say ? new Promise<void>((r) => pending.push(r)) : Promise.resolve(),
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Avançar" }));
+    await flush();
+    expect(pending).toHaveLength(1);
+    narratorMock.playNarration.mockClear();
+    fireEvent.click(document.querySelector('button[data-hotspot="bear"]')!);
+    await flush();
+    const spoken = narratorMock.playNarration.mock.calls.map((c) => c[0]);
+    expect(spoken).toEqual([unit.words.find((w) => w.id === "bear")!.say, story.pages[1].say]);
+    expect(pending).toHaveLength(2);
+    // The interrupted first reading ends: it must not count.
+    pending[0]();
+    await flush();
+    expect(screen.queryByRole("button", { name: "Avançar" })).toBeNull();
+    expect(screen.queryByRole("button", { name: "Repetir" })).toBeNull();
+    pending[1]();
+    await flush();
+    expect(screen.getByRole("button", { name: "Avançar" })).toBeInTheDocument();
+  });
+
+  it("the 🔊 replay restarts the page narration and the page only counts when it ends uninterrupted", async () => {
+    renderStory();
+    await doWarmup();
+    fireEvent.click(feedbackContinue());
+    await flush();
+    const pending: (() => void)[] = [];
+    narratorMock.playNarration.mockImplementation((n) =>
+      n === story.pages[0].say ? new Promise<void>((r) => pending.push(r)) : Promise.resolve(),
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Repetir" }));
+    await flush();
+    expect(pending).toHaveLength(1);
+    fireEvent.click(screen.getByRole("button", { name: "Ouvir de novo" }));
+    await flush();
+    expect(pending).toHaveLength(2);
+    pending[0]();
+    await flush();
+    expect(screen.queryByRole("button", { name: "Avançar" })).toBeNull();
+    pending[1]();
+    await flush();
+    expect(screen.getByRole("button", { name: "Avançar" })).toBeInTheDocument();
+  });
 });

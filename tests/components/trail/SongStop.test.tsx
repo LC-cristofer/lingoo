@@ -140,8 +140,6 @@ describe("SongStop", () => {
   });
 
   it("falls back when play() is rejected", async () => {
-    const orig = FakeAudio.prototype;
-    void orig;
     const rejecting = (src: string) => {
       const a = new FakeAudio(src);
       a.play = vi.fn(() => Promise.reject(new Error("blocked")));
@@ -211,5 +209,74 @@ describe("SongStop", () => {
     fireEvent.click(screen.getByRole("button", { name: "Sair" }));
     expect(onExit).toHaveBeenCalled();
     expect(audios[0].pause).toHaveBeenCalled();
+  });
+
+  describe("a play() that fails after the child left or paused", () => {
+    /** An audio whose play() stays pending until the test rejects it. */
+    function deferredAudio() {
+      let reject: (e: Error) => void = () => {};
+      const make = (src: string) => {
+        const a = new FakeAudio(src);
+        a.play = vi.fn(
+          () =>
+            new Promise<void>((_, rej) => {
+              reject = rej;
+            }),
+        );
+        audios.push(a);
+        return a as unknown as HTMLAudioElement;
+      };
+      return { make, reject: () => reject(new DOMException("aborted", "AbortError")) };
+    }
+    const lineCalls = () =>
+      narratorMock.playNarration.mock.calls.filter((c) => song.lyrics.some((l) => l.say === c[0]));
+
+    it("does not speak the lyrics after ✕", async () => {
+      const d = deferredAudio();
+      const onExit = vi.fn();
+      render(<SongStop unit={unit} stop={song} onExit={onExit} createAudio={d.make} />);
+      await sing();
+      fireEvent.click(screen.getByRole("button", { name: "Sair" }));
+      d.reject();
+      await flush();
+      expect(lineCalls()).toHaveLength(0);
+    });
+
+    it("does not speak the lyrics after unmount", async () => {
+      const d = deferredAudio();
+      const view = render(<SongStop unit={unit} stop={song} onExit={vi.fn()} createAudio={d.make} />);
+      await sing();
+      view.unmount();
+      d.reject();
+      await flush();
+      expect(lineCalls()).toHaveLength(0);
+    });
+
+    it("does not speak the lyrics after a user Pause", async () => {
+      const d = deferredAudio();
+      render(<SongStop unit={unit} stop={song} onExit={vi.fn()} createAudio={d.make} />);
+      await sing();
+      fireEvent.click(screen.getByRole("button", { name: "Pausar" }));
+      d.reject();
+      await flush();
+      expect(lineCalls()).toHaveLength(0);
+      expect(screen.getByRole("button", { name: "Tocar" })).toBeInTheDocument();
+    });
+  });
+
+  it("on unmount: pauses the audio and ignores late events", async () => {
+    const errors = vi.spyOn(console, "error").mockImplementation(() => {});
+    const view = render(<SongStop unit={unit} stop={song} onExit={vi.fn()} createAudio={createAudio} />);
+    await sing();
+    view.unmount();
+    expect(audios[0].pause).toHaveBeenCalled();
+    audios[0].currentTime = barTime(3);
+    audios[0].emit("timeupdate");
+    audios[0].emit("ended");
+    audios[0].emit("error");
+    await tick(300);
+    expect(errors).not.toHaveBeenCalled();
+    expect(narratorMock.playNarration).not.toHaveBeenCalledWith(song.lyrics[0].say);
+    errors.mockRestore();
   });
 });

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { StoryScene } from "@/art/scenes/StoryScene";
 import { narrator } from "@/audio/narrator";
 import type { ArtId, StoryStop as StoryStopData, Unit } from "@/domain/trail/schema";
@@ -40,17 +40,27 @@ export function StoryStop({ unit, stop, onExit, record = true }: StoryStopProps)
   // Leaving (any way) silences the narrator.
   useEffect(() => () => narrator.stop(), []);
 
+  // Identifies the latest narration request: a newer one (a word, a replay, another page) makes an
+  // older one's end meaningless, so the page only counts as read when its own reading ends uninterrupted.
+  const reading = useRef(0);
+  const pageSay = stop.pages[page].say;
+  const key = `${page}:${replays}`;
+
+  const readPage = useCallback(() => {
+    const id = ++reading.current;
+    void narrator.playNarration(pageSay).then(() => {
+      if (id === reading.current) setReadKey(key);
+    });
+  }, [pageSay, key]);
+
   // Each page is read to the child; the buttons wait until the reading is over.
   useEffect(() => {
     if (step !== "pages") return;
-    let alive = true;
-    void narrator.playNarration(stop.pages[page].say).then(() => {
-      if (alive) setReadKey(`${page}:${replays}`);
-    });
+    readPage();
     return () => {
-      alive = false;
+      reading.current += 1;
     };
-  }, [step, page, replays, stop.pages]);
+  }, [step, readPage]);
 
   const exit = () => {
     narrator.stop();
@@ -114,7 +124,11 @@ export function StoryStop({ unit, stop, onExit, record = true }: StoryStopProps)
   const sayWord = (id: ArtId) => {
     narrator.playSfx("tap");
     const word = unit.words.find((w) => w.id === id);
-    void narrator.playNarration(word?.say ?? [{ lang: "en-US", text: id }]);
+    const mine = ++reading.current;
+    void narrator.playNarration(word?.say ?? [{ lang: "en-US", text: id }]).then(() => {
+      // The word cut the page's reading short: read the page again from the start.
+      if (mine === reading.current && !ready) readPage();
+    });
   };
   const advance = () => {
     if (last) setStep("question");
@@ -136,7 +150,7 @@ export function StoryStop({ unit, stop, onExit, record = true }: StoryStopProps)
             ))}
           </div>
         </div>
-        <Bubble tail="left" className="k-flat" onReplay={() => void narrator.playNarration(current.say)}>
+        <Bubble tail="left" className="k-flat" onReplay={readPage}>
           <NarrationText narration={current.say} />
         </Bubble>
         <div className="k-story-controls">
