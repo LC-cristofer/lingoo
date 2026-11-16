@@ -17,13 +17,23 @@ const unitFiles: Record<string, unknown> = {
   "forest-animals": forestAnimalsJson,
 };
 
+// The content files are static: each is validated once, on first use, and the same object is handed out after that.
+let pathCache: PathUnit[] | undefined;
+const unitCache = new Map<string, Unit>();
+let linesCache: Lines | undefined;
+
 export function getPath(): PathUnit[] {
-  return parsePath(pathJson);
+  return (pathCache ??= parsePath(pathJson));
 }
 
 export function getUnit(id: string): Unit | null {
   if (!Object.hasOwn(unitFiles, id)) return null;
-  return parseUnit(unitFiles[id]);
+  let unit = unitCache.get(id);
+  if (!unit) {
+    unit = parseUnit(unitFiles[id]);
+    unitCache.set(id, unit);
+  }
+  return unit;
 }
 
 export function getStop(stopId: string): { unit: Unit; stop: Stop; index: number } | null {
@@ -34,7 +44,7 @@ export function getStop(stopId: string): { unit: Unit; stop: Stop; index: number
 }
 
 export function getLines(): Lines {
-  return parseLines(linesJson);
+  return (linesCache ??= parseLines(linesJson));
 }
 
 function exerciseNarrations(ex: Exercise): Narration[] {

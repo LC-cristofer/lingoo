@@ -23,6 +23,13 @@ describe("trail content", () => {
     ]);
   });
 
+  it("parses once: every call returns the same object", () => {
+    expect(getPath()).toBe(getPath());
+    expect(getUnit("forest-animals")).toBe(getUnit("forest-animals"));
+    expect(getLines()).toBe(getLines());
+    expect(getStop("forest-animals/song")!.unit).toBe(getUnit("forest-animals"));
+  });
+
   it("returns null for unknown units and stops", () => {
     expect(getUnit("nope")).toBeNull();
     expect(getUnit("toString")).toBeNull();
