@@ -25,6 +25,8 @@ const song = unit.stops[0] as SongStopType;
 /** A fake HTMLAudioElement: the test drives currentTime and the events. */
 class FakeAudio extends EventTarget {
   currentTime = 0;
+  duration = NaN;
+  readyState = 4;
   paused = true;
   src: string;
   play = vi.fn(() => {
@@ -151,6 +153,103 @@ describe("SongStop", () => {
     await flush();
     expect(narratorMock.playNarration).toHaveBeenCalledWith(song.lyrics[0].say);
     expect(screen.getByRole("button", { name: "Continuar" })).toBeInTheDocument();
+  });
+
+  describe("a song that never finishes by itself", () => {
+    const continuar = () => screen.queryByRole("button", { name: "Continuar" });
+
+    it("ends 3 s after its duration when `ended` never fires, so Continuar appears", async () => {
+      renderSong();
+      await sing();
+      audios[0].duration = 20;
+      act(() => audios[0].emit("loadedmetadata"));
+      await tick(20_000 + 2_900);
+      expect(continuar()).toBeNull();
+      await tick(200);
+      expect(continuar()).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: "Cantar de novo" })).toBeInTheDocument();
+    });
+
+    it("pausing stops the safety timer, and resuming arms it for what is left", async () => {
+      renderSong();
+      await sing();
+      audios[0].duration = 20;
+      act(() => audios[0].emit("loadedmetadata"));
+      await tick(5_000);
+      audios[0].currentTime = 5;
+      fireEvent.click(screen.getByRole("button", { name: "Pausar" }));
+      await tick(60_000);
+      expect(continuar()).toBeNull();
+      fireEvent.click(screen.getByRole("button", { name: "Tocar" }));
+      await tick(15_000 + 2_900);
+      expect(continuar()).toBeNull();
+      await tick(200);
+      expect(continuar()).toBeInTheDocument();
+    });
+
+    it("a file that stalls or waits for more than 3 s falls back to the gatinho's voice", async () => {
+      renderSong();
+      await sing();
+      narratorMock.playNarration.mockClear();
+      act(() => audios[0].emit("waiting"));
+      await tick(2_900);
+      expect(narratorMock.playNarration).not.toHaveBeenCalled();
+      await tick(200);
+      await flush();
+      expect(audios[0].pause).toHaveBeenCalled();
+      expect(narratorMock.playNarration.mock.calls.map((c) => c[0])).toEqual(song.lyrics.map((l) => l.say));
+      expect(continuar()).toBeInTheDocument();
+    });
+
+    it("`stalled` counts the same, and speaking resumes from the current line", async () => {
+      renderSong();
+      await sing();
+      audios[0].currentTime = barTime(3) + 0.1;
+      await tick();
+      narratorMock.playNarration.mockClear();
+      act(() => audios[0].emit("stalled"));
+      await tick(3_100);
+      await flush();
+      const spoken = narratorMock.playNarration.mock.calls.map((c) => c[0]);
+      expect(spoken[0]).toEqual(song.lyrics.find((l) => l.bar === 3)!.say);
+    });
+
+    it("a stall that recovers within 3 s keeps the song playing", async () => {
+      renderSong();
+      await sing();
+      narratorMock.playNarration.mockClear();
+      act(() => audios[0].emit("waiting"));
+      await tick(2_000);
+      act(() => audios[0].emit("playing"));
+      await tick(5_000);
+      expect(narratorMock.playNarration).not.toHaveBeenCalled();
+      expect(screen.getByRole("button", { name: "Pausar" })).toBeInTheDocument();
+    });
+
+    it("a file with nothing buffered and no events at all falls back after 3 s", async () => {
+      const unloaded = (src: string) => {
+        const a = new FakeAudio(src);
+        a.readyState = 0;
+        audios.push(a);
+        return a as unknown as HTMLAudioElement;
+      };
+      render(<SongStop unit={unit} stop={song} onExit={vi.fn()} createAudio={unloaded} />);
+      await sing();
+      narratorMock.playNarration.mockClear();
+      await tick(3_100);
+      await flush();
+      expect(narratorMock.playNarration).toHaveBeenCalledWith(song.lyrics[0].say);
+    });
+
+    it("leaves no timer behind on unmount", async () => {
+      const view = render(<SongStop unit={unit} stop={song} onExit={vi.fn()} createAudio={createAudio} />);
+      await sing();
+      audios[audios.length - 1].duration = 20;
+      act(() => audios[audios.length - 1].emit("loadedmetadata"));
+      act(() => audios[audios.length - 1].emit("waiting"));
+      view.unmount();
+      expect(vi.getTimerCount()).toBe(0);
+    });
   });
 
   it("offers 'Cantar de novo' at the end, which restarts the song", async () => {

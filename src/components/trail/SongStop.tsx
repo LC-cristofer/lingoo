@@ -27,6 +27,10 @@ type SongStopProps = {
 type Step = "opening" | "singing" | "session" | "closing";
 
 const POLL_MS = 100;
+/** The narrator's rule: audio showing no sign of life for this long has failed. */
+const STALL_MS = 3000;
+/** If `ended` never comes, the song counts as over this long after it should have finished. */
+const END_MARGIN_MS = 3000;
 
 /** When a lyric line starts: `introBars` empty bars, then 4 beats per bar. */
 export function lineStart(stop: SongStopData, bar: number): number {
@@ -50,6 +54,11 @@ export function SongStop({ unit, stop, onExit, record = true, createAudio = (src
   const speechMode = useRef(false);
   /** Identifies the latest play() request: leaving, pausing or replaying invalidates older ones. */
   const playId = useRef(0);
+  const armStall = useRef<() => void>(() => {});
+  /** Ends the song when `ended` never arrives (duration + a margin). */
+  const safetyTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  /** Counts a stalled or waiting file; past STALL_MS the music has failed. */
+  const stallTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   const starts = useMemo(() => stop.lyrics.map((l) => lineStart(stop, l.bar)), [stop]);
   const wordIds = useMemo(() => [...new Set(stop.lyrics.flatMap((l) => (l.wordId ? [l.wordId] : [])))] as ArtId[], [stop]);
@@ -59,15 +68,23 @@ export function SongStop({ unit, stop, onExit, record = true, createAudio = (src
     setCurrent(i);
   }, []);
 
+  const clearTimers = useCallback(() => {
+    clearTimeout(safetyTimer.current);
+    clearTimeout(stallTimer.current);
+    safetyTimer.current = undefined;
+    stallTimer.current = undefined;
+  }, []);
+
   /** Silences everything: the file, the voice and any running line-by-line fallback. */
   const silence = useCallback(() => {
+    clearTimers();
     playId.current += 1;
     speechToken.current += 1;
     detachRef.current();
     detachRef.current = () => {};
     audioRef.current?.pause();
     narrator.stop();
-  }, []);
+  }, [clearTimers]);
 
   useEffect(() => silence, [silence]);
 
@@ -75,6 +92,7 @@ export function SongStop({ unit, stop, onExit, record = true, createAudio = (src
   const speakLines = useCallback(
     async (from: number) => {
       speechMode.current = true;
+      clearTimers();
       detachRef.current();
       detachRef.current = () => {};
       audioRef.current?.pause();
@@ -89,7 +107,29 @@ export function SongStop({ unit, stop, onExit, record = true, createAudio = (src
       setPlaying(false);
       setEnded(true);
     },
-    [stop.lyrics, show],
+    [stop.lyrics, show, clearTimers],
+  );
+
+  /** The file is over: ended, or the safety timer decided it. */
+  const endSong = useCallback(() => {
+    clearTimers();
+    detachRef.current();
+    detachRef.current = () => {};
+    setPlaying(false);
+    setEnded(true);
+  }, [clearTimers]);
+
+  /** If `ended` never fires, the song ends by itself once its length (plus a margin) has gone by. */
+  const armSafety = useCallback(
+    (audio: HTMLAudioElement) => {
+      clearTimeout(safetyTimer.current);
+      safetyTimer.current = undefined;
+      const duration = audio.duration;
+      if (!Number.isFinite(duration) || duration <= 0) return;
+      const left = Math.max(0, duration - audio.currentTime);
+      safetyTimer.current = setTimeout(endSong, left * 1000 + END_MARGIN_MS);
+    },
+    [endSong],
   );
 
   const playAudio = useCallback(
@@ -101,14 +141,22 @@ export function SongStop({ unit, stop, onExit, record = true, createAudio = (src
       const failed = () => {
         if (id === playId.current) void speakLines(Math.max(0, currentRef.current));
       };
+      armStall.current = () => {
+        clearTimeout(stallTimer.current);
+        stallTimer.current = setTimeout(failed, STALL_MS);
+      };
       try {
         const result = audio.play();
         if (result && typeof result.catch === "function") result.catch(failed);
       } catch {
         failed();
+        return;
       }
+      armSafety(audio);
+      // Nothing buffered yet: if no sign of life comes, the music has failed.
+      if (audio.readyState < 2) armStall.current();
     },
-    [speakLines],
+    [speakLines, armSafety],
   );
 
   const sync = useCallback(() => {
@@ -129,22 +177,33 @@ export function SongStop({ unit, stop, onExit, record = true, createAudio = (src
     const audio = audioRef.current ?? createAudio(`/audio/song-${unit.id}.mp3`);
     audioRef.current = audio;
     rewind(audio);
-    const onEnded = () => {
-      detachRef.current();
-      detachRef.current = () => {};
-      setPlaying(false);
-      setEnded(true);
-    };
     const onError = () => void speakLines(Math.max(0, currentRef.current));
-    audio.addEventListener("timeupdate", sync);
-    audio.addEventListener("ended", onEnded);
-    audio.addEventListener("error", onError);
+    const onMetadata = () => {
+      if (!audio.paused) armSafety(audio);
+    };
+    const onStall = () => {
+      if (!audio.paused && stallTimer.current === undefined) armStall.current();
+    };
+    const onAlive = () => {
+      clearTimeout(stallTimer.current);
+      stallTimer.current = undefined;
+    };
+    const events: [string, () => void][] = [
+      ["timeupdate", sync],
+      ["ended", endSong],
+      ["error", onError],
+      ["loadedmetadata", onMetadata],
+      ["waiting", onStall],
+      ["stalled", onStall],
+      ["playing", onAlive],
+      ["canplay", onAlive],
+      ["timeupdate", onAlive],
+    ];
+    for (const [name, fn] of events) audio.addEventListener(name, fn);
     const poll = setInterval(sync, POLL_MS);
     detachRef.current = () => {
       clearInterval(poll);
-      audio.removeEventListener("timeupdate", sync);
-      audio.removeEventListener("ended", onEnded);
-      audio.removeEventListener("error", onError);
+      for (const [name, fn] of events) audio.removeEventListener(name, fn);
     };
     playAudio(audio);
   };
@@ -164,6 +223,7 @@ export function SongStop({ unit, stop, onExit, record = true, createAudio = (src
     if (!audio) return;
     if (playing) {
       playId.current += 1;
+      clearTimers();
       audio.pause();
       setPlaying(false);
     } else {
