@@ -133,37 +133,52 @@ def trail():
     return s, len(TRAIL_PROG) * 4
 
 
-# ---------------------------------------------------------------- album / memória: calm, 84 bpm
+# ---------------------------------------------------------------- album / memória: bouncy, 112 bpm
+# (v1 at 84 bpm with a music box sounded like a lullaby; Lucas asked for something livelier)
 
-ALBUM_PROG = ["F", "Dm", "Bb", "C"] * 4
-ALBUM_MEL = [
-    [("A5", 1.5), ("C6", 0.5), ("A5", 1), ("F5", 1)],
-    [("D5", 2), ("F5", 1), ("A5", 1)],
-    [("A#5", 1.5), ("A5", 0.5), ("G5", 1), ("F5", 1)],
-    [("G5", 3), (None, 1)],
-    [("A5", 1), ("C6", 1), ("D6", 1), ("C6", 1)],
-    [("A5", 2), ("F5", 2)],
-    [("G5", 1), ("A5", 1), ("A#5", 1), ("D6", 1)],
-    [("C6", 3), (None, 1)],
+ALBUM_PROG = ["G", "Em", "C", "D"] * 4
+CHORDS.setdefault("D", ["D3", "F#3", "A3"])
+ALBUM_MEL_A = [
+    [("B5", 0.5), ("D6", 0.5), ("B5", 0.5), ("G5", 0.5), ("A5", 1), ("B5", 1)],
+    [("G5", 1), ("E5", 0.5), ("G5", 0.5), ("B5", 2)],
+    [("C6", 0.5), ("B5", 0.5), ("A5", 0.5), ("G5", 0.5), ("E5", 1), ("G5", 1)],
+    [("A5", 1.5), ("F#5", 0.5), ("D5", 2)],
+]
+ALBUM_MEL_B = [
+    [("D6", 0.5), ("B5", 0.5), ("G5", 0.5), ("B5", 0.5), ("D6", 1), ("E6", 1)],
+    [("D6", 1), ("B5", 1), ("G5", 2)],
+    [("E6", 0.5), ("D6", 0.5), ("C6", 0.5), ("B5", 0.5), ("A5", 1), ("C6", 1)],
+    [("B5", 0.5), ("A5", 0.5), ("F#5", 0.5), ("A5", 0.5), ("D5", 2)],
 ]
 
 
 def album():
-    s = Song(84)
-    s.program(0, 10)   # music box: melody
-    s.program(1, 12)   # marimba: broken chords
-    s.program(2, 89)   # warm pad
-    s.program(3, 32)   # acoustic bass
-    melody(s, 0, ALBUM_MEL + ALBUM_MEL, 64)
+    s = Song(112)
+    s.program(0, 13)   # xylophone: melody
+    s.program(1, 24)   # nylon guitar: bouncy off-beat chords
+    s.program(2, 33)   # fingered bass: jumping root-fifth
+    s.program(3, 11)   # vibraphone: sparkle on the second half
+    melody(s, 0, ALBUM_MEL_A + ALBUM_MEL_B + ALBUM_MEL_A + ALBUM_MEL_B, 70)
     for i, ch in enumerate(ALBUM_PROG):
         b = i * 4
         tones = [note(n) + 12 for n in CHORDS[ch]]
-        for k, beat in enumerate((0, 1, 2, 3)):
-            s.add(1, tones[[0, 1, 2, 1][k]], b + beat, 1, 38)
-        for p in tones:
-            s.add(2, p, b, 4, 30)
-        s.add(3, note(CHORDS[ch][0]) - 12, b, 2, 55)
-    return s, len(ALBUM_PROG) * 4
+        for beat in (0.5, 1.5, 2.5, 3.5):  # chords on the off-beats: a skip in the step
+            for k, p in enumerate(tones):
+                s.add(1, p, b + beat + k * 0.015, 0.4, 52)
+        root = note(CHORDS[ch][0]) - 12
+        for beat, p in ((0, root), (1, root + 7), (2, root + 12), (3, root + 7)):
+            s.add(2, p, b + beat, 0.5, 72)
+        if i >= 8:
+            s.add(3, note(CHORDS[ch][2]) + 24, b, 2, 36)
+    beats = len(ALBUM_PROG) * 4
+    for beat in range(beats):
+        if beat % 2 == 0:
+            s.add(9, 36, beat, 0.4, 52)   # kick on 1 and 3
+        else:
+            s.add(9, 39, beat, 0.3, 42)   # hand clap on 2 and 4
+    for e in range(beats * 2):
+        s.add(9, 42, e / 2, 0.2, 34 if e % 2 else 24)  # closed hi-hat, soft eighths
+    return s, beats
 
 
 # ---------------------------------------------------------------- render
