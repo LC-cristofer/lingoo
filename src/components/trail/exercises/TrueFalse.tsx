@@ -30,8 +30,8 @@ export function TrueFalse({ exercise, phase, onAnswer }: TrueFalseProps) {
   };
 
   const thumbs = [
-    { choice: true, label: "Certo", emoji: "👍", tone: "leaf" as const },
-    { choice: false, label: "Errado", emoji: "👎", tone: "coral" as const },
+    { choice: true, label: "Certo", emoji: "👍", tone: "success" as const },
+    { choice: false, label: "Errado", emoji: "👎", tone: "retry" as const },
   ];
 
   return (

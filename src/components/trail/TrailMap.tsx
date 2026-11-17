@@ -14,10 +14,9 @@ import { useToday } from "./useToday";
 import { BottomNav } from "./kit/BottomNav";
 import { SpeakerIcon } from "./icons";
 import { MusicToggle } from "./kit/MusicToggle";
-import { ForestScene } from "./kit/ForestScene";
-import { Scatter, type ScatterItem } from "./kit/Scatter";
+import { NightSky } from "./kit/NightSky";
 import { StopButton } from "./kit/StopButton";
-import { WoodSign } from "./kit/WoodSign";
+import { UnitHeader } from "./kit/UnitHeader";
 
 type TrailMapProps = {
   path: PathUnit[];
@@ -115,42 +114,6 @@ function trailPath(points: [number, number][]): string {
   return d;
 }
 
-function sideDecor(height: number): ScatterItem[] {
-  const out: ScatterItem[] = [];
-  let i = 0;
-  for (let y = 900; y < height + 360; y += 230, i++) {
-    out.push({ kind: i % 2 ? "round" : "pine", x: i % 2 ? 91 : 6, y, s: 0.8 + (i % 3) * 0.12 });
-    out.push({ kind: i % 3 === 0 ? "mush" : "flower", x: i % 2 ? 12 : 84, y: y + 90, color: i % 2 ? "#FF8FA3" : "#fff" });
-    out.push({ kind: i % 2 ? "pine" : "round", x: i % 2 ? 4 : 94, y: y + 120, s: 0.7 });
-  }
-  return out;
-}
-
-const PHONE_DECOR: ScatterItem[] = [
-  { kind: "pine", x: 7, y: 330, s: 0.62 },
-  { kind: "round", x: 90, y: 322, s: 0.5 },
-  { kind: "pine", x: 91, y: 470, s: 0.9 },
-  { kind: "round", x: 8, y: 520, s: 0.72 },
-  { kind: "pine", x: 5, y: 700, s: 1 },
-  { kind: "round", x: 92, y: 660, s: 0.8 },
-  { kind: "mush", x: 79, y: 560 },
-  { kind: "flower", x: 15, y: 420, color: "#FF8FA3" },
-  { kind: "flower", x: 85, y: 750, color: "#fff" },
-  { kind: "mush", x: 22, y: 760 },
-];
-
-const TABLET_DECOR: ScatterItem[] = [
-  { kind: "pine", x: 6, y: 330, s: 0.8 },
-  { kind: "pine", x: 13, y: 346, s: 0.56 },
-  { kind: "round", x: 92, y: 330, s: 0.7 },
-  { kind: "pine", x: 97, y: 350, s: 0.6 },
-  { kind: "round", x: 91, y: 520, s: 0.95 },
-  { kind: "pine", x: 6, y: 760, s: 1.25 },
-  { kind: "mush", x: 82, y: 560 },
-  { kind: "mush", x: 26, y: 640 },
-  { kind: "flower", x: 87, y: 740, color: "#FF8FA3" },
-];
-
 /**
  * The map: one tall trail per world. Stops zigzag down a dirt path, the current one is larger with the
  * cat beside it, and the next units follow as locked signs with grey ghost stops.
@@ -191,28 +154,10 @@ export function TrailMap({ path, units, progress, onOpenStop }: TrailMapProps) {
   };
 
   const soon = () => void narrator.playNarration(lines.soonUnit);
-  const decor = useMemo(() => sideDecor(layout.height), [layout.height]);
 
   return (
     <div ref={rootRef} className="k-screen k-trailmap" data-guide={cat && cat.x < 50 ? "right" : "left"}>
-      <ForestScene variant="trail" />
-      <Scatter items={PHONE_DECOR} className="k-only-phone" />
-      <Scatter items={TABLET_DECOR} className="k-only-tablet" />
-      <Scatter items={decor} />
-      <svg className="k-pond k-only-tablet" width="320" height="120" viewBox="0 0 320 120" aria-hidden="true">
-        <ellipse cx="160" cy="66" rx="150" ry="48" fill="#3F9CE6" />
-        <ellipse cx="160" cy="60" rx="150" ry="48" fill="#6FC0FF" />
-        <ellipse cx="120" cy="46" rx="46" ry="10" fill="#fff" opacity=".35" />
-      </svg>
-      <span className="k-peek k-peek-frog k-only-tablet" aria-hidden="true">
-        <Animal id="frog" size={76} />
-      </span>
-      <span className="k-peek k-peek-bear k-only-tablet" aria-hidden="true">
-        <Animal id="bear" size={96} />
-      </span>
-      <span className="k-peek k-peek-bird" aria-hidden="true">
-        <Animal id="bird" size={54} />
-      </span>
+      <NightSky variant="map" />
 
       <div className="k-fixed-chips">
         <DaysCalendar progress={progress} />
@@ -222,7 +167,7 @@ export function TrailMap({ path, units, progress, onOpenStop }: TrailMapProps) {
       <main className="k-trailmap-body">
         {first && firstUnit ? (
           <div className="k-trailmap-sign">
-            <WoodSign
+            <UnitHeader
               unitLabel="Unidade 1"
               title={first.title}
               done={firstDone}
@@ -235,9 +180,7 @@ export function TrailMap({ path, units, progress, onOpenStop }: TrailMapProps) {
 
         <div className="k-trail" style={{ height: layout.height }}>
           <svg className="k-trail-path" viewBox={`0 0 100 ${layout.height}`} preserveAspectRatio="none" width="100%" height={layout.height} aria-hidden="true">
-            <path d={trailPath(layout.points)} fill="none" stroke="#D9B873" strokeWidth="54" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
-            <path d={trailPath(layout.points)} fill="none" stroke="#F6DDA6" strokeWidth="46" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
-            <path d={trailPath(layout.points)} fill="none" stroke="#fff" strokeWidth="5" strokeLinecap="round" strokeDasharray="2 20" opacity=".85" vectorEffect="non-scaling-stroke" />
+            <path d={trailPath(layout.points)} fill="none" className="k-trail-dots" strokeWidth="5" strokeLinecap="round" strokeDasharray="0 14" vectorEffect="non-scaling-stroke" />
           </svg>
 
           {layout.chest ? (
@@ -255,7 +198,7 @@ export function TrailMap({ path, units, progress, onOpenStop }: TrailMapProps) {
             if (spot.type === "sign") {
               return (
                 <div key={spot.key} className="k-trail-sign" style={{ top: spot.y }}>
-                  <WoodSign unitLabel={`Unidade ${spot.unitNumber}`} title={spot.title} locked ariaLabel={`Unidade ${spot.unitNumber}, ${spot.title}`} onPress={soon} />
+                  <UnitHeader unitLabel={`Unidade ${spot.unitNumber}`} title={spot.title} locked ariaLabel={`Unidade ${spot.unitNumber}, ${spot.title}`} onPress={soon} />
                 </div>
               );
             }

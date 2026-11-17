@@ -65,7 +65,7 @@ export function TapRepeat({ exercise, phase, onAnswer, onCatExpression }: TapRep
       </TileGrid>
       <div className="min-h-16">
         {complete && isInteractive(phase) ? (
-          <ChunkyButton label="Continuar" tone="sun" onPress={() => report(true)}>
+          <ChunkyButton label="Continuar" tone="accent" onPress={() => report(true)}>
             Continuar
           </ChunkyButton>
         ) : null}

@@ -6,7 +6,7 @@ import { Cat, type CatExpression } from "@/art/Cat";
 import type { Narration } from "@/domain/trail/schema";
 import { FeedbackBanner, type FeedbackKind } from "./FeedbackBanner";
 import { Bubble } from "./kit/Bubble";
-import { ForestScene } from "./kit/ForestScene";
+import { NightSky } from "./kit/NightSky";
 import { LessonTopBar } from "./kit/LessonTopBar";
 import { NarrationText } from "./NarrationText";
 
@@ -24,7 +24,7 @@ type ExerciseShellProps = {
 export function ExerciseShell({ ratio, prompt, catExpression, feedback, onExit, count, children }: ExerciseShellProps) {
   return (
     <div className="k-screen">
-      <ForestScene variant="lesson" />
+      <NightSky variant="lesson" />
       <div className="k-lesson">
         <LessonTopBar ratio={ratio} onExit={onExit} count={count} />
         <div className="k-ask">

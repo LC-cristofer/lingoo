@@ -56,7 +56,7 @@ export function Intro({ exercise, words, phase, onAnswer }: IntroProps) {
       </p>
       <div className="min-h-16">
         {ready && isInteractive(phase) ? (
-          <ChunkyButton label="Continuar" tone="sun" onPress={() => report(true)}>
+          <ChunkyButton label="Continuar" tone="accent" onPress={() => report(true)}>
             Já repeti!
           </ChunkyButton>
         ) : null}

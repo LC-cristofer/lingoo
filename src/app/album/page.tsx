@@ -9,23 +9,14 @@ import { useToday } from "@/components/trail/useToday";
 import { useTrailProgress } from "@/components/trail/TrailProgressProvider";
 import { BottomNav } from "@/components/trail/kit/BottomNav";
 import { MusicToggle } from "@/components/trail/kit/MusicToggle";
-import { ForestScene } from "@/components/trail/kit/ForestScene";
-import { Scatter, type ScatterItem } from "@/components/trail/kit/Scatter";
-import { WoodSign } from "@/components/trail/kit/WoodSign";
+import { NightSky } from "@/components/trail/kit/NightSky";
+import { UnitHeader } from "@/components/trail/kit/UnitHeader";
 import { getLines, getPath, getUnit } from "@/domain/trail/content";
 import { dueCards } from "@/domain/trail/memory";
 import { emptyProgress } from "@/domain/trail/progress";
 import type { ArtId, Narration } from "@/domain/trail/schema";
 
 const EMPTY = emptyProgress();
-
-const DECOR: ScatterItem[] = [
-  { kind: "pine", x: 4, y: 330, s: 0.9 },
-  { kind: "round", x: 95, y: 520, s: 0.7 },
-  { kind: "flower", x: 8, y: 640, color: "#FF8FA3" },
-  { kind: "mush", x: 92, y: 760 },
-  { kind: "pine", x: 96, y: 900, s: 1 },
-];
 
 /** Phase 1 stickers the album still knows how to show; the earned ones come from progress.legacy. */
 const LEGACY_STICKERS: Record<string, { image: string; name: (lines: ReturnType<typeof getLines>) => Narration }> = {
@@ -71,8 +62,7 @@ export default function AlbumPage() {
 
   return (
     <div className="k-screen">
-      <ForestScene variant="trail" />
-      <Scatter items={DECOR} />
+      <NightSky variant="map" />
       <div className="k-fixed-chips">
         <DaysCalendar progress={shown} />
         <MusicToggle />
@@ -84,7 +74,7 @@ export default function AlbumPage() {
           return (
             <section key={u.unitId} className="k-album-unit" aria-label={`Unidade ${u.number}, ${u.title}`}>
               <div className="k-album-sign">
-                <WoodSign unitLabel={`Unidade ${u.number}`} title={u.title} done={earned ? 1 : 0} total={1} />
+                <UnitHeader unitLabel={`Unidade ${u.number}`} title={u.title} done={earned ? 1 : 0} total={1} />
               </div>
               {sticker ? (
                 <button
@@ -138,7 +128,7 @@ export default function AlbumPage() {
         {soon.length > 0 ? (
           <div className="k-album-soon">
             {soon.map((u) => (
-              <WoodSign key={u.unitId} unitLabel={`Unidade ${u.number}`} title={u.title} locked />
+              <UnitHeader key={u.unitId} unitLabel={`Unidade ${u.number}`} title={u.title} locked />
             ))}
           </div>
         ) : null}

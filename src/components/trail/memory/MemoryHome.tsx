@@ -12,31 +12,14 @@ import { PlayIcon } from "../icons";
 import { BottomNav } from "../kit/BottomNav";
 import { Bubble } from "../kit/Bubble";
 import { ChunkyButton } from "../kit/ChunkyButton";
-import { ForestScene } from "../kit/ForestScene";
+import { NightSky } from "../kit/NightSky";
 import { MusicToggle } from "../kit/MusicToggle";
-import { Scatter, type ScatterItem } from "../kit/Scatter";
 import { NarrationText } from "../NarrationText";
 import { useToday } from "../useToday";
 import { useTrailProgress } from "../TrailProgressProvider";
 import { CardPile } from "./CardPile";
 import { MemoryRound } from "./MemoryRound";
 
-const PHONE_DECOR: ScatterItem[] = [
-  { kind: "pine", x: 7, y: 360, s: 0.7 },
-  { kind: "round", x: 92, y: 350, s: 0.6 },
-  { kind: "pine", x: 90, y: 640, s: 1 },
-  { kind: "round", x: 8, y: 660, s: 0.85 },
-  { kind: "flower", x: 23, y: 720, color: "#FF8FA3" },
-  { kind: "mush", x: 77, y: 730 },
-];
-const TABLET_DECOR: ScatterItem[] = [
-  { kind: "pine", x: 6, y: 340, s: 0.8 },
-  { kind: "round", x: 93, y: 340, s: 0.8 },
-  { kind: "pine", x: 7, y: 740, s: 1.3 },
-  { kind: "round", x: 96, y: 730, s: 1.1 },
-  { kind: "flower", x: 29, y: 700, color: "#FF8FA3" },
-  { kind: "mush", x: 72, y: 720 },
-];
 
 type Kind = "loading" | "none" | "due" | "empty-tomorrow" | "empty-later";
 
@@ -108,9 +91,7 @@ export function MemoryHome() {
 
   return (
     <div className="k-screen">
-      <ForestScene variant="start" />
-      <Scatter items={PHONE_DECOR} className="k-only-phone" />
-      <Scatter items={TABLET_DECOR} className="k-only-tablet" />
+      <NightSky variant="map" />
       <div className="k-fixed-chips">
         <DaysCalendar progress={hydrated ? progress : { ...progress, completedStops: {}, daysPlayed: [] }} />
         <MusicToggle />
@@ -136,7 +117,7 @@ export function MemoryHome() {
             )}
           </div>
           {kind === "due" ? (
-            <ChunkyButton label="Treinar" tone="sun" size="lg" className="k-mtab-cta" onPress={() => setRound(due.slice(0, ROUND_LIMIT))}>
+            <ChunkyButton label="Treinar" tone="accent" size="lg" className="k-mtab-cta" onPress={() => setRound(due.slice(0, ROUND_LIMIT))}>
               Treinar
               <PlayIcon size={28} />
             </ChunkyButton>

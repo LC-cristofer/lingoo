@@ -12,7 +12,7 @@ import { ExerciseView } from "./exercises/ExerciseView";
 import { AnswerTile, TileGrid } from "./kit/AnswerTile";
 import { Bubble } from "./kit/Bubble";
 import { ChunkyButton } from "./kit/ChunkyButton";
-import { ForestScene } from "./kit/ForestScene";
+import { NightSky } from "./kit/NightSky";
 import { LessonTopBar } from "./kit/LessonTopBar";
 import { PlayIcon } from "./icons";
 import { NarrationText } from "./NarrationText";
@@ -100,7 +100,7 @@ export function StopOpening({ title, opening, words, wordIds, startLabel = "Come
   }, [opening]);
   return (
     <div className="k-screen">
-      <ForestScene variant="lesson" trees />
+      <NightSky variant="lesson" />
       <div className={`k-stage ${wordIds.length > 3 ? "is-many" : ""}`}>
         <LessonTopBar ratio={0} onExit={onExit} title={title} />
         <div className="k-hello">
@@ -112,7 +112,7 @@ export function StopOpening({ title, opening, words, wordIds, startLabel = "Come
           </span>
         </div>
         <WordCards words={words} ids={wordIds} />
-        <ChunkyButton label={startLabel} tone="sun" size="lg" className="k-cta" onPress={onStart}>
+        <ChunkyButton label={startLabel} tone="accent" size="lg" className="k-cta" onPress={onStart}>
           {startLabel}
           <PlayIcon size={28} />
         </ChunkyButton>
@@ -143,7 +143,7 @@ export function StopClosing({ closing, words, wordIds, isChallenge = false, reco
   const label = isChallenge ? "Continuar" : record ? "Voltar ao mapa" : "Voltar";
   return (
     <div className="k-screen">
-      <ForestScene variant="lesson" trees />
+      <NightSky variant="lesson" />
       <div className="k-stage is-closing">
         <div className="k-hello">
           <Bubble tail="down">
@@ -160,7 +160,7 @@ export function StopClosing({ closing, words, wordIds, isChallenge = false, reco
           </p>
         </div>
         <WordCards words={words} ids={wordIds} />
-        <ChunkyButton label={label} tone="sun" size="lg" className="k-cta" onPress={onContinue}>
+        <ChunkyButton label={label} tone="accent" size="lg" className="k-cta" onPress={onContinue}>
           {label}
         </ChunkyButton>
       </div>

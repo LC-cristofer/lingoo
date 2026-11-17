@@ -11,7 +11,7 @@ import { hashSeed, seededShuffle } from "../exercises/shared";
 import { PlayIcon } from "../icons";
 import { Bubble } from "../kit/Bubble";
 import { ChunkyButton } from "../kit/ChunkyButton";
-import { ForestScene } from "../kit/ForestScene";
+import { NightSky } from "../kit/NightSky";
 import { LessonTopBar } from "../kit/LessonTopBar";
 import { NarrationText } from "../NarrationText";
 import { ExerciseLoop } from "../StopFlow";
@@ -95,9 +95,9 @@ export function MemoryRound({ unit, cardIds, record, intro = false, onDone, onEx
     // Nothing to train (should not happen): leave without fuss.
     return (
       <div className="k-screen">
-        <ForestScene variant="lesson" />
+        <NightSky variant="lesson" />
         <div className="k-stage">
-          <ChunkyButton label="Continuar" tone="sun" size="lg" className="k-cta" onPress={onDone}>
+          <ChunkyButton label="Continuar" tone="accent" size="lg" className="k-cta" onPress={onDone}>
             Continuar
           </ChunkyButton>
         </div>
@@ -125,7 +125,7 @@ export function MemoryRound({ unit, cardIds, record, intro = false, onDone, onEx
     const replay = () => void narrator.playNarration(flipped ? word.say : lines.memoryAsk);
     return (
       <div className="k-screen">
-        <ForestScene variant="lesson" />
+        <NightSky variant="lesson" />
         <div className="k-lesson k-mem">
           <LessonTopBar ratio={recallIndex / total} count={`${recallIndex + 1} de ${total}`} onExit={onExit} />
           <div className="k-mem-recall">
@@ -143,7 +143,7 @@ export function MemoryRound({ unit, cardIds, record, intro = false, onDone, onEx
           </div>
           <div className="k-mem-next">
             {flipped ? (
-              <ChunkyButton label="Próximo" tone="sun" size="lg" onPress={next}>
+              <ChunkyButton label="Próximo" tone="accent" size="lg" onPress={next}>
                 Próximo
                 <PlayIcon size={28} />
               </ChunkyButton>
@@ -182,7 +182,7 @@ export function MemoryRound({ unit, cardIds, record, intro = false, onDone, onEx
   const doneLine = lines.memoryDone[Math.min(rememberedCount, lines.memoryDone.length - 1)];
   return (
     <div className="k-screen">
-      <ForestScene variant="lesson" trees />
+      <NightSky variant="lesson" />
       <div className="k-stage">
         <LessonTopBar ratio={1} onExit={onExit} title="Treino de memória" />
         <div className="k-hello">
@@ -212,7 +212,7 @@ export function MemoryRound({ unit, cardIds, record, intro = false, onDone, onEx
             </div>
           ))}
         </div>
-        <ChunkyButton label="Continuar" tone="sun" size="lg" className="k-cta" onPress={onDone}>
+        <ChunkyButton label="Continuar" tone="accent" size="lg" className="k-cta" onPress={onDone}>
           Continuar
           <PlayIcon size={28} />
         </ChunkyButton>
