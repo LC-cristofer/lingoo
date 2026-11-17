@@ -17,18 +17,9 @@ type StopButtonProps = {
   size?: number;
 };
 
-const COLORS: Record<Stop["kind"], [string, string]> = {
-  song: ["#FF7A6B", "#D9544A"],
-  lesson: ["#FFC93C", "#DE9F12"],
-  story: ["#4AA8F0", "#2C82CC"],
-  challenge: ["#B57EDC", "#8F57BF"],
-};
-const LOCKED: [string, string] = ["#D5D9E0", "#AEB4BF"];
-
-/** A chunky, pressable stop: a disc on a darker edge, its name beside it. */
+/** A round, pressable stop: green when done, amber with a ring of light when current, navy when locked. */
 export function StopButton({ kind, state, label, labelSide, onPress, onLockedPress, showLabel = true, size = 76 }: StopButtonProps) {
   const locked = state === "locked";
-  const [fill, edge] = locked ? LOCKED : COLORS[kind];
   const s = state === "current" ? size + 14 : size;
   return (
     <button
@@ -45,12 +36,12 @@ export function StopButton({ kind, state, label, labelSide, onPress, onLockedPre
       style={{ width: s, height: s }}
     >
       {state === "current" ? <span className="k-stop-ring" /> : null}
-      <span className="k-stop-disc" style={{ background: fill, boxShadow: `0 9px 0 ${edge}, 0 15px 0 rgba(31,60,40,.18)` }}>
-        <svg viewBox="-24 -24 48 48" width={s * 0.62} height={s * 0.62} aria-hidden="true">
+      <span className="k-stop-disc">
+        <svg className="k-stop-glyph" viewBox="-24 -24 48 48" width={s * 0.54} height={s * 0.54} aria-hidden="true">
           {locked ? (
             <g>
-              <rect x="-11" y="-3" width="22" height="17" rx="5" fill="#fff" />
-              <path d="M-6.5 -3 v-5 a6.5 6.5 0 0 1 13 0 v5" stroke="#fff" strokeWidth="4.5" fill="none" />
+              <rect x="-11" y="-3" width="22" height="17" rx="5" fill="currentColor" />
+              <path d="M-6.5 -3 v-5 a6.5 6.5 0 0 1 13 0 v5" stroke="currentColor" strokeWidth="4.5" fill="none" />
             </g>
           ) : (
             <Glyph kind={kind} />
@@ -59,8 +50,8 @@ export function StopButton({ kind, state, label, labelSide, onPress, onLockedPre
       </span>
       {state === "done" ? (
         <span className="k-stop-check" aria-hidden="true">
-          <svg viewBox="-10 -10 20 20" width="18" height="18">
-            <path d="M-5 0 l4 4 l7 -8" stroke="#fff" strokeWidth="3.6" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+          <svg viewBox="-10 -10 20 20" width="16" height="16">
+            <path d="M-5 0 l4 4 l7 -8" stroke="currentColor" strokeWidth="3.6" fill="none" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </span>
       ) : null}

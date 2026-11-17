@@ -6,11 +6,11 @@ import { BottomNav } from "@/components/trail/kit/BottomNav";
 import { Bubble } from "@/components/trail/kit/Bubble";
 import { ChunkyButton } from "@/components/trail/kit/ChunkyButton";
 import { FeedbackSheet } from "@/components/trail/kit/FeedbackSheet";
-import { ForestScene } from "@/components/trail/kit/ForestScene";
 import { LessonTopBar } from "@/components/trail/kit/LessonTopBar";
 import { StopButton } from "@/components/trail/kit/StopButton";
 import { TopChips } from "@/components/trail/kit/TopChips";
-import { WoodSign } from "@/components/trail/kit/WoodSign";
+import { UnitHeader } from "@/components/trail/kit/UnitHeader";
+import { ProgressBar } from "@/components/trail/ProgressBar";
 
 describe("ChunkyButton", () => {
   it("is a button named by its label, at least 64 px, and calls onPress", async () => {
@@ -38,8 +38,8 @@ describe("ChunkyButton", () => {
     expect(onPress).not.toHaveBeenCalled();
   });
 
-  it("offers the four tones", () => {
-    for (const tone of ["sun", "leaf", "sky", "white"] as const) {
+  it("offers the four tones: accent (primary), success, white (secondary) and retry (never red)", () => {
+    for (const tone of ["accent", "success", "white", "retry"] as const) {
       const { unmount } = render(
         <ChunkyButton label={tone} onPress={() => {}} tone={tone}>
           x
@@ -62,6 +62,21 @@ describe("AnswerTile", () => {
     expect(tile.className).toContain("min-h-[120px]");
     await userEvent.click(tile);
     expect(onPress).toHaveBeenCalledOnce();
+  });
+
+  it.each(["idle", "correct", "wrong", "dim", "hint", "selected"] as const)("%s state is a class and a data-state", (state) => {
+    render(<AnswerTile id="bird" label="bird" state={state} onPress={() => {}} />);
+    const tile = screen.getByRole("button", { name: "bird" });
+    expect(tile).toHaveAttribute("data-state", state);
+    expect(tile).toHaveClass(`is-${state}`);
+    expect(tile).toHaveClass("k-tile");
+  });
+
+  it("only the correct state carries the check badge", () => {
+    const { container, rerender } = render(<AnswerTile id="bird" label="bird" state="correct" onPress={() => {}} />);
+    expect(container.querySelector(".k-tile-badge")).not.toBeNull();
+    rerender(<AnswerTile id="bird" label="bird" state="selected" onPress={() => {}} />);
+    expect(container.querySelector(".k-tile-badge")).toBeNull();
   });
 
   it("glows only in the hint state", () => {
@@ -94,6 +109,15 @@ describe("FeedbackSheet", () => {
     render(<FeedbackSheet kind={kind} line="Opa!" />);
     expect(screen.getByRole("status")).toHaveAttribute("data-kind", kind);
     expect(screen.queryByRole("button")).toBeNull();
+  });
+
+  it("correct is the success sheet; retry and hint share the warm retry sheet", () => {
+    const { rerender } = render(<FeedbackSheet kind="correct" line="x" onContinue={() => {}} />);
+    expect(screen.getByRole("status")).toHaveClass("k-sheet", "is-correct");
+    rerender(<FeedbackSheet kind="retry" line="x" />);
+    expect(screen.getByRole("status")).toHaveClass("is-retry");
+    rerender(<FeedbackSheet kind="hint" line="x" />);
+    expect(screen.getByRole("status")).toHaveClass("is-retry");
   });
 
   it.each(["correct", "retry", "hint"] as const)("%s uses nothing of the red family", (kind) => {
@@ -191,12 +215,30 @@ describe("other pieces", () => {
     expect(onReplay).toHaveBeenCalledOnce();
   });
 
-  it("WoodSign shows the unit, the title and the progress; locked shows a lock", () => {
-    const { rerender } = render(<WoodSign unitLabel="Unidade 1" title="Animais da floresta" done={2} total={6} />);
+  it("UnitHeader shows the unit, the title and the progress, card-less; locked shows a lock and no progress", () => {
+    const { container, rerender } = render(<UnitHeader unitLabel="Unidade 1" title="Animais da floresta" done={2} total={6} />);
     expect(screen.getByText("Unidade 1")).toBeInTheDocument();
+    expect(screen.getByText("Animais da floresta")).toBeInTheDocument();
     expect(screen.getByText("2 de 6")).toBeInTheDocument();
-    rerender(<WoodSign unitLabel="Unidade 2" title="Cores" locked />);
+    expect(container.querySelector(".k-unit-icon")).not.toBeNull();
+    expect(parseFloat((container.querySelector(".k-unit-bar > i") as HTMLElement).style.width)).toBeCloseTo(33.33, 1);
+    rerender(<UnitHeader unitLabel="Unidade 2" title="Cores" locked />);
     expect(screen.queryByText(/ de /)).toBeNull();
+    expect(container.querySelector(".k-unit-lock")).not.toBeNull();
+    expect(container.firstElementChild).toHaveClass("is-locked");
+  });
+
+  it("UnitHeader is pressable with its accessible name when onPress is given", async () => {
+    const onPress = vi.fn();
+    render(<UnitHeader unitLabel="Unidade 1" title="Animais" done={0} total={6} ariaLabel="Unidade 1, Animais" onPress={onPress} />);
+    await userEvent.click(screen.getByRole("button", { name: "Unidade 1, Animais" }));
+    expect(onPress).toHaveBeenCalledOnce();
+  });
+
+  it("the progress bar has a moving shine on its fill and keeps its value", () => {
+    const { container } = render(<ProgressBar ratio={0.5} />);
+    expect(container.querySelector(".k-bar > i .k-bar-shine")).not.toBeNull();
+    expect(screen.getByRole("progressbar")).toHaveAttribute("aria-valuenow", "50");
   });
 
   it("TopChips shows the stars and the seven days", () => {
@@ -207,8 +249,25 @@ describe("other pieces", () => {
     expect(container.querySelectorAll(".k-day.is-on")).toHaveLength(3);
   });
 
-  it("ForestScene is a decorative, hidden backdrop", () => {
-    const { container } = render(<ForestScene variant="lesson" />);
-    expect(container.firstElementChild).toHaveAttribute("aria-hidden", "true");
+  it("StopButton: the current stop has the glow ring, the done one the check, a locked one neither", () => {
+    const { container, rerender } = render(<StopButton kind="lesson" state="current" label="Lição 2" labelSide="right" onPress={() => {}} />);
+    expect(container.querySelector(".k-stop-ring")).not.toBeNull();
+    expect(container.querySelector(".k-stop-check")).toBeNull();
+    rerender(<StopButton kind="lesson" state="done" label="Lição 1" labelSide="right" onPress={() => {}} />);
+    expect(container.querySelector(".k-stop-check")).not.toBeNull();
+    expect(container.querySelector(".k-stop-ring")).toBeNull();
+    rerender(<StopButton kind="lesson" state="locked" label="Lição 3" labelSide="right" onPress={() => {}} />);
+    expect(container.querySelector(".k-stop-check, .k-stop-ring")).toBeNull();
+  });
+
+  it("no kit primitive uses a loose hex colour for its look (tokens only), except icon strokes", () => {
+    const { container } = render(
+      <>
+        <StopButton kind="song" state="done" label="a" labelSide="left" onPress={() => {}} />
+        <StopButton kind="story" state="current" label="b" labelSide="left" onPress={() => {}} />
+        <StopButton kind="challenge" state="locked" label="c" labelSide="left" onPress={() => {}} />
+      </>,
+    );
+    expect(container.querySelector("[style*='#']")).toBeNull();
   });
 });

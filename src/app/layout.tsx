@@ -26,13 +26,13 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
-  themeColor: "#5CC46B",
+  themeColor: "#0B1030",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pt-BR" className={`${baloo.variable} ${nunito.variable} h-full`}>
-      <body className="min-h-full flex flex-col bg-cream text-ink font-body">
+      <body className="min-h-full flex flex-col bg-night text-fg font-body">
         <AudioUnlock />
         <TrailProgressProvider>{children}</TrailProgressProvider>
       </body>

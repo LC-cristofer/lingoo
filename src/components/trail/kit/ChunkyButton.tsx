@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 
-export type ChunkyTone = "sun" | "leaf" | "sky" | "white" | "coral";
+/** accent: the primary action; success: a right answer or "done"; white: secondary; retry: warm, never red. */
+export type ChunkyTone = "accent" | "success" | "white" | "retry";
 export type ChunkySize = "md" | "lg" | "round";
 
 type ChunkyButtonProps = {
@@ -16,8 +17,8 @@ type ChunkyButtonProps = {
   data?: Record<`data-${string}`, string | undefined>;
 };
 
-/** The pressable of the approved look: a flat darker "edge" under it, never a blurred shadow. */
-export function ChunkyButton({ onPress, label, children, tone = "sun", size = "md", disabled = false, className = "", lang, data }: ChunkyButtonProps) {
+/** The pressable of the premium dark look: a solid darker edge under it that sinks when pressed. */
+export function ChunkyButton({ onPress, label, children, tone = "accent", size = "md", disabled = false, className = "", lang, data }: ChunkyButtonProps) {
   return (
     <button
       type="button"

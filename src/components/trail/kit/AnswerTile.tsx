@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { Animal } from "@/art/Animal";
 import type { ArtId } from "@/domain/trail/schema";
 
-export type TileState = "idle" | "correct" | "wrong" | "dim" | "hint";
+export type TileState = "idle" | "correct" | "wrong" | "dim" | "hint" | "selected";
 
 type AnswerTileProps = {
   id: ArtId;
@@ -28,7 +28,7 @@ function Badge() {
   );
 }
 
-/** A picture card: white tile on a flat edge; the hint state makes the drawing glow. */
+/** A picture card: a light card on the night sky with a solid bottom edge; the hint state makes the drawing glow. */
 export function AnswerTile({ id, onPress, state = "idle", disabled = false, label, lang, artSize = 160, className = "", data }: AnswerTileProps) {
   return (
     <button

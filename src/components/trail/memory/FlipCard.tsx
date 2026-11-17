@@ -61,7 +61,7 @@ export function FlipCard({ word, flipped, onFlip, hint, size = "md" }: FlipCardP
           type="button"
           aria-label="Ouvir a palavra"
           onClick={() => void narrator.playNarration(word.say)}
-          className="k-round k-round-sky k-mem-say min-h-16 min-w-16"
+          className="k-round k-round-accent k-mem-say min-h-16 min-w-16"
         >
           <SpeakerIcon size={30} />
         </button>

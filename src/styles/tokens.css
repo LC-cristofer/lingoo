@@ -13,8 +13,11 @@
   --card: #F4F6FF;
   --card-edge: #B8C0E6;
   --card-line: rgba(255, 255, 255, 0.7);
+  --white: #FFFFFF;
+  --highlight: rgba(255, 255, 255, 0.22);
   /* Glass and raised dark panels (chips, nav, sheet). */
-  --glass: rgba(26, 32, 78, 0.62);
+  --glass: rgba(26, 32, 78, 0.78);
+  --nav: rgba(20, 26, 66, 0.94);
   --glass-line: rgba(255, 255, 255, 0.12);
   --panel: #1B2358;
   --panel-edge: #121842;
@@ -30,6 +33,7 @@
   --accent: #4470F4;
   --accent-edge: #2F55D4;
   --accent-text: #2F55D4;
+  --accent-light: #9DB5FF;
   --accent-soft: rgba(110, 145, 255, 0.2);
   --current: #FFB84A;
   --current-edge: #E08F1E;

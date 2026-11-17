@@ -14,7 +14,7 @@ export function Bubble({ children, tail = "left", onReplay, className = "" }: Bu
     <div className={`k-bubble k-tail-${tail} ${className}`}>
       <p className="k-bubble-text">{children}</p>
       {onReplay ? (
-        <button type="button" aria-label="Ouvir de novo" onClick={onReplay} className="k-round k-round-sky min-h-16 min-w-16">
+        <button type="button" aria-label="Ouvir de novo" onClick={onReplay} className="k-round k-round-accent min-h-16 min-w-16">
           <SpeakerIcon size={30} />
         </button>
       ) : null}

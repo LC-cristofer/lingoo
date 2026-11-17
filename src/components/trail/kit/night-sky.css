@@ -8,9 +8,9 @@
 /* The layers are taller than the screen so the parallax never shows an edge. */
 .ns-layer { position: absolute; left: 0; right: 0; top: -120px; bottom: -120px; will-change: transform; }
 .ns-star { position: absolute; display: block; border-radius: 50%; background: #EEF2FF; will-change: opacity; animation: ns-twinkle var(--d, 4s) ease-in-out var(--dl, 0s) infinite; }
-.ns-star.is-s { width: 1.5px; height: 1.5px; box-shadow: 0 0 3px rgba(200, 212, 255, 0.5); }
-.ns-star.is-m { width: 2.4px; height: 2.4px; box-shadow: 0 0 5px rgba(200, 212, 255, 0.65); }
-.ns-star.is-l { width: 3.4px; height: 3.4px; box-shadow: 0 0 8px rgba(200, 212, 255, 0.7); }
+.ns-star.is-s { width: 2px; height: 2px; box-shadow: 0 0 3px rgba(200, 212, 255, 0.5); }
+.ns-star.is-m { width: 3px; height: 3px; box-shadow: 0 0 5px rgba(200, 212, 255, 0.65); }
+.ns-star.is-l { width: 4px; height: 4px; box-shadow: 0 0 8px rgba(200, 212, 255, 0.7); }
 @keyframes ns-twinkle { 0%, 100% { opacity: var(--lo, 0.2); } 50% { opacity: var(--hi, 0.8); } }
 /* A few larger, softer points of light. */
 .ns-glint { position: absolute; display: block; width: 18px; height: 18px; margin: -9px 0 0 -9px; border-radius: 50%; background: radial-gradient(closest-side, #fff 0, rgba(214, 224, 255, 0.8) 24%, rgba(160, 180, 255, 0.24) 58%, transparent); will-change: transform, opacity; animation: ns-glint var(--d, 8s) ease-in-out var(--dl, 0s) infinite; }
