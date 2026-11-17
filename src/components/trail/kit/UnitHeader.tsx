@@ -9,7 +9,9 @@ type UnitHeaderProps = {
   onPress?: () => void;
   /** Name for screen readers when the header is pressable (its text is split in parts). */
   ariaLabel?: string;
-  /** The small glyph in the icon chip; a sprout by default. */
+  /** The unit id: its sticker (/art/units/<id>.webp) fills the icon chip. */
+  unitId?: string;
+  /** The small glyph in the icon chip when there is no unitId; a sprout by default. */
   icon?: ReactNode;
 };
 
@@ -31,11 +33,16 @@ function Lock() {
 }
 
 /** The unit header, with no card: a small icon chip, "Unidade N", the title and a thin progress line. */
-export function UnitHeader({ unitLabel, title, done = 0, total = 1, locked = false, onPress, ariaLabel, icon }: UnitHeaderProps) {
+export function UnitHeader({ unitLabel, title, done = 0, total = 1, locked = false, onPress, ariaLabel, unitId, icon }: UnitHeaderProps) {
   const body = (
     <>
-      <span className="k-unit-icon" aria-hidden="true">
-        {icon ?? <Sprout />}
+      <span className={`k-unit-icon ${unitId ? "has-art" : ""}`} aria-hidden="true">
+        {unitId ? (
+          // eslint-disable-next-line @next/next/no-img-element -- a small fixed local sticker
+          <img src={`/art/units/${unitId}.webp`} alt="" width={48} height={48} decoding="async" />
+        ) : (
+          (icon ?? <Sprout />)
+        )}
       </span>
       <span className="k-unit-text">
         <small>{unitLabel}</small>

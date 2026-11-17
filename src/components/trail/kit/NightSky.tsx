@@ -117,7 +117,7 @@ type NightSkyProps = {
 };
 
 /**
- * The night sky behind every screen: gradient, two breathing pools of light, a vignette that calms the
+ * The night sky behind every screen: a painted base (portrait or landscape), two breathing pools of light, a vignette that calms the
  * centre, an organic deterministic star field in two layers, three soft glints and a rare shooting star.
  * Fixed to the viewport; only transform and opacity animate; reduced motion freezes a complete still.
  */
@@ -137,6 +137,7 @@ export function NightSky({ variant = "map", scroll }: NightSkyProps) {
   );
   return (
     <div className={`ns ns-${variant} ${reduced ? "is-still" : ""}`} data-variant={variant} aria-hidden="true">
+      <i className="ns-paint" />
       <i className="ns-pool ns-pool-a" />
       <i className="ns-pool ns-pool-b" />
       <div className="ns-layer is-far" style={layerStyle(0.015)}>

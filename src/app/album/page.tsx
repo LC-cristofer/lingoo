@@ -74,7 +74,7 @@ export default function AlbumPage() {
           return (
             <section key={u.unitId} className="k-album-unit" aria-label={`Unidade ${u.number}, ${u.title}`}>
               <div className="k-album-sign">
-                <UnitHeader unitLabel={`Unidade ${u.number}`} title={u.title} done={earned ? 1 : 0} total={1} />
+                <UnitHeader unitLabel={`Unidade ${u.number}`} title={u.title} unitId={u.unitId} done={earned ? 1 : 0} total={1} />
               </div>
               {sticker ? (
                 <button
@@ -128,7 +128,7 @@ export default function AlbumPage() {
         {soon.length > 0 ? (
           <div className="k-album-soon">
             {soon.map((u) => (
-              <UnitHeader key={u.unitId} unitLabel={`Unidade ${u.number}`} title={u.title} locked />
+              <UnitHeader key={u.unitId} unitLabel={`Unidade ${u.number}`} title={u.title} unitId={u.unitId} locked />
             ))}
           </div>
         ) : null}

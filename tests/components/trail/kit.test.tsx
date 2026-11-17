@@ -228,6 +228,17 @@ describe("other pieces", () => {
     expect(container.firstElementChild).toHaveClass("is-locked");
   });
 
+  it("UnitHeader shows the unit's sticker in the icon chip when given a unitId, dimmed when locked", () => {
+    const { container, rerender } = render(<UnitHeader unitLabel="Unidade 1" title="Animais" unitId="forest-animals" done={0} total={6} />);
+    const img = container.querySelector(".k-unit-icon img") as HTMLImageElement;
+    expect(img).not.toBeNull();
+    expect(img.getAttribute("src")).toBe("/art/units/forest-animals.webp");
+    expect(img).toHaveAttribute("alt", "");
+    rerender(<UnitHeader unitLabel="Unidade 2" title="Cores" unitId="colors" locked />);
+    expect(container.firstElementChild).toHaveClass("is-locked");
+    expect(container.querySelector(".k-unit-icon img")!.getAttribute("src")).toBe("/art/units/colors.webp");
+  });
+
   it("UnitHeader is pressable with its accessible name when onPress is given", async () => {
     const onPress = vi.fn();
     render(<UnitHeader unitLabel="Unidade 1" title="Animais" done={0} total={6} ariaLabel="Unidade 1, Animais" onPress={onPress} />);

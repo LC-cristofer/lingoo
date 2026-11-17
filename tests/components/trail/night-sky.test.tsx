@@ -74,6 +74,16 @@ describe("NightSky", () => {
     expect(count("quiet").stars).toBeLessThan(count("lesson").stars);
   });
 
+  it("has a painted base layer under the star field, in every variant", () => {
+    mockMotion(false);
+    for (const v of ["start", "map", "lesson", "quiet"] as const) {
+      const { container, unmount } = render(<NightSky variant={v} />);
+      const root = container.firstElementChild!;
+      expect(root.firstElementChild).toHaveClass("ns-paint");
+      unmount();
+    }
+  });
+
   it("renders the same stars on every render (deterministic markup)", () => {
     mockMotion(false);
     const a = render(<NightSky variant="map" />).container.innerHTML;

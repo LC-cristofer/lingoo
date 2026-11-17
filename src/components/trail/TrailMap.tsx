@@ -39,7 +39,7 @@ const TAIL = 70;
 type Spot =
   | { type: "stop"; key: string; x: number; y: number; stop: Stop; status: StopStatus; label: string; side: "left" | "right" }
   | { type: "ghost"; key: string; x: number; y: number; kind: Stop["kind"]; unitTitle: string }
-  | { type: "sign"; key: string; y: number; unitNumber: number; title: string };
+  | { type: "sign"; key: string; y: number; unitId: string; unitNumber: number; title: string };
 
 type Layout = {
   spots: Spot[];
@@ -68,7 +68,7 @@ function buildLayout(path: PathUnit[], units: Record<string, Unit>, progress: Pr
     if (index > 0) {
       // The sign sits on the trail, then the next stops follow.
       y += SIGN_DROP;
-      spots.push({ key: `sign-${entry.unitId}`, type: "sign", y, unitNumber: index + 1, title: entry.title });
+      spots.push({ key: `sign-${entry.unitId}`, type: "sign", y, unitId: entry.unitId, unitNumber: index + 1, title: entry.title });
       points.push([50, y]);
       y += AFTER_SIGN;
     }
@@ -169,6 +169,7 @@ export function TrailMap({ path, units, progress, onOpenStop }: TrailMapProps) {
           <div className="k-trailmap-sign">
             <UnitHeader
               unitLabel="Unidade 1"
+              unitId={first.unitId}
               title={first.title}
               done={firstDone}
               total={firstUnit.stops.length}
@@ -198,7 +199,7 @@ export function TrailMap({ path, units, progress, onOpenStop }: TrailMapProps) {
             if (spot.type === "sign") {
               return (
                 <div key={spot.key} className="k-trail-sign" style={{ top: spot.y }}>
-                  <UnitHeader unitLabel={`Unidade ${spot.unitNumber}`} title={spot.title} locked ariaLabel={`Unidade ${spot.unitNumber}, ${spot.title}`} onPress={soon} />
+                  <UnitHeader unitLabel={`Unidade ${spot.unitNumber}`} title={spot.title} unitId={spot.unitId} locked ariaLabel={`Unidade ${spot.unitNumber}, ${spot.title}`} onPress={soon} />
                 </div>
               );
             }

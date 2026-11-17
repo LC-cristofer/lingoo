@@ -104,6 +104,9 @@ button.k-unit { cursor: pointer; }
 .k-unit::after { content: ""; position: absolute; left: 0; bottom: -1px; width: 22%; height: 1px; background: var(--accent); opacity: 0.9; }
 .k-unit.is-locked::after { display: none; }
 .k-unit-icon { flex: none; width: 44px; height: 44px; border-radius: var(--r-1); display: grid; place-items: center; background: var(--accent-soft); color: var(--text-1); }
+.k-unit-icon.has-art, .k-unit.is-locked .k-unit-icon.has-art { width: 52px; height: 52px; background: none; }
+.k-unit-icon img { display: block; width: 48px; height: 48px; object-fit: contain; }
+.k-unit.is-locked .k-unit-icon img { opacity: 0.45; filter: grayscale(0.6); }
 .k-unit-text { flex: 1; min-width: 0; }
 .k-unit-text small { display: block; font-weight: 800; font-size: var(--fs-caption); line-height: var(--lh-caption); color: var(--text-2); }
 .k-unit-text strong { display: block; font-family: var(--font-display); font-weight: 800; font-size: var(--fs-subtitle); line-height: 1.1; color: var(--text-1); }
