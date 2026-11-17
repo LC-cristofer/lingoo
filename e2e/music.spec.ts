@@ -46,7 +46,7 @@ test("music follows the screens: map, lesson (silent), album and Memória", asyn
 
   await test.step("the start screen is silent, even after a tap", async () => {
     await page.goto("/");
-    await page.getByRole("heading", { name: "Lingoo" }).click();
+    await page.getByRole("heading", { name: "NESTOY" }).click();
     await page.waitForTimeout(800);
     expect(seen.music).toEqual([]);
   });

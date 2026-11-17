@@ -43,14 +43,6 @@ const mix = (a: string, b: string, t: number) => {
   return `#${A.map((v, i) => Math.round(v + (B[i] - v) * t).toString(16).padStart(2, "0")).join("")}`;
 };
 
-function rng(seed: number) {
-  let s = seed >>> 0 || 1;
-  return () => {
-    s = (s * 1664525 + 1013904223) >>> 0;
-    return s / 4294967296;
-  };
-}
-
 /** A gently rolling edge, sampled so a polyline reads as a smooth hill. */
 function ridge(w: number, y0: number, a: number, ph: number, step = 8): P[] {
   const pts: P[] = [];

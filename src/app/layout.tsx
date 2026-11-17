@@ -15,8 +15,8 @@ const nunito = Nunito({
 });
 
 export const metadata: Metadata = {
-  title: "Lingoo",
-  description: "Aprenda inglês brincando",
+  title: "NESTOY",
+  description: "NESTOY, um ninho de descobertas: inglês para crianças, brincando.",
   manifest: "/manifest.webmanifest",
   icons: { icon: "/icon.svg" },
 };

@@ -45,8 +45,8 @@ export default function Home() {
       <Scatter items={TABLET_TREES} className="k-only-tablet" />
       <main className="k-start">
         <div className="k-start-text">
-          <h1 className="k-logo">Lingoo</h1>
-          <p className="k-tagline">Inglês para brincar</p>
+          <h1 className="k-logo">NESTOY</h1>
+          <p className="k-tagline">Um ninho de descobertas</p>
         </div>
         <div className="k-start-cast" aria-hidden="true">
           <span className="k-cast-l">
