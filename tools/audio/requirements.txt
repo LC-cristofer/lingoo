@@ -5,3 +5,4 @@ faster-whisper
 numpy
 soundfile
 setuptools<81
+mido

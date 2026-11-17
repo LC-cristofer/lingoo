@@ -1,9 +1,10 @@
 """Check every generated line with faster-whisper and flag poor matches.
 
-    python tools/audio/verify.py [--only id1,id2]
+    python tools/audio/verify.py [--only id1,id2] [--engine eleven|chatterbox]
 
-Lines under 0.80 similarity are regenerated with seeds 43 and 44 (best take kept).
-Lines still under 0.80 are written to tools/audio/review.md.
+Lines under 0.80 similarity are regenerated with seeds 43 and 44 (best take kept), with the same
+engine that made them (ElevenLabs by default). Lines still under 0.80 are written to
+tools/audio/review.md; a run with --only never deletes that file.
 """
 import argparse
 import difflib
@@ -43,6 +44,7 @@ def check(line):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--only")
+    ap.add_argument("--engine", choices=["eleven", "chatterbox"], default="eleven")
     args = ap.parse_args()
     lines = load_lines()
     if args.only:
@@ -61,7 +63,10 @@ def main():
             print(f"ok   {best:.2f} {l['id']} {l['text']}", flush=True)
             continue
         retried += 1
-        from generate import synth
+        if args.engine == "eleven":
+            from generate_eleven import synth
+        else:
+            from generate import synth
         best_copy = os.path.join(tempfile.mkdtemp(), "best.mp3")
         shutil.copy(path, best_copy)
         for seed in RETRY_SEEDS:
@@ -83,7 +88,7 @@ def main():
             f.write("# Lines to review by ear\n\nSimilarity below 0.80 after retries (seeds 43 and 44).\n\n")
             for l, s, h in flagged:
                 f.write(f"- `{l['id']}` ({l['lang']}) score {s:.2f}\n  - text: {l['text']}\n  - heard: {h.strip()}\n")
-    elif os.path.exists(review):
+    elif os.path.exists(review) and not args.only:
         os.remove(review)
     print(f"ok {ok}, retried {retried}, flagged {len(flagged)}")
 
