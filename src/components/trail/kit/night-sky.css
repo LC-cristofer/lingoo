@@ -1,0 +1,44 @@
+/* NightSky: the fixed night sky behind every screen. Only transform and opacity animate. */
+.ns { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; background: linear-gradient(180deg, var(--sky-0) 0%, var(--sky-1) 48%, var(--sky-2) 100%); }
+.ns-pool { position: absolute; display: block; border-radius: 50%; will-change: opacity; animation: ns-breathe 24s ease-in-out infinite; }
+/* Cobalt bloom up high, violet bloom down low; they swap intensity every 12 s. */
+.ns-pool-a { left: -30%; top: -22%; width: 160%; height: 70%; background: radial-gradient(closest-side, rgba(54, 92, 230, 0.5), transparent); opacity: 0.95; }
+.ns-pool-b { left: -20%; bottom: -26%; width: 150%; height: 66%; background: radial-gradient(closest-side, rgba(130, 70, 215, 0.55), transparent); opacity: 0.3; animation-delay: -12s; }
+@keyframes ns-breathe { 0%, 100% { opacity: 0.22; } 50% { opacity: 1; } }
+/* The layers are taller than the screen so the parallax never shows an edge. */
+.ns-layer { position: absolute; left: 0; right: 0; top: -120px; bottom: -120px; will-change: transform; }
+.ns-star { position: absolute; display: block; border-radius: 50%; background: #EEF2FF; will-change: opacity; animation: ns-twinkle var(--d, 4s) ease-in-out var(--dl, 0s) infinite; }
+.ns-star.is-s { width: 1.5px; height: 1.5px; box-shadow: 0 0 3px rgba(200, 212, 255, 0.5); }
+.ns-star.is-m { width: 2.4px; height: 2.4px; box-shadow: 0 0 5px rgba(200, 212, 255, 0.65); }
+.ns-star.is-l { width: 3.4px; height: 3.4px; box-shadow: 0 0 8px rgba(200, 212, 255, 0.7); }
+@keyframes ns-twinkle { 0%, 100% { opacity: var(--lo, 0.2); } 50% { opacity: var(--hi, 0.8); } }
+/* A few larger, softer points of light. */
+.ns-glint { position: absolute; display: block; width: 18px; height: 18px; margin: -9px 0 0 -9px; border-radius: 50%; background: radial-gradient(closest-side, #fff 0, rgba(214, 224, 255, 0.8) 24%, rgba(160, 180, 255, 0.24) 58%, transparent); will-change: transform, opacity; animation: ns-glint var(--d, 8s) ease-in-out var(--dl, 0s) infinite; }
+@keyframes ns-glint { 0%, 100% { opacity: 0.35; transform: scale(0.85); } 50% { opacity: 0.95; transform: scale(1.1); } }
+/* Calms the centre, where the content lives, and darkens the corners. */
+.ns-vignette { position: absolute; inset: 0; display: block; background: radial-gradient(ellipse 80% 60% at 50% 52%, rgba(8, 11, 36, 0.38) 0%, rgba(8, 11, 36, 0.14) 55%, rgba(4, 6, 22, 0.5) 100%); }
+/* One slow shooting star, about every 26 s; visible for ~2.3 s of that. */
+.ns-shoot { position: absolute; left: 82%; top: 9%; display: block; width: 110px; height: 2px; border-radius: 2px; background: linear-gradient(90deg, transparent, rgba(190, 205, 255, 0.3) 55%, rgba(255, 255, 255, 0.9)); opacity: 0; will-change: transform, opacity; animation: ns-shoot 26s cubic-bezier(0.3, 0.1, 0.5, 1) 7s infinite; }
+.ns-shoot::after { content: ""; position: absolute; right: -2px; top: -2px; width: 6px; height: 6px; border-radius: 50%; background: #fff; box-shadow: 0 0 8px 2px rgba(190, 210, 255, 0.6); }
+@keyframes ns-shoot {
+  0% { transform: translate3d(0, 0, 0) rotate(155deg); opacity: 0; }
+  1.5% { opacity: 0.9; }
+  8% { opacity: 0.7; }
+  9% { transform: translate3d(-250px, 117px, 0) rotate(155deg); opacity: 0; }
+  100% { transform: translate3d(-250px, 117px, 0) rotate(155deg); opacity: 0; }
+}
+/* Calmer variants: softer pools. */
+.ns-lesson .ns-pool, .ns-quiet .ns-pool { animation-duration: 32s; }
+.ns-quiet .ns-pool-a { opacity: 0.6; }
+/* Reduced motion: a complete, frozen still (stars at their mid brightness, pools half lit). */
+.ns.is-still .ns-pool, .ns.is-still .ns-star, .ns.is-still .ns-glint { animation: none; }
+.ns.is-still .ns-pool-a { opacity: 0.55; }
+.ns.is-still .ns-pool-b { opacity: 0.5; }
+.ns.is-still .ns-glint { opacity: 0.7; }
+@media (prefers-reduced-motion: reduce) {
+  .ns-pool, .ns-star, .ns-glint { animation: none; }
+  .ns-pool-a { opacity: 0.55; }
+  .ns-pool-b { opacity: 0.5; }
+  .ns-glint { opacity: 0.7; }
+  .ns-shoot { display: none; }
+}

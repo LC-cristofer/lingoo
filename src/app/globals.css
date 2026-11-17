@@ -1,7 +1,10 @@
 @import "tailwindcss";
+/* Design tokens (colour, type, space, radii, elevation, motion): the single source for every screen. */
+@import "../styles/tokens.css";
 /* Gatinho and animal art animations (blink, tail, jump, glow). */
 @import "../art/art.css";
 /* The visual kit of the approved look (buttons, tiles, sheets, signs, nav, scenes). */
+@import "../components/trail/kit/night-sky.css";
 @import "../components/trail/kit/kit.css";
 @import "../components/trail/trail-map.css";
 
