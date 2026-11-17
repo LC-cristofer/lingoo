@@ -16,6 +16,10 @@ export interface Narrator {
   /** Silences the voice and any sound effect that is still playing. */
   stop(): void;
   isUnlocked(): boolean;
+  /** True while a narration is going (sound effects do not count). The background music ducks on it. */
+  isSpeaking(): boolean;
+  /** Calls `listener` whenever isSpeaking() changes; returns the unsubscribe. */
+  onSpeakingChange(listener: (speaking: boolean) => void): () => void;
 }
 
 export interface NarratorDeps {
@@ -53,6 +57,23 @@ export function createNarrator(deps: NarratorDeps = {}): Narrator {
   let unlocked = false;
   let stopCurrent: (() => void) | null = null;
 
+  const listeners = new Set<(speaking: boolean) => void>();
+  let lastSpeaking = false;
+  /** Tells the listeners when "a narration is going" flipped. Called after the state settled, so a narration
+   * replacing another one never reports a silence in between. */
+  function notifySpeaking() {
+    const now = stopCurrent !== null;
+    if (now === lastSpeaking) return;
+    lastSpeaking = now;
+    for (const listener of [...listeners]) {
+      try {
+        listener(now);
+      } catch {
+        // a listener must never break the narrator
+      }
+    }
+  }
+
   const getSpeech = () => (deps.speech !== undefined ? deps.speech : defaultSpeech());
 
   /** Sound effects still sounding, so stop() can cut them. */
@@ -68,6 +89,7 @@ export function createNarrator(deps: NarratorDeps = {}): Narrator {
   /** Silences the voice and every sound effect (leaving a screen). */
   function stop() {
     stopVoice();
+    notifySpeaking();
     for (const audio of sfxPlaying) {
       try {
         audio.pause();
@@ -215,6 +237,7 @@ export function createNarrator(deps: NarratorDeps = {}): Narrator {
   async function playNarration(narration: Narration, options?: { ifIdle?: boolean }): Promise<void> {
     if (!unlocked) {
       stopVoice();
+      notifySpeaking();
       return;
     }
     if (options?.ifIdle && stopCurrent) return;
@@ -228,6 +251,7 @@ export function createNarrator(deps: NarratorDeps = {}): Narrator {
       fn?.();
     };
     stopCurrent = halt;
+    notifySpeaking();
     const slot: Slot = {
       arm: (h) => {
         inner = h;
@@ -247,6 +271,7 @@ export function createNarrator(deps: NarratorDeps = {}): Narrator {
       }
     } finally {
       if (stopCurrent === halt && !inner) stopCurrent = null;
+      notifySpeaking();
     }
   }
 
@@ -284,6 +309,11 @@ export function createNarrator(deps: NarratorDeps = {}): Narrator {
     playSfx,
     stop,
     isUnlocked: () => unlocked,
+    isSpeaking: () => stopCurrent !== null,
+    onSpeakingChange(listener) {
+      listeners.add(listener);
+      return () => void listeners.delete(listener);
+    },
   };
 }
 

@@ -2,11 +2,13 @@
 
 import { useEffect, useMemo } from "react";
 import { narrator } from "@/audio/narrator";
+import { useBackgroundMusic } from "@/audio/useBackgroundMusic";
 import { Sticker } from "@/art/scenes/Sticker";
 import { DaysCalendar } from "@/components/trail/DaysCalendar";
 import { useToday } from "@/components/trail/useToday";
 import { useTrailProgress } from "@/components/trail/TrailProgressProvider";
 import { BottomNav } from "@/components/trail/kit/BottomNav";
+import { MusicToggle } from "@/components/trail/kit/MusicToggle";
 import { ForestScene } from "@/components/trail/kit/ForestScene";
 import { Scatter, type ScatterItem } from "@/components/trail/kit/Scatter";
 import { WoodSign } from "@/components/trail/kit/WoodSign";
@@ -33,6 +35,7 @@ const LEGACY_STICKERS: Record<string, { image: string; name: (lines: ReturnType<
 type AlbumUnit = { unitId: string; number: number; title: string; sticker: { id: string; art: ArtId; name: Narration } | null };
 
 export default function AlbumPage() {
+  useBackgroundMusic("album");
   const { progress, hydrated } = useTrailProgress();
   const shown = hydrated ? progress : EMPTY;
   const today = useToday();
@@ -72,6 +75,7 @@ export default function AlbumPage() {
       <Scatter items={DECOR} />
       <div className="k-fixed-chips">
         <DaysCalendar progress={shown} />
+        <MusicToggle />
       </div>
       <main className="k-album">
         {withContent.map((u) => {

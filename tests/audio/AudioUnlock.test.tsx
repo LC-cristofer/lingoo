@@ -1,7 +1,10 @@
 import { fireEvent, render } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { AudioUnlock } from "@/audio/AudioUnlock";
+import { music } from "@/audio/music";
 import { narrator } from "@/audio/narrator";
+
+vi.mock("@/audio/music", () => ({ music: { prepare: vi.fn() } }));
 
 let unlocked = false;
 vi.mock("@/audio/narrator", () => ({
@@ -31,6 +34,13 @@ describe("AudioUnlock (mounted once in the root layout)", () => {
     fireEvent.click(document.body);
     fireEvent.click(document.body);
     expect(narrator.unlock).toHaveBeenCalledTimes(1);
+  });
+
+  it("also starts the music's audio context inside the same gesture", () => {
+    vi.mocked(music.prepare).mockClear();
+    render(<AudioUnlock />);
+    fireEvent.click(document.body);
+    expect(music.prepare).toHaveBeenCalledTimes(1);
   });
 
   it("unlocks on the first touchend or keydown", () => {

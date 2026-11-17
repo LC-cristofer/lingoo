@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { music } from "@/audio/music";
 import { narrator } from "@/audio/narrator";
 
 // User-gesture events: unlock() must run inside one so iOS lets speech start. pointerdown is
@@ -16,6 +17,8 @@ export function useUnlockOnTouch() {
     function unlock() {
       off();
       narrator.unlock();
+      // The music needs its audio context started inside this same gesture (iOS).
+      music.prepare();
     }
     GESTURES.forEach((t) => document.addEventListener(t, unlock, true));
     return off;

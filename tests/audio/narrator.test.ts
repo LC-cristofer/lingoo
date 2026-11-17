@@ -439,3 +439,103 @@ describe("narrator", () => {
     });
   });
 });
+
+describe("narrator speaking state (the music ducks on it)", () => {
+  const one = { lang: "en-US" as const, text: "bear" };
+  const two = [one, { lang: "en-US" as const, text: "frog" }];
+
+  function setup() {
+    const made: ReturnType<typeof fakeAudio>[] = [];
+    const createAudio = (() => {
+      const audio = fakeAudio();
+      made.push(audio);
+      return audio;
+    }) as unknown as (src: string) => HTMLAudioElement;
+    const n = createNarrator({ speech: null, createAudio });
+    n.unlock();
+    const calls: boolean[] = [];
+    const off = n.onSpeakingChange((s) => calls.push(s));
+    return { made, n, calls, off };
+  }
+
+  it("is idle at first and reports true while a narration runs, false when it ends", async () => {
+    const { made, n, calls } = setup();
+    expect(n.isSpeaking()).toBe(false);
+    const p = n.playNarration([one]);
+    expect(n.isSpeaking()).toBe(true);
+    made[0].onended!();
+    await p;
+    expect(n.isSpeaking()).toBe(false);
+    expect(calls).toEqual([true, false]);
+  });
+
+  it("stays speaking between the segments of one narration (no flicker)", async () => {
+    const { made, n, calls } = setup();
+    const p = n.playNarration(two);
+    made[0].onended!();
+    await nextTask();
+    expect(made).toHaveLength(2);
+    expect(calls).toEqual([true]);
+    made[1].onended!();
+    await p;
+    expect(calls).toEqual([true, false]);
+  });
+
+  it("a newer narration replaces the running one without reporting a silence in between", async () => {
+    const { made, n, calls } = setup();
+    const first = n.playNarration(two);
+    const second = n.playNarration([one]);
+    made.at(-1)!.onended!();
+    await Promise.all([first, second]);
+    expect(calls).toEqual([true, false]);
+  });
+
+  it("stop() reports false once", async () => {
+    const { n, calls } = setup();
+    const p = n.playNarration([one]);
+    n.stop();
+    n.stop();
+    await p;
+    expect(calls).toEqual([true, false]);
+  });
+
+  it("a narration dropped before unlock or by ifIdle reports nothing extra", async () => {
+    const made: ReturnType<typeof fakeAudio>[] = [];
+    const createAudio = (() => {
+      const audio = fakeAudio();
+      made.push(audio);
+      return audio;
+    }) as unknown as (src: string) => HTMLAudioElement;
+    const n = createNarrator({ speech: null, createAudio });
+    const calls: boolean[] = [];
+    n.onSpeakingChange((s) => calls.push(s));
+    await n.playNarration([one]);
+    expect(calls).toEqual([]);
+    n.unlock();
+    const p = n.playNarration([one]);
+    await n.playNarration([one], { ifIdle: true });
+    expect(calls).toEqual([true]);
+    n.stop();
+    await p;
+  });
+
+  it("sound effects do not count as speaking", () => {
+    const { calls, n } = setup();
+    n.playSfx("tap");
+    expect(n.isSpeaking()).toBe(false);
+    expect(calls).toEqual([]);
+  });
+
+  it("unsubscribes, and a throwing listener does not break the narrator", async () => {
+    const { made, n, calls, off } = setup();
+    n.onSpeakingChange(() => {
+      throw new Error("boom");
+    });
+    off();
+    const p = n.playNarration([one]);
+    made[0].onended!();
+    await p;
+    expect(calls).toEqual([]);
+    expect(n.isSpeaking()).toBe(false);
+  });
+});

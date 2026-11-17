@@ -13,6 +13,7 @@ import { DaysCalendar } from "./DaysCalendar";
 import { useToday } from "./useToday";
 import { BottomNav } from "./kit/BottomNav";
 import { SpeakerIcon } from "./icons";
+import { MusicToggle } from "./kit/MusicToggle";
 import { ForestScene } from "./kit/ForestScene";
 import { Scatter, type ScatterItem } from "./kit/Scatter";
 import { StopButton } from "./kit/StopButton";
@@ -215,6 +216,7 @@ export function TrailMap({ path, units, progress, onOpenStop }: TrailMapProps) {
 
       <div className="k-fixed-chips">
         <DaysCalendar progress={progress} />
+        <MusicToggle />
       </div>
 
       <main className="k-trailmap-body">

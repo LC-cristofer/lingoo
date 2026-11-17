@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useMemo } from "react";
+import { useBackgroundMusic } from "@/audio/useBackgroundMusic";
 import { TrailMap } from "@/components/trail/TrailMap";
 import { useTrailProgress } from "@/components/trail/TrailProgressProvider";
 import { getPath, getUnit } from "@/domain/trail/content";
@@ -13,6 +14,7 @@ const EMPTY = emptyProgress();
 
 export default function MapPage() {
   const router = useRouter();
+  useBackgroundMusic("trail");
   const { progress, hydrated } = useTrailProgress();
   // One trail per world: this page shows the first world (the forest).
   const { path, units } = useMemo(() => {

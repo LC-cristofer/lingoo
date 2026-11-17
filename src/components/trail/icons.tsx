@@ -49,3 +49,20 @@ export function ArrowIcon({ size = 36 }: { size?: number }) {
     </svg>
   );
 }
+
+/** A music note; with `off`, a slash across it. */
+export function MusicIcon({ size = 36, off = false }: { size?: number; off?: boolean }) {
+  return (
+    <svg {...base} width={size} height={size} data-music={off ? "off" : "on"}>
+      <path d="M9 17.5V5.5l10-2v12" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+      <ellipse cx="6.8" cy="17.6" rx="3.1" ry="2.5" fill="currentColor" />
+      <ellipse cx="16.8" cy="15.6" rx="3.1" ry="2.5" fill="currentColor" />
+      {off ? (
+        <>
+          <path d="M4 3.5l16.5 17" stroke="#fff" strokeWidth="5.4" strokeLinecap="round" />
+          <path d="M4 3.5l16.5 17" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" />
+        </>
+      ) : null}
+    </svg>
+  );
+}

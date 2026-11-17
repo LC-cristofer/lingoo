@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Cat } from "@/art/Cat";
 import { narrator } from "@/audio/narrator";
+import { useBackgroundMusic } from "@/audio/useBackgroundMusic";
 import { getLines, getPath, getUnit } from "@/domain/trail/content";
 import { daysBetween, dueCards, nextDue, ROUND_LIMIT, unitOfCard, wordOfCard, type CardId } from "@/domain/trail/memory";
 import type { ArtId, Narration, Unit } from "@/domain/trail/schema";
@@ -12,6 +13,7 @@ import { BottomNav } from "../kit/BottomNav";
 import { Bubble } from "../kit/Bubble";
 import { ChunkyButton } from "../kit/ChunkyButton";
 import { ForestScene } from "../kit/ForestScene";
+import { MusicToggle } from "../kit/MusicToggle";
 import { Scatter, type ScatterItem } from "../kit/Scatter";
 import { NarrationText } from "../NarrationText";
 import { useToday } from "../useToday";
@@ -87,6 +89,9 @@ export function MemoryHome() {
 
   useEffect(() => () => narrator.stop(), []);
 
+  // The round is an exercise (the child must hear the English words): music only on the home.
+  useBackgroundMusic(round === null ? "album" : null);
+
   if (round !== null && unit) {
     return <MemoryRound unit={unit} cardIds={round} record onDone={() => setRound(null)} onExit={() => setRound(null)} />;
   }
@@ -108,6 +113,7 @@ export function MemoryHome() {
       <Scatter items={TABLET_DECOR} className="k-only-tablet" />
       <div className="k-fixed-chips">
         <DaysCalendar progress={hydrated ? progress : { ...progress, completedStops: {}, daysPlayed: [] }} />
+        <MusicToggle />
       </div>
       <main className={`k-mtab is-${kind}`}>
         <div className="k-mtab-side">
