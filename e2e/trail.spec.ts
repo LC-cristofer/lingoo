@@ -181,7 +181,7 @@ test("one full unit: song, three lessons, story, challenge, memory and persisten
     // A locked stop (the next one up the stairs) does not open: the card says what to do instead.
     await page.getByRole("button", { name: labelOf(stopOf("lesson-1")), exact: true }).click({ timeout: 20_000 });
     await expect(page).toHaveURL(/\/farol$/);
-    await expect(page.locator('[data-testid="nino-card"]:visible')).toContainText("Primeiro a parada que está brilhando!");
+    await expect(page.locator('[data-testid="nino-card"]:visible')).toContainText("Essa parada ainda está trancada. Termine a anterior primeiro!");
   });
 
   await test.step("back from the farol the island is usable again (no veil, pins clickable)", async () => {
@@ -327,12 +327,13 @@ for (const vp of [
           if (r.bottom <= 0 || r.top >= innerHeight || r.right <= 0 || r.left >= innerWidth) continue; // not in the visible area
           const isTile = el.hasAttribute("data-card");
           if (isTile) tiles.push(Math.round(Math.min(r.width, r.height)));
-          const min = isTile ? 120 : 64;
+          const min = isTile ? (innerHeight <= 520 ? 96 : 120) : 64; // a phone on its side fits cards of 96 px and up
           if (r.width < min - 0.5 || r.height < min - 0.5) bad.push(`${el.getAttribute("aria-label") ?? el.textContent} is ${Math.round(r.width)}x${Math.round(r.height)}`);
         }
-        return { scrollWidth: de.scrollWidth, innerWidth, bad, tiles };
+        return { scrollWidth: de.scrollWidth, scrollHeight: de.scrollHeight, innerWidth, innerHeight, bad, tiles };
       });
       expect(m.scrollWidth, `${label}: horizontal scroll`).toBeLessThanOrEqual(m.innerWidth);
+      if (m.innerHeight <= 520) expect(m.scrollHeight, `${label}: vertical scroll on a phone on its side`).toBeLessThanOrEqual(m.innerHeight + 1);
       expect(m.bad, `${label}: small controls`).toEqual([]);
       if (expectTiles) expect(m.tiles.length, `${label}: tiles`).toBe(4);
     };

@@ -99,4 +99,11 @@ describe("createSettingsStore", () => {
     const st = memStorage({ [SETTINGS_KEY]: JSON.stringify({ version: 1, ambient: "x", pauseMinutes: 7, bedtime: "20:00", openingSeen: true }) });
     expect(createSettingsStore(st).load()).toMatchObject({ ambient: "dia", pauseMinutes: 0, bedtime: "20:00", openingSeen: true });
   });
+  it("lastVisit must be a local date key, anything else is forgotten", () => {
+    const load = (lastVisit: unknown) => createSettingsStore(memStorage({ [SETTINGS_KEY]: JSON.stringify({ version: 1, lastVisit }) })).load().lastVisit;
+    expect(load("2026-11-18")).toBe("2026-11-18");
+    expect(load("2026-11-18T10:00:00.000Z")).toBeNull();
+    expect(load("yesterday")).toBeNull();
+    expect(load(20261118)).toBeNull();
+  });
 });

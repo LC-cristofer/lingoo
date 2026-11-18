@@ -68,4 +68,27 @@ describe("ambience", () => {
     expect(made).toHaveLength(0);
     expect(amb.current()).toBeNull();
   });
+
+  it("a stop in the middle of the fade-in fades from where it was and ends silent", () => {
+    const { amb, made } = make();
+    amb.play("day");
+    vi.advanceTimersByTime(500);
+    amb.stop();
+    vi.advanceTimersByTime(2000);
+    expect(made[0].volume).toBe(0);
+    expect(made[0].pause).toHaveBeenCalled();
+  });
+
+  it("a fast day-night-day toggle never leaves the new voice dragged down by an old ramp", () => {
+    const { amb, made } = make();
+    amb.play("day");
+    vi.advanceTimersByTime(300);
+    amb.play("night");
+    vi.advanceTimersByTime(300);
+    amb.stop();
+    amb.play("day");
+    vi.advanceTimersByTime(3000);
+    expect(made[2].volume).toBeCloseTo(0.35);
+    expect(made[1].volume).toBe(0);
+  });
 });

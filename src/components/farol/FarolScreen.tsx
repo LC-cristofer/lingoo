@@ -37,7 +37,8 @@ function subscribeSide(cb: () => void) {
 }
 const sideNow = () => typeof window !== "undefined" && !!window.matchMedia && window.matchMedia(SIDE_QUERY).matches;
 
-type Message = { title: string; text: string; chip: string };
+/** A line that replaces the card's own text for a moment; the chip always follows the progress. */
+type Message = { title: string; text: string };
 
 /** The inside of the Farol das Línguas: the spiral staircase is the unit's trail, one landing per stop. */
 export function FarolScreen() {
@@ -56,7 +57,8 @@ export function FarolScreen() {
   const currentIndex = Math.max(0, statuses.indexOf("current") === -1 ? stops.length - 1 : statuses.indexOf("current"));
   const level = unit ? farolLevel(p, unit) : 1;
 
-  const intro: Message = { title: "Farol das Línguas", text: `Unidade 1: ${unitTitle}`, chip: `${doneCount} de ${stops.length}` };
+  const intro: Message = { title: "Farol das Línguas", text: `Unidade 1: ${unitTitle}` };
+  const chip = `${doneCount} de ${stops.length}`;
   const [message, setMessage] = useState<Message | null>(null);
   const [pose, setPose] = useState<NinoPose>("idle");
   const [ready, setReady] = useState(false);
@@ -81,6 +83,7 @@ export function FarolScreen() {
   const vpRef = useRef<Viewport | null>(null);
   const readyRef = useRef(false);
   const voiced = useRef(false);
+  const climbing = useRef(false); // the arrival line is playing: leaving or tapping cuts it
   const [stage, setStage] = useState<Stage | null>(null);
   // Latest values for the entry flow, which runs once per stage.
   const live = useRef({ currentIndex, side, reduced, statuses, intro, lines });
@@ -147,12 +150,14 @@ export function FarolScreen() {
       if (cancelled) return;
       readyRef.current = true;
       setReady(true);
-      setMessage(live.current.intro);
+      setMessage(null); // the card shows the unit's live progress
       if (!voiced.current && narrator.isUnlocked()) {
         voiced.current = true;
         setPose("point");
         Object.assign(st, poseState("point"));
+        climbing.current = true;
         await narrator.playNarration(live.current.lines.farolClimb, { ifIdle: true });
+        climbing.current = false;
         if (cancelled) return;
       }
       setPose("idle");
@@ -180,6 +185,10 @@ export function FarolScreen() {
     }
     return () => {
       cancelled = true;
+      if (climbing.current) {
+        climbing.current = false;
+        narrator.stop();
+      }
       st.walk = 0;
       readyRef.current = false;
       setReady(false);
@@ -188,17 +197,21 @@ export function FarolScreen() {
 
   // ---- taps ----
   const open = (i: number) => {
+    if (climbing.current) {
+      climbing.current = false;
+      narrator.stop();
+    }
     narrator.playSfx("tap");
     router.push(stopHref(stops[i].id));
   };
   const pressStop = (i: number) => {
     if (statuses[i] !== "locked") return open(i);
-    setMessage({ title: stopLabel(stops[i]), text: "Primeiro a parada que está brilhando!", chip: intro.chip });
+    setMessage({ title: stopLabel(stops[i]), text: lines.lockedStop.map((seg) => seg.text).join(" ") });
     setPose("help");
     void narrator.playNarration(lines.lockedStop);
   };
 
-  const shown = message ?? intro;
+  const shown = { ...(message ?? intro), chip };
   const cur = statuses[currentIndex] !== "done" && stops[currentIndex] ? currentIndex : -1;
   return (
     <div ref={rootRef} className="nz-screen" data-ready={ready} data-testid="farol">

@@ -52,6 +52,15 @@ describe("IslandScreen", () => {
     expect(card()).toHaveTextContent("Toque num lugar da ilha.");
   });
 
+  it("leaving the island (unmount, or the route hidden) stops the narration and the ambience", () => {
+    const { unmount } = render(<IslandScreen mode="explore" />);
+    vi.mocked(narrator.stop).mockClear();
+    ambience.stop.mockClear();
+    unmount();
+    expect(narrator.stop).toHaveBeenCalled();
+    expect(ambience.stop).toHaveBeenCalled();
+  });
+
   it("carries the launch states on the pins: farol and ninho ready, letras in construction, the rest soon", () => {
     render(<IslandScreen mode="explore" />);
     expect(pin("Árvore das Letras")).toHaveAttribute("data-state", "obra");
@@ -288,11 +297,26 @@ describe("IslandScreen", () => {
       fireEvent.click(screen.getByRole("button", { name: "Pausar" }));
       const dialog = await screen.findByRole("dialog", { name: "Pausa" });
       expect(dialog).toHaveTextContent("O Nino foi descansar no ninho.");
+      // everything behind the break is inert: no focus, no taps for the island
+      expect(screen.getByTestId("island").querySelector(".nz-inert-wrap")).toHaveAttribute("inert");
       fireEvent.click(within(dialog).getByRole("button", { name: "Voltar a brincar" }));
       expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+      expect(screen.getByTestId("island").querySelector(".nz-inert-wrap")).not.toHaveAttribute("inert");
       expect(card()).toHaveTextContent("Oi de novo!");
       // the next reminder counts from now
       expect(Date.now() - Number(sessionStorage.getItem("lingoo:session:start"))).toBeLessThan(5000);
+    });
+
+    it("going to the parents' area restarts the pause clock (an adult just stepped in), the nest does not", () => {
+      settings = { ...defaultSettings(), motion: "reduzir", pauseMinutes: 30 };
+      const old = String(Date.now() - 10 * 60_000);
+      sessionStorage.setItem("lingoo:session:start", old);
+      render(<IslandScreen mode="explore" />);
+      fireEvent.click(screen.getByRole("button", { name: "Voltar ao ninho" }));
+      expect(sessionStorage.getItem("lingoo:session:start")).toBe(old);
+      fireEvent.click(screen.getByRole("button", { name: "Área dos responsáveis" }));
+      expect(Date.now() - Number(sessionStorage.getItem("lingoo:session:start"))).toBeLessThan(5000);
+      expect(push).toHaveBeenLastCalledWith("/responsaveis");
     });
 
     it("no reminder before the time, or when the reminder is off", () => {

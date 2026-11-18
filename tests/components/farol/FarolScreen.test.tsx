@@ -53,6 +53,15 @@ describe("FarolScreen", () => {
     expect(card).toHaveTextContent("1 de 6");
   });
 
+  it("the count in the card follows the progress, even after a locked tap changed its line", () => {
+    const { rerender } = render(<FarolScreen />);
+    fireEvent.click(stop("Lição 3"));
+    expect(screen.getByTestId("nino-card")).toHaveTextContent("1 de 6");
+    progress = { ...withSong(), completedStops: { ...withSong().completedStops, "forest-animals/lesson-1": "2026-01-01T00:00:00.000Z" } };
+    rerender(<FarolScreen />);
+    expect(screen.getByTestId("nino-card")).toHaveTextContent("2 de 6");
+  });
+
   it("the current stop opens its page", () => {
     render(<FarolScreen />);
     fireEvent.click(stop("Lição 1"));
@@ -69,7 +78,7 @@ describe("FarolScreen", () => {
     render(<FarolScreen />);
     fireEvent.click(stop("Lição 3"));
     expect(push).not.toHaveBeenCalled();
-    expect(screen.getByTestId("nino-card")).toHaveTextContent("Primeiro a parada que está brilhando!");
+    expect(screen.getByTestId("nino-card")).toHaveTextContent("Essa parada ainda está trancada. Termine a anterior primeiro!");
     expect(narrator.playNarration).toHaveBeenCalledWith(getLines().lockedStop);
   });
 

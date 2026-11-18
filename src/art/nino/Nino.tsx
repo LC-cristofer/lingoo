@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from "react";
 import { narrator } from "@/audio/narrator";
 import { REACTION_POSE, poseState, type NinoPose, type NinoReaction } from "./poses";
 import { createNinoRig, type Arm, type NinoRig, type NinoState } from "./rig";
@@ -22,13 +22,21 @@ const VIEW = { x: -30, y: -40, w: 260, h: 300 };
 const REACTION_MS = 1400;
 
 const REDUCED_QUERY = "(prefers-reduced-motion: reduce)";
+/** The system preference or the parents' choice (SettingsProvider mirrors it on <html data-motion>). */
 function subscribeReduced(cb: () => void) {
-  if (typeof window === "undefined" || !window.matchMedia) return () => {};
-  const mq = window.matchMedia(REDUCED_QUERY);
-  mq.addEventListener?.("change", cb);
-  return () => mq.removeEventListener?.("change", cb);
+  if (typeof window === "undefined") return () => {};
+  const mq = window.matchMedia?.(REDUCED_QUERY);
+  mq?.addEventListener?.("change", cb);
+  const mo = typeof MutationObserver === "undefined" ? null : new MutationObserver(cb);
+  mo?.observe(document.documentElement, { attributes: true, attributeFilter: ["data-motion"] });
+  return () => {
+    mq?.removeEventListener?.("change", cb);
+    mo?.disconnect();
+  };
 }
-const reducedNow = () => (typeof window !== "undefined" && !!window.matchMedia && window.matchMedia(REDUCED_QUERY).matches);
+const reducedNow = () =>
+  typeof window !== "undefined" &&
+  (document.documentElement.dataset.motion === "reduzir" || (!!window.matchMedia && window.matchMedia(REDUCED_QUERY).matches));
 
 /** Extra motion a reaction adds on top of its pose, as a function of progress k in 0..1. */
 function reactionMotion(kind: NinoReaction, k: number): Partial<NinoState> {
@@ -53,8 +61,12 @@ export function Nino({ pose, size, speaks = false, talking: talkingOverride, rea
   const [expired, setExpired] = useState<string | null>(null);
   const target = useRef<{ pose: NinoPose; reaction: NinoReaction | null; start: number }>({ pose, reaction: null, start: 0 });
   // The narrator may be absent (tests mock it away); a listener must never break it either.
+  const subscribeSpeaking = useCallback(
+    (cb: () => void) => (speaks ? (narrator.onSpeakingChange?.(() => cb()) ?? (() => {})) : () => {}),
+    [speaks],
+  );
   const speaking = useSyncExternalStore(
-    (cb) => (speaks ? (narrator.onSpeakingChange?.(() => cb()) ?? (() => {})) : () => {}),
+    subscribeSpeaking,
     () => (speaks ? (narrator.isSpeaking?.() ?? false) : false),
     () => false,
   );

@@ -26,6 +26,7 @@ import { PauseOverlay } from "./PauseOverlay";
 import { playOpening, showIsland, skipOpening, wakeEarly } from "./opening";
 import { playBedtime, playReturn, returnPlan, settleFarol, wakeToIsland } from "./return";
 import { Pins, PLACE_NAMES } from "./Pins";
+import { readSession, SESSION_KEY, writeSession } from "./session-guard";
 import { TopBar } from "./TopBar";
 
 const UNIT_ID = "forest-animals";
@@ -50,29 +51,6 @@ function subscribeSide(cb: () => void) {
 }
 const sideNow = () => typeof window !== "undefined" && !!window.matchMedia && window.matchMedia(SIDE_QUERY).matches;
 
-const SESSION_KEY = "lingoo:session:start";
-
-function session(): Storage | null {
-  try {
-    return typeof window === "undefined" ? null : window.sessionStorage;
-  } catch {
-    return null;
-  }
-}
-function readSession(key: string): string | null {
-  try {
-    return session()?.getItem(key) ?? null;
-  } catch {
-    return null;
-  }
-}
-function writeSession(key: string, value: string): void {
-  try {
-    session()?.setItem(key, value);
-  } catch {
-    /* blocked storage: the reminder simply runs from this page's own clock */
-  }
-}
 /** The evening counts for the date it started: after midnight (until 06:00) it is still yesterday's. */
 const bedtimeKey = (now: Date) => `lingoo:bedtime:${dateKey(new Date(now.getTime() - 6 * 3_600_000))}`;
 
@@ -268,7 +246,9 @@ export function IslandScreen({ mode = "auto", volta = null, onStage }: IslandScr
     }
     const plan = unit ? returnPlan(prog, unit, pendingVolta.current) : null;
     if (!plan) pendingVolta.current = null;
-    const how = plan ? "return" : live.current.mode === "explore" ? "none" : openingMode(cfg, now, s.env.reduced);
+    let how = plan ? "return" : live.current.mode === "explore" ? "none" : openingMode(cfg, now, s.env.reduced);
+    // Under reduced motion the 400 ms fade marks the day's first arrival only, not every return to the island.
+    if (how === "reduced" && cfg.lastVisit === dateKey(now)) how = "none";
     live.current.update({ lastVisit: dateKey(now) });
 
     let interval: ReturnType<typeof setInterval> | undefined;
@@ -333,6 +313,7 @@ export function IslandScreen({ mode = "auto", volta = null, onStage }: IslandScr
       cancelled = true;
       clearInterval(interval);
       s.tl.cancelAll();
+      narrator.stop();
       ambience.stop();
     };
     // Settings and progress are read through `live`: only the stage and the hydration decide when an arrival starts.
@@ -583,28 +564,31 @@ export function IslandScreen({ mode = "auto", volta = null, onStage }: IslandScr
       data-card={chrome.card}
       data-testid="island"
     >
-      <StageView scene="island" states={LAUNCH_STATES} threads={threads} farolLevel={level} insets={insets} onStage={onStageMount} onViewport={onViewport} />
-      <div className="nz-island-sky" data-testid="island-sky" onClick={tapWorld} />
-      <span ref={zzRef} className="nz-zz" aria-hidden="true"><span>z</span><span>z</span><span>z</span></span>
-      <Pins stage={stage} states={STATES} glow={ready ? glow : null} onPress={(id) => void pressPlace(id)} />
-      <TopBar
-        ref={barRef}
-        night={night}
-        onNest={() => { pendingVolta.current = null; router.push("/ninho"); }}
-        onParents={() => { pendingVolta.current = null; router.push("/responsaveis"); }}
-      />
-      <NinoCard
-        ref={cardRef}
-        title={view.title}
-        text={view.text}
-        chip={view.chip || undefined}
-        tone={view.tone}
-        pose={pose}
-        speaks={speaks}
-        action={action}
-      />
-      <Opening stage={stage} active={intro} onSkip={() => skipRef.current()} />
-      <div ref={veilRef} className="nz-veil" aria-hidden="true" />
+      {/* While the break overlay is up everything behind it is inert: no focus, no taps, no reading. */}
+      <div className="nz-inert-wrap" inert={phase === "pause"}>
+        <StageView scene="island" states={LAUNCH_STATES} threads={threads} farolLevel={level} insets={insets} onStage={onStageMount} onViewport={onViewport} />
+        <div className="nz-island-sky" data-testid="island-sky" onClick={tapWorld} />
+        <span ref={zzRef} className="nz-zz" aria-hidden="true"><span>z</span><span>z</span><span>z</span></span>
+        <Pins stage={stage} states={STATES} glow={ready ? glow : null} onPress={(id) => void pressPlace(id)} />
+        <TopBar
+          ref={barRef}
+          night={night}
+          onNest={() => { pendingVolta.current = null; router.push("/ninho"); }}
+          onParents={() => { pendingVolta.current = null; restartSession(); router.push("/responsaveis"); }}
+        />
+        <NinoCard
+          ref={cardRef}
+          title={view.title}
+          text={view.text}
+          chip={view.chip || undefined}
+          tone={view.tone}
+          pose={pose}
+          speaks={speaks}
+          action={action}
+        />
+        <Opening stage={stage} active={intro} onSkip={() => skipRef.current()} />
+        <div ref={veilRef} className="nz-veil" aria-hidden="true" />
+      </div>
       {phase === "pause" ? <PauseOverlay onResume={resume} /> : null}
     </div>
   );

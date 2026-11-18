@@ -18,31 +18,36 @@ export function createAmbience(deps: Deps = {}): Ambience {
   const createAudio = deps.createAudio ?? ((src: string) => new Audio(src));
   const isEnabled = deps.isEnabled ?? (() => music.isEnabled());
 
-  type Voice = { audio: HTMLAudioElement; kind: AmbienceKind };
+  type Voice = { audio: HTMLAudioElement; kind: AmbienceKind; timer?: ReturnType<typeof setInterval> };
   let active: Voice | null = null;
-  const fading = new Set<ReturnType<typeof setInterval>>();
 
-  function ramp(audio: HTMLAudioElement, from: number, to: number, done?: () => void): void {
+  /** One ramp per voice: starting a new one cancels the previous (a fast toggle never leaves two ramps fighting). */
+  function ramp(v: Voice, from: number, to: number, done?: () => void): void {
+    if (v.timer !== undefined) clearInterval(v.timer);
     const start = Date.now();
-    audio.volume = from;
+    try {
+      v.audio.volume = from;
+    } catch {
+      /* ignore */
+    }
     const timer = setInterval(() => {
       const t = Math.min(1, (Date.now() - start) / FADE_MS);
       try {
-        audio.volume = from + (to - from) * t;
+        v.audio.volume = from + (to - from) * t;
       } catch {
         /* ignore */
       }
       if (t >= 1) {
         clearInterval(timer);
-        fading.delete(timer);
+        if (v.timer === timer) v.timer = undefined;
         done?.();
       }
     }, STEP_MS);
-    fading.add(timer);
+    v.timer = timer;
   }
 
   function fadeOut(v: Voice): void {
-    ramp(v.audio, v.audio.volume, 0, () => {
+    ramp(v, v.audio.volume, 0, () => {
       try {
         v.audio.pause();
       } catch {
@@ -61,8 +66,9 @@ export function createAmbience(deps: Deps = {}): Ambience {
         audio.volume = 0;
         void Promise.resolve(audio.play()).catch(() => {});
         const previous = active;
-        active = { audio, kind };
-        ramp(audio, 0, VOLUME);
+        const voice: Voice = { audio, kind };
+        active = voice;
+        ramp(voice, 0, VOLUME);
         if (previous) fadeOut(previous);
       } catch {
         /* no audio: stay silent */

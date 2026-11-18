@@ -70,7 +70,7 @@ function sanitize(raw: unknown): Settings {
     opening: r.opening === "auto" || r.opening === "curta" ? r.opening : d.opening,
     motion: r.motion === "auto" || r.motion === "reduzir" ? r.motion : d.motion,
     openingSeen: r.openingSeen === true,
-    lastVisit: typeof r.lastVisit === "string" ? r.lastVisit : null,
+    lastVisit: typeof r.lastVisit === "string" && /^\d{4}-\d{2}-\d{2}$/.test(r.lastVisit) ? r.lastVisit : null,
   };
 }
 

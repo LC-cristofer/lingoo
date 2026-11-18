@@ -59,6 +59,7 @@ export function StageView({ scene, states = NO_STATES, threads = 0, farolLevel, 
   const hostRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<Stage | null>(null);
   const reduced = useReducedMotion();
+  const { hydrated } = useSettings();
   // Latest props for the long-lived callbacks below.
   const live = useRef({ insets, onStage, onViewport, states, threads, farolLevel });
   useEffect(() => {
@@ -69,7 +70,8 @@ export function StageView({ scene, states = NO_STATES, threads = 0, farolLevel, 
 
   useEffect(() => {
     const host = hostRef.current;
-    if (!host) return;
+    // Until the stored settings are in, `reduced` is a guess: building now would mean a second build when it flips.
+    if (!host || !hydrated) return;
     const { states: st, threads: th, farolLevel: lv } = live.current;
     const stage = createStage(host, { scene, states: st, threads: th, farolLevel: lv, reduced });
     stageRef.current = stage;
@@ -92,7 +94,7 @@ export function StageView({ scene, states = NO_STATES, threads = 0, farolLevel, 
       stage.destroy();
     };
     // The stage is rebuilt only when the world or the motion preference changes.
-  }, [scene, reduced, statesKey, threads]);
+  }, [scene, reduced, hydrated, statesKey, threads]);
 
   useEffect(() => {
     push.current();
