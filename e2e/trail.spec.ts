@@ -309,6 +309,7 @@ test("one full unit: song, three lessons, story, challenge, memory and persisten
 for (const vp of [
   { name: "phone portrait", width: 390, height: 844 },
   { name: "tablet landscape", width: 1024, height: 768 },
+  { name: "phone landscape", width: 844, height: 390 },
 ]) {
   test(`fits ${vp.name} (${vp.width}x${vp.height})`, async ({ page }) => {
     test.setTimeout(240_000);
