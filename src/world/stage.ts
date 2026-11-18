@@ -65,6 +65,7 @@ export function createStage(host: HTMLElement, o: StageOptions): Stage {
     pennant: [1, 1, 0, 0, 0], boatX: 120, thread: [0, 1, 2, 3].map(i => (i < o.threads ? 1 : 0)), lampPulse: 0, hammerFast: false, wiggle: {},
   };
   let vp: Viewport = { w: host.clientWidth || 390, h: host.clientHeight || 844, top: 108, bottom: 150 };
+  // farol: starts at the door at D 0.5 (the plan for Task 6; the prototype's icam was 500,2280,0.45)
   const cam: Cam = isIsland ? overviewCam(vp) : { X: 500, Y: 2250, D: 0.5 };
 
   // ---- DOM ----
@@ -182,8 +183,9 @@ export function createStage(host: HTMLElement, o: StageOptions): Stage {
         p.setAttribute("stroke-dasharray", v >= 1 ? "9 6" : `${(v * 160).toFixed(1)} 400`);
       });
       els.bf.forEach((g, i) => {
-        const x = 500 + Math.sin(t / 2300 + i * 2.2) * 90 + Math.sin(t / 700 + i) * 22;
-        const y = 806 + Math.sin(t / 1900 + i * 1.3) * 40 - Math.abs(Math.sin(t / 420 + i)) * 16;
+        // reduced: parked at a fixed spot, wings open
+        const x = red ? 500 + (i ? 70 : -70) : 500 + Math.sin(t / 2300 + i * 2.2) * 90 + Math.sin(t / 700 + i) * 22;
+        const y = red ? 800 : 806 + Math.sin(t / 1900 + i * 1.3) * 40 - Math.abs(Math.sin(t / 420 + i)) * 16;
         g.setAttribute("transform", `translate(${x.toFixed(1)} ${y.toFixed(1)}) scale(1.5)`);
         g.setAttribute("opacity", (1 - n).toFixed(2));
         const k = red ? 1 : 0.25 + 0.75 * Math.abs(Math.sin(t / 85 + i));
@@ -238,12 +240,16 @@ export function createStage(host: HTMLElement, o: StageOptions): Stage {
   let raf = 0, destroyed = false;
   if ((o.clock ?? "raf") === "raf") {
     const t0 = performance.now();
-    const loop = () => { if (destroyed) return; frame(performance.now() - t0); raf = requestAnimationFrame(loop); };
+    const loop = () => {
+      if (destroyed) return;
+      try { frame(performance.now() - t0); } catch (e) { console.error(e); } finally { raf = requestAnimationFrame(loop); }
+    };
     raf = requestAnimationFrame(loop);
   }
   frame(0);
 
   // ---- walking ----
+  /* A cancelAll mid-walk leaves st.walk = 1 (the promise never resolves): callers must reset walk/pose. */
   async function walk(route: keyof typeof ROUTES, reverse = false): Promise<void> {
     if (!isIsland) return;
     if (slot === "nest") moveNino("actors");

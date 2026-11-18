@@ -63,6 +63,11 @@ describe("createStage (island)", () => {
   it("reduced leaves ambient groups untouched and renders Nino static", () => {
     const s = mount({ reduced: true });
     s.frame(4000);
+    const bf = () => [...host.querySelectorAll(".bfly")].map(b => b.getAttribute("transform"));
+    const before = bf();
+    expect(before.length).toBeGreaterThan(0);
+    s.frame(5300);
+    expect(bf()).toEqual(before);
     expect([...host.querySelectorAll(".drift, .sway, .bob")].every(d => !d.hasAttribute("transform"))).toBe(true);
     expect(host.querySelector("#Lfar")!.getAttribute("style") ?? "").not.toContain("blur");
   });
