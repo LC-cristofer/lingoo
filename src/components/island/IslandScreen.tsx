@@ -113,6 +113,7 @@ export function IslandScreen({ onStage }: IslandScreenProps) {
   const focusRef = useRef<PlaceId | null>(null);
   const flowRef = useRef(0); // bumped by every interaction: an older flow stops touching the screen
   const veilRef = useRef<HTMLDivElement>(null);
+  const awayRef = useRef(false); // the dive is running or done: the island ignores taps
   const live = useRef({ settings, level });
   useEffect(() => {
     live.current = { settings, level };
@@ -147,6 +148,10 @@ export function IslandScreen({ onStage }: IslandScreenProps) {
     Object.assign(s.cam, overviewCam(vp));
     focusRef.current = null;
     idle.current = true;
+    // coming back from the farol (the route was kept hidden): the UI is back, the veil is gone
+    awayRef.current = false;
+    setAway(false);
+    if (veilRef.current) veilRef.current.style.opacity = "0";
     setReady(true);
     return () => {
       setReady(false);
@@ -178,7 +183,7 @@ export function IslandScreen({ onStage }: IslandScreenProps) {
 
   const goOverview = useCallback(async () => {
     const s = stageRef.current, vp = vpRef.current;
-    if (!s || !vp || focusRef.current === null) return;
+    if (!s || !vp || awayRef.current || focusRef.current === null) return;
     const token = interrupt();
     focusRef.current = null;
     setFocus(null);
@@ -192,12 +197,13 @@ export function IslandScreen({ onStage }: IslandScreenProps) {
 
   const pressPlace = useCallback(async (id: PlaceId) => {
     const s = stageRef.current, vp = vpRef.current;
-    if (!s || !vp) return;
+    if (!s || !vp || awayRef.current) return;
     narrator.playSfx("tap");
     if (id === "ninho") {
       router.push("/ninho");
       return;
     }
+    if (focusRef.current === id) return; // already there: do not re-walk
     const token = interrupt();
     focusRef.current = id;
     setFocus(id);
@@ -235,10 +241,12 @@ export function IslandScreen({ onStage }: IslandScreenProps) {
   const enterFarol = useCallback(async () => {
     const s = stageRef.current, vp = vpRef.current;
     if (!s || !vp) return;
+    if (awayRef.current) return;
+    awayRef.current = true;
     const token = interrupt();
     idle.current = false;
     setAway(true);
-    await diveIntoFarol(s, vp, (v) => {
+    await diveIntoFarol(s, (v) => {
       if (veilRef.current) veilRef.current.style.opacity = v.toFixed(3);
     });
     if (token !== flowRef.current) return;
@@ -248,7 +256,7 @@ export function IslandScreen({ onStage }: IslandScreenProps) {
   /** A tap on the world: a place's body opens it, anything else (the sky, the sea) goes back to the whole island. */
   const tapWorld = (e: React.MouseEvent<HTMLDivElement>) => {
     const s = stageRef.current;
-    if (!s || !ready) return;
+    if (!s || !ready || awayRef.current) return;
     const r = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - r.left, y = e.clientY - r.top;
     const k = s.screenOf(1, 0)[0] - s.screenOf(0, 0)[0]; // px per world unit

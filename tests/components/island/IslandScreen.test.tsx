@@ -123,4 +123,59 @@ describe("IslandScreen", () => {
     expect(ambience.play).toHaveBeenLastCalledWith("night");
     expect(within(screen.getByTestId("island-time")).getByLabelText("Noite")).toBeInTheDocument();
   });
+
+  it("unmounting stops the ambience", () => {
+    const { unmount } = render(<IslandScreen mode="explore" />);
+    ambience.stop.mockClear();
+    unmount();
+    expect(ambience.stop).toHaveBeenCalled();
+  });
+
+  it("a second tap on the place already in focus does not start it again", async () => {
+    render(<IslandScreen mode="explore" />);
+    fireEvent.click(pin("Farol das Línguas"));
+    await screen.findByRole("button", { name: "Entrar no farol" });
+    fireEvent.click(pin("Farol das Línguas"));
+    await act(async () => {});
+    const farolLines = vi.mocked(narrator.playNarration).mock.calls.filter(([n]) => n === getLines().placeFarol);
+    expect(farolLines).toHaveLength(1);
+    expect(screen.getByRole("button", { name: "Entrar no farol" })).toBeInTheDocument();
+  });
+
+  it("tapping another place while Nino walks to the farol takes over: no enter button appears", async () => {
+    settings = { ...defaultSettings(), motion: "auto" };
+    render(<IslandScreen mode="explore" />);
+    fireEvent.click(pin("Farol das Línguas"));
+    fireEvent.click(pin("Árvore das Letras"));
+    expect(card()).toHaveTextContent("Em construção");
+    await new Promise((r) => setTimeout(r, 300));
+    expect(screen.queryByRole("button", { name: "Entrar no farol" })).not.toBeInTheDocument();
+    expect(card()).toHaveTextContent("Em construção");
+  });
+
+  it("taps during the dive are ignored: the dive finishes and /farol is pushed once", async () => {
+    render(<IslandScreen mode="explore" />);
+    fireEvent.click(pin("Farol das Línguas"));
+    fireEvent.click(await screen.findByRole("button", { name: "Entrar no farol" }));
+    expect(screen.getByTestId("island")).toHaveAttribute("data-away", "true");
+    fireEvent.click(screen.getByTestId("island-sky"));
+    fireEvent.click(document.querySelector('[data-place="letras"]')!); // off screen while zoomed on the farol
+    expect(card()).toHaveTextContent("Farol das Línguas");
+    await waitFor(() => expect(push).toHaveBeenCalledWith("/farol"));
+    expect(push).toHaveBeenCalledTimes(1);
+  });
+
+  it("coming back after a dive (the stage is rebuilt) shows the island again with no veil", async () => {
+    const { rerender } = render(<IslandScreen mode="explore" />);
+    fireEvent.click(pin("Farol das Línguas"));
+    fireEvent.click(await screen.findByRole("button", { name: "Entrar no farol" }));
+    await waitFor(() => expect(push).toHaveBeenCalledWith("/farol"));
+    const veil = () => document.querySelector<HTMLElement>(".nz-veil")!;
+    expect(Number(veil().style.opacity)).toBe(1);
+    settings = { ...defaultSettings(), motion: "auto" }; // rebuilds the stage, like Activity showing the route again
+    rerender(<IslandScreen mode="explore" />);
+    await waitFor(() => expect(screen.getByTestId("island")).toHaveAttribute("data-away", "false"));
+    expect(Number(veil().style.opacity)).toBe(0);
+    expect(screen.getByTestId("island")).toHaveAttribute("data-ready", "true");
+  });
 });

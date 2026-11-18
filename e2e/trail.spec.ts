@@ -184,6 +184,14 @@ test("one full unit: song, three lessons, story, challenge, memory and persisten
     await expect(page.locator('[data-testid="nino-card"]:visible')).toContainText("Primeiro a parada que está brilhando!");
   });
 
+  await test.step("back from the farol the island is usable again (no veil, pins clickable)", async () => {
+    await page.goBack();
+    await expect(page).toHaveURL(/\/$/);
+    await page.getByRole("button", { name: "Farol das Línguas" }).click({ timeout: 20_000 });
+    await page.getByRole("button", { name: "Entrar no farol" }).click();
+    await expect(page).toHaveURL(/\/farol$/);
+  });
+
   await test.step("leaving a stop with the ✕ goes back to the farol", async () => {
     await openFromFarol(page, "song");
     await page.getByRole("button", { name: "Sair" }).click();

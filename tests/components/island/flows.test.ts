@@ -101,7 +101,7 @@ describe("island flows", () => {
 
   it("diveIntoFarol takes the camera to the door at D 0.035 and fades to full", async () => {
     const fades: number[] = [];
-    await run(diveIntoFarol(stage, vp, (v) => fades.push(v)));
+    await run(diveIntoFarol(stage, (v) => fades.push(v)));
     expect(stage.cam.X).toBeCloseTo(FAROL_DOOR.x, 3);
     expect(stage.cam.Y).toBeCloseTo(FAROL_DOOR.y, 3);
     expect(stage.cam.D).toBeCloseTo(0.035, 6);
@@ -113,7 +113,7 @@ describe("island flows", () => {
     stage.env.reduced = true;
     const cam0 = { ...stage.cam };
     const fades: number[] = [];
-    const p = diveIntoFarol(stage, vp, (v) => fades.push(v));
+    const p = diveIntoFarol(stage, (v) => fades.push(v));
     let done = false;
     void p.then(() => (done = true));
     for (let ms = 50; ms <= 400 && !done; ms += 50) { stage.frame(ms); await flush(); }

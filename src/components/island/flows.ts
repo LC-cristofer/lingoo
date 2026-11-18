@@ -89,8 +89,7 @@ export async function goToFarol(stage: Stage, vp: Viewport): Promise<void> {
  * The camera dives into the lighthouse door while Nino fades; `onFade` gets the cream veil's opacity (0 to 1)
  * so the screen can cover the cut. Reduced motion: no dive, only a 300 ms fade.
  */
-export async function diveIntoFarol(stage: Stage, vp: Viewport, onFade?: (v: number) => void): Promise<void> {
-  void vp;
+export async function diveIntoFarol(stage: Stage, onFade?: (v: number) => void): Promise<void> {
   narrator.playSfx("dive");
   if (stage.env.reduced) {
     const k = { v: 0 };
