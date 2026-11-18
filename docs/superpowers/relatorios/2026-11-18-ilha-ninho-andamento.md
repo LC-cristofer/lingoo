@@ -1,32 +1,32 @@
-# NESTOY Ilha-Ninho — andamento da reconstrução (2026-11-18)
+# NESTOY Ilha-Ninho — reconstrução concluída (2026-11-18)
 
-Plano: `docs/superpowers/plans/2026-11-18-nestoy-ilha-ninho.md` (11 etapas). Design aprovado: `docs/superpowers/specs/2026-11-18-nestoy-ilha-ninho-design.md`. Prévia: `docs/arte/ilha-ninho/andamento-2026-11-18.png`.
+Plano: `docs/superpowers/plans/2026-11-18-nestoy-ilha-ninho.md` (11 etapas). Design aprovado: `docs/superpowers/specs/2026-11-18-nestoy-ilha-ninho-design.md`. Folhas de validação: `docs/arte/ilha-ninho/validacao/`.
 
-## Pronto e revisado (3 de 11)
+## As 11 etapas, prontas e revisadas
 
-| Etapa | O que entrou | Commit |
-|---|---|---|
-| 0. Referência | Design aprovado, plano, protótipo, logotipo, sons e imagens aprovadas guardados no repositório | `a86bad1` |
-| 1. Fundação | Cores, sombras e cantos da bíblia; fontes Fredoka e Nunito; grão de papel; logotipo NESTOY com o "O" de ninho; ícones do app (PWA); botões, balões, cartões e folha de resultado no visual novo; o céu noturno antigo saiu de todas as telas | `f1fe4ac` |
-| 2. Nino | O desenho aprovado dividido em partes. Em todas as telas o Nino respira, pisca, mexe a cauda e a orelha. A boca acompanha a voz, e ele tem 8 poses e reações de acerto, quase, dica e comemoração. | `a793b72` |
-| 3. Desenho do mundo | A ilha, o ninho, os lugares com estados e o interior do farol, em vetor dentro do app. O resultado é idêntico ao protótipo aprovado. | `517383a` |
+| Etapa | O que entrou |
+|---|---|
+| 1. Fundação | Cores, fontes Fredoka e Nunito, grão de papel, logotipo NESTOY, ícones do app, kit de botões e cartões |
+| 2. Nino | O desenho aprovado em partes: respira, pisca, mexe cauda e orelha, boca com a voz, 8 poses e reações |
+| 3. Desenho do mundo | Ilha, ninho, lugares com estados e interior do farol em vetor, idênticos ao protótipo |
+| 4. Motor | Relógio único, câmera com 4 camadas de profundidade, animações da ilha |
+| 5. Preferências e sons | `lingoo:settings:v1`, 9 falas novas do Nino, 15 efeitos, ambiente de dia e de noite |
+| 6. Farol das Línguas | Interior com a escada em espiral como trilha da unidade 1 |
+| 7. Ilha | Tela inicial navegável, estados dos lugares, pinos, o Nino andando pelos caminhos |
+| 8. Abertura e volta | Abertura completa/curta/direta, farol que cresce, fios no ninho, hora de dormir, lembrete de pausa |
+| 9. Atividades | Barra de lâmpadas, cartões grandes, acerto, "quase" sem vermelho, estrela, figurinha no baú |
+| 10. Ninho e responsáveis | `/ninho` (figurinhas + Treino de memória) e `/responsaveis` (portão de 2 s, rotina, pausa, abertura, movimento, música) |
+| 11. Validação | Jornada gravada em 4 tamanhos com e sem movimento reduzido, desempenho, acessibilidade, README |
 
-Todas as verificações passaram em cada etapa: 530 testes, tipos, lint, build e 10 testes de ponta a ponta. Cada etapa também teve uma revisão independente aprovada.
+Cada etapa teve revisão independente. A revisão final do branch inteiro encontrou 5 pontos importantes (falas da volta, repetir parada, parada que não recomeçava, som de fundo, "Reduzir movimento"); todos foram corrigidos com testes e conferidos numa nova revisão.
 
-## Em andamento
+## Verificações finais
 
-**4. Motor da câmera e do mundo.** Inclui o relógio, a câmera com profundidade e as animações da ilha. A etapa foi interrompida pelo limite de uso da conta. O trabalho parcial está salvo e não foi commitado; ela continua quando o limite renovar.
+678 testes, tipos, lint, build e 14 testes de ponta a ponta passando. Nenhuma tarefa longa (> 100 ms) na abertura; pior caso 34 ms. axe-core (WCAG 2 A/AA) sem problemas em 10 estados e 3 formatos.
 
-## Próximas
+## Decisões para o Lucas conferir
 
-5. Preferências dos responsáveis, falas novas do Nino, sons e ambiente.
-6. Farol das Línguas por dentro, com a unidade 1 na escada.
-7. A ilha como tela inicial, com exploração e estados dos lugares.
-8. Abertura no ninho, farol que cresce na volta, hora de dormir e pausa.
-9. Atividades e recompensas no visual final.
-10. Ninho (figurinhas e Treino de memória) e área dos responsáveis.
-11. Validação completa: celular e tablet, vídeos, desempenho, acessibilidade e revisão final.
-
-## O que já dá para ver no app
-
-As lições e o Treino de memória já estão no visual novo, com o Nino animado. A tela inicial ainda é provisória: a ilha e a abertura só substituem o início e o mapa nas etapas 7 e 8.
+- Texto branco nos botões verde (#5DB55A, 2,55:1) e azul (#2E9FD8, 2,97:1): mantido por ser o visual aprovado; abaixo do contraste recomendado.
+- "Brincar mais um pouco" continua aparecendo depois da hora de dormir.
+- O app bloqueia o zoom de pinça (jogo em tela cheia).
+- O custo do fundo desfocado do farol num tablet simples ainda não foi medido num aparelho real.
