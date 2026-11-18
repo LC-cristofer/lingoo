@@ -35,7 +35,7 @@ const whatsMissing = find(lesson3.exercises, "whatsMissing"); // shown bear, fro
 function setup(exercise: Exercise, phase: Phase = "answering") {
   const onAnswer = vi.fn();
   const onDone = vi.fn();
-  const onCatExpression = vi.fn();
+  const onPose = vi.fn();
   const view = (p: Phase) => (
     <ExerciseView
       exercise={exercise}
@@ -43,11 +43,11 @@ function setup(exercise: Exercise, phase: Phase = "answering") {
       phase={p}
       onAnswer={onAnswer}
       onDone={onDone}
-      onCatExpression={onCatExpression}
+      onPose={onPose}
     />
   );
   const utils = render(view(phase));
-  return { ...utils, onAnswer, onCatExpression, setPhase: (p: Phase) => utils.rerender(view(p)) };
+  return { ...utils, onAnswer, onPose, setPhase: (p: Phase) => utils.rerender(view(p)) };
 }
 
 const card = (container: HTMLElement, id: string) =>
@@ -328,14 +328,14 @@ describe("TapRepeat", () => {
   });
 
   it("each tap sets the cat to listening for 1.5 s, then pointing", async () => {
-    const { container, onCatExpression } = setup(tapRepeat);
+    const { container, onPose } = setup(tapRepeat);
     await flush();
     fireEvent.click(card(container, "bear"));
-    expect(onCatExpression).toHaveBeenLastCalledWith("listening");
+    expect(onPose).toHaveBeenLastCalledWith("listen");
     act(() => vi.advanceTimersByTime(1499));
-    expect(onCatExpression).not.toHaveBeenCalledWith("pointing");
+    expect(onPose).not.toHaveBeenCalledWith("point");
     act(() => vi.advanceTimersByTime(1));
-    expect(onCatExpression).toHaveBeenLastCalledWith("pointing");
+    expect(onPose).toHaveBeenLastCalledWith("point");
   });
 
   it("does not play the prompt itself", async () => {

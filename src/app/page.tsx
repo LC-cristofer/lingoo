@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { Animal } from "@/art/Animal";
 import { Wordmark } from "@/art/brand/Wordmark";
-import { Cat } from "@/art/Cat";
+import { Nino } from "@/art/nino/Nino";
 import { narrator } from "@/audio/narrator";
 import { ChunkyButton } from "@/components/trail/kit/ChunkyButton";
 import { Backdrop } from "@/components/trail/kit/Backdrop";
@@ -30,7 +30,7 @@ export default function Home() {
           <span className="k-cast-l">
             <Animal id="bear" size={96} />
           </span>
-          <Cat expression="happy" size={230} />
+          <Nino pose="wave" size={230} />
           <span className="k-cast-r">
             <Animal id="bird" size={84} />
           </span>

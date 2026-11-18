@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Animal } from "@/art/Animal";
-import { Cat } from "@/art/Cat";
+import { Nino } from "@/art/nino/Nino";
 import { narrator } from "@/audio/narrator";
 import { getLines } from "@/domain/trail/content";
 import { cardId, pickDistractors, todayKey, unitOfCard, wordOfCard, type CardId } from "@/domain/trail/memory";
@@ -131,7 +131,7 @@ export function MemoryRound({ unit, cardIds, record, intro = false, onDone, onEx
           <div className="k-mem-recall">
             <div className="k-ask k-mem-ask">
               <span className="k-cat">
-                <Cat expression={flipped ? "happy" : "listening"} size={112} />
+                <Nino pose={flipped ? "happy" : "listen"} size={112} speaks />
               </span>
               <Bubble onReplay={replay}>
                 {flipped ? <b lang="en">{sentence(word.say[0].text)}</b> : <NarrationText narration={lines.memoryAsk} />}
@@ -190,7 +190,7 @@ export function MemoryRound({ unit, cardIds, record, intro = false, onDone, onEx
             <NarrationText narration={doneLine} />
           </Bubble>
           <span className={`k-cat ${total > 3 ? "is-small" : ""}`}>
-            <Cat expression="happy" size={176} />
+            <Nino pose="happy" size={176} speaks />
           </span>
         </div>
         <div className={`k-mem-words ${total > 6 ? "is-many" : ""}`}>

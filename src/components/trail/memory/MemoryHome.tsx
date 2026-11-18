@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Cat } from "@/art/Cat";
+import { Nino } from "@/art/nino/Nino";
 import { narrator } from "@/audio/narrator";
 import { useBackgroundMusic } from "@/audio/useBackgroundMusic";
 import { getLines, getPath, getUnit } from "@/domain/trail/content";
@@ -103,7 +103,7 @@ export function MemoryHome() {
             {kind === "due" ? (
               <>
                 <span className="k-cat">
-                  <Cat expression="pointing" size={104} />
+                  <Nino pose="point" size={104} speaks />
                 </span>
                 {bubble}
               </>
@@ -111,7 +111,7 @@ export function MemoryHome() {
               <>
                 {bubble}
                 <span className="k-cat">
-                  <Cat expression="happy" size={170} />
+                  <Nino pose="happy" size={170} speaks />
                 </span>
               </>
             )}

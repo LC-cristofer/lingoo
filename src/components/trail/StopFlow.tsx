@@ -2,7 +2,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { ART_WORDS } from "@/art/Animal";
-import { Cat, type CatExpression } from "@/art/Cat";
+import { Nino } from "@/art/nino/Nino";
+import type { NinoPose } from "@/art/nino/poses";
 import { narrator } from "@/audio/narrator";
 import { getLines } from "@/domain/trail/content";
 import type { ArtId, Exercise, Narration, Word } from "@/domain/trail/schema";
@@ -29,10 +30,10 @@ function playsOwnQuestion(ex: Exercise): boolean {
   return ex.kind === "intro" || ex.kind === "listenTap" || ex.kind === "trueFalse";
 }
 
-function catFor(phase: Phase): CatExpression {
-  if (phase === "answering") return "pointing";
+function poseFor(phase: Phase): NinoPose {
+  if (phase === "answering") return "point";
   if (phase === "correct") return "happy";
-  return "helping";
+  return "help";
 }
 
 /** The stop's words as tiles with the English word under each (tap to hear it). */
@@ -108,7 +109,7 @@ export function StopOpening({ title, opening, words, wordIds, startLabel = "Come
             <NarrationText narration={opening} />
           </Bubble>
           <span className="k-cat">
-            <Cat expression="happy" size={170} />
+            <Nino pose="wave" size={170} speaks />
           </span>
         </div>
         <WordCards words={words} ids={wordIds} />
@@ -150,7 +151,7 @@ export function StopClosing({ closing, words, wordIds, isChallenge = false, reco
             <NarrationText narration={closing} />
           </Bubble>
           <span className="k-cat">
-            <Cat expression="happy" size={120} />
+            <Nino pose="happy" size={120} speaks />
           </span>
         </div>
         <div className="k-reward">
@@ -192,7 +193,7 @@ export function ExerciseLoop({ exercises, sessionId, words, onExit, onFinished, 
   const [session, setSession] = useState(() => startSession(exercises, sessionId));
   const [shown, setShown] = useState(0);
   const [correctCount, setCorrectCount] = useState(0);
-  const [override, setOverride] = useState<{ key: string; expression: CatExpression } | null>(null);
+  const [override, setOverride] = useState<{ key: string; pose: NinoPose } | null>(null);
 
   // High-water mark: the bar never goes backwards (a queued review lowers the raw ratio).
   const rawRatio = progressRatio(session);
@@ -249,7 +250,7 @@ export function ExerciseLoop({ exercises, sessionId, words, onExit, onFinished, 
   };
 
   const overrideKey = `${index}:${phase}`;
-  const catExpression = override && override.key === overrideKey ? override.expression : catFor(phase);
+  const pose = override && override.key === overrideKey ? override.pose : poseFor(phase);
   const feedback =
     phase === "correct"
       ? { kind: "correct" as const, line: praiseLine, onContinue }
@@ -265,7 +266,7 @@ export function ExerciseLoop({ exercises, sessionId, words, onExit, onFinished, 
       count={topBar?.count}
       steps={topBar ? undefined : exercises.length}
       prompt={questionOf(item.exercise)}
-      catExpression={catExpression}
+      pose={pose}
       feedback={feedback}
       onExit={onExit}
     >
@@ -276,7 +277,7 @@ export function ExerciseLoop({ exercises, sessionId, words, onExit, onFinished, 
         phase={phase}
         onAnswer={onAnswer}
         onDone={() => {}}
-        onCatExpression={(expression) => setOverride({ key: overrideKey, expression })}
+        onPose={(pose) => setOverride({ key: overrideKey, pose })}
       />
     </ExerciseShell>
   );

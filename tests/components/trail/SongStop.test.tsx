@@ -112,13 +112,13 @@ describe("SongStop", () => {
     expect(document.querySelector('svg[data-art="bear"]')).toBeNull();
   });
 
-  it("shows the gatinho on the last line and while it sings", async () => {
+  it("shows the Nino on the last line and while it sings", async () => {
     renderSong();
     await sing();
     audios[0].currentTime = barTime(13) + 0.1;
     await tick();
     expect(currentLine()).toHaveTextContent("Animals, animals, in the forest!");
-    expect(document.querySelector('svg[data-expression="talking"]')).toBeInTheDocument();
+    expect(document.querySelector('svg[data-pose="happy"]')).toBeInTheDocument();
   });
 
   it("pauses and plays again", async () => {

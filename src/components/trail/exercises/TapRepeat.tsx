@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import { narrator } from "@/audio/narrator";
-import type { CatExpression } from "@/art/Cat";
+import type { NinoPose } from "@/art/nino/poses";
 import { repeatTap, type RepeatState } from "@/domain/trail/exercises";
 import type { ArtId, Exercise } from "@/domain/trail/schema";
 import type { Phase } from "@/domain/trail/session";
@@ -17,11 +17,11 @@ type TapRepeatProps = {
   exercise: Extract<Exercise, { kind: "tapRepeat" }>;
   phase: Phase;
   onAnswer: (correct: boolean) => void;
-  onCatExpression?: (e: CatExpression) => void;
+  onPose?: (p: NinoPose) => void;
 };
 
 /** Tap each animal, hear it, say it back. No right or wrong: "Continuar" once every card was tapped. */
-export function TapRepeat({ exercise, phase, onAnswer, onCatExpression }: TapRepeatProps) {
+export function TapRepeat({ exercise, phase, onAnswer, onPose }: TapRepeatProps) {
   const { isLocked, report } = useAnswerGate(phase, onAnswer);
   const { later, cancel } = useTimers();
   const stateRef = useRef<RepeatState>({ tapped: [] });
@@ -34,11 +34,11 @@ export function TapRepeat({ exercise, phase, onAnswer, onCatExpression }: TapRep
     if (isLocked()) return;
     narrator.playSfx("tap");
     void narrator.playNarration(item.say);
-    onCatExpression?.("listening");
+    onPose?.("listen");
     cancel(listenTimer.current);
     listenTimer.current = later(() => {
       listenTimer.current = null;
-      onCatExpression?.("pointing");
+      onPose?.("point");
     }, LISTEN_MS);
     const next = repeatTap(stateRef.current, item.wordId, all);
     stateRef.current = next.state;

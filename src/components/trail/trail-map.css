@@ -65,7 +65,7 @@
 .k-wordmark { display: block; width: min(78vw, 320px); height: auto; filter: drop-shadow(0 3px 0 color-mix(in srgb, var(--white) 55%, transparent)); }
   .k-tagline { font-size: var(--fs-title); }
   .k-start-cta { width: 300px; justify-self: start; }
-  .k-start-cast .art-cat { width: 300px; height: auto; }
+  .k-start-cast .nino-svg { width: 300px; height: auto; }
   .k-cast-l { margin-right: 6px; }
   .k-cast-r { margin-left: 6px; }
   .k-cast-l svg { width: 130px; height: auto; }

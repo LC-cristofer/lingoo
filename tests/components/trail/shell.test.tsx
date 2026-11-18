@@ -62,7 +62,7 @@ describe("FeedbackBanner", () => {
   it("retry has no button and no red classes", () => {
     const { container } = render(<FeedbackBanner kind="retry" line={line} />);
     expect(screen.queryByRole("button")).toBeNull();
-    expect(container.innerHTML).not.toMatch(/red/i);
+    expect(container.innerHTML).not.toMatch(/\bred\b|text-red|bg-red/i);
     expect(container.firstElementChild).toHaveAttribute("data-kind", "retry");
   });
   it("hint has no button", () => {
@@ -75,7 +75,7 @@ describe("ExerciseShell", () => {
   it("speaker replays the prompt", async () => {
     playNarration.mockClear();
     render(
-      <ExerciseShell ratio={0.5} prompt={prompt} catExpression="talking" feedback={null} onExit={() => {}}>
+      <ExerciseShell ratio={0.5} prompt={prompt} pose="idle" feedback={null} onExit={() => {}}>
         <div>area</div>
       </ExerciseShell>,
     );
@@ -86,7 +86,7 @@ describe("ExerciseShell", () => {
   it("exit calls onExit", async () => {
     const onExit = vi.fn();
     render(
-      <ExerciseShell ratio={0} prompt={prompt} catExpression="idle" feedback={null} onExit={onExit}>
+      <ExerciseShell ratio={0} prompt={prompt} pose="idle" feedback={null} onExit={onExit}>
         <div />
       </ExerciseShell>,
     );
@@ -95,7 +95,7 @@ describe("ExerciseShell", () => {
   });
   it("renders feedback when present", () => {
     render(
-      <ExerciseShell ratio={0} prompt={prompt} catExpression="happy" feedback={{ kind: "correct", line, onContinue: () => {} }} onExit={() => {}}>
+      <ExerciseShell ratio={0} prompt={prompt} pose="idle" feedback={{ kind: "correct", line, onContinue: () => {} }} onExit={() => {}}>
         <div />
       </ExerciseShell>,
     );

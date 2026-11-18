@@ -2,7 +2,8 @@
 
 import type { ReactNode } from "react";
 import { narrator } from "@/audio/narrator";
-import { Cat, type CatExpression } from "@/art/Cat";
+import { Nino } from "@/art/nino/Nino";
+import type { NinoPose } from "@/art/nino/poses";
 import type { Narration } from "@/domain/trail/schema";
 import { FeedbackBanner, type FeedbackKind } from "./FeedbackBanner";
 import { Bubble } from "./kit/Bubble";
@@ -13,7 +14,7 @@ import { NarrationText } from "./NarrationText";
 type ExerciseShellProps = {
   ratio: number;
   prompt: Narration;
-  catExpression: CatExpression;
+  pose: NinoPose;
   feedback: { kind: FeedbackKind; line: Narration; onContinue?: () => void } | null;
   onExit: () => void;
   /** "2 de 5": the memory training's blue bar and count pill. */
@@ -23,7 +24,7 @@ type ExerciseShellProps = {
   children: ReactNode;
 };
 
-export function ExerciseShell({ ratio, prompt, catExpression, feedback, onExit, count, steps, children }: ExerciseShellProps) {
+export function ExerciseShell({ ratio, prompt, pose, feedback, onExit, count, steps, children }: ExerciseShellProps) {
   return (
     <div className="k-screen">
       <Backdrop variant="interior" />
@@ -31,7 +32,7 @@ export function ExerciseShell({ ratio, prompt, catExpression, feedback, onExit, 
         <LessonTopBar ratio={ratio} onExit={onExit} count={count} steps={steps} />
         <div className="k-ask">
           <span className="k-cat">
-            <Cat expression={catExpression} size={104} />
+            <Nino pose={pose} size={104} speaks />
           </span>
           <Bubble onReplay={() => void narrator.playNarration(prompt)}>
             <NarrationText narration={prompt} />

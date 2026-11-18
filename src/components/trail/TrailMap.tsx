@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Animal } from "@/art/Animal";
-import { Cat } from "@/art/Cat";
+import { Nino } from "@/art/nino/Nino";
 import { Chest } from "@/art/scenes/Chest";
 import { narrator } from "@/audio/narrator";
 import { getLines } from "@/domain/trail/content";
@@ -246,7 +246,7 @@ export function TrailMap({ path, units, progress, onOpenStop }: TrailMapProps) {
                   </span>
                 </span>
               </button>
-              <Cat expression="pointing" size={92} />
+              <Nino pose="point" size={92} speaks />
             </div>
           ) : null}
         </div>

@@ -218,30 +218,30 @@ describe("StopPlayer session", () => {
     expect(value()).toBeGreaterThanOrEqual(before);
   });
 
-  describe("gatinho expression", () => {
-    const expression = () => document.querySelector("[data-expression]")!.getAttribute("data-expression");
+  describe("Nino pose", () => {
+    const expression = () => document.querySelector(".k-ask [data-pose]")!.getAttribute("data-pose");
     const tapRepeatStop: LessonStop = {
       ...full,
       exercises: [full.exercises.find((e) => e.kind === "tapRepeat")!, full.exercises[0]],
     };
 
-    it("pointing while answering, happy on correct, helping on retry and on hint", async () => {
+    it("point while answering, happy on correct, help on retry and on hint", async () => {
       renderPlayer();
       await startAndFinishIntro();
-      expect(expression()).toBe("pointing");
+      expect(expression()).toBe("point");
       let endRetry: () => void = () => {};
       narratorMock.playNarration.mockImplementation((n) =>
         JSON.stringify(n) === JSON.stringify(lines.retry) ? new Promise<void>((r) => (endRetry = r)) : Promise.resolve(),
       );
       fireEvent.click(card("bird"));
       await flush();
-      expect(expression()).toBe("helping");
+      expect(expression()).toBe("help");
       endRetry();
       await flush();
-      expect(expression()).toBe("pointing");
+      expect(expression()).toBe("point");
       fireEvent.click(card("bird"));
       await flush();
-      expect(expression()).toBe("helping"); // hint
+      expect(expression()).toBe("help"); // hint
       fireEvent.click(card("bear"));
       await flush();
       expect(expression()).toBe("happy");
@@ -251,17 +251,17 @@ describe("StopPlayer session", () => {
       renderPlayer(tapRepeatStop);
       fireEvent.click(screen.getByRole("button", { name: "Começar" }));
       await flush();
-      expect(expression()).toBe("pointing");
+      expect(expression()).toBe("point");
       const items = (tapRepeatStop.exercises[0] as Extract<LessonStop["exercises"][number], { kind: "tapRepeat" }>).items;
       fireEvent.click(document.querySelector(`button[data-card="${items[0].wordId}"]`)!);
-      expect(expression()).toBe("listening");
+      expect(expression()).toBe("listen");
       for (const it of items.slice(1)) fireEvent.click(document.querySelector(`button[data-card="${it.wordId}"]`)!);
       fireEvent.click(screen.getByRole("button", { name: "Continuar" }));
       await flush();
       expect(expression()).toBe("happy");
       fireEvent.click(within(feedback()).getByRole("button", { name: "Continuar" }));
       await flush();
-      expect(expression()).toBe("pointing"); // next exercise: override gone
+      expect(expression()).toBe("point"); // next exercise: override gone
     });
   });
 

@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Animal } from "@/art/Animal";
-import { Cat } from "@/art/Cat";
+import { Nino } from "@/art/nino/Nino";
 import { narrator } from "@/audio/narrator";
 import type { ArtId, SongStop as SongStopData, Unit } from "@/domain/trail/schema";
 import { PauseIcon, PlayIcon } from "./icons";
@@ -301,12 +301,12 @@ export function SongStop({ unit, stop, onExit, record = true, createAudio = (src
             <Animal id={line.wordId} size={220} />
           ) : (
             <span className="k-song-cat">
-              <Cat expression={playing ? "talking" : "happy"} size={190} />
+              <Nino pose="happy" size={190} />
             </span>
           )}
           {line?.wordId ? (
             <span className="k-song-mini">
-              <Cat expression={playing ? "talking" : "happy"} size={84} />
+              <Nino pose="happy" size={84} />
             </span>
           ) : null}
         </div>
