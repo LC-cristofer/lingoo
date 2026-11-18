@@ -101,7 +101,7 @@ describe("StoryStop", () => {
     await flush();
     expect(finishStop).toHaveBeenCalledTimes(1);
     expect(finishStop).toHaveBeenCalledWith(story.id);
-    expect(screen.getByRole("button", { name: "Voltar ao mapa" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Voltar ao farol" })).toBeInTheDocument();
   });
 
   it("shows Avançar and Repetir only when the page narration has ended", async () => {
@@ -153,7 +153,7 @@ describe("StoryStop", () => {
     await flush();
     expect(finishStop).not.toHaveBeenCalled();
     expect(screen.getByRole("button", { name: "Voltar" })).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: "Voltar ao mapa" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Voltar ao farol" })).not.toBeInTheDocument();
   });
 
   it("stops the narration on ✕", async () => {

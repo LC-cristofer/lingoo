@@ -127,7 +127,7 @@ async function openFromFarol(page: Page, slug: string) {
 /** Finishing a stop lands on the start page (?volta=<stop>); the next stop is entered from /farol again. */
 async function backToFarol(page: Page) {
   await expect(page.locator('[data-testid="star"]:visible')).toBeVisible({ timeout: 20_000 });
-  await page.getByRole("button", { name: "Voltar ao mapa" }).click();
+  await page.getByRole("button", { name: "Voltar ao farol" }).click();
   await expect(page).toHaveURL(/\/\?volta=forest-animals%2F/);
   await page.goto("/farol");
   await expect(page.locator('.nz-hit[data-status="current"], .nz-hit[data-status="done"]').first()).toBeVisible({ timeout: 20_000 });
@@ -277,7 +277,7 @@ test("one full unit: song, three lessons, story, challenge, memory and persisten
     await page.getByRole("button", { name: "Abrir o baú" }).click();
     await expect(page.locator('[data-art="bear"][data-earned="true"]:visible')).toBeVisible();
     await expect.poll(() => net.requested.includes("sfx/chest")).toBe(true);
-    await page.getByRole("button", { name: "Voltar ao mapa" }).click();
+    await page.getByRole("button", { name: "Voltar ao farol" }).click();
     await expect(page).toHaveURL(/\/\?volta=forest-animals%2Fchallenge$/);
   });
 

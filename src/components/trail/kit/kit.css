@@ -65,7 +65,7 @@
 .k-tile:disabled { cursor: default; }
 .k-tile.is-correct { animation: k-pop 380ms var(--ease-spring); }
 .k-tile.is-correct, .k-tile.is-tapped, .k-tile.is-matched { box-shadow: 0 0 0 5px var(--success), 0 7px 0 5px var(--success-dark), 0 0 30px 6px color-mix(in srgb, var(--success) 35%, transparent); }
-.k-tile.is-wrong { box-shadow: 0 0 0 5px var(--retry), 0 7px 0 5px var(--retry-dark), var(--shadow-soft); animation: k-shake 480ms ease-in-out; }
+.k-tile.is-wrong { box-shadow: 0 0 0 5px #E3C58C, 0 7px 0 5px #C9A46A, var(--shadow-soft); animation: k-shake 480ms ease-in-out; }
 .k-tile.is-dim { opacity: 0.4; }
 .k-tile.is-hint { box-shadow: 0 0 0 5px var(--hint), 0 7px 0 5px var(--hint-dark), 0 0 30px 6px color-mix(in srgb, var(--hint) 40%, transparent); }
 .k-tile.is-selected { box-shadow: 0 0 0 5px var(--area-linguas), 0 7px 0 5px var(--area-linguas-dark), var(--shadow-soft); }

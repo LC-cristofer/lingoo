@@ -121,7 +121,7 @@ type StopClosingProps = {
   closing: Narration;
   words: Word[];
   wordIds: ArtId[];
-  /** Challenge: "Continuar" leads to the chest. Otherwise "Voltar ao mapa" leaves ("Voltar" in review mode). */
+  /** Challenge: "Continuar" leads to the chest. Otherwise "Voltar ao farol" leaves ("Voltar" in review mode). */
   isChallenge?: boolean;
   /** False in review mode: nothing is saved and the way out goes back to the review list. */
   record?: boolean;
@@ -136,7 +136,7 @@ export function StopClosing({ closing, words, wordIds, isChallenge = false, reco
     void narrator.playNarration([...closing, ...lines.star]);
   }, [closing, lines.star]);
   // In review mode the way out is the review list, not the map.
-  const label = isChallenge ? "Continuar" : record ? "Voltar ao mapa" : "Voltar";
+  const label = isChallenge ? "Continuar" : record ? "Voltar ao farol" : "Voltar";
   return (
     <div className="k-screen">
       <Backdrop variant="farol" />

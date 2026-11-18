@@ -161,7 +161,7 @@ describe("StopPlayer session", () => {
     expect(narratorMock.playSfx).toHaveBeenCalledWith("star");
     expect(narratorMock.playNarration).toHaveBeenCalledWith([...lesson.closing, ...lines.star]);
     expect(screen.getByTestId("star")).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: "Voltar ao mapa" }));
+    fireEvent.click(screen.getByRole("button", { name: "Voltar ao farol" }));
     expect(onExit).toHaveBeenCalledTimes(1);
     expect(onExit).toHaveBeenCalledWith("done");
     expect(finishStop).toHaveBeenCalledTimes(1);
@@ -190,7 +190,7 @@ describe("StopPlayer session", () => {
     fireEvent.click(within(feedback()).getByRole("button", { name: "Continuar" }));
     await flush();
     // Not finished: the same exercise is back.
-    expect(screen.queryByRole("button", { name: "Voltar ao mapa" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Voltar ao farol" })).not.toBeInTheDocument();
     expect(finishStop).not.toHaveBeenCalled();
     fireEvent.click(card("bear"));
     await flush();
@@ -286,7 +286,7 @@ describe("StopPlayer session", () => {
     await finishMemoryRound();
     // Review mode leaves to the review list, so the button does not say "mapa".
     expect(screen.getByRole("button", { name: "Voltar" })).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: "Voltar ao mapa" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Voltar ao farol" })).not.toBeInTheDocument();
     expect(finishStop).not.toHaveBeenCalled();
     expect(addMemoryCards).not.toHaveBeenCalled();
     expect(gradeCards).not.toHaveBeenCalled();
@@ -376,7 +376,7 @@ describe("StopPlayer challenge", () => {
     expect(narratorMock.playNarration).toHaveBeenCalledWith([...lines.chestOpen, ...sticker.name]);
     expect(document.querySelector("svg.art-sticker")).toBeInTheDocument();
     expect(finishStop).toHaveBeenCalledTimes(1);
-    fireEvent.click(screen.getByRole("button", { name: "Voltar ao mapa" }));
+    fireEvent.click(screen.getByRole("button", { name: "Voltar ao farol" }));
     expect(onExit).toHaveBeenCalledTimes(1);
     expect(onExit).toHaveBeenCalledWith("done");
   });
@@ -393,7 +393,7 @@ describe("StopPlayer challenge", () => {
   it("a challenge without a sticker still offers the way back", () => {
     const onBack = vi.fn();
     render(<ChestReward stop={{ ...challenge, sticker: undefined }} lines={lines} onBack={onBack} />);
-    fireEvent.click(screen.getByRole("button", { name: "Voltar ao mapa" }));
+    fireEvent.click(screen.getByRole("button", { name: "Voltar ao farol" }));
     expect(onBack).toHaveBeenCalledTimes(1);
   });
 });

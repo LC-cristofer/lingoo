@@ -192,6 +192,13 @@ describe("LessonTopBar lamps", () => {
     expect(container.querySelector(".k-lamps")).toBeNull();
     expect(container.querySelector(".k-bar")).not.toBeNull();
   });
+
+  it("never shows a full bar before the lesson is finished", () => {
+    const { container, rerender } = render(<LessonTopBar ratio={11 / 12} steps={12} onExit={() => {}} />);
+    expect(container.querySelectorAll(".k-lamps > i[data-on]")).toHaveLength(5);
+    rerender(<LessonTopBar ratio={1} steps={12} onExit={() => {}} />);
+    expect(container.querySelectorAll(".k-lamps > i[data-on]")).toHaveLength(6);
+  });
 });
 
 describe("Backdrop", () => {

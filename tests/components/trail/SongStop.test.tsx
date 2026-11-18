@@ -290,7 +290,7 @@ describe("SongStop", () => {
     }
     expect(finishStop).toHaveBeenCalledTimes(1);
     expect(finishStop).toHaveBeenCalledWith(song.id);
-    expect(screen.getByRole("button", { name: "Voltar ao mapa" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Voltar ao farol" })).toBeInTheDocument();
     expect(narratorMock.playSfx).toHaveBeenCalledWith("star");
   });
 
@@ -310,7 +310,7 @@ describe("SongStop", () => {
     }
     expect(finishStop).not.toHaveBeenCalled();
     expect(screen.getByRole("button", { name: "Voltar" })).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: "Voltar ao mapa" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Voltar ao farol" })).not.toBeInTheDocument();
   });
 
   it("stops the audio on ✕ and on unmount", async () => {

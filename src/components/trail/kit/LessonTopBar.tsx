@@ -26,7 +26,9 @@ export function LessonTopBar({ ratio, onExit, title, count, steps }: LessonTopBa
   const total = steps ?? totalOf(count);
   const lamps = total === undefined || total <= 0 ? 0 : total <= MAX_LAMPS ? total : LESSON_LAMPS;
   const value = Math.round(Math.min(1, Math.max(0, ratio)) * 100);
-  const lit = Math.round(Math.min(1, Math.max(0, ratio)) * lamps);
+  const r = Math.min(1, Math.max(0, ratio));
+  // The last lamp lights only when the lesson is really finished.
+  const lit = r >= 1 ? lamps : Math.min(lamps - 1, Math.round(r * lamps));
   return (
     <div className="k-top">
       <button type="button" aria-label="Sair" onClick={onExit} className="k-round k-round-glass min-h-16 min-w-16">
