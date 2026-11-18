@@ -12,7 +12,7 @@ vi.mock("@/audio/narrator", () => ({
     isUnlocked: vi.fn(() => true),
   },
 }));
-vi.mock("next/navigation", () => ({ useRouter: () => ({ push: vi.fn() }) }));
+vi.mock("next/navigation", () => ({ useRouter: () => ({ push: vi.fn(), replace: vi.fn() }), useSearchParams: () => new URLSearchParams() }));
 vi.mock("@/components/nestoy/SettingsProvider", () => ({
   useSettings: () => ({ settings: { motion: "reduzir", ambient: "dia" }, update: vi.fn(), hydrated: true }),
 }));
@@ -50,8 +50,10 @@ afterEach(() => vi.useRealTimers());
 describe("music on the screens", () => {
   it("the island (the home) plays the trail track", () => {
     render(<Home />);
-    expect(calls().every((t) => t === "trail")).toBe(true);
-    expect(calls().length).toBeGreaterThan(0);
+    // the island asks for silence while it arrives (the opening plays without music), then for the trail track
+    const asked = calls().filter((t) => t !== null);
+    expect(asked.every((t) => t === "trail")).toBe(true);
+    expect(asked.length).toBeGreaterThan(0);
   });
 
   it("the album plays the album track and carries the switch", () => {

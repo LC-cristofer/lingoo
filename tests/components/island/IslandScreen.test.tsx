@@ -2,9 +2,12 @@ import { act, fireEvent, render, screen, waitFor, within } from "@testing-librar
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { Progress } from "@/domain/trail/progress";
 import { defaultSettings, type Settings } from "@/domain/nestoy/settings";
+import { dateKey } from "@/domain/trail/progress";
 
 const push = vi.fn();
-vi.mock("next/navigation", () => ({ useRouter: () => ({ push, replace: vi.fn() }) }));
+const replace = vi.fn();
+const update = vi.fn();
+vi.mock("next/navigation", () => ({ useRouter: () => ({ push, replace }) }));
 vi.mock("@/audio/narrator", () => ({
   narrator: { playNarration: vi.fn(() => Promise.resolve()), playSfx: vi.fn(), stop: vi.fn(), unlock: vi.fn(), isUnlocked: vi.fn(() => true) },
 }));
@@ -16,7 +19,7 @@ vi.mock("@/components/trail/TrailProgressProvider", () => ({
 }));
 let settings: Settings;
 vi.mock("@/components/nestoy/SettingsProvider", () => ({
-  useSettings: () => ({ settings, update: vi.fn(), hydrated: true }),
+  useSettings: () => ({ settings, update, hydrated: true }),
 }));
 
 import { IslandScreen } from "@/components/island/IslandScreen";
@@ -31,6 +34,9 @@ const card = () => screen.getByTestId("nino-card");
 
 beforeEach(() => {
   push.mockClear();
+  replace.mockClear();
+  update.mockClear();
+  sessionStorage.clear();
   ambience.play.mockClear();
   vi.mocked(narrator.playNarration).mockClear();
   vi.mocked(narrator.playSfx).mockClear();
@@ -177,5 +183,149 @@ describe("IslandScreen", () => {
     await waitFor(() => expect(screen.getByTestId("island")).toHaveAttribute("data-away", "false"));
     expect(Number(veil().style.opacity)).toBe(0);
     expect(screen.getByTestId("island")).toHaveAttribute("data-ready", "true");
+  });
+
+  describe("arrival", () => {
+    const FIRST = "forest-animals/song";
+    const done = (...ids: string[]): Progress => ({ ...empty(), completedStops: Object.fromEntries(ids.map((id) => [id, "2026-11-18T10:00:00.000Z"])) });
+    const grab = () => {
+      const box: { stage: Stage | null } = { stage: null };
+      return { box, onStage: (s: Stage | null) => { if (s) box.stage = s; } };
+    };
+
+    it("records the visit: lastVisit is today's local date key, not a timestamp", () => {
+      render(<IslandScreen mode="explore" />);
+      expect(update).toHaveBeenCalledWith({ lastVisit: dateKey(new Date()) });
+    });
+
+    it("the first visit plays the full opening: Pular shows, the card and the pins wait, and tapping Pular lands on the island", async () => {
+      settings = { ...defaultSettings(), motion: "auto" };
+      const { box, onStage } = grab();
+      render(<IslandScreen mode="auto" onStage={onStage} />);
+      expect(screen.getByTestId("island")).toHaveAttribute("data-phase", "opening");
+      expect(screen.getByTestId("island")).toHaveAttribute("data-card", "false");
+      expect(box.stage!.nino.st.eyes).toBe("closed");
+      expect(update).not.toHaveBeenCalledWith({ openingSeen: true });
+      fireEvent.click(screen.getByText("Pular"));
+      expect(screen.getByTestId("island")).toHaveAttribute("data-phase", "island");
+      expect(screen.getByTestId("island")).toHaveAttribute("data-card", "true");
+      expect(update).toHaveBeenCalledWith({ openingSeen: true });
+      expect(screen.queryByText("Pular")).not.toBeInTheDocument();
+      expect(card()).toHaveTextContent("Vamos explorar?");
+      expect(box.stage!.fx.pins.farol).toBe(1);
+      expect(narrator.stop).toHaveBeenCalled();
+    });
+
+    it("a tap on the sleeping Nino wakes him early (the greeting comes in under 5.5 s; asleep it takes 2.6 s more)", async () => {
+      settings = { ...defaultSettings(), motion: "auto" };
+      render(<IslandScreen mode="auto" />);
+      fireEvent.click(screen.getByTestId("island-sky"));
+      await waitFor(() => expect(narrator.playNarration).toHaveBeenCalledWith(getLines().ninoHello), { timeout: 5500 });
+    }, 8000);
+
+    it("the same day again goes straight to the island, with no opening and no Pular", () => {
+      settings = { ...defaultSettings(), motion: "auto", openingSeen: true, lastVisit: dateKey(new Date()) };
+      render(<IslandScreen mode="auto" />);
+      expect(screen.getByTestId("island")).toHaveAttribute("data-phase", "island");
+      expect(screen.queryByText("Pular")).not.toBeInTheDocument();
+    });
+
+    it("another day after the first opening plays the short one: no Pular, the places wait for the reveal", () => {
+      settings = { ...defaultSettings(), motion: "auto", openingSeen: true, lastVisit: "2026-01-01" };
+      render(<IslandScreen mode="auto" />);
+      expect(screen.getByTestId("island")).toHaveAttribute("data-phase", "opening");
+      expect(screen.queryByText("Pular")).not.toBeInTheDocument();
+    });
+
+    it("reduced motion: the island at once (no Pular), the full opening never plays and openingSeen stays false", () => {
+      render(<IslandScreen mode="auto" />);
+      expect(screen.getByTestId("island")).toHaveAttribute("data-phase", "island");
+      expect(screen.queryByText("Pular")).not.toBeInTheDocument();
+      expect(update).not.toHaveBeenCalledWith({ openingSeen: true });
+    });
+
+    it("?volta= naming a finished stop plays the return: the farol grows and Nino says so; the URL is cleaned", async () => {
+      progress = done(FIRST);
+      settings = { ...defaultSettings(), openingSeen: true, motion: "reduzir" };
+      const { box, onStage } = grab();
+      render(<IslandScreen mode="auto" volta={FIRST} onStage={onStage} />);
+      expect(replace).toHaveBeenCalledWith("/");
+      expect(screen.getByTestId("island")).toHaveAttribute("data-phase", "return");
+      expect(screen.getByTestId("island")).toHaveAttribute("data-card", "false");
+      expect(box.stage!.env.farolLevel).toBe(1); // as it was before the stop
+      await waitFor(() => expect(narrator.playNarration).toHaveBeenCalledWith(getLines().farolGrew), { timeout: 4000 });
+      expect(box.stage!.env.farolLevel).toBe(2);
+      expect(box.stage!.fx.pennant[2]).toBeGreaterThan(0); // the new pennants are flying up
+    });
+
+    it("?volta= naming a stop that is not finished opens to explore", () => {
+      settings = { ...defaultSettings(), openingSeen: true, motion: "reduzir" };
+      render(<IslandScreen mode="auto" volta={FIRST} />);
+      expect(screen.getByTestId("island")).toHaveAttribute("data-phase", "island");
+      expect(card()).toHaveTextContent("Vamos explorar?");
+      expect(narrator.playNarration).not.toHaveBeenCalledWith(getLines().farolGrew);
+    });
+
+    it("an arrival resets the card and the focus left from the last visit (a hidden route comes back)", async () => {
+      const { rerender } = render(<IslandScreen mode="explore" />);
+      fireEvent.click(pin("Torre dos Números"));
+      expect(card()).toHaveTextContent("Em breve");
+      settings = { ...defaultSettings(), motion: "auto", openingSeen: true, lastVisit: dateKey(new Date()) }; // rebuilds the stage
+      rerender(<IslandScreen mode="explore" />);
+      await waitFor(() => expect(card()).toHaveTextContent("Vamos explorar?"));
+      expect(screen.getByTestId("island")).toHaveAttribute("data-focus", "none");
+    });
+  });
+
+  describe("pause and bedtime", () => {
+    it("after the chosen minutes Nino suggests a pause; Pausar shows the break with Nino asleep, Voltar a brincar ends it", async () => {
+      settings = { ...defaultSettings(), motion: "reduzir", pauseMinutes: 15 };
+      sessionStorage.setItem("lingoo:session:start", String(Date.now() - 16 * 60_000));
+      render(<IslandScreen mode="explore" />);
+      expect(card()).toHaveTextContent("Que tal uma pausa?");
+      expect(card()).toHaveTextContent("Lembrete de 15 min");
+      await waitFor(() => expect(narrator.playNarration).toHaveBeenCalledWith(getLines().pauseSuggest));
+      fireEvent.click(screen.getByRole("button", { name: "Pausar" }));
+      const dialog = await screen.findByRole("dialog", { name: "Pausa" });
+      expect(dialog).toHaveTextContent("O Nino foi descansar no ninho.");
+      fireEvent.click(within(dialog).getByRole("button", { name: "Voltar a brincar" }));
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+      expect(card()).toHaveTextContent("Oi de novo!");
+      // the next reminder counts from now
+      expect(Date.now() - Number(sessionStorage.getItem("lingoo:session:start"))).toBeLessThan(5000);
+    });
+
+    it("no reminder before the time, or when the reminder is off", () => {
+      settings = { ...defaultSettings(), motion: "reduzir", pauseMinutes: 15 };
+      sessionStorage.setItem("lingoo:session:start", String(Date.now() - 5 * 60_000));
+      const { unmount } = render(<IslandScreen mode="explore" />);
+      expect(card()).toHaveTextContent("Vamos explorar?");
+      unmount();
+      settings = { ...defaultSettings(), motion: "reduzir", pauseMinutes: 0 };
+      sessionStorage.setItem("lingoo:session:start", String(Date.now() - 600 * 60_000));
+      render(<IslandScreen mode="explore" />);
+      expect(card()).toHaveTextContent("Vamos explorar?");
+    });
+
+    it("the session start is written on the first arrival of the session and kept", () => {
+      render(<IslandScreen mode="explore" />);
+      const first = sessionStorage.getItem("lingoo:session:start");
+      expect(Number(first)).toBeGreaterThan(0);
+    });
+
+    it("on the routine at night: the island darkens for bedtime, once per evening; ambient noite just shows the night", async () => {
+      settings = { ...defaultSettings(), motion: "reduzir", ambient: "rotina", bedtime: "00:00" };
+      const { box, onStage } = (() => { const b: { stage: Stage | null } = { stage: null }; return { box: b, onStage: (s: Stage | null) => { if (s) b.stage = s; } }; })();
+      const { unmount } = render(<IslandScreen mode="explore" onStage={onStage} />);
+      expect(card()).toHaveTextContent("Hora de dormir");
+      expect(screen.getByTestId("island")).toHaveAttribute("data-phase", "night");
+      await waitFor(() => expect(box.stage!.env.night).toBe(1), { timeout: 3000 });
+      expect(Object.keys(sessionStorage).some((k) => k.startsWith("lingoo:bedtime:"))).toBe(true);
+      unmount();
+      // the same evening again: no second bedtime, the island is simply night
+      render(<IslandScreen mode="explore" onStage={onStage} />);
+      expect(card()).toHaveTextContent("Vamos explorar?");
+      expect(box.stage!.env.night).toBe(1);
+    });
   });
 });

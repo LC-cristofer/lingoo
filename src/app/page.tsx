@@ -1,5 +1,10 @@
-import { IslandScreen } from "@/components/island/IslandScreen";
+import { Suspense } from "react";
+import { IslandRoute } from "@/components/island/IslandRoute";
 
 export default function Home() {
-  return <IslandScreen mode="explore" />;
+  return (
+    <Suspense fallback={null}>
+      <IslandRoute />
+    </Suspense>
+  );
 }

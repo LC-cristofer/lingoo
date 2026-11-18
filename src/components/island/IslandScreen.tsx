@@ -6,6 +6,7 @@ import type { NinoPose } from "@/art/nino/poses";
 import { poseState } from "@/art/nino/poses";
 import { ambience } from "@/audio/ambience";
 import { narrator } from "@/audio/narrator";
+import type { Track } from "@/audio/music";
 import { useBackgroundMusic } from "@/audio/useBackgroundMusic";
 import { NinoCard, type ChipTone } from "@/components/nestoy/NinoCard";
 import { useSettings } from "@/components/nestoy/SettingsProvider";
@@ -13,13 +14,17 @@ import { StageView, type StageInsets } from "@/components/nestoy/StageView";
 import { useTrailProgress } from "@/components/trail/TrailProgressProvider";
 import { useToday } from "@/components/trail/useToday";
 import { farolLevel, LAUNCH_STATES, nestThreads, suggestedPlace } from "@/domain/nestoy/island-view";
-import { isNight } from "@/domain/nestoy/settings";
+import { isNight, openingMode, pauseDue } from "@/domain/nestoy/settings";
 import { getLines, getPath, getUnit } from "@/domain/trail/content";
-import { emptyProgress } from "@/domain/trail/progress";
-import { focusCam, overviewCam, type Viewport } from "@/world/camera";
+import { dateKey, emptyProgress } from "@/domain/trail/progress";
+import { focusCam, nestCloseCam, overviewCam, type Viewport } from "@/world/camera";
 import { PLACE_ANCHORS, type PlaceId, type PlaceState } from "@/world/island";
 import type { Stage } from "@/world/stage";
-import { diveIntoFarol, focusPlace, goToFarol, NEST_FRONT, NINO_ISLAND_SCALE, settle, toOverview } from "./flows";
+import { diveIntoFarol, focusPlace, goToFarol, settle, toOverview, type LineKey, type Say, type Sfx } from "./flows";
+import { Opening } from "./Opening";
+import { PauseOverlay } from "./PauseOverlay";
+import { playOpening, showIsland, skipOpening, wakeEarly } from "./opening";
+import { playBedtime, playReturn, returnPlan, settleFarol, wakeToIsland } from "./return";
 import { Pins, PLACE_NAMES } from "./Pins";
 import { TopBar } from "./TopBar";
 
@@ -45,21 +50,70 @@ function subscribeSide(cb: () => void) {
 }
 const sideNow = () => typeof window !== "undefined" && !!window.matchMedia && window.matchMedia(SIDE_QUERY).matches;
 
-type View = { title: string; text: string; chip: string; tone: ChipTone; enter: boolean };
-const EXPLORE: View = { title: "Vamos explorar?", text: "Toque num lugar da ilha.", chip: "", tone: "ok", enter: false };
+const SESSION_KEY = "lingoo:session:start";
+
+function session(): Storage | null {
+  try {
+    return typeof window === "undefined" ? null : window.sessionStorage;
+  } catch {
+    return null;
+  }
+}
+function readSession(key: string): string | null {
+  try {
+    return session()?.getItem(key) ?? null;
+  } catch {
+    return null;
+  }
+}
+function writeSession(key: string, value: string): void {
+  try {
+    session()?.setItem(key, value);
+  } catch {
+    /* blocked storage: the reminder simply runs from this page's own clock */
+  }
+}
+/** The evening counts for the date it started: after midnight (until 06:00) it is still yesterday's. */
+const bedtimeKey = (now: Date) => `lingoo:bedtime:${dateKey(new Date(now.getTime() - 6 * 3_600_000))}`;
+
+type Phase = "boot" | "opening" | "return" | "island" | "night" | "sleep" | "pause";
+type Act = "enter" | "pause" | "wake";
+type View = { title: string; text: string; chip: string; tone: ChipTone; act?: Act };
+const EXPLORE: View = { title: "Vamos explorar?", text: "Toque num lugar da ilha.", chip: "", tone: "ok" };
+
+function SunIcon() {
+  return (
+    <svg viewBox="0 0 20 20" width="30" height="30" aria-hidden="true">
+      <circle cx="10" cy="10" r="4.5" fill="currentColor" />
+      <g stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+        <path d="M10 1.5v2.5M10 16v2.5M1.5 10H4M16 10h2.5M4 4l1.8 1.8M14.2 14.2L16 16M4 16l1.8-1.8M14.2 5.8L16 4" />
+      </g>
+    </svg>
+  );
+}
+
+function PauseIcon() {
+  return (
+    <svg viewBox="0 0 20 20" width="28" height="28" aria-hidden="true">
+      <rect x="5" y="4" width="3.6" height="12" rx="1.5" fill="currentColor" />
+      <rect x="11.4" y="4" width="3.6" height="12" rx="1.5" fill="currentColor" />
+    </svg>
+  );
+}
 
 export type IslandScreenProps = {
-  /** Task 8 adds the opening and the return; for now the island always arrives ready to explore. */
-  mode: "explore";
+  /** "auto": the visit decides what opens (the opening, the return from a stop, the bedtime). "explore": straight to the island. */
+  mode?: "auto" | "explore";
+  /** The stop the child has just finished (`?volta=`): it opens the return when it names a finished stop of the unit. */
+  volta?: string | null;
   /** The live stage once mounted, and null once destroyed. */
   onStage?: (stage: Stage | null) => void;
 };
 
-/** The island home: the world stage, six place pins, the Nino card and the top bar. */
-export function IslandScreen({ onStage }: IslandScreenProps) {
+/** The island home: the world stage, six place pins, the Nino card and the top bar; it also plays the opening, the return and the night. */
+export function IslandScreen({ mode = "auto", volta = null, onStage }: IslandScreenProps) {
   const router = useRouter();
-  useBackgroundMusic("trail");
-  const { settings, hydrated: settingsReady } = useSettings();
+  const { settings, update, hydrated: settingsReady } = useSettings();
   const { progress, hydrated: progressReady } = useTrailProgress();
   const today = useToday();
   const unit = useMemo(() => getUnit(UNIT_ID), []);
@@ -74,10 +128,15 @@ export function IslandScreen({ onStage }: IslandScreenProps) {
   const [focus, setFocus] = useState<PlaceId | null>(null);
   const [pose, setPose] = useState<NinoPose>("idle");
   const [speaks, setSpeaks] = useState(false);
-  const [ready, setReady] = useState(false);
+  const [phase, setPhaseState] = useState<Phase>("boot");
+  const [chrome, setChrome] = useState({ top: false, card: false });
+  const [intro, setIntro] = useState(false); // the full opening runs: logo and "Pular"
   const [away, setAway] = useState(false);
   const [night, setNight] = useState(false);
   const [stage, setStage] = useState<Stage | null>(null);
+  const [track, setTrack] = useState<Track | null>(null); // the trail music starts at arrival, never during the opening
+  useBackgroundMusic(track);
+  const ready = phase === "island";
 
   // ---- layout: what the top bar and the card cover decides where the camera frames the island ----
   const side = useSyncExternalStore(subscribeSide, sideNow, () => false);
@@ -111,13 +170,24 @@ export function IslandScreen({ onStage }: IslandScreenProps) {
   const stageRef = useRef<Stage | null>(null);
   const vpRef = useRef<Viewport | null>(null);
   const focusRef = useRef<PlaceId | null>(null);
+  const phaseRef = useRef<Phase>("boot");
   const flowRef = useRef(0); // bumped by every interaction: an older flow stops touching the screen
   const veilRef = useRef<HTMLDivElement>(null);
+  const zzRef = useRef<HTMLSpanElement>(null);
   const awayRef = useRef(false); // the dive is running or done: the island ignores taps
-  const live = useRef({ settings, level });
+  const busyRef = useRef(false); // the bedtime or the pause suggestion is starting: no second one
+  const pauseCardRef = useRef(false); // the "Que tal uma pausa?" card is up
+  const pendingVolta = useRef<string | null>(null); // the stop to show the return for, until it has played
+  const skipRef = useRef<() => void>(() => {});
+  const tickRef = useRef<() => void>(() => {});
+  const live = useRef({ settings, level, progress: p, volta, mode, update });
   useEffect(() => {
-    live.current = { settings, level };
+    live.current = { settings, level, progress: p, volta, mode, update };
   });
+  const setPhase = useCallback((next: Phase) => {
+    phaseRef.current = next;
+    setPhaseState(next);
+  }, []);
 
   /** Where the camera rests for the current focus, with the latest insets. */
   const rest = useCallback((vp: Viewport) => (focusRef.current ? focusCam(PLACE_ANCHORS[focusRef.current], vp) : overviewCam(vp)), []);
@@ -134,30 +204,140 @@ export function IslandScreen({ onStage }: IslandScreenProps) {
     if (s && idle.current) Object.assign(s.cam, rest(vp));
   }, [rest]);
 
-  // Arrival (until Task 8's opening): Nino stands in front of the nest, the whole island in view, the ambient set.
+  // The sleeping Nino's "z z z" follows the nest on screen.
   useEffect(() => {
-    const vp = vpRef.current, s = stageRef.current;
-    if (!stage || !s || !vp) return;
-    const night = isNight(live.current.settings, new Date());
-    s.env.night = night ? 1 : 0;
-    s.env.farolLevel = live.current.level;
-    setNight(night);
-    ambience.play(night ? "night" : "day");
-    s.moveNino("actors");
-    Object.assign(s.nino.st, { x: NEST_FRONT.x, y: NEST_FRONT.y, s: NINO_ISLAND_SCALE, walk: 0, alpha: 1, facing: 1 });
-    Object.assign(s.cam, overviewCam(vp));
-    focusRef.current = null;
-    idle.current = true;
-    // coming back from the farol (the route was kept hidden): the UI is back, the veil is gone
+    if (!stage) return;
+    const place = () => {
+      const el = zzRef.current;
+      if (!el) return;
+      const [x, y] = stage.screenOf(548, 770);
+      el.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px)`;
+    };
+    place();
+    return stage.onFrame(place);
+  }, [stage]);
+
+  const sfx = useMemo<Sfx>(() => (name) => narrator.playSfx(name), []);
+
+  // ---- arrival: the opening, the return from a stop, or straight to the island ----
+  useEffect(() => {
+    const s = stageRef.current, vp = vpRef.current;
+    if (!stage || !s || !vp || stage !== s) return;
+    let cancelled = false;
+    // The route may have been kept hidden: nothing of the last visit's transient UI survives an arrival.
     awayRef.current = false;
     setAway(false);
     if (veilRef.current) veilRef.current.style.opacity = "0";
-    setReady(true);
+    focusRef.current = null;
+    setFocus(null);
+    setView(EXPLORE);
+    setPose("idle");
+    setSpeaks(false);
+    setIntro(false);
+    busyRef.current = false;
+    pauseCardRef.current = false;
+    idle.current = false;
+    s.fx.intro.fade = 0;
+    setTrack(null);
+
+    if (!settingsReady || !progressReady) {
+      // Waiting for the stored settings: the nest close-up, Nino asleep, nothing else yet.
+      // (the screen starts in the "boot" phase with the chrome hidden, and hydration only ever flips once)
+      s.moveNino("nest");
+      Object.assign(s.nino.st, { x: 500, y: 1070, s: 0.56 }, poseState("sleep"));
+      Object.assign(s.cam, nestCloseCam(vp));
+      for (const id of Object.keys(s.fx.pins) as PlaceId[]) s.fx.pins[id] = 0;
+      return;
+    }
+
+    const { settings: cfg, level: lv, progress: prog } = live.current;
+    const now = new Date();
+    // Opened after bedtime the island is simply night; the tick below puts Nino to bed once per evening on the routine.
+    const startNight = isNight(cfg, now);
+    s.env.night = startNight ? 1 : 0;
+    setNight(startNight);
+    settleFarol(s, lv);
+    ambience.play(startNight ? "night" : "day");
+    if (readSession(SESSION_KEY) === null) writeSession(SESSION_KEY, String(Date.now()));
+
+    // ?volta=<stop>: a finished stop of the unit opens the return; anything else opens to explore
+    const named = live.current.volta;
+    if (named) {
+      pendingVolta.current = named;
+      router.replace("/"); // a reload must not play it again
+    }
+    const plan = unit ? returnPlan(prog, unit, pendingVolta.current) : null;
+    if (!plan) pendingVolta.current = null;
+    const how = plan ? "return" : live.current.mode === "explore" ? "none" : openingMode(cfg, now, s.env.reduced);
+    live.current.update({ lastVisit: dateKey(now) });
+
+    let interval: ReturnType<typeof setInterval> | undefined;
+    const arrive = (keepCard: boolean) => {
+      if (cancelled) return;
+      pendingVolta.current = null;
+      if (how === "full") live.current.update({ openingSeen: true });
+      const v = vpRef.current ?? vp;
+      Object.assign(s.cam, rest(v));
+      idle.current = true;
+      if (!keepCard) setView(EXPLORE);
+      setPose("idle");
+      setSpeaks(false);
+      setIntro(false);
+      setChrome({ top: true, card: true });
+      setPhase("island");
+      setTrack(startNight ? null : "trail");
+      interval = setInterval(() => tickRef.current(), 30_000);
+      tickRef.current();
+    };
+
+    let cardShown = false;
+    const say: Say = async (key: LineKey) => {
+      if (cancelled) return;
+      if (key === "nestSaved" && plan) {
+        // the nest card appears as Nino says he kept the sticker
+        setView({ title: PLACE_NAMES.ninho, text: lines.nestSaved[0].text, chip: plan.newThread ? "Novo fio no ninho" : "Figurinha guardada", tone: "ok" });
+        setChrome({ top: true, card: true });
+        setPose("happy");
+        cardShown = true;
+      }
+      setSpeaks(true);
+      await narrator.playNarration(lines[key]);
+      if (!cancelled) setSpeaks(false);
+    };
+
+    if (how === "return" && plan) {
+      setPhase("return");
+      setChrome({ top: true, card: false });
+      void playReturn(s, vp, plan, say, sfx).then(() => arrive(cardShown));
+    } else if (how === "full" || how === "short") {
+      setPhase("opening");
+      setChrome({ top: false, card: false });
+      setIntro(how === "full");
+      skipRef.current = () => {
+        if (cancelled || phaseRef.current !== "opening") return;
+        narrator.stop();
+        void skipOpening(s, vpRef.current ?? vp);
+        arrive(false);
+      };
+      void playOpening(s, how, vp, say, sfx).then(() => arrive(false));
+    } else if (how === "reduced") {
+      // no camera, no hops: the island is there at once and a 400 ms fade clears over it
+      void playOpening(s, "full", vp, say, sfx);
+      arrive(false);
+    } else {
+      showIsland(s, vp);
+      arrive(false);
+    }
+
     return () => {
-      setReady(false);
+      cancelled = true;
+      clearInterval(interval);
+      s.tl.cancelAll();
       ambience.stop();
     };
-  }, [stage]);
+    // Settings and progress are read through `live`: only the stage and the hydration decide when an arrival starts.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stage, settingsReady, progressReady]);
 
   // ---- interactions ----
   /** Cancels whatever flow is running: its promises never resolve, so the screen restores what it touched. */
@@ -181,9 +361,11 @@ export function IslandScreen({ onStage }: IslandScreenProps) {
     setPose(to);
   }, []);
 
+  const restartSession = useCallback(() => writeSession(SESSION_KEY, String(Date.now())), []);
+
   const goOverview = useCallback(async () => {
     const s = stageRef.current, vp = vpRef.current;
-    if (!s || !vp || awayRef.current || focusRef.current === null) return;
+    if (!s || !vp || awayRef.current || phaseRef.current !== "island" || focusRef.current === null) return;
     const token = interrupt();
     focusRef.current = null;
     setFocus(null);
@@ -197,8 +379,13 @@ export function IslandScreen({ onStage }: IslandScreenProps) {
 
   const pressPlace = useCallback(async (id: PlaceId) => {
     const s = stageRef.current, vp = vpRef.current;
-    if (!s || !vp || awayRef.current) return;
+    if (!s || !vp || awayRef.current || phaseRef.current !== "island") return;
     narrator.playSfx("tap");
+    pendingVolta.current = null;
+    if (pauseCardRef.current) {
+      pauseCardRef.current = false; // the child kept playing: the next reminder counts from now
+      restartSession();
+    }
     if (id === "ninho") {
       router.push("/ninho");
       return;
@@ -214,35 +401,36 @@ export function IslandScreen({ onStage }: IslandScreenProps) {
       if (vpRef.current) Object.assign(s.cam, rest(vpRef.current));
     };
     if (id === "farol") {
-      setView({ title: PLACE_NAMES.farol, text: `Inglês · Unidade 1: ${unitTitle}`, chip: "Pronto", tone: "ok", enter: false });
+      setView({ title: PLACE_NAMES.farol, text: `Inglês · Unidade 1: ${unitTitle}`, chip: "Pronto", tone: "ok" });
       await goToFarol(s, vp);
       if (token !== flowRef.current) return;
       setPose("point");
       Object.assign(s.nino.st, poseState("point"));
-      setView((v) => ({ ...v, enter: true }));
+      setView((v) => ({ ...v, act: "enter" }));
       await done();
       await speak(token, lines.placeFarol);
       if (token === flowRef.current) Object.assign(s.nino.st, poseState("idle"));
     } else if (id === "letras") {
-      setView({ title: PLACE_NAMES.letras, text: "Os construtores estão trabalhando aqui.", chip: "Em construção", tone: "obra", enter: false });
+      setView({ title: PLACE_NAMES.letras, text: "Os construtores estão trabalhando aqui.", chip: "Em construção", tone: "obra" });
       setPose("help");
       void speak(token, lines.placeBuilding);
       await focusPlace(s, id, vp);
       await done();
     } else {
-      setView({ title: PLACE_NAMES[id], text: "Um lugar novo vai nascer aqui.", chip: "Em breve", tone: "futuro", enter: false });
+      setView({ title: PLACE_NAMES[id], text: "Um lugar novo vai nascer aqui.", chip: "Em breve", tone: "futuro" });
       setPose("help");
       void speak(token, lines.soonUnit);
       await focusPlace(s, id, vp);
       await done();
     }
-  }, [interrupt, lines, rest, router, speak, unitTitle]);
+  }, [interrupt, lines, rest, restartSession, router, speak, unitTitle]);
 
   const enterFarol = useCallback(async () => {
     const s = stageRef.current, vp = vpRef.current;
     if (!s || !vp) return;
     if (awayRef.current) return;
     awayRef.current = true;
+    pendingVolta.current = null;
     const token = interrupt();
     idle.current = false;
     setAway(true);
@@ -253,10 +441,113 @@ export function IslandScreen({ onStage }: IslandScreenProps) {
     router.push("/farol");
   }, [interrupt, router]);
 
+  // ---- the night and the pause ----
+  const startBedtime = useCallback(async () => {
+    const s = stageRef.current, vp = vpRef.current;
+    if (!s || !vp || phaseRef.current !== "island" || busyRef.current || awayRef.current) return;
+    busyRef.current = true;
+    writeSession(bedtimeKey(new Date()), "1");
+    const token = interrupt();
+    idle.current = false;
+    pauseCardRef.current = false;
+    narrator.stop();
+    setPhase("night");
+    setNight(true);
+    setPose("idle");
+    setView({ title: "Hora de dormir", text: "A rotina foi combinada pelos responsáveis.", chip: live.current.settings.bedtime, tone: "noite" });
+    setChrome({ top: true, card: true });
+    ambience.play("night"); // crickets instead of the music
+    setTrack(null);
+    const say: Say = async (key) => {
+      if (token !== flowRef.current) return;
+      setSpeaks(true);
+      await narrator.playNarration(lines[key]);
+      if (token === flowRef.current) setSpeaks(false);
+    };
+    await playBedtime(s, vp, say, sfx);
+    if (token !== flowRef.current) return;
+    busyRef.current = false;
+    setSpeaks(false);
+    setPhase("sleep");
+    setView({ title: "Hora de dormir", text: "A rotina foi combinada pelos responsáveis.", chip: live.current.settings.bedtime, tone: "noite", act: "wake" });
+  }, [interrupt, lines, setPhase, sfx]);
+
+  const wakeUp = useCallback(async () => {
+    const s = stageRef.current, vp = vpRef.current;
+    if (!s || !vp || phaseRef.current !== "sleep") return;
+    const token = interrupt();
+    setPhase("night");
+    setView(EXPLORE);
+    await wakeToIsland(s, vp, sfx);
+    if (token !== flowRef.current) return;
+    focusRef.current = null;
+    idle.current = true;
+    Object.assign(s.cam, overviewCam(vpRef.current ?? vp));
+    setPhase("island");
+  }, [interrupt, setPhase, sfx]);
+
+  const startPause = useCallback(async () => {
+    const s = stageRef.current;
+    if (!s || phaseRef.current !== "island" || busyRef.current || awayRef.current || pauseCardRef.current) return;
+    busyRef.current = true;
+    pauseCardRef.current = true;
+    const token = interrupt();
+    const minutes = live.current.settings.pauseMinutes;
+    setView({ title: "Que tal uma pausa?", text: "Você brincou bastante hoje.", chip: `Lembrete de ${minutes} min`, tone: "noite", act: "pause" });
+    setPose("stretch");
+    narrator.playSfx("stretch");
+    setSpeaks(true);
+    await narrator.playNarration(lines.pauseSuggest);
+    busyRef.current = false;
+    if (token !== flowRef.current) return;
+    setSpeaks(false);
+    setPose("idle");
+  }, [interrupt, lines]);
+
+  const doPause = useCallback(() => {
+    if (phaseRef.current !== "island") return;
+    narrator.stop();
+    narrator.playSfx("tap");
+    interrupt();
+    pauseCardRef.current = false;
+    setTrack(null);
+    ambience.stop();
+    setPhase("pause");
+  }, [interrupt, setPhase]);
+
+  const resume = useCallback(() => {
+    restartSession();
+    const dark = isNight(live.current.settings, new Date()) && live.current.settings.ambient !== "rotina";
+    ambience.play(dark || stageRef.current?.env.night === 1 ? "night" : "day");
+    setTrack(stageRef.current?.env.night === 1 ? null : "trail");
+    setView({ title: "Oi de novo!", text: "Vamos continuar?", chip: "", tone: "ok" });
+    setPose("wave");
+    setPhase("island");
+  }, [restartSession, setPhase]);
+
+  // Every 30 s the island is idle: is it bedtime, or time for a break?
+  useEffect(() => {
+    tickRef.current = () => {
+      if (phaseRef.current !== "island" || busyRef.current || awayRef.current || focusRef.current !== null) return;
+      const cfg = live.current.settings, now = new Date();
+      if (cfg.ambient === "rotina" && isNight(cfg, now) && readSession(bedtimeKey(now)) === null) {
+        void startBedtime();
+        return;
+      }
+      const startedAt = Number(readSession(SESSION_KEY));
+      if (startedAt > 0 && !pauseCardRef.current && pauseDue(cfg, startedAt, Date.now())) void startPause();
+    };
+  }, [startBedtime, startPause]);
+
   /** A tap on the world: a place's body opens it, anything else (the sky, the sea) goes back to the whole island. */
   const tapWorld = (e: React.MouseEvent<HTMLDivElement>) => {
     const s = stageRef.current;
-    if (!s || !ready || awayRef.current) return;
+    if (!s || awayRef.current) return;
+    if (phaseRef.current === "opening") {
+      wakeEarly(s); // a tap on the sleeping Nino wakes him
+      return;
+    }
+    if (phaseRef.current !== "island") return;
     const r = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - r.left, y = e.clientY - r.top;
     const k = s.screenOf(1, 0)[0] - s.screenOf(0, 0)[0]; // px per world unit
@@ -268,18 +559,40 @@ export function IslandScreen({ onStage }: IslandScreenProps) {
       if (d <= b.r * k && d < bestD) { best = id; bestD = d; }
     });
     if (best) void pressPlace(best);
-    else void goOverview();
+    else if (pauseCardRef.current) {
+      pauseCardRef.current = false; // tapping the sky: keep playing
+      restartSession();
+      setView(EXPLORE);
+    } else void goOverview();
   };
 
+  const action =
+    view.act === "enter" ? { label: "Entrar no farol", onPress: () => void enterFarol() }
+    : view.act === "pause" ? { label: "Pausar", onPress: doPause, icon: <PauseIcon /> }
+    : view.act === "wake" ? { label: "Brincar mais um pouco", onPress: () => void wakeUp(), icon: <SunIcon /> }
+    : undefined;
   const glow = focus ?? suggested;
   return (
-    <div className="nz-screen nz-island" data-ready={ready} data-away={away} data-focus={focus ?? "none"} data-testid="island">
-      {settingsReady && progressReady ? (
-        <StageView scene="island" states={LAUNCH_STATES} threads={threads} farolLevel={level} insets={insets} onStage={onStageMount} onViewport={onViewport} />
-      ) : null}
+    <div
+      className="nz-screen nz-island"
+      data-ready={ready}
+      data-away={away}
+      data-focus={focus ?? "none"}
+      data-phase={phase}
+      data-top={chrome.top}
+      data-card={chrome.card}
+      data-testid="island"
+    >
+      <StageView scene="island" states={LAUNCH_STATES} threads={threads} farolLevel={level} insets={insets} onStage={onStageMount} onViewport={onViewport} />
       <div className="nz-island-sky" data-testid="island-sky" onClick={tapWorld} />
+      <span ref={zzRef} className="nz-zz" aria-hidden="true"><span>z</span><span>z</span><span>z</span></span>
       <Pins stage={stage} states={STATES} glow={ready ? glow : null} onPress={(id) => void pressPlace(id)} />
-      <TopBar ref={barRef} night={night} onNest={() => router.push("/ninho")} onParents={() => router.push("/responsaveis")} />
+      <TopBar
+        ref={barRef}
+        night={night}
+        onNest={() => { pendingVolta.current = null; router.push("/ninho"); }}
+        onParents={() => { pendingVolta.current = null; router.push("/responsaveis"); }}
+      />
       <NinoCard
         ref={cardRef}
         title={view.title}
@@ -288,9 +601,11 @@ export function IslandScreen({ onStage }: IslandScreenProps) {
         tone={view.tone}
         pose={pose}
         speaks={speaks}
-        action={view.enter ? { label: "Entrar no farol", onPress: () => void enterFarol() } : undefined}
+        action={action}
       />
+      <Opening stage={stage} active={intro} onSkip={() => skipRef.current()} />
       <div ref={veilRef} className="nz-veil" aria-hidden="true" />
+      {phase === "pause" ? <PauseOverlay onResume={resume} /> : null}
     </div>
   );
 }

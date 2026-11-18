@@ -23,7 +23,13 @@ export type Stage = {
   cam: Cam;
   nino: NinoRig;
   env: { night: number; farolLevel: number; reduced: boolean };
-  fx: { pennant: number[]; boatX: number; thread: number[]; lampPulse: number; hammerFast: boolean; wiggle: Partial<Record<PlaceId, number>> };
+  fx: {
+    pennant: number[]; boatX: number; thread: number[]; lampPulse: number; hammerFast: boolean; wiggle: Partial<Record<PlaceId, number>>;
+    /** How much each place's pin has appeared (0 hidden, 1 shown; the opening pops them one by one). */
+    pins: Record<PlaceId, number>;
+    /** The opening's overlay: logo, "Pular" and the cream fade (all 0 to 1). */
+    intro: { logo: number; skip: number; fade: number };
+  };
   setViewport(vp: Viewport): void;
   frame(t: number): void;
   screenOf(x: number, y: number): [number, number];
@@ -63,6 +69,7 @@ export function createStage(host: HTMLElement, o: StageOptions): Stage {
   const env = { night: 0, farolLevel: o.farolLevel as number, reduced: o.reduced };
   const fx: Stage["fx"] = {
     pennant: [1, 1, 0, 0, 0], boatX: 120, thread: [0, 1, 2, 3].map(i => (i < o.threads ? 1 : 0)), lampPulse: 0, hammerFast: false, wiggle: {},
+    pins: { ninho: 1, letras: 1, numeros: 1, cores: 1, lago: 1, farol: 1 }, intro: { logo: 0, skip: 0, fade: 0 },
   };
   let vp: Viewport = { w: host.clientWidth || 390, h: host.clientHeight || 844, top: 108, bottom: 150 };
   // farol: starts at the door at D 0.5 (the plan for Task 6; the prototype's icam was 500,2280,0.45)

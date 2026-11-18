@@ -104,11 +104,14 @@ export function Pins({ stage, states, glow, onPress }: PinsProps) {
         const b = refs.current[id];
         if (!b) return;
         const [sx, sy] = pos[i];
-        const vis = sx > -PIN && sx < w + PIN && sy > -PIN && sy < h + PIN ? "visible" : "hidden";
-        const key = `${sx.toFixed(1)},${sy.toFixed(1)},${vis}`;
+        // the opening pops the pins in one by one: fx.pins is how much each one has appeared (the pop may overshoot 1)
+        const shown = stage.fx.pins[id];
+        const vis = shown > 0.01 && sx > -PIN && sx < w + PIN && sy > -PIN && sy < h + PIN ? "visible" : "hidden";
+        const key = `${sx.toFixed(1)},${sy.toFixed(1)},${vis},${shown.toFixed(3)}`;
         if (seen[id] === key) return;
         seen[id] = key;
-        b.style.transform = `translate(${(sx - PIN / 2).toFixed(1)}px, ${(sy - PIN / 2).toFixed(1)}px)`;
+        b.style.transform = `translate(${(sx - PIN / 2).toFixed(1)}px, ${(sy - PIN / 2).toFixed(1)}px) scale(${shown >= 1 ? 1 : (0.4 + 0.6 * Math.max(0, shown)).toFixed(3)})`;
+        b.style.opacity = Math.min(1, Math.max(0, shown)).toFixed(3);
         b.style.visibility = vis;
       });
     };

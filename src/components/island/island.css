@@ -5,8 +5,8 @@
 
 /* ---------- pins: 64 px buttons, 46 px medallions, moved with the camera ---------- */
 .nz-pins { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
-.nz-pin { position: absolute; left: 0; top: 0; width: 64px; height: 64px; padding: 0; border: 0; background: transparent; display: grid; place-items: center; cursor: pointer; pointer-events: none; opacity: 0; will-change: transform; -webkit-tap-highlight-color: transparent; transition: opacity var(--t-slow) var(--ease-out); }
-.nz-island[data-ready="true"] .nz-pin { pointer-events: auto; opacity: 1; }
+.nz-pin { position: absolute; left: 0; top: 0; width: 64px; height: 64px; padding: 0; border: 0; background: transparent; display: grid; place-items: center; cursor: pointer; pointer-events: none; opacity: 0; will-change: transform, opacity; -webkit-tap-highlight-color: transparent; }
+.nz-island[data-ready="true"] .nz-pin { pointer-events: auto; }
 .nz-pin-med { position: relative; width: 46px; height: 46px; display: grid; place-items: center; border-radius: 50%; background: var(--cream); border: 3px solid var(--c); box-shadow: 0 4px 10px color-mix(in srgb, var(--cocoa) 25%, transparent); font-family: var(--font-display); font-weight: 700; font-size: 14px; line-height: 1; color: var(--cocoa); transition: transform var(--t-quick) var(--ease-out); }
 .nz-pin-med b { font-weight: 700; }
 .nz-pin-med svg { width: 30px; display: block; }
@@ -38,6 +38,40 @@
 .nz-island[data-away="true"] .nz-pins, .nz-island[data-away="true"] .nz-card, .nz-island[data-away="true"] .nz-topbar { opacity: 0; pointer-events: none; }
 .nz-island[data-away="true"] .nz-pin { pointer-events: none; }
 
+/* ---------- phases: what shows while the opening, the return, the night or the pause runs ---------- */
+.nz-island .nz-card, .nz-island .nz-topbar { transition: opacity var(--t-slow) var(--ease-out), transform var(--t-slow) var(--ease-out); }
+.nz-island[data-top="false"] .nz-topbar { opacity: 0; transform: translateY(-16px); pointer-events: none; }
+.nz-island[data-top="false"] .nz-topbar > * { pointer-events: none; }
+.nz-island[data-card="false"] .nz-card { opacity: 0; transform: translateY(40px); pointer-events: none; }
+.nz-island[data-card="false"] .nz-card-btn { pointer-events: none; }
+
+/* ---------- the opening: logo in the sky, "Pular", the cream fade ---------- */
+.nz-intro { position: absolute; inset: 0; z-index: 6; pointer-events: none; }
+.nz-intro-logo { position: absolute; top: 92px; left: 0; right: 0; display: grid; justify-items: center; gap: var(--sp-2); opacity: 0; will-change: transform, opacity; }
+.nz-intro-wm { width: min(250px, 64vw); height: auto; filter: drop-shadow(0 3px 0 color-mix(in srgb, var(--white) 55%, transparent)); }
+.nz-intro-tag { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-caption); line-height: 1; letter-spacing: 0.02em; color: var(--cocoa); opacity: 0.75; }
+.nz-intro-skip { position: absolute; top: max(var(--sp-4), env(safe-area-inset-top)); right: max(var(--sp-4), env(safe-area-inset-right)); padding: 0 var(--sp-5); border: 0; border-radius: var(--r-pill); background: color-mix(in srgb, var(--cream) 88%, transparent); box-shadow: 0 4px 0 var(--edge); font-family: var(--font-body); font-weight: 800; font-size: var(--fs-body); line-height: 1; color: var(--cocoa-2); cursor: pointer; opacity: 0; visibility: hidden; pointer-events: none; will-change: opacity; -webkit-tap-highlight-color: transparent; }
+.nz-intro-skip:active { transform: translateY(var(--sink)); }
+.nz-intro-skip:focus-visible { outline: none; box-shadow: 0 4px 0 var(--edge), var(--focus-ring); }
+.nz-fade { position: absolute; inset: 0; z-index: 9; background: var(--cream); opacity: 0; pointer-events: none; }
+
+/* ---------- the night: Nino asleep in the nest ---------- */
+.nz-zz { position: absolute; left: 0; top: 0; z-index: 2; pointer-events: none; font-family: var(--font-display); font-weight: 700; font-size: 26px; line-height: 1; color: var(--cream); opacity: 0; transition: opacity var(--t-slow) var(--ease-out); }
+.nz-zz span { display: inline-block; animation: nz-zz 2.6s ease-in-out infinite; }
+.nz-zz span:nth-child(2) { animation-delay: 0.5s; font-size: 20px; }
+.nz-zz span:nth-child(3) { animation-delay: 1s; font-size: 15px; }
+.nz-island[data-phase="sleep"] .nz-zz { opacity: 0.9; }
+@keyframes nz-zz { 0%, 100% { transform: translateY(0); opacity: 0.45; } 50% { transform: translateY(-8px); opacity: 1; } }
+
+/* ---------- the pause ---------- */
+.nz-pause { position: absolute; inset: 0; z-index: 12; display: grid; place-items: center; padding: var(--sp-4); background: color-mix(in srgb, var(--night-ui) 58%, transparent); }
+.nz-pause-box { width: min(320px, 100%); display: grid; justify-items: center; gap: var(--sp-3); padding: var(--sp-5); border-radius: var(--r-4); background: var(--cream); box-shadow: 0 6px 0 var(--edge), 0 18px 40px color-mix(in srgb, var(--cocoa) 30%, transparent); text-align: center; }
+.nz-pause-nino { display: block; width: 150px; height: 172px; }
+.nz-pause-nino svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.nz-pause-title { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: var(--fs-title, 26px); line-height: 1.1; color: var(--cocoa); }
+.nz-pause-text { margin: 0; font-family: var(--font-body); font-weight: 800; font-size: var(--fs-caption); line-height: 1.35; color: var(--cocoa-2); }
+.nz-pause-btn { width: 100%; }
+
 /* A short landscape screen (phone on its side): the bar becomes a column on the right, the card sits on the left. */
 @media (orientation: landscape) and (max-height: 520px) {
   .nz-topbar { left: auto; top: var(--sp-3); right: max(var(--sp-3), env(safe-area-inset-right)); flex-direction: column; gap: var(--sp-2); }
@@ -45,5 +79,6 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .nz-pin, .nz-pin-med, .nz-island .nz-pins, .nz-island .nz-card, .nz-island .nz-topbar { transition-duration: 0.01ms; }
+  .nz-zz span { animation: none; }
   .nz-pin[data-glow="true"] .nz-pin-med::after { animation: none; }
 }

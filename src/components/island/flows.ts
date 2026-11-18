@@ -2,9 +2,12 @@
    Ported from tools/visual/ilha/src/app.js (focusPlace, walkTo, overview, enterFarol). Under reduced motion
    the camera jumps and nobody walks; sounds still play. A caller that interrupts a flow calls
    `stage.tl.cancelAll()` and then `settle(stage)` (the cancelled promises never resolve). */
-import { narrator } from "@/audio/narrator";
+import { narrator, type SfxName } from "@/audio/narrator";
+import { poseState, type NinoPose } from "@/art/nino/poses";
+import type { NinoState } from "@/art/nino/rig";
 import { focusCam, overviewCam, type Cam, type Viewport } from "@/world/camera";
 import { FAROL_DOOR, PLACE_ANCHORS, type PlaceId } from "@/world/island";
+import type { Ease } from "@/world/timeline";
 import type { Stage } from "@/world/stage";
 
 /** Nino's scale on the island (the nest keeps him at 0.56). */
@@ -21,7 +24,7 @@ const DIVE_MS = 1000;
 const FADE_MS = 300;
 const HOLD_MS = 900;
 
-function camTo(stage: Stage, to: Cam, ms: number, ease: "io" | "in" = "io", onUpdate?: (e: number) => void): Promise<void> {
+export function camTo(stage: Stage, to: Cam, ms: number, ease: "io" | "in" = "io", onUpdate?: (e: number) => void): Promise<void> {
   if (stage.env.reduced) {
     Object.assign(stage.cam, to);
     return Promise.resolve();
@@ -117,4 +120,55 @@ export async function setNight(stage: Stage, on: boolean, ms: number): Promise<v
     return;
   }
   await stage.tl.tween(stage.env, { night: to }, dur, "io");
+}
+
+// ---- shared by the opening, the return and the bedtime ----
+
+/** The lines Nino says in those flows (keys of content/lines.json). */
+export type LineKey = "start" | "ninoHello" | "ninoExplore" | "farolGrew" | "nestSaved" | "goodnight";
+/** Plays a line and resolves when it ends (at once while the audio is locked). */
+export type Say = (key: LineKey) => Promise<void>;
+export type Sfx = (name: SfxName) => void;
+
+/** How long a line holds the scene at least, so a silent run (audio still locked) keeps the same pace. */
+const LINE_MIN_MS: Record<LineKey, number> = { start: 1800, ninoHello: 1500, ninoExplore: 1900, farolGrew: 1900, nestSaved: 1900, goodnight: 2600 };
+
+/** Nino talks (his mouth moves) while the line plays; never shorter than its minimum, so a muted run is not rushed. */
+export async function speakLine(stage: Stage, say: Say, key: LineKey): Promise<void> {
+  const st = stage.nino.st;
+  st.talking = true;
+  await Promise.all([say(key), stage.tl.wait(LINE_MIN_MS[key])]);
+  st.talking = false;
+}
+
+/** A small jump of joy (lift up and back down). */
+export function hopInPlace(stage: Stage, px = 18): Promise<void> {
+  const st = stage.nino.st;
+  return stage.tl.tween(st, { lift: px }, 200, "out").then(() => stage.tl.tween(st, { lift: 0 }, 300, "back"));
+}
+
+/** The lamp swells and settles (the farol answering). */
+export function pulseLamp(stage: Stage, up = 400, down = 1400): Promise<void> {
+  return stage.tl.tween(stage.fx, { lampPulse: 1 }, up, "out").then(() => stage.tl.tween(stage.fx, { lampPulse: 0 }, down, "io"));
+}
+
+/** Pennants showing at each farol level (spec §6: 2, 4, then all 5) and whether the boat is at the dock. */
+export const FAROL_PENNANTS: Record<1 | 2 | 3 | 4, number> = { 1: 2, 2: 4, 3: 5, 4: 5 };
+export const BOAT_AWAY = 120;
+export const BOAT_DOCKED = -20;
+export function farolWorld(level: 1 | 2 | 3 | 4): { pennant: number[]; boatX: number } {
+  return { pennant: [0, 1, 2, 3, 4].map((i) => (i < FAROL_PENNANTS[level] ? 1 : 0)), boatX: level >= 2 ? BOAT_DOCKED : BOAT_AWAY };
+}
+
+/** Eases Nino into a pose: the numbers tween, the face (eyes, mouth) changes at once. */
+export function blendPose(stage: Stage, pose: NinoPose, ms: number, ease: Ease = "io"): Promise<void> {
+  const target = poseState(pose) as Record<string, unknown>;
+  const st = stage.nino.st as unknown as Record<string, unknown>;
+  const nums: Record<string, number | number[]> = {};
+  for (const [k, v] of Object.entries(target)) {
+    if (typeof v === "number") nums[k] = v;
+    else if (Array.isArray(v)) nums[k] = [...(v as number[])];
+    else st[k] = v;
+  }
+  return stage.tl.tween(stage.nino.st, nums as Partial<Record<keyof NinoState, number | number[]>>, ms, ease);
 }
