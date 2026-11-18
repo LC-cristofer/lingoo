@@ -1,8 +1,12 @@
 #!/usr/bin/env node
-// Captures the lesson screens of a running app (npm run build && npx next start -p 3220) with
-// Playwright's preinstalled Chromium, at phone portrait (390x844) and tablet landscape (1024x768),
-// using the review mode (?revisao=1) so no progress is needed. For each capture it also checks that
-// the page does not scroll and that buttons are >= 64 px and answer tiles >= 120 px.
+// Captures the screens of NESTOY from a running production build (npm run build && npx next start -p 3220) with
+// Playwright's preinstalled Chromium, at phone portrait (390x844), tablet landscape (1024x768) and a phone on its side (844x390):
+//   routes   /  (opening, island day and night, focus on the farol), /farol, /parada/forest-animals/<stop>,
+//            /ninho, /responsaveis (gate and sheet), /memoria, /revisao, and the old /mapa and /album redirects.
+// The lessons use the review mode (?revisao=1) so no progress is needed; the other routes get settings
+// (lingoo:settings:v1) and progress (lingoo:progress:v2, migrated to v3 on load) stored before the app loads.
+// For each capture it also checks that the page does not scroll and that buttons are >= 64 px and answer tiles >= 120 px.
+// (The whole child journey with video is tools/visual/journey.cjs.)
 //   node tools/visual/screens.cjs [outDir] [baseUrl]
 /* eslint-disable @typescript-eslint/no-require-imports -- a plain CommonJS script for node */
 const fs = require("node:fs");
@@ -12,11 +16,13 @@ const unit = require("../../content/units/forest-animals.json");
 
 const OUT = path.resolve(process.argv[2] ?? "tools/visual/.out/screens");
 const SCALE = Number(process.env.SCALE ?? 1); // deviceScaleFactor: 1 to check, 2 for the committed captures
-const ONLY = process.env.ONLY; // "phone" or "tablet" to capture a single form factor
+const ONLY = process.env.ONLY; // "phone", "tablet" or "landscape" (a phone on its side) to capture a single form factor
 const BASE = process.argv[3] ?? "http://localhost:3220";
+const SETTINGS_KEY = "lingoo:settings:v1";
 const VIEWPORTS = [
   { prefix: "phone", width: 390, height: 844 },
   { prefix: "tablet", width: 1024, height: 768 },
+  { prefix: "landscape", width: 844, height: 390 },
 ];
 const stopOf = (slug) => unit.stops.find((s) => s.id === `forest-animals/${slug}`);
 
@@ -30,8 +36,10 @@ async function report(page, label) {
       const r = el.getBoundingClientRect();
       if (r.width === 0 || r.height === 0) continue;
       const tile = el.hasAttribute("data-card");
-      const min = tile ? 120 : 64;
+      const min = tile ? (innerHeight <= 520 ? 96 : 120) : 64; // a phone on its side fits cards of 96 px and up
       if (r.width < min - 0.5 || r.height < min - 0.5) out.push(`${tile ? "tile" : "button"} ${el.getAttribute("aria-label") ?? el.textContent} is ${Math.round(r.width)}x${Math.round(r.height)}`);
+      // (the farol's hit discs follow stops the camera has moved off screen; the parents' sheet scrolls)
+      if (el.closest(".nz-hit, .np-sheet") || el.classList.contains("nz-hit")) continue;
       if (r.bottom > innerHeight + 1 || r.right > innerWidth + 1 || r.left < -1) out.push(`${el.getAttribute("aria-label") ?? el.textContent} is clipped by the viewport`);
     }
     return out;
@@ -168,34 +176,58 @@ const progressOf = ({ stops = [], stickers = {}, memory = {} }) => ({
 });
 const cards = (words, box, due) => Object.fromEntries(words.map((w) => [`forest-animals:${w}`, { box, due }]));
 
-/** A fresh context whose progress is stored before the app loads. */
-async function withProgress(browser, vp, progress) {
-  const ctx = await browser.newContext({ viewport: { width: vp.width, height: vp.height }, deviceScaleFactor: SCALE });
+const settingsOf = (patch = {}) => ({ version: 1, ambient: "dia", bedtime: "19:30", pauseMinutes: 0, opening: "auto", motion: "auto", openingSeen: true, lastVisit: dayKey(0), ...patch });
+
+/** A fresh context whose settings and progress are stored before the app loads. `motion: "reduce"` is the browser preference. */
+async function withProgress(browser, vp, progress, settings = settingsOf(), motion = "reduce") {
+  const ctx = await browser.newContext({ viewport: { width: vp.width, height: vp.height }, deviceScaleFactor: SCALE, reducedMotion: motion });
   if (progress) await ctx.addInitScript(([k, v]) => localStorage.setItem(k, v), ["lingoo:progress:v2", JSON.stringify(progress)]);
+  if (settings) await ctx.addInitScript(([k, v]) => localStorage.setItem(k, v), [SETTINGS_KEY, JSON.stringify(settings)]);
   return { ctx, page: await ctx.newPage() };
 }
 
-/** Start, map, song, story, album and the memory screens. */
+/** Island, farol, nest, parents, memory, song, story and the review list. */
 async function extras(browser, vp) {
   const P = vp.prefix;
   const open = async (page, url, ready) => {
     await page.goto(`${BASE}${url}`, { waitUntil: "networkidle" });
     if (ready) await ready();
   };
-  console.log(`\n== ${P} start, map, song, story, album, memory`);
-  let { ctx, page } = await withProgress(browser, vp, null);
-  await open(page, "/");
-  await shot(page, P, "start");
-  await open(page, "/mapa");
-  await shot(page, P, "map-new");
+  const island = (page) => page.getByRole("button", { name: "Farol das Línguas" }).waitFor();
+  console.log(`\n== ${P} island, farol, nest, parents, memory, song, story, review`);
+
+  // The first visit: the opening (full motion), a still of its first second.
+  let { ctx, page } = await withProgress(browser, vp, null, null, "no-preference");
+  await page.goto(`${BASE}/`, { waitUntil: "load" });
+  await page.waitForTimeout(500);
+  await page.screenshot({ path: path.join(OUT, `${P}-first-opening.png`) }); // mid-animation: the pins are still popping in, so no size report
   await ctx.close();
 
-  ({ ctx, page } = await withProgress(browser, vp, progressOf({ stops: ["song", "lesson-1"], memory: cards(WORDS.slice(0, 3), 1, dayKey(1)) })));
-  await open(page, "/mapa");
-  await shot(page, P, "map-progress");
-  await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
-  await shot(page, P, "map-next-unit");
+  // The island by day, with the farol in focus, and by night.
+  ({ ctx, page } = await withProgress(browser, vp, null));
+  await open(page, "/", () => island(page));
+  await shot(page, P, "island");
+  await page.getByRole("button", { name: "Farol das Línguas" }).click();
+  await page.getByRole("button", { name: "Entrar no farol" }).waitFor();
+  await shot(page, P, "island-farol");
   await ctx.close();
+  ({ ctx, page } = await withProgress(browser, vp, progressOf({ stops: ["song", "lesson-1"] }), settingsOf({ ambient: "noite" })));
+  await open(page, "/", () => island(page));
+  await shot(page, P, "island-night");
+  await ctx.close();
+  ({ ctx, page } = await withProgress(browser, vp, progressOf({ stops: ["song", "lesson-1", "lesson-2", "lesson-3", "story", "challenge"] })));
+  await open(page, "/", () => island(page));
+  await shot(page, P, "island-grown");
+  await ctx.close();
+
+  // The farol: new, half way, finished.
+  for (const [name, stops] of [["new", []], ["half", ["song", "lesson-1", "lesson-2"]], ["done", ["song", "lesson-1", "lesson-2", "lesson-3", "story", "challenge"]]]) {
+    ({ ctx, page } = await withProgress(browser, vp, progressOf({ stops })));
+    await open(page, "/farol", () => page.locator(".nz-hit").first().waitFor());
+    await page.waitForTimeout(500);
+    await shot(page, P, `farol-${name}`);
+    await ctx.close();
+  }
 
   // The song: karaoke (the line being sung) after the start.
   ({ ctx, page } = await withProgress(browser, vp, progressOf({})));
@@ -218,17 +250,42 @@ async function extras(browser, vp) {
   await shot(page, P, "story-page");
   await ctx.close();
 
-  // Album: nothing earned, then the sticker earned.
+  // The nest: nothing earned, then the sticker and the threads; the old /album and /mapa lead to /ninho and /.
   ({ ctx, page } = await withProgress(browser, vp, progressOf({})));
+  await open(page, "/ninho");
+  await shot(page, P, "ninho-empty");
   await open(page, "/album");
-  await shot(page, P, "album-empty");
+  console.log(`  /album -> ${new URL(page.url()).pathname}`);
+  await open(page, "/mapa", () => island(page));
+  console.log(`  /mapa -> ${new URL(page.url()).pathname}`);
   await ctx.close();
-  ({ ctx, page } = await withProgress(browser, vp, progressOf({ stops: ["song", "lesson-1", "lesson-2", "lesson-3", "story", "challenge"], stickers: { "sticker-forest-bear": dayKey(0) } })));
-  await open(page, "/album");
-  await shot(page, P, "album-earned");
+  ({ ctx, page } = await withProgress(browser, vp, progressOf({ stops: ["song", "lesson-1", "lesson-2", "lesson-3", "story", "challenge"], stickers: { "sticker-forest-bear": dayKey(0) }, memory: cards(WORDS.slice(0, 3), 1, dayKey(-1)) })));
+  await open(page, "/ninho");
+  await shot(page, P, "ninho-earned");
   await ctx.close();
 
-  // Memory tab: none, due (with the round), ready tomorrow, ready later.
+  // The parents' area: the gate, then the sheet (the gate is held for 2 s).
+  ({ ctx, page } = await withProgress(browser, vp, null));
+  await open(page, "/responsaveis");
+  await shot(page, P, "parents-gate");
+  const hold = page.locator(".np-hold");
+  const box = await hold.boundingBox();
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  await page.mouse.down();
+  await page.waitForTimeout(2300);
+  await page.mouse.up();
+  await page.locator(".np-sheet").waitFor();
+  await shot(page, P, "parents-sheet");
+  await ctx.close();
+
+  // The review list (adults only).
+  ({ ctx, page } = await withProgress(browser, vp, null));
+  await open(page, "/revisao");
+  await page.waitForTimeout(300);
+  await page.screenshot({ path: path.join(OUT, `${P}-review-list.png`), animations: "disabled" });
+  await ctx.close();
+
+  // Memory training: none, due (with the round), ready tomorrow, ready later.
   ({ ctx, page } = await withProgress(browser, vp, progressOf({})));
   await open(page, "/memoria");
   await shot(page, P, "mem-none");
@@ -278,7 +335,7 @@ async function run() {
       if (ONLY && vp.prefix !== ONLY) continue;
       await extras(browser, vp);
       console.log(`\n== ${vp.prefix} ${vp.width}x${vp.height} lessons`);
-      const ctx = await browser.newContext({ viewport: { width: vp.width, height: vp.height }, deviceScaleFactor: SCALE });
+      const ctx = await browser.newContext({ viewport: { width: vp.width, height: vp.height }, deviceScaleFactor: SCALE, reducedMotion: "reduce" });
       const page = await ctx.newPage();
       const P = vp.prefix;
 
@@ -321,8 +378,8 @@ async function run() {
         }
         await continueSheet(page);
       }
-      await finishRepeats(page, page.getByRole("button", { name: "Voltar ao mapa" }));
-      await page.getByRole("button", { name: "Voltar ao mapa" }).waitFor({ timeout: 8000 }).catch(async () => {
+      await finishRepeats(page, page.getByRole("button", { name: "Voltar", exact: true }));
+      await page.getByRole("button", { name: "Voltar", exact: true }).waitFor({ timeout: 8000 }).catch(async () => {
         await page.screenshot({ path: path.join(OUT, `${P}-debug.png`) });
         throw new Error("the closing did not appear (see the debug shot)");
       });
