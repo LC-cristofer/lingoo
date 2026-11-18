@@ -25,7 +25,7 @@ describe("design tokens (bible, spec §1)", () => {
     ["--area-numeros", "#F5B12E"],
     ["--area-cores", "#A57BEA"],
     ["--area-linguas", "#2E9FD8"],
-    ["--area-linguas-dark", "#2384B5"],
+    ["--area-linguas-dark", "#1D77A3"],
     ["--area-mundo", "#2EB8A4"],
     ["--area-ninho", "#C98A4B"],
     ["--success", "#5DB55A"],

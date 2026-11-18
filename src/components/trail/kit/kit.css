@@ -114,24 +114,6 @@
 
 
 
-/* ---------- stops ---------- */
-.k-stop { position: relative; display: block; padding: 0; border: 0; background: none; cursor: pointer; }
-.k-stop[aria-disabled="true"] { cursor: default; }
-.k-stop-disc { --disc: var(--success); --disc-edge: var(--success-dark); position: absolute; inset: 0; border-radius: 50%; display: grid; place-items: center; color: var(--white); background: radial-gradient(circle at 50% 22%, color-mix(in srgb, var(--disc) 75%, var(--white)) 0, var(--disc) 62%); box-shadow: 0 6px 0 var(--disc-edge), 0 14px 22px color-mix(in srgb, var(--cocoa) 28%, transparent); transition: transform var(--t-tap) var(--ease-out); }
-.k-stop[data-state="current"] .k-stop-disc { --disc: var(--hint); --disc-edge: var(--hint-dark); color: var(--cocoa); box-shadow: 0 6px 0 var(--disc-edge), 0 10px 26px color-mix(in srgb, var(--hint) 45%, transparent); }
-.k-stop[data-state="locked"] .k-stop-disc { --disc: var(--lamp-off); --disc-edge: var(--edge); color: var(--cocoa-2); box-shadow: 0 6px 0 var(--disc-edge), 0 12px 20px color-mix(in srgb, var(--cocoa) 26%, transparent); background: linear-gradient(180deg, color-mix(in srgb, var(--lamp-off) 85%, var(--white)), var(--lamp-off)); }
-/* The icons are drawn in white by the art; on the amber disc they turn ink for contrast. */
-.k-stop[data-state="current"] .k-stop-glyph [fill]:not([fill="none"]) { fill: var(--cocoa); }
-.k-stop[data-state="current"] .k-stop-glyph [stroke]:not([stroke="none"]) { stroke: var(--cocoa); }
-.k-stop:active:not([aria-disabled="true"]) .k-stop-disc { transform: translateY(5px); }
-/* The ring of light around the current stop breathes slowly (opacity and scale only). */
-.k-stop-ring { position: absolute; inset: -14px; border-radius: 50%; background: radial-gradient(closest-side, color-mix(in srgb, var(--hint) 22%, transparent), color-mix(in srgb, var(--hint) 5%, transparent)); box-shadow: 0 0 34px 4px color-mix(in srgb, var(--hint) 38%, transparent); border: 1.5px solid color-mix(in srgb, var(--hint) 60%, transparent); animation: k-ring 4s ease-in-out infinite; will-change: transform, opacity; }
-@keyframes k-ring { 0%, 100% { transform: scale(0.95); opacity: 0.7; } 50% { transform: scale(1.06); opacity: 1; } }
-.k-stop-check { position: absolute; right: -6px; top: -6px; width: 28px; height: 28px; border-radius: 50%; background: var(--success); color: var(--white); border: 3px solid var(--paper); display: grid; place-items: center; z-index: 1; }
-.k-stop-label { position: absolute; top: 50%; transform: translateY(-50%); white-space: nowrap; font-family: var(--font-display); font-weight: 700; font-size: 17px; line-height: 1; color: var(--cocoa); text-shadow: 0 1px 0 var(--cream), 0 0 8px var(--cream); }
-.k-stop-label.is-right { left: calc(100% + 14px); }
-.k-stop-label.is-left { right: calc(100% + 14px); }
-.k-stop-label.is-locked { color: var(--cocoa-2); }
 
 /* ---------- opening and closing ---------- */
 .k-hello { display: flex; flex-direction: column; align-items: center; gap: var(--sp-2); margin-top: var(--sp-1); width: 100%; }
@@ -178,7 +160,7 @@
   .k-stage > .k-cta { max-width: 420px; margin-bottom: 22px; }
   /* The bottom navigation floats as a centred pill. */
 }
-@media (prefers-reduced-motion: reduce) { .is-glow, .k-bar-shine, .k-stop-ring { animation: none; } .k-bar-shine { display: none; } .k-btn, .k-tile, .k-round, .k-bar > i, .k-stop-disc, .k-music { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .is-glow, .k-bar-shine { animation: none; } .k-bar-shine { display: none; } .k-btn, .k-tile, .k-round, .k-bar > i, .k-stop-disc, .k-music { transition: none; } }
 
 /* ---------- song (karaoke) ---------- */
 .k-song { height: 100dvh; min-height: 0; overflow: hidden; gap: 8px; padding-bottom: calc(14px + env(safe-area-inset-bottom)); }
@@ -357,5 +339,102 @@
 @media (prefers-reduced-motion: reduce) {
   .k-tile.is-correct, .k-tile.is-wrong, .k-sheet, .k-star-big > g, .k-reward-hero .k-cat, .k-reward-title, .k-reward-sub, .k-reward-note, .k-reward-stage .k-words, .k-lamps > i.is-on { animation: none; }
 }
-:root[data-motion="reduzir"] :is(.k-tile.is-correct, .k-tile.is-wrong, .k-sheet, .k-star-big > g, .k-reward-hero .k-cat, .k-reward-title, .k-reward-sub, .k-reward-note, .k-reward-stage .k-words, .k-lamps > i.is-on, .k-bar-shine, .k-stop-ring, .is-glow) { animation: none; }
-:root[data-motion="reduzir"] :is(.k-btn, .k-tile, .k-round, .k-bar > i, .k-lamps > i, .k-stop-disc, .k-music) { transition: none; }
+:root[data-motion="reduzir"] :is(.k-tile.is-correct, .k-tile.is-wrong, .k-sheet, .k-star-big > g, .k-reward-hero .k-cat, .k-reward-title, .k-reward-sub, .k-reward-note, .k-reward-stage .k-words, .k-lamps > i.is-on, .k-bar-shine, .is-glow) { animation: none; }
+:root[data-motion="reduzir"] :is(.k-btn, .k-tile, .k-round, .k-bar > i, .k-lamps > i, .k-music) { transition: none; }
+
+/* ---------- a phone on its side (short landscape, e.g. 844x390) ----------
+   The screens are two columns: Nino and the question (or the title) on the left, the cards on the right; the feedback
+   sheet is one low row over the bottom. Nothing scrolls, and every button keeps its 64 px. */
+@media (orientation: landscape) and (max-height: 520px) {
+  /* exercises */
+  .k-lesson { display: grid; grid-template-columns: minmax(240px, 36%) minmax(0, 1fr); grid-template-rows: auto 1fr; column-gap: 20px; row-gap: 6px; height: 100dvh; min-height: 0; padding: 8px max(16px, env(safe-area-inset-right)) 0 max(16px, env(safe-area-inset-left)); overflow: hidden; }
+  .k-lesson > .k-top { grid-column: 1; grid-row: 1; }
+  .k-lesson > .k-ask { grid-column: 1; grid-row: 2; align-self: start; gap: 8px; }
+  .k-cat svg { width: 76px; }
+  .k-bubble { font-size: 18px; padding: 10px 10px 10px 14px; }
+  .k-lesson > .k-main { grid-column: 2; grid-row: 1 / span 2; justify-content: center; padding: 0 0 92px; }
+  .k-lesson > .k-feedback { position: fixed; left: 0; right: 0; bottom: 0; margin: 0; min-height: 0; z-index: 6; }
+  .k-sheet { flex-direction: row; align-items: center; justify-content: space-between; gap: var(--sp-4); padding: 10px 28px calc(12px + env(safe-area-inset-bottom)); border-radius: 24px 24px 0 0; }
+  .k-sheet.is-retry { padding-bottom: calc(12px + env(safe-area-inset-bottom)); }
+  .k-sheet-who { width: 64px; height: 72px; margin: -22px 0 -4px; }
+  .k-sheet-text { font-size: 26px; line-height: 28px; }
+  .k-sheet .k-sheet-btn { width: auto; min-width: 220px; }
+  /* cards: three across at 130 px, or two rows; the two tall cards are shorter */
+  .k-tiles, .k-tiles.is-dense, .k-tiles.is-small, .k-tiles.is-six { gap: 12px; width: 100%; margin: 0; }
+  .k-tiles > *, .k-tiles.is-dense > *, .k-tiles.is-small > *, .k-tiles.is-six > * { width: min(130px, calc((100% - 24px) / 3)); }
+  .k-tiles:not(.is-dense, .is-small, .is-six):not(:has(> :nth-child(3))) > .k-tile { width: min(170px, calc((100% - 12px) / 2)); height: min(176px, 46dvh); }
+  .k-tiles:has(> :nth-child(4)) > * { width: min(118px, calc((100% - 36px) / 4)); }
+  .k-tiles:has(> :nth-child(5)) > * { width: min(100px, calc((100% - 24px) / 3)); }
+  .k-main .min-w-\[120px\] { min-width: 88px; padding-left: 12px; padding-right: 12px; font-size: 20px; gap: 6px; }
+  .k-slot-art { width: min(150px, 38dvh); }
+  .k-tile.is-big { width: min(150px, 38dvh); }
+  .k-big-word { font-size: 30px; padding: 6px 18px 4px; }
+  .k-main > .flex-col { gap: 10px; }
+  .k-main .gap-6 { gap: 10px; }
+  .k-main .gap-5 { gap: 8px; }
+
+  /* the stop's opening, the memory intro and its summary: title and Nino left, the cards and the button right */
+  .k-stage { display: grid; grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr); grid-template-rows: auto 1fr auto; column-gap: 20px; row-gap: 6px; height: 100dvh; min-height: 0; padding: 8px max(16px, env(safe-area-inset-right)) 8px max(16px, env(safe-area-inset-left)); align-items: center; justify-items: center; overflow: hidden; }
+  .k-stage > .k-top { grid-column: 1 / -1; grid-row: 1; }
+  .k-stage > .k-hello { grid-column: 1; grid-row: 2 / span 2; margin: 0; gap: 4px; }
+  .k-hello .k-bubble { font-size: 19px; max-width: 100%; margin-bottom: 6px; }
+  .k-hello .k-cat svg, .is-closing .k-hello .k-cat svg, .is-many .k-hello .k-cat svg { width: 116px; }
+  .k-stage > .k-words { grid-column: 2; grid-row: 2; }
+  .k-stage > .k-cta { grid-column: 2; grid-row: 3; margin: 0; width: 100%; max-width: 380px; }
+  .k-words .k-tiles > *, .k-words .k-tiles.is-six > * { width: min(112px, calc((100% - 24px) / 3)); }
+  .k-word { gap: 6px; }
+  .k-word-en { font-size: 18px; padding: 5px 10px 3px; }
+  .k-btn-lg { font-size: 22px; padding: 14px 24px 12px; }
+  .k-mem-words { gap: 8px; }
+  .k-mem-words > .k-word, .k-mem-words.is-many > .k-word { width: calc((100% - 16px) / 3); max-width: 104px; }
+  .k-mem-words:has(> :nth-child(4)) > .k-word { width: calc((100% - 24px) / 4); max-width: 96px; }
+  .k-mem-words:has(> :nth-child(5)) > .k-word { width: calc((100% - 32px) / 5); max-width: 84px; }
+  .k-mem-words:has(> :nth-child(6)) > .k-word { width: calc((100% - 40px) / 6); max-width: 70px; }
+
+  /* the star and the chest */
+  .k-reward-stage { min-height: 0; height: 100dvh; padding: 10px 16px; gap: 6px; justify-content: center; overflow: hidden; }
+  .k-reward-stage.is-closing { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); grid-template-rows: auto auto auto auto; column-gap: 20px; align-content: center; align-items: center; justify-items: center; }
+  .is-closing .k-reward-hero { grid-column: 1; grid-row: 1; margin: 0; }
+  .is-closing .k-reward-hero .k-star-big { width: 96px; height: 96px; }
+  .is-closing .k-reward-hero .k-cat { top: -10px; left: calc(50% + 52px); }
+  .is-closing .k-reward-hero .k-cat svg { width: 64px; }
+  .k-reward-title { font-size: 28px; line-height: 1.05; }
+  .k-reward-sub { font-size: 16px; }
+  .is-closing .k-reward-title { grid-column: 1; grid-row: 2; }
+  .is-closing .k-reward-sub { grid-column: 1; grid-row: 3; }
+  .is-closing .k-words { grid-column: 2; grid-row: 1 / span 3; }
+  .is-closing > .k-cta { grid-column: 2; grid-row: 4; margin: 0; max-width: 380px; }
+  .k-reward-stage:not(.is-closing) > .k-cta { margin-bottom: 14px; }
+  .k-reward-stage .k-prize svg { width: auto; max-height: 44dvh; }
+  .k-reward-note { font-size: 16px; }
+  /* memory training: the recall card on the right, Nino and the way on, at the left */
+  .k-stage > .k-mem-words { grid-column: 2; grid-row: 2; }
+  .k-mem-recall { display: contents; }
+  .k-mem > .k-mem-recall > .k-ask { grid-column: 1; grid-row: 2; align-self: start; width: auto; max-width: none; margin: 0; }
+  .k-mem > .k-mem-recall > .k-mem-center { grid-column: 2; grid-row: 1 / span 2; align-self: center; margin: 0; }
+  .k-mem-stack { width: 210px; height: 276px; }
+  .k-mem-face.is-back { padding-top: 22px; }
+  .k-mem-word { font-size: 44px; }
+  .k-mem-q { top: 10px; right: 12px; width: 38px; height: 38px; font-size: 26px; line-height: 42px; }
+  .k-mem-hint { font-size: 16px; }
+  .k-mem-next { position: fixed; left: max(16px, env(safe-area-inset-left)); bottom: 12px; width: min(300px, 38%); min-height: 0; margin: 0; padding: 0; z-index: 6; }
+  .k-mem-next > .k-btn { width: 100%; }
+  /* Memória (the tab): the pile on the right, the title, the guide and the button on the left */
+  .k-mtab { flex-direction: row; justify-content: center; align-items: center; gap: 40px; min-height: 0; height: 100dvh; padding: 12px 24px; overflow: hidden; }
+  .k-mtab-side { width: 48%; align-items: flex-start; gap: 10px; }
+  .k-mtab-side.is-pile { align-items: center; width: auto; }
+  .k-mtab-title { font-size: 26px; text-align: left; }
+  .k-guide-row .k-bubble { font-size: 18px; }
+  .k-guide-row .k-cat svg, .k-guide-col .k-cat svg { width: 84px; }
+  .k-guide-col { align-items: flex-start; }
+  .k-guide-col .k-bubble { font-size: 18px; }
+  .k-mtab-cta { width: auto; min-width: 260px; }
+  .k-mtab.is-due { padding-bottom: 12px; }
+  .k-mtab.is-due .k-mtab-side:first-child { display: flex; }
+  .k-mtab.is-due .k-mtab-cta { margin-top: 0; }
+  .k-mtab.is-due .k-mtab-side.is-pile { order: 0; }
+  .k-mtab.is-none .k-mtab-side:first-child { align-items: center; }
+  .k-pile { --pile: 92px; margin-top: 0; }
+  .k-pile.is-faded { --pile: 76px; }
+  .k-mem-count { font-size: 20px; }
+}

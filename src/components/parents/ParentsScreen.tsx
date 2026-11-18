@@ -69,6 +69,20 @@ export function ParentsScreen() {
     if (vpRef.current) Object.assign(s.cam, overviewCam(vpRef.current));
   }, [stage, settings, hydrated]);
 
+  // A cue while the sheet still has options below the fold (the last rows hide under the Fechar footer on a phone).
+  const sheetRef = useRef<HTMLElement>(null);
+  const [more, setMore] = useState(false);
+  const checkMore = useCallback(() => {
+    const el = sheetRef.current;
+    setMore(!!el && el.scrollHeight - el.scrollTop - el.clientHeight > 24);
+  }, []);
+  useEffect(() => {
+    if (!opened) return;
+    checkMore();
+    window.addEventListener("resize", checkMore);
+    return () => window.removeEventListener("resize", checkMore);
+  }, [opened, checkMore, settings.ambient]);
+
   const set = <K extends keyof Settings>(key: K, value: Settings[K]) => update({ [key]: value } as Partial<Settings>);
   const close = () => router.push("/");
 
@@ -86,7 +100,7 @@ export function ParentsScreen() {
           </button>
         </section>
       ) : (
-        <section className="np-sheet" aria-label="Área dos responsáveis">
+        <section ref={sheetRef} className="np-sheet" aria-label="Área dos responsáveis" onScroll={checkMore}>
           <h1 className="np-title">Área dos responsáveis</h1>
 
           <Segment
@@ -171,6 +185,7 @@ export function ParentsScreen() {
           />
 
           <div className="np-foot">
+            {more ? <span className="np-more" aria-hidden="true" data-testid="more-cue">Mais opções abaixo ↓</span> : null}
             <button type="button" className="np-close" onClick={close}>Fechar</button>
           </div>
         </section>

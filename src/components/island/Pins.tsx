@@ -22,16 +22,17 @@ const AREA: Record<PlaceId, string> = {
 };
 const PIN = 64;
 
+/** The lettering of some medallions is art, drawn with a pseudo-element: the button's name is the place's name. */
+const GLYPH: Partial<Record<PlaceId, string>> = { farol: "Hi!", letras: "Aa", numeros: "123" };
+
 function Icon({ id }: { id: PlaceId }) {
   switch (id) {
     case "ninho":
       return <span aria-hidden="true" className="nz-pin-ico"><NestMark size={30} /></span>;
     case "farol":
-      return <b aria-hidden="true">Hi!</b>;
     case "letras":
-      return <b aria-hidden="true">Aa</b>;
     case "numeros":
-      return <b aria-hidden="true">123</b>;
+      return null; // lettering: see GLYPH
     case "cores":
       return (
         <svg aria-hidden="true" viewBox="0 0 30 12" width="26">
@@ -134,7 +135,7 @@ export function Pins({ stage, states, glow, onPress }: PinsProps) {
           style={{ "--c": AREA[id] } as React.CSSProperties}
           onClick={() => onPress(id)}
         >
-          <span className="nz-pin-med">
+          <span className="nz-pin-med" aria-hidden="true" data-glyph={GLYPH[id]}>
             <Icon id={id} />
             <Badge state={states[id]} />
           </span>

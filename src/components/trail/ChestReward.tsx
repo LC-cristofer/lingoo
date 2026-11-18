@@ -31,7 +31,7 @@ export function ChestReward({ stop, lines, onBack }: ChestRewardProps) {
         <Backdrop variant="farol" />
         <i className="k-rays" aria-hidden="true" />
         <div className="k-reward-stage justify-center">
-          <ChunkyButton label="Voltar ao farol" tone="ok" size="lg" onPress={onBack}>
+          <ChunkyButton label="Voltar ao farol" tone="area" size="lg" onPress={onBack}>
             Voltar ao farol
           </ChunkyButton>
         </div>
@@ -64,7 +64,7 @@ export function ChestReward({ stop, lines, onBack }: ChestRewardProps) {
         {open ? <p className="k-reward-note">A figurinha vai morar no ninho.</p> : null}
         <div className="k-cta min-h-16" style={{ display: "flex", justifyContent: "center" }}>
           {open ? (
-            <ChunkyButton label="Voltar ao farol" tone="ok" size="lg" onPress={onBack} className="w-full">
+            <ChunkyButton label="Voltar ao farol" tone="area" size="lg" onPress={onBack} className="w-full">
               Voltar ao farol
             </ChunkyButton>
           ) : null}

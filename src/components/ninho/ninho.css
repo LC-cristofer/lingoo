@@ -33,6 +33,10 @@
 .nn-mem-nino svg { width: 64px; height: auto; display: block; overflow: visible; }
 .nn-mem-cta { flex: none; display: inline-flex; align-items: center; gap: var(--sp-2); font-size: 20px; padding: 14px var(--sp-5) 12px; }
 
+/* A tablet has the room: a wider, taller sheet so the stickers are not small. */
+@media (min-width: 900px) and (min-height: 600px) {
+  .nn-sheet { width: min(100%, 780px); max-height: 72dvh; }
+}
 /* a phone on its side: the sheet becomes a column on the right */
 @media (orientation: landscape) and (max-height: 520px) {
   .nn-sheet { top: 0; left: auto; right: 0; margin: 0; width: min(48%, 440px); max-height: none; border-radius: var(--r-4) 0 0 var(--r-4); box-shadow: -8px 0 24px color-mix(in srgb, var(--cocoa) 12%, transparent); padding: var(--sp-4) var(--sp-5); gap: var(--sp-3); }

@@ -155,7 +155,7 @@ export function StopClosing({ closing, words, wordIds, isChallenge = false, reco
           <NarrationText narration={closing} />
         </p>
         <WordCards words={words} ids={wordIds} />
-        <ChunkyButton label={label} tone="ok" size="lg" className="k-cta" onPress={onContinue}>
+        <ChunkyButton label={label} tone="area" size="lg" className="k-cta" onPress={onContinue}>
           {label}
         </ChunkyButton>
       </div>

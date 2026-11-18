@@ -11,11 +11,22 @@ const VPS: [string, Viewport, number][] = [
 ];
 
 describe("landingCam", () => {
-  it("shows the same room width on every screen (D 0.66 at 390 px)", () => {
+  it("shows the same room width on every upright screen (D 0.66 at 390 px)", () => {
     expect(landingCam(VPS[0][1], 1).D).toBeCloseTo(0.66, 2);
-    for (const [, vp] of VPS) {
+    for (const [, vp] of VPS.filter(([, v]) => v.h >= v.w)) {
       const cam = landingCam(vp, 1);
       expect(vp.w / ppu(cam, vp)).toBeCloseTo(ROOM_SHOWN, 0);
+    }
+  });
+
+  it.each(VPS.filter(([, v, l]) => v.w > v.h && l === 0))("%s: shows a wider room, so the stop below and the stop above are in view", (_n, vp, left) => {
+    const cam = landingCam(vp, 2, left);
+    expect(vp.w / ppu(cam, vp)).toBeGreaterThan(ROOM_SHOWN);
+    const r = STOP_R * ppu(cam, vp);
+    for (const i of [1, 3]) {
+      const [, sy] = toScreen(cam, FAROL_LANDINGS[i].x, FAROL_LANDINGS[i].y - 18, vp);
+      expect(sy - r).toBeGreaterThanOrEqual(vp.top - 1); // the whole face clears the top bar and the card
+      expect(sy + r).toBeLessThanOrEqual(vp.h - vp.bottom + 1);
     }
   });
 

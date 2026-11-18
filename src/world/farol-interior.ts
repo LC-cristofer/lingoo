@@ -20,7 +20,7 @@ export const FAROL_INTERIOR_DOOR = { x: 500, y: 2390 } as const;
 
 export function buildFarolInterior(): string {
   const P = PAL, W = 1000;
-  const stone = (() => { const r = rng(91); let s = ""; for (let row = 0; row < 40; row++) { const y = 380 + row * 54, off = row % 2 ? 0 : 60; for (let x = -60 + off; x < W + 60; x += 120) { const w = 104 + r() * 10; s += `<rect x="${(x + r() * 6).toFixed(1)}" y="${y}" width="${w.toFixed(1)}" height="46" rx="12"/>`; } } return s; })();
+  const stone = (() => { const r = rng(91); let s = ""; for (let row = 0; row < 40; row++) { const y = 380 + row * 54, off = row % 2 ? 0 : 60; for (let x = -420 + off; x < W + 420; x += 120) { const w = 104 + r() * 10; s += `<rect x="${(x + r() * 6).toFixed(1)}" y="${y}" width="${w.toFixed(1)}" height="46" rx="12"/>`; } } return s; })();
   let g = `<defs><linearGradient id="fi-cyl" x1="0" x2="1"><stop offset="0" stop-color="#5A3F2A" stop-opacity=".35"/><stop offset=".22" stop-color="#5A3F2A" stop-opacity="0"/><stop offset=".78" stop-color="#5A3F2A" stop-opacity="0"/><stop offset="1" stop-color="#5A3F2A" stop-opacity=".42"/></linearGradient>
     <radialGradient id="fi-glow"><stop offset="0" stop-color="#FFE7A8" stop-opacity=".95"/><stop offset=".4" stop-color="#FFD27A" stop-opacity=".4"/><stop offset="1" stop-color="#FFD27A" stop-opacity="0"/></radialGradient>
     <radialGradient id="fi-door-light" cx=".5" cy="1" r=".8"><stop offset="0" stop-color="#FFE7A8" stop-opacity=".8"/><stop offset="1" stop-color="#FFE7A8" stop-opacity="0"/></radialGradient></defs>`;

@@ -32,8 +32,10 @@
 .np-seg button:focus-visible { outline: none; box-shadow: inset 0 0 0 2px var(--line), var(--focus-ring); }
 .np-time { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3); }
 .np-time input { min-height: 64px; min-width: 140px; padding: 0 var(--sp-4); border: 0; border-radius: var(--r-2); background: var(--paper); box-shadow: inset 0 0 0 3px var(--area-linguas); font-family: var(--font-display); font-weight: 700; font-size: var(--fs-title); color: var(--cocoa); }
+.np-time input:focus-visible { outline: none; box-shadow: inset 0 0 0 3px var(--area-linguas), var(--focus-ring); }
 .np-action { min-height: 64px; justify-self: start; padding: 0 var(--sp-5); border: 0; border-radius: var(--r-2); background: var(--paper); box-shadow: inset 0 0 0 2px var(--line); font-family: var(--font-display); font-weight: 700; font-size: var(--fs-body); color: var(--cocoa); cursor: pointer; }
 .np-foot { position: sticky; bottom: calc(-1 * var(--sp-5)); margin: 0 calc(-1 * var(--sp-5)); padding: var(--sp-4) var(--sp-5) var(--sp-1); background: linear-gradient(to bottom, transparent, var(--cream) 28%); }
+.np-more { display: block; margin: 0 0 var(--sp-2); text-align: center; font-family: var(--font-body); font-weight: 800; font-size: var(--fs-caption); line-height: 1.2; color: var(--cocoa-2); pointer-events: none; }
 .np-close { width: 100%; min-height: 64px; border: 0; border-radius: var(--r-3); background: var(--cocoa); color: var(--white); font-family: var(--font-display); font-weight: 700; font-size: var(--fs-sub); cursor: pointer; }
 .np-action:focus-visible, .np-close:focus-visible { outline: none; box-shadow: var(--focus-ring); }
 
@@ -42,6 +44,8 @@
   .np-sheet { top: 0; max-height: none; width: min(100%, 760px); border-radius: 0; padding-top: var(--sp-3); gap: var(--sp-3); }
   /* Short screens: Fechar ends the scroll instead of covering half a row. */
   .np-foot { position: static; margin: 0; padding: var(--sp-2) 0 0; background: none; }
+  /* the sheet is a full-height column: the cue floats over its lower edge while options remain below */
+  .np-more { position: fixed; left: 50%; transform: translateX(-50%); width: min(100%, 760px); bottom: 0; margin: 0; padding: var(--sp-4) 0 var(--sp-1); background: linear-gradient(to bottom, transparent, var(--cream) 70%); z-index: 5; }
 }
 /* The ring keeps its fill: it is progress feedback for the 2 s hold, not decoration. */
 @media (prefers-reduced-motion: reduce) { .np-hold { transition: none; } }
