@@ -1,0 +1,20 @@
+<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Nunito:wght@800&display=swap">
+<style>body{margin:0;background:#FFF6E8;font-family:Nunito}.g{display:grid;grid-template-columns:repeat(5,170px);gap:14px;padding:18px}.c{background:#fff;border-radius:18px;padding:8px;text-align:center;box-shadow:0 2px 8px rgba(58,38,24,.08)}svg{width:150px;height:170px}b{display:block;font:700 15px Fredoka;color:#3A2618}span{font-size:11px;color:#8A6A50}</style>
+<div class="g" id="g"></div>
+<script src="src/world.js"></script><script src="src/nino.js"></script>
+<script>
+const P = [
+ ["Dormindo","no ninho, respira devagar",{eyes:"closed",head:9,breathe:2.2}],
+ ["Acordando","pisca e mexe a orelha",{eyes:"open",blink:.55,earR:-14,head:5}],
+ ["Espreguiçando","boceja, braços para cima",{eyes:"happy",mouth:"yawn",armL:ARM.stretchL,armR:ARM.stretchR,pawL:1,pawR:1,sy:1.08,sx:.95}],
+ ["Olhando para você","cabeça inclinada, sorriso",{lookY:2,head:5}],
+ ["Acenando","“Oi! Eu sou o Nino.”",{mouth:"big",armR:ARM.waveR,pawR:1,head:4}],
+ ["Apontando","mostra o próximo lugar",{armR:ARM.pointR,pawR:1,lookX:4}],
+ ["Andando","quique, patas alternadas",{walk:1,walkPhase:1.2}],
+ ["Comemorando","acerto e recompensa",{eyes:"happy",mouth:"big",armL:ARM.upL,armR:ARM.upR,pawL:1,pawR:1,lift:18}],
+ ["Ajudando","“Opa! Vamos tentar de novo.”",{mouth:"soft",head:-6,armR:ARM.helpR,pawR:1}],
+ ["Falando","boca só mexe com a voz",{mouth:"open",head:2}],
+];
+const g = document.getElementById("g");
+P.forEach(([n,d,st]) => { g.insertAdjacentHTML("beforeend", `<div class="c"><svg viewBox="-30 -50 260 300"></svg><b>${n}</b><span>${d}</span></div>`); const svg = g.lastElementChild.querySelector("svg"); const k = makeNino(svg, Object.assign({x:100,y:222,s:1,alive:false}, st)); k.render(0, true); });
+</script>

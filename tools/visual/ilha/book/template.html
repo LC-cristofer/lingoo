@@ -1,0 +1,430 @@
+<title>NESTOY Ilha-Ninho</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500&family=Fredoka:wght@500;600;700&family=Nunito:wght@700;800;900&display=swap">
+<style>
+/* Layout: caderno de estúdio. Coluna de leitura larga; o filme e o protótipo ficam em molduras de celular. */
+:root{
+  --bg:#ECEFF2; --paper:#FFFFFF; --ink:#15181E; --muted:#556070; --line:#D3D9E0;
+  --accent:#B9580C; --accent-soft:#FFEBD8; --good:#17784E; --bad:#A4441A;
+  --f-display:"Bricolage Grotesque","Avenir Next",system-ui,sans-serif;
+  --f-body:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#101318; --paper:#181C23; --ink:#E8ECF1; --muted:#9BA5B4; --line:#2A303A;
+  --accent:#FFA24C; --accent-soft:#3A2715; --good:#5ED39B; --bad:#FFAE7E; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#101318; --paper:#181C23; --ink:#E8ECF1; --muted:#9BA5B4; --line:#2A303A;
+  --accent:#FFA24C; --accent-soft:#3A2715; --good:#5ED39B; --bad:#FFAE7E; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font:400 17px/1.6 var(--f-body);-webkit-font-smoothing:antialiased;margin:0}
+.wrap{max-width:1160px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);line-height:1.08;text-wrap:balance;margin:0;letter-spacing:-.01em}
+h2{font-size:clamp(30px,4.2vw,46px);font-weight:800}
+h3{font-size:21px;font-weight:800}
+p{margin:0}
+a{color:var(--accent)}
+.eyebrow{font:600 12px/1 var(--f-body);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.lede{font-size:19px;color:var(--muted);max-width:68ch}
+.prose{max-width:70ch;display:grid;gap:12px}
+.small{font-size:15px;color:var(--muted);line-height:1.5}
+section{padding-block:72px;border-top:1px solid var(--line)}
+.sec-head{display:grid;gap:14px;margin-bottom:34px}
+.sub{margin-top:48px;display:grid;gap:18px}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:20px;display:grid;gap:10px;align-content:start;min-width:0}
+.card h3{font-size:18px}
+.card ul,.card ol{margin:0;padding-left:18px;display:grid;gap:6px}
+.tag{font:700 11px/1 var(--f-body);letter-spacing:.1em;text-transform:uppercase}
+.tag.good{color:var(--good)} .tag.bad{color:var(--bad)} .tag.acc{color:var(--accent)}
+button{font:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px;border-radius:8px}
+/* capa */
+.cover{padding-block:52px 44px}
+.cover-top{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-bottom:34px}
+.status{display:inline-flex;gap:8px;align-items:center;font:600 13px/1 var(--f-body);padding:9px 14px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
+.status i{width:8px;height:8px;border-radius:50%;background:currentColor;display:block}
+.cover h1{font-size:clamp(36px,5.6vw,72px);font-weight:800;max-width:18ch}
+.cover h1 em{font-style:normal;color:var(--accent)}
+.hero{display:grid;grid-template-columns:auto minmax(0,1fr);gap:40px;align-items:start;margin-top:38px}
+.vphone{width:340px;max-width:100%;border-radius:40px;overflow:hidden;background:#0b0c10;box-shadow:0 0 0 7px #121419,0 0 0 8px #2E323B,0 26px 50px -14px rgba(10,14,30,.5)}
+.vphone video{display:block;width:100%;aspect-ratio:390/844;background:#7CC4EE}
+.steps{list-style:none;margin:0;padding:0;display:grid;gap:6px;counter-reset:s}
+.steps li{counter-increment:s}
+.steps button{width:100%;text-align:left;display:grid;grid-template-columns:34px 54px minmax(0,1fr);gap:8px;align-items:baseline;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:10px 12px;color:var(--ink)}
+.steps button:hover,.steps button[aria-current="true"]{border-color:var(--accent)}
+.steps button::before{content:counter(s,decimal-leading-zero);font:500 12px/1 var(--f-mono);color:var(--accent)}
+.steps time{font:500 12px/1 var(--f-mono);color:var(--muted)}
+.steps b{font-weight:600;font-size:15px}
+.toc{display:flex;flex-wrap:wrap;gap:8px;margin-top:30px}
+.toc a{font:600 14px/1 var(--f-body);color:var(--ink);text-decoration:none;padding:10px 14px;border:1px solid var(--line);border-radius:999px;background:var(--paper)}
+.toc a:hover{border-color:var(--accent);color:var(--accent)}
+/* figuras */
+.shots{display:flex;flex-wrap:wrap;gap:22px 18px;align-items:flex-start}
+.shot{margin:0;display:grid;gap:10px;width:196px;max-width:100%}
+.shot img{width:100%;aspect-ratio:390/844;object-fit:cover;border-radius:22px;display:block;box-shadow:0 0 0 5px #121419,0 14px 28px -12px rgba(10,14,30,.45)}
+.shot figcaption{display:grid;gap:3px}
+.shot b{font:700 14px/1.25 var(--f-display)}
+.shot span{font-size:13px;color:var(--muted);line-height:1.4}
+.shot time{font:500 11px/1 var(--f-mono);color:var(--accent)}
+.wide img{width:100%;border-radius:18px;display:block}
+.posesimg{width:100%;border-radius:18px;display:block;border:1px solid var(--line)}
+/* tabela */
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:16px;background:var(--paper)}
+table{border-collapse:collapse;width:100%;min-width:620px;font-size:15px}
+th,td{text-align:left;padding:12px 16px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:700 12px/1.2 var(--f-body);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+tr:last-child td{border-bottom:0}
+/* bíblia */
+.rules{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.rule{display:grid;grid-template-columns:120px minmax(0,1fr);gap:16px;align-items:center;background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:16px}
+.rule .spec{width:120px;height:110px;border-radius:14px;background:#FFF6E8;display:grid;place-items:center;overflow:hidden}
+.rule .spec svg{width:100%;height:100%}
+.rule h3{font-size:17px}
+.rule p{font-size:14.5px;color:var(--muted);line-height:1.5;margin-top:4px}
+.palette{display:grid;gap:16px}
+.prow{display:grid;grid-template-columns:150px minmax(0,1fr);gap:14px;align-items:start}
+.prow > span{font:700 13px/1.3 var(--f-body);color:var(--muted);padding-top:12px}
+.sws{display:flex;flex-wrap:wrap;gap:8px}
+.sw{display:grid;gap:4px;width:86px}
+.sw i{display:block;height:44px;border-radius:10px;border:1px solid rgba(0,0,0,.08)}
+.sw b{font:600 12px/1.2 var(--f-body)}
+.sw code{font:500 10.5px/1 var(--f-mono);color:var(--muted)}
+.typeset{display:grid;gap:10px;background:#FFF8EC;border-radius:18px;padding:20px;color:#3A2618}
+.logoBox{border-radius:20px;padding:30px;display:grid;place-items:center}
+.logoBox svg{width:min(100%,520px);height:auto}
+.icons{display:flex;gap:18px;flex-wrap:wrap;align-items:flex-end}
+.icons figure{margin:0;display:grid;gap:6px;justify-items:center;font:500 11px/1 var(--f-mono);color:var(--muted)}
+.ico{display:grid;place-items:center;box-shadow:0 4px 12px rgba(43,45,66,.18)}
+/* protótipo */
+.proto{display:grid;grid-template-columns:auto minmax(0,1fr);gap:36px;align-items:start}
+.pframe{position:relative;width:336px;height:727px;border-radius:40px;overflow:hidden;background:#0b0c10;box-shadow:0 0 0 7px #121419,0 0 0 8px #2E323B,0 26px 50px -14px rgba(10,14,30,.5);flex:none}
+.pframe #nst{transform:scale(.8615);transform-origin:0 0}
+.startov{position:absolute;inset:0;display:grid;place-items:center;background:rgba(14,22,64,.25);z-index:60}
+.startov button{height:56px;padding:0 24px;border-radius:28px;border:0;background:#FFF8EC;color:#3A2618;font:700 18px/1 "Fredoka",sans-serif;box-shadow:0 6px 0 rgba(58,38,24,.18),0 12px 30px rgba(0,0,0,.25)}
+.controls{display:flex;flex-wrap:wrap;gap:8px}
+.controls button{border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:10px 14px;font-weight:600;font-size:14px}
+.controls button:hover,.controls button[aria-pressed="true"]{border-color:var(--accent);color:var(--accent)}
+.cols{columns:2 300px;column-gap:28px}
+.cols li{break-inside:avoid;margin-bottom:8px}
+.scope{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.scope .card{border-top:4px solid var(--c)}
+@media (max-width:980px){
+  .hero,.proto{grid-template-columns:minmax(0,1fr)}
+  .grid4,.scope{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .grid3{grid-template-columns:minmax(0,1fr)}
+  .rules{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:620px){
+  .grid2,.grid4,.scope{grid-template-columns:minmax(0,1fr)}
+  .rule{grid-template-columns:90px minmax(0,1fr)} .rule .spec{width:90px;height:90px}
+  .prow{grid-template-columns:minmax(0,1fr)} .prow > span{padding-top:0}
+  .shot{width:calc(50% - 9px)}
+  section{padding-block:56px}
+  .pframe{width:300px;height:649px} .pframe #nst{transform:scale(.7692)}
+}
+/* prototype stage css */
+{{PROTO_CSS}}
+</style>
+
+{{SYMBOLS}}
+
+<header class="wrap cover">
+  <div class="cover-top">
+    <span class="eyebrow">NESTOY · Marco 1 · Refinamento da direção B</span>
+    <span class="status"><i></i>Aguardando a sua validação · o app não foi alterado</span>
+  </div>
+  <h1>O ninho apresenta o universo. <em>A câmera revela a ilha.</em></h1>
+  <p class="lede" style="margin-top:18px">Construí a experiência inteira em movimento, do ninho até a noite. Ela passa pela revelação da ilha, a exploração e uma atividade real do Farol das Línguas, segue com o acerto, a recompensa e a transformação do lugar, e termina na volta para casa. Tudo usa o desenho original do Nino, a voz aprovada e sons novos. Assista ao filme com som e depois jogue o protótipo mais abaixo.</p>
+  <div class="hero">
+    <div class="vphone"><video id="film" src="filme/nestoy-jornada.mp4" poster="img/poster.webp" controls playsinline preload="metadata" aria-label="Filme da jornada completa"></video></div>
+    <div style="display:grid;gap:14px;min-width:0">
+      <span class="eyebrow">A jornada no filme · toque para pular até o momento</span>
+      <ol class="steps" id="steps">{{STEPS}}</ol>
+    </div>
+  </div>
+  <nav class="toc" aria-label="Seções">
+    <a href="#biblia">A · Bíblia visual</a><a href="#ninho">B · Ninho e abertura</a><a href="#ilha">C · Ilha</a><a href="#interiores">D · Ambientes internos</a><a href="#sistema">E · Sistema de interação</a><a href="#jornada">F · Protótipo</a><a href="#rotina">Rotina e noite</a><a href="#escopo">Escopo</a><a href="#tecnica">Técnica</a><a href="#depois">Depois da validação</a>
+  </nav>
+</header>
+
+<main>
+<!-- ======================= A ======================= -->
+<section id="biblia"><div class="wrap">
+  <div class="sec-head"><span class="eyebrow">A · Bíblia visual</span><h2>Uma regra só, do Nino ao último botão</h2><p class="lede">O desenho do Nino vira a regra do mundo: formas chapadas e sem contorno, luz vindo do alto à esquerda, um tom de sombra e um de luz por material, e um grão de papel por cima de tudo. A ilha, os lugares, os objetos, as recompensas e a interface seguem as mesmas dez regras.</p></div>
+  <div class="rules" id="rules">{{RULES}}</div>
+
+  <div class="sub">
+    <h3>Cores</h3>
+    <div class="palette">
+      <div class="prow"><span>Mundo</span><div class="sws">{{SW_WORLD}}</div></div>
+      <div class="prow"><span>Uma cor por área</span><div class="sws">{{SW_AREAS}}</div></div>
+      <div class="prow"><span>Interface</span><div class="sws">{{SW_UI}}</div></div>
+      <div class="prow"><span>Noite (mesmo mundo, outra luz)</span><div class="sws">{{SW_NIGHT}}</div></div>
+    </div>
+    <p class="small">O laranja do Nino (#FF9F43) é só dele: nenhuma peça da interface usa esse tom. A noite não é outra paleta. É a mesma ilha sob uma luz azul, com as luzes quentes acesas (lanterna do ninho, janelas, farol, vaga-lumes).</p>
+  </div>
+
+  <div class="sub">
+    <h3>Tipografia</h3>
+    <div class="typeset">
+      <span style="font:700 34px/1.05 Fredoka,sans-serif">Farol das Línguas</span>
+      <span style="font:700 22px/1.1 Fredoka,sans-serif">Vamos explorar?</span>
+      <span style="font:800 19px/1.3 Nunito,sans-serif">Qual é o <span style="color:#2E9FD8">bear</span>? Toque nele!</span>
+      <span style="font:800 13px/1.35 Nunito,sans-serif;color:#8A6A50">Inglês · Unidade 1: Animais da floresta</span>
+    </div>
+    <p class="small">Fredoka 700 em títulos, botões e números. Nunito 800 no texto. A escala é 34 / 22 / 19 / 15 / 13. O texto existe para os responsáveis; para a criança, tudo também vem por voz, ícone e movimento.</p>
+  </div>
+
+  <div class="sub" id="logo">
+    <h3>Logotipo</h3>
+    <div class="grid2">
+      <div class="logoBox" style="background:#FFF6E8">{{WORDMARK}}</div>
+      <div class="logoBox" style="background:#16205A">{{WORDMARK_NIGHT}}</div>
+    </div>
+    <div class="icons">{{ICONS}}</div>
+    <ul class="small" style="margin:0;padding-left:18px;display:grid;gap:6px">
+      <li>O nome é sempre escrito <b>NESTOY</b>, em maiúsculas. No logotipo, o "O" é o ninho com o Nino espiando.</li>
+      <li>As letras estão em curvas (vetor), sem depender de fonte instalada. A base é Fredoka 700 com espaçamento ajustado.</li>
+      <li>O símbolo sozinho é o ícone do app. Ele foi testado de 180 px até 29 px e continua lendo como "gatinho num ninho". A cor do fundo pode mudar por área.</li>
+      <li>Tamanho mínimo: o logotipo com 96 px de largura e o ícone com 29 px.</li>
+    </ul>
+  </div>
+</div></section>
+
+<!-- ======================= B ======================= -->
+<section id="ninho"><div class="wrap">
+  <div class="sec-head"><span class="eyebrow">B · Ninho e abertura</span><h2>O ninho é a casa, e a casa guarda o que você descobre</h2></div>
+  <div class="grid4">
+    <div class="card"><h3>Casa do Nino</h3><p class="small">Cada sessão começa com o Nino acordando no ninho e termina com ele voltando para dormir.</p></div>
+    <div class="card"><h3>Onde as descobertas ficam</h3><p class="small">As figurinhas e o Treino de memória moram no ninho. É o "meu lugar" da criança.</p></div>
+    <div class="card"><h3>Tecido com o que você aprendeu</h3><p class="small">Cada parada concluída tece um fio da cor da área. Com o tempo, o ninho fica mais colorido e aconchegante.</p></div>
+    <div class="card"><h3>Pequeno no mapa, grande no afeto</h3><p class="small">Na ilha ele ocupa um lugar modesto, no alto e ao centro. Ele aparece inteiro e proporcional, sem cortes, e não toma conta da tela.</p></div>
+  </div>
+  <div class="sub">
+    <h3>A abertura, quadro a quadro</h3>
+    <div class="shots">{{OPENING_SHOTS}}</div>
+  </div>
+  <div class="sub">
+    <h3>Poses do Nino, feitas com o desenho original</h3>
+    <img class="posesimg" src="img/poses.webp" alt="Dez poses do Nino: dormindo, acordando, espreguiçando, olhando, acenando, apontando, andando, comemorando, ajudando e falando">
+    <p class="small">As poses não redesenham o personagem. São as mesmas formas do gatinho aprovado, separadas em partes que se movem: cabeça, orelhas, olhos, boca, braços, pés e cauda. Em repouso ele respira, pisca em ritmos diferentes, mexe a cauda e a orelha. A boca só mexe enquanto a voz toca.</p>
+  </div>
+  <div class="sub">
+    <h3>Como a abertura se comporta</h3>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Situação</th><th>O que acontece</th><th>Duração</th></tr></thead>
+      <tbody>
+        <tr><td>Primeira vez no app</td><td>A apresentação completa: o Nino dorme, acorda, se espreguiça, diz "Oi! Eu sou o Nino.", salta do ninho e a câmera revela a ilha. Tocar no Nino faz ele acordar antes.</td><td>cerca de 14 s</td></tr>
+        <tr><td>Próximas aberturas</td><td>Versão curta: o Nino já está acordado, acena com um "Hello!" e a câmera se afasta até a ilha.</td><td>cerca de 2,5 s</td></tr>
+        <tr><td>Voltou no mesmo dia</td><td>Direto na ilha, com o Nino acenando ao lado do ninho.</td><td>menos de 1 s</td></tr>
+        <tr><td>Pular</td><td>O botão aparece depois de 1 s e leva ao estado final da ilha, sem cortar som pela metade.</td><td>imediato</td></tr>
+        <tr><td>Movimento reduzido</td><td>Sem viagem de câmera nem paralaxe: a ilha aparece num esmaecer curto. O Nino continua piscando, mas sem pulos.</td><td>0,4 s</td></tr>
+        <tr><td>Rever a abertura</td><td>Disponível na área dos responsáveis.</td><td>quando quiser</td></tr>
+      </tbody>
+    </table></div>
+    <p class="small">A continuidade vem de um único mundo com uma única câmera. O close do ninho e a ilha inteira são o mesmo desenho: a câmera só muda a distância, numa curva suave. São quatro camadas de profundidade (céu distante, nuvens, ilha e nuvens próximas), e cada uma anda numa velocidade diferente. No começo o fundo fica desfocado e ganha nitidez conforme a câmera recua. Os lugares surgem quando a câmera passa por eles, cada um com o seu som.</p>
+  </div>
+</div></section>
+
+<!-- ======================= C ======================= -->
+<section id="ilha"><div class="wrap">
+  <div class="sec-head"><span class="eyebrow">C · Ilha principal</span><h2>A tela principal é um lugar, e não um menu</h2></div>
+  <div class="shots">{{ISLAND_SHOTS}}</div>
+  <div class="sub grid2">
+    <div class="card"><h3>Distribuição dos lugares</h3><ul class="small">
+      <li><b>Ninho</b>: no alto e ao centro. É o coração da ilha, e todos os caminhos saem dele.</li>
+      <li><b>Árvore das Letras</b>: alto à esquerda.</li>
+      <li><b>Torre dos Números</b>: alto à direita.</li>
+      <li><b>Farol das Línguas</b>: na ponta de pedra da direita, olhando para fora da ilha.</li>
+      <li><b>Jardim das Cores</b>: meio à esquerda.</li>
+      <li><b>Lago das Descobertas</b>: na frente, com o barquinho e o cais.</li></ul></div>
+    <div class="card"><h3>Explorar</h3><ul class="small">
+      <li>Tocar num lugar, ou no ícone dele, aproxima a câmera, e o lugar responde com som e movimento.</li>
+      <li>Num lugar pronto, o Nino anda pelo caminho até lá e aparece o botão grande para entrar.</li>
+      <li>Um lugar em construção mostra andaime de gravetos e um martelinho trabalhando. Um lugar futuro mostra um broto e uma plaquinha.</li>
+      <li>Tocar no céu volta para a ilha inteira.</li>
+      <li>O próximo passo sugerido brilha, mas a criança é livre para ir aonde quiser.</li></ul></div>
+  </div>
+</div></section>
+
+<!-- ======================= D ======================= -->
+<section id="interiores"><div class="wrap">
+  <div class="sec-head"><span class="eyebrow">D · Ambientes internos</span><h2>Mesma casca, material próprio, trilha com a forma do lugar</h2><p class="lede">Entrar num lugar é atravessar a porta dele: a câmera mergulha na porta do farol e sai do lado de dentro. Cada interior segue as regras da ilha. O que muda é a cor dominante, o material, o som e a forma da trilha.</p></div>
+  <div class="shots">{{INTERIOR_SHOTS}}</div>
+  <div class="sub">
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Lugar</th><th>A trilha é…</th><th>Material e cor</th><th>Som do lugar</th><th>Nesta etapa</th></tr></thead>
+      <tbody>
+        <tr><td><b>Farol das Línguas</b></td><td>a escada em espiral. Cada patamar é uma parada e no topo fica a lâmpada, que acende quando a unidade termina</td><td>pedra clara, madeira, azul-farol</td><td>sininho do farol, mar</td><td><span class="tag good">Desenhado</span></td></tr>
+        <tr><td>Árvore das Letras</td><td>galhos que sobem até a casinha-biblioteca</td><td>madeira, folhas, coral</td><td>páginas, folhas</td><td><span class="tag acc">Definido</span></td></tr>
+        <tr><td>Torre dos Números</td><td>blocos empilhados; cada parada põe um bloco</td><td>blocos de madeira pintada, mostarda</td><td>blocos batendo</td><td><span class="tag acc">Definido</span></td></tr>
+        <tr><td>Jardim das Cores</td><td>canteiros em caminho; cada parada faz uma flor desabrochar</td><td>terra, flores, lilás</td><td>folhas, florzinha</td><td><span class="tag acc">Definido</span></td></tr>
+        <tr><td>Lago das Descobertas</td><td>boias até uma ilha nova</td><td>água, madeira do cais, turquesa</td><td>água</td><td><span class="tag acc">Definido</span></td></tr>
+        <tr><td>Ninho</td><td>não tem trilha: é a coleção de figurinhas e o Treino de memória</td><td>lã, gravetos, caramelo</td><td>tecer, harpa</td><td><span class="tag acc">Definido</span></td></tr>
+      </tbody>
+    </table></div>
+    <p class="small">Só o interior do Farol foi desenhado nesta etapa, porque é a área com conteúdo pronto. Os outros seguem este sistema quando cada área for construída.</p>
+  </div>
+</div></section>
+
+<!-- ======================= E ======================= -->
+<section id="sistema"><div class="wrap">
+  <div class="sec-head"><span class="eyebrow">E · Sistema de interação</span><h2>Estados, respostas, recompensas e um mundo que muda</h2></div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Momento</th><th>Tela</th><th>Nino</th><th>Som e voz</th></tr></thead>
+    <tbody>
+      <tr><td><b>Acerto</b></td><td>O cartão pulsa e ganha borda verde, e a folha de resultado sobe.</td><td>Comemora dentro da folha, com os braços para cima.</td><td>Efeito "acerto" + "Awesome!"</td></tr>
+      <tr><td><b>Quase</b></td><td>O cartão balança de leve. Nunca aparece vermelho nem "errado".</td><td>Inclina a cabeça e estende a pata para ajudar.</td><td>Som suave + "Opa! Vamos tentar de novo."</td></tr>
+      <tr><td><b>Dica</b></td><td>Depois de duas tentativas, o cartão certo brilha.</td><td>Aponta para o cartão certo.</td><td>"Olha aqui! É esse que está brilhando."</td></tr>
+      <tr><td><b>Lugar em construção</b></td><td>Andaime e martelinho.</td><td>Explica com carinho.</td><td>Marteladas + "Esse lugar ainda está sendo construído."</td></tr>
+      <tr><td><b>Lugar futuro</b></td><td>Broto e plaquinha.</td><td>Conta que vai nascer um lugar ali.</td><td>Folhas + "Essa aventura está chegando!"</td></tr>
+    </tbody>
+  </table></div>
+  <div class="sub grid2">
+    <div class="card"><h3>Recompensas que viram mundo</h3><ul class="small">
+      <li><b>Estrela</b>: cada parada concluída. Ela voa para o lugar.</li>
+      <li><b>Figurinha</b>: a palavra aprendida vira figurinha com borda de recorte e vai morar no ninho.</li>
+      <li><b>Fio no ninho</b>: um fio novo na cor da área.</li>
+      <li><b>O lugar cresce</b>: a mudança aparece na ilha, sem números.</li></ul></div>
+    <div class="card"><h3>Navegação</h3><ul class="small">
+      <li>Ilha → lugar → trilha → atividade.</li>
+      <li>O "×" sempre volta um nível, e o botão do ninho está sempre no topo.</li>
+      <li>A criança nunca fica presa nem perde progresso ao sair no meio.</li></ul></div>
+  </div>
+  <div class="sub">
+    <h3>Como o Farol cresce</h3>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Nível</th><th>O que muda no farol</th><th>Quando</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Luz fraca e duas bandeirinhas</td><td>Ao começar a unidade</td></tr>
+        <tr><td>2</td><td>Luz mais forte, bandeirinhas novas e um barquinho chega ao lago</td><td>Primeiras paradas (o que o filme mostra)</td></tr>
+        <tr><td>3</td><td>Varal completo; à noite o feixe gira sobre o céu</td><td>Metade da unidade</td></tr>
+        <tr><td>4</td><td>A lâmpada do topo acende de vez e um barco de outra ilha atraca</td><td>Unidade completa</td></tr>
+      </tbody>
+    </table></div>
+    <div class="shots">{{GROW_SHOTS}}</div>
+  </div>
+  <div class="sub grid2">
+    <div class="card"><h3>Entender sem ler</h3><ul class="small">
+      <li>Ícones e formas: "Aa", "123", três bolinhas de cor, "Hi!", um barquinho, o ninho.</li>
+      <li>O que é para fazer agora brilha, e o Nino aponta e anda até lá.</li>
+      <li>Todo pedido vem por voz, e todo toque responde com som e movimento.</li>
+      <li>Selos visuais mostram o estado: martelinho para "em construção" e broto para "em breve".</li>
+      <li>O texto da tela é para os responsáveis; a criança não precisa dele.</li></ul></div>
+    <div class="card"><h3>Progresso sem pressão</h3><ul class="small">
+      <li>Nada é perdido por ficar dias sem jogar: sem ofensiva que zera, sem vidas, sem tempo.</li>
+      <li>O mundo só cresce. Nada murcha, apaga ou fica triste.</li>
+      <li>Quando a criança volta, o Nino comemora a volta. Nunca cobra a ausência.</li>
+      <li>Errar faz parte: o "quase" não conta contra nada.</li></ul></div>
+  </div>
+</div></section>
+
+<!-- ======================= F ======================= -->
+<section id="jornada"><div class="wrap">
+  <div class="sec-head"><span class="eyebrow">F · Jornada animada</span><h2>Jogue a experiência</h2><p class="lede">Este é o protótipo de verdade, com o mesmo código do filme. Toque para começar e explore a ilha. Entre no farol, responda à atividade e veja o lugar crescer.</p></div>
+  <div class="proto">
+    <div class="pframe" id="pframe">{{STAGE}}<div class="startov" id="startov"><button id="startBtn">Começar com som</button></div></div>
+    <div class="prose">
+      <h3>Experimente também</h3>
+      <div class="controls">
+        <button data-c="full">Abertura da primeira vez</button>
+        <button data-c="short">Abertura de quem volta</button>
+        <button data-c="reduced" aria-pressed="false">Movimento reduzido</button>
+        <button data-c="bed">Hora de dormir (rotina)</button>
+        <button data-c="pause">Lembrete de pausa</button>
+        <button data-c="sound" aria-pressed="true">Som ligado</button>
+      </div>
+      <ol class="small" style="padding-left:18px;margin:6px 0 0;display:grid;gap:6px">
+        <li>Na ilha, toque na Árvore das Letras (em construção) e na Torre dos Números (em breve).</li>
+        <li>Toque no Farol: o Nino anda até lá. Use o botão azul para entrar.</li>
+        <li>Dentro do farol, toque na parada que brilha.</li>
+        <li>Toque primeiro no passarinho para ver o "quase" e depois no urso.</li>
+        <li>Siga até a recompensa e volte ao farol para ver o que mudou.</li>
+        <li>No cadeado ficam as preferências dos responsáveis.</li>
+      </ol>
+      <p class="small">O protótipo é um estudo de experiência feito fora do app. Ele mostra a sensação e as regras. A implementação final usa a arquitetura atual: progresso, exercícios, voz e memória.</p>
+    </div>
+  </div>
+</div></section>
+
+<!-- ======================= Rotina ======================= -->
+<section id="rotina"><div class="wrap">
+  <div class="sec-head"><span class="eyebrow">Rotina e modo noturno</span><h2>Quem decide a noite são os responsáveis</h2><p class="lede">Eu revi a sugestão de encerrar a sessão em 15 minutos. O app não fecha sozinho nem usa o relógio do aparelho para decidir a rotina da criança. Ele oferece escolhas para os responsáveis e sugestões gentis para a criança.</p></div>
+  <div class="shots">{{ROUTINE_SHOTS}}</div>
+  <div class="sub grid3">
+    <div class="card"><h3>Ambiente da ilha</h3><ul class="small"><li><b>Sempre dia</b> é o padrão.</li><li><b>Seguir a rotina</b>: a ilha anoitece no horário que os responsáveis escolherem, por exemplo 19:30.</li><li><b>Noite</b>: para quem prefere a ilha calma o tempo todo.</li></ul></div>
+    <div class="card"><h3>Pausa</h3><ul class="small"><li>Os responsáveis escolhem o lembrete: desligado, 15, 20 ou 30 minutos. A sugestão é escolher isso na primeira configuração.</li><li>O Nino se espreguiça e sugere a pausa; a criança pode continuar.</li><li>Só existe limite firme se os responsáveis ativarem.</li></ul></div>
+    <div class="card"><h3>Noite e movimento</h3><ul class="small"><li>A noite é a mesma ilha com outra luz: estrelas, lanterna, janelas, feixe do farol e vaga-lumes. O som ambiente vira grilos e a música baixa.</li><li>Na hora de dormir, o Nino boceja, volta para o ninho e dorme.</li><li>Movimento reduzido segue o aparelho ou a escolha dos responsáveis.</li></ul></div>
+  </div>
+</div></section>
+
+<!-- ======================= Escopo ======================= -->
+<section id="escopo"><div class="wrap">
+  <div class="sec-head"><span class="eyebrow">Escopo de lançamento</span><h2>O que existe, o que será construído e o que vem depois</h2><p class="lede">Na ilha do lançamento, só o Farol e o Ninho funcionam. Os outros lugares aparecem honestamente como "em construção" ou "em breve", e nada é apresentado como pronto antes de estar.</p></div>
+  <div class="scope">
+    <div class="card" style="--c:#17784E"><span class="tag good">Pronto no app hoje</span><ul class="small">
+      <li>Inglês, unidade 1 completa (Animais da floresta): Música, Lições 1 a 3, História e Desafio com baú</li>
+      <li>6 tipos de exercício e revisão do erro</li>
+      <li>Treino de memória com repetição espaçada</li>
+      <li>Álbum de figurinhas</li>
+      <li>Voz aprovada (123 falas), duas músicas e efeitos</li>
+      <li>Progresso salvo e testes automatizados</li></ul></div>
+    <div class="card" style="--c:#B9580C"><span class="tag acc">Construir agora (após validar)</span><ul class="small">
+      <li>Bíblia visual, logotipo e ícone</li>
+      <li>Abertura no ninho e revelação da ilha</li>
+      <li>Nino animado (todas as poses e reações)</li>
+      <li>Ilha navegável, dia e noite</li>
+      <li>Farol das Línguas com a unidade 1 na escada</li>
+      <li>Ninho: figurinhas, memória e fios</li>
+      <li>Transformações do Farol</li>
+      <li>Área dos responsáveis: rotina, pausa e movimento</li></ul></div>
+    <div class="card" style="--c:#2E9FD8"><span class="tag" style="color:#2E9FD8">Em desenvolvimento depois</span><ul class="small">
+      <li>Inglês, unidades 2 a 7: os roteiros existem, faltam vozes e arte</li>
+      <li>Árvore das Letras, a primeira área nova: falta o roteiro pedagógico, além de vozes e arte</li></ul></div>
+    <div class="card" style="--c:#8A5ED6"><span class="tag" style="color:#8A5ED6">Futuro</span><ul class="small">
+      <li>Torre dos Números</li><li>Jardim das Cores</li><li>Lago das Descobertas</li><li>Amigos que chocam dos ovos do ninho</li><li>Relatório simples para os responsáveis</li></ul></div>
+  </div>
+</div></section>
+
+<!-- ======================= Técnica ======================= -->
+<section id="tecnica"><div class="wrap">
+  <div class="sec-head"><span class="eyebrow">Técnica e ferramentas</span><h2>Por que vetor, camadas e um relógio só</h2></div>
+  <div class="grid3">
+    <div class="card"><h3>Ilustração em vetor</h3><p class="small">A ilha, os lugares e os interiores foram desenhados em SVG com as mesmas regras do Nino. Isso dá três coisas que a imagem gerada não dá: tudo parece do mesmo artista, a câmera aproxima sem perder nitidez e cada parte pode se mexer e crescer.</p></div>
+    <div class="card"><h3>Câmera com profundidade</h3><p class="small">Quatro camadas com velocidades diferentes, zoom numa curva suave, desfoque do fundo no close e a abertura toda num único espaço. Não há troca de imagens.</p></div>
+    <div class="card"><h3>Um relógio para tudo</h3><p class="small">Personagem, câmera, interface e som seguem o mesmo relógio. Foi assim que o filme saiu quadro a quadro, sem engasgos e com o som no tempo certo. No app, isso garante que movimento reduzido e pular funcionem em todo lugar.</p></div>
+    <div class="card"><h3>Som</h3><p class="small">O ElevenLabs gerou 17 efeitos novos (ambiente de dia e de noite, revelação, bocejo, passos, sininho do farol, crescer, tecer) e 9 falas novas do Nino com a voz aprovada. As falas da atividade são as do app.</p></div>
+    <div class="card"><h3>Marca</h3><p class="small">O logotipo foi convertido em curvas a partir da fonte, com o ninho desenhado à mão. O ícone foi testado em cinco tamanhos.</p></div>
+    <div class="card"><h3>O que eu avaliei e não usei</h3><p class="small">Vídeo gerado por IA, no Canva ou no Weave do Figma, redesenha o gato e não reage ao toque, então serve para um trailer e não para o app. Não há como criar animação em Rive ou Lottie aqui, mas o esqueleto do Nino em SVG cobre todas as poses. O Figma entra na implementação como biblioteca de componentes e tokens.</p></div>
+  </div>
+</div></section>
+
+<!-- ======================= Depois ======================= -->
+<section id="depois"><div class="wrap">
+  <div class="sec-head"><span class="eyebrow">Depois da validação</span><h2>Do protótipo para o NESTOY de verdade</h2></div>
+  <ol class="cols small" style="padding-left:18px">
+    <li><b>Fundação:</b> tokens da bíblia, logotipo, ícone e o mundo em componentes (ilha, lugares, estados).</li>
+    <li><b>Nino:</b> o esqueleto animado como componente do app, com a boca ligada à voz que já existe.</li>
+    <li><b>Abertura e câmera:</b> primeira vez, retorno, pular e movimento reduzido, com a lembrança de "já viu" salva no progresso.</li>
+    <li><b>Ilha:</b> exploração, estados dos lugares, dia e noite.</li>
+    <li><b>Farol:</b> a escada recebe as 6 paradas da unidade 1 e as atividades atuais ganham o novo visual.</li>
+    <li><b>Recompensas:</b> estrela, figurinha no ninho, fios e os níveis do farol, todos ligados ao progresso salvo.</li>
+    <li><b>Ninho:</b> álbum e Treino de memória dentro do ninho.</li>
+    <li><b>Responsáveis:</b> rotina, pausa, movimento e rever a abertura.</li>
+    <li><b>Validação:</b> testes, tipos, lint e build verdes; vídeos e capturas no celular e no tablet; desempenho e acessibilidade.</li>
+  </ol>
+  <div class="card" style="margin-top:24px;border:2px solid var(--accent)"><h3>O que eu preciso de você</h3><p class="small">A validação deste refinamento: a abertura, a ilha, o sistema e a bíblia. Se algo não estiver como você imaginou, aponte o momento do filme ou a seção e eu ajusto antes de começar a reconstrução.</p></div>
+</div></section>
+</main>
+<footer class="wrap" style="padding-block:40px 64px;border-top:1px solid var(--line)"><p class="small">NESTOY · refinamento da direção B. Os estudos e o protótipo foram feitos à parte; nenhum arquivo do app foi alterado.</p></footer>
+
+<script>window.NESTOY_CFG={{CFG}};window.NESTOY_DUR={{DUR}};</script>
+<script>{{JS}}</script>
+<script>{{APP}}</script>
+<script>{{BOOKJS}}</script>

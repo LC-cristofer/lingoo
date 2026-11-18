@@ -1,0 +1,62 @@
+<div id="nst" role="application" aria-label="Protótipo NESTOY">
+  <div id="sky"></div>
+  <svg id="Lfar" class="layer" aria-hidden="true"></svg>
+  <svg id="Lmid" class="layer" aria-hidden="true"></svg>
+  <svg id="Lisl" class="layer" aria-hidden="true"></svg>
+  <svg id="Lnear" class="layer" aria-hidden="true"></svg>
+  <svg id="Lint" class="layer" aria-hidden="true"></svg>
+  <div id="veil"></div>
+  <div id="grain"></div>
+  <div id="ui">
+    <div id="logo">{{LOGO}}<span>um ninho de descobertas</span></div>
+    <button id="skip">Pular</button>
+    <div id="pins"></div>
+    <div id="stopHits"></div>
+    <div id="topbar">
+      <button class="rb" id="bNest" aria-label="Ninho do Nino"><svg viewBox="0 0 640 600"><use href="#nest-o"/></svg></button>
+      <span class="sp"></span>
+      <button class="rb" id="bTime" aria-label="Dia ou noite" aria-pressed="false"><svg class="sun" width="22" height="22" viewBox="0 0 20 20"><circle cx="10" cy="10" r="4.5" fill="#FFC94A"/><g stroke="#FFC94A" stroke-width="2" stroke-linecap="round"><path d="M10 1.5v2.5M10 16v2.5M1.5 10H4M16 10h2.5M4 4l1.8 1.8M14.2 14.2L16 16M4 16l1.8-1.8M14.2 5.8L16 4"/></g></svg><svg class="moon" width="20" height="20" viewBox="0 0 20 20"><path d="M12 2a8 8 0 108 10A6.5 6.5 0 0112 2z" fill="#2B3990"/></svg></button>
+      <button class="rb" id="bParents" aria-label="Área dos responsáveis"><svg viewBox="0 0 24 24" width="24"><rect x="5" y="10" width="14" height="10" rx="3" fill="#8A6A50"/><path d="M8 10V8a4 4 0 018 0v2" stroke="#8A6A50" stroke-width="2.4" fill="none"/></svg></button>
+    </div>
+    <div id="card">
+      <svg class="who" id="portrait" viewBox="-30 -40 260 300"></svg>
+      <div class="txt"><span class="chip" id="cardChip" hidden></span><b id="cardTitle"></b><span id="cardText"></span></div>
+      <button class="cardBtn" id="cardBtn" hidden aria-label="Entrar"><svg viewBox="0 0 20 20"><path d="M6 3.5l11 6.5-11 6.5z" fill="#fff"/></svg></button>
+    </div>
+    <div id="activity" hidden>
+      <div class="actTop"><button id="actClose" aria-label="Sair">×</button><div class="lampbar" aria-label="Progresso"><i class="on"></i><i></i><i></i><i></i><i></i><i></i></div></div>
+      <div class="actRow"><svg class="who" id="actNino" viewBox="-30 -40 260 300"></svg><div class="bubble"><span id="actSay">Qual é o <em>bear</em>? Toque nele!</span><button class="spk" aria-label="Ouvir de novo"><svg viewBox="0 0 20 20"><path d="M3 7.5h3.5L11 4v12l-4.5-3.5H3z" fill="#fff"/><path d="M13.5 7a4 4 0 010 6M15.5 5a7 7 0 010 10" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></button></div></div>
+      <div class="cards"><button class="ans" data-id="bird" aria-label="bird"><svg viewBox="0 0 300 300"><use href="#ani-bird"/></svg></button><button class="ans" data-id="bear" aria-label="bear"><svg viewBox="0 0 300 300"><use href="#ani-bear"/></svg></button></div>
+      <div id="sheet" hidden><div class="row"><svg class="who" id="sheetNino" viewBox="-30 -40 260 300"></svg><div><b>Isso!</b><span>bear é urso.</span></div></div><button class="bigBtn" id="sheetBtn">Continuar</button></div>
+    </div>
+    <div id="reward" hidden>
+      <div class="rays"></div>
+      <svg id="rwStar" viewBox="0 0 100 100"><path d="M50 6l12.6 27.4 29.9 3.4-22.3 20.3 6.2 29.5L50 71.6 23.6 86.6l6.2-29.5L7.5 36.8l29.9-3.4z" fill="#FFC94A" stroke="#fff" stroke-width="5" stroke-linejoin="round"/></svg>
+      <div id="rwSticker"><svg viewBox="0 0 300 300"><use href="#ani-bear"/></svg></div>
+      <h3>Você ganhou uma estrela!</h3>
+      <p>O urso virou figurinha e vai morar no ninho.</p>
+      <svg class="who" id="rewardNino" viewBox="-30 -40 260 300"></svg>
+      <button class="bigBtn" id="rewardBtn">Voltar ao farol</button>
+    </div>
+    <div id="parents" hidden>
+      <div class="psheet">
+        <h4>Área dos responsáveis</h4>
+        <span class="lbl">Ambiente da ilha</span>
+        <div class="seg"><button data-pset="amb:dia" aria-pressed="true">Sempre dia</button><button data-pset="amb:rotina" aria-pressed="false">Seguir a rotina</button><button data-pset="amb:noite" aria-pressed="false">Noite</button></div>
+        <p>Na rotina, a ilha anoitece no horário que vocês escolherem (ex.: 19:30). O relógio do aparelho sozinho não decide nada.</p>
+        <span class="lbl">Lembrete de pausa</span>
+        <div class="seg"><button data-pset="pausa:off" aria-pressed="false">Desligado</button><button data-pset="pausa:15" aria-pressed="false">15 min</button><button data-pset="pausa:20" aria-pressed="true">20 min</button><button data-pset="pausa:30" aria-pressed="false">30 min</button></div>
+        <p>O Nino sugere a pausa com carinho. A criança pode continuar, a menos que vocês ativem o limite firme.</p>
+        <span class="lbl">Abertura</span>
+        <div class="seg"><button data-pset="abertura:auto" aria-pressed="true">Completa só na 1ª vez</button><button data-pset="abertura:curta" aria-pressed="false">Sempre curta</button></div>
+        <span class="lbl">Movimento</span>
+        <div class="seg"><button data-pset="mov:auto" aria-pressed="true">Seguir o aparelho</button><button data-pset="mov:on" aria-pressed="false">Reduzir movimento</button></div>
+        <button id="parentsClose">Fechar</button>
+      </div>
+    </div>
+    <div id="pauseScr" hidden><div><b>Pausa</b><span>O Nino foi descansar no ninho. Quando quiser, é só voltar.</span><button id="pauseBack">Voltar a brincar</button></div></div>
+    <div id="zz">z z</div>
+  </div>
+  <div id="fade"></div>
+  <div id="touches"></div>
+</div>
