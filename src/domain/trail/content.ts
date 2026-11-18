@@ -85,5 +85,6 @@ export function allNarrations(): Narration[] {
   out.push(l.memoryIntro, l.memoryAsk, l.memoryFlip, l.memoryPraise, ...l.memoryDone, l.memoryHome, l.memoryEmpty, l.memoryEmptyLater, l.memoryNone);
   out.push(...Object.values(l.stopGo));
   out.push(l.legacySection, l.legacyFox);
+  out.push(l.ninoHello, l.ninoExplore, l.placeFarol, l.farolClimb, l.placeBuilding, l.farolGrew, l.nestSaved, l.goodnight, l.pauseSuggest);
   return out;
 }

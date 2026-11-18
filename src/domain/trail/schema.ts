@@ -204,6 +204,15 @@ export const linesSchema = z.object({
   legacySection: narrationSchema,
   /** The name of the phase 1 fox sticker, kept in the album for children who earned it. */
   legacyFox: narrationSchema,
+  ninoHello: narrationSchema,
+  ninoExplore: narrationSchema,
+  placeFarol: narrationSchema,
+  farolClimb: narrationSchema,
+  placeBuilding: narrationSchema,
+  farolGrew: narrationSchema,
+  nestSaved: narrationSchema,
+  goodnight: narrationSchema,
+  pauseSuggest: narrationSchema,
 });
 
 export type Lang = z.infer<typeof langSchema>;

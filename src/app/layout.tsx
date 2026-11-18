@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Fredoka, Nunito } from "next/font/google";
 import "./globals.css";
 import { AudioUnlock } from "@/audio/AudioUnlock";
+import { SettingsProvider } from "@/components/nestoy/SettingsProvider";
 import { TrailProgressProvider } from "@/components/trail/TrailProgressProvider";
 
 const fredoka = Fredoka({
@@ -37,7 +38,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="pt-BR" className={`${fredoka.variable} ${nunito.variable} h-full`}>
       <body className="min-h-full flex flex-col font-body">
         <AudioUnlock />
-        <TrailProgressProvider>{children}</TrailProgressProvider>
+        <SettingsProvider>
+          <TrailProgressProvider>{children}</TrailProgressProvider>
+        </SettingsProvider>
       </body>
     </html>
   );

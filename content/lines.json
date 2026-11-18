@@ -236,5 +236,59 @@
         "text": "Desafio. Vamos!"
       }
     ]
-  }
+  },
+  "ninoHello": [
+    {
+      "lang": "pt-BR",
+      "text": "Oi! Eu sou o Nino."
+    }
+  ],
+  "ninoExplore": [
+    {
+      "lang": "pt-BR",
+      "text": "Vem! Vamos explorar a ilha!"
+    }
+  ],
+  "placeFarol": [
+    {
+      "lang": "pt-BR",
+      "text": "Esse é o Farol das Línguas!"
+    }
+  ],
+  "farolClimb": [
+    {
+      "lang": "pt-BR",
+      "text": "Vamos subir a escada do farol?"
+    }
+  ],
+  "placeBuilding": [
+    {
+      "lang": "pt-BR",
+      "text": "Esse lugar ainda está sendo construído. Logo fica pronto!"
+    }
+  ],
+  "farolGrew": [
+    {
+      "lang": "pt-BR",
+      "text": "Olha! O farol brilhou mais forte!"
+    }
+  ],
+  "nestSaved": [
+    {
+      "lang": "pt-BR",
+      "text": "Guardei a sua figurinha no ninho."
+    }
+  ],
+  "goodnight": [
+    {
+      "lang": "pt-BR",
+      "text": "Boa noite! Amanhã a gente brinca mais."
+    }
+  ],
+  "pauseSuggest": [
+    {
+      "lang": "pt-BR",
+      "text": "Que tal uma pausa? Vou esticar as patinhas."
+    }
+  ]
 }

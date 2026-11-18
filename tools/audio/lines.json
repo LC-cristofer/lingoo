@@ -5,6 +5,11 @@
     "text": "Awesome!"
   },
   {
+    "id": "0562d471d79c8187",
+    "lang": "pt-BR",
+    "text": "Esse lugar ainda está sendo construído. Logo fica pronto!"
+  },
+  {
     "id": "066f6cdd4191a7ee",
     "lang": "pt-BR",
     "text": "Toque para virar"
@@ -28,6 +33,11 @@
     "id": "0cb9e892c54accc7",
     "lang": "pt-BR",
     "text": "Olha aqui! É esse que está brilhando."
+  },
+  {
+    "id": "0e3846549ab30a1c",
+    "lang": "pt-BR",
+    "text": "Boa noite! Amanhã a gente brinca mais."
   },
   {
     "id": "1831ea6d9c1ce736",
@@ -450,6 +460,11 @@
     "text": "What's this? It's a frog!"
   },
   {
+    "id": "a4488bb4d3f32b9e",
+    "lang": "pt-BR",
+    "text": "Olha! O farol brilhou mais forte!"
+  },
+  {
     "id": "a8b596a137fc95ca",
     "lang": "pt-BR",
     "text": "Essa aventura está chegando!"
@@ -458,6 +473,16 @@
     "id": "aa0ae38b6a0302c1",
     "lang": "pt-BR",
     "text": "Hora de treinar a memória!"
+  },
+  {
+    "id": "ad9d53fc87e80e6f",
+    "lang": "pt-BR",
+    "text": "Que tal uma pausa? Vou esticar as patinhas."
+  },
+  {
+    "id": "ae592c0a295769fa",
+    "lang": "pt-BR",
+    "text": "Vem! Vamos explorar a ilha!"
   },
   {
     "id": "b015410eb0043b37",
@@ -535,6 +560,11 @@
     "text": "This is a snake!"
   },
   {
+    "id": "d6919f6dff8aa631",
+    "lang": "pt-BR",
+    "text": "Guardei a sua figurinha no ninho."
+  },
+  {
     "id": "d8c8d964b63a186a",
     "lang": "en-US",
     "text": "frog?"
@@ -580,6 +610,11 @@
     "text": "Agora você sabe perguntar e responder:"
   },
   {
+    "id": "e41e6920a1ad082e",
+    "lang": "pt-BR",
+    "text": "Esse é o Farol das Línguas!"
+  },
+  {
     "id": "e5c3fd3ad07cae9f",
     "lang": "en-US",
     "text": "mouse?"
@@ -595,9 +630,19 @@
     "text": "mouse!"
   },
   {
+    "id": "e8cd481af8b3f393",
+    "lang": "pt-BR",
+    "text": "Vamos subir a escada do farol?"
+  },
+  {
     "id": "ec7327e589e84777",
     "lang": "en-US",
     "text": "Hello, forest!"
+  },
+  {
+    "id": "ecaf010af4359ec7",
+    "lang": "pt-BR",
+    "text": "Oi! Eu sou o Nino."
   },
   {
     "id": "eeb5a4b00ae508bc",

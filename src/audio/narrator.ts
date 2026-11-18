@@ -1,7 +1,10 @@
 import { audioSrc } from "@/domain/trail/audio-id";
 import type { Narration, Segment } from "@/domain/trail/schema";
 
-export type SfxName = "correct" | "retry" | "star" | "chest" | "tap";
+export type SfxName =
+  | "correct" | "retry" | "star" | "chest" | "tap"
+  | "whoosh" | "celebrate" | "reveal" | "yawn" | "stretch" | "pop" | "steps" | "bell"
+  | "blocks" | "pages" | "water" | "leaves" | "obra" | "dive" | "grow" | "thread" | "night";
 
 export interface Narrator {
   /** Call from a user gesture (tap or click): audio stays silent until then. */

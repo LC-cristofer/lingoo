@@ -9,7 +9,7 @@ Protótipo aprovado pelo Lucas em 2026-11-18 ("I lovit this version, pode seguir
 - `src/proto.css`, `src/stage.html` — interface do protótipo.
 - `build.py`, `film.cjs`, `mix.py`, `stills.cjs`, `src/director.js` — montagem, filme quadro a quadro com som sincronizado e imagens. Rodavam numa pasta temporária; os caminhos podem precisar de ajuste.
 - `logo/` — logotipo NESTOY (Fredoka 700 em curvas + o "O" de ninho) e o símbolo.
-- `sons/` — efeitos e falas novas gerados com ElevenLabs (mesma voz aprovada). `gen.py` mostra os textos e parâmetros.
+- `sons/` — `gen.py` (textos e parâmetros do ElevenLabs, mesma voz aprovada). Os sons gerados agora vivem em `public/audio` (falas em `public/audio/<id>.mp3`, efeitos em `public/audio/sfx/`, ambientes em `public/audio/ambient/`).
 - `book/` — o caderno publicado para aprovação.
 
 Imagens aprovadas: `docs/arte/ilha-ninho/`.

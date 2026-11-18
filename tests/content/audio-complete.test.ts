@@ -21,10 +21,19 @@ describe("audio completeness", () => {
     expect(missing).toEqual([]);
   });
 
-  it("the chant and the five sound effects exist", () => {
+  it("the chant and the sound effects exist", () => {
     expect(sizeOf(join(AUDIO, "song-forest-animals.mp3"))).toBeGreaterThan(MIN_BYTES);
-    for (const name of ["correct", "retry", "star", "chest", "tap"]) {
+    for (const name of [
+      "correct", "retry", "star", "chest", "tap",
+      "reveal", "yawn", "stretch", "pop", "steps", "bell", "blocks", "pages", "water", "leaves", "obra", "dive", "grow", "thread", "night",
+    ]) {
       expect(sizeOf(join(AUDIO, "sfx", `${name}.mp3`)), name).toBeGreaterThan(MIN_BYTES);
+    }
+  });
+
+  it("the two ambient loops exist", () => {
+    for (const kind of ["day", "night"]) {
+      expect(sizeOf(join(AUDIO, "ambient", `${kind}.mp3`)), kind).toBeGreaterThan(MIN_BYTES);
     }
   });
 });
