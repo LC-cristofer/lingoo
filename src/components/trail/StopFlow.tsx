@@ -66,17 +66,12 @@ export function WordCards({ words, ids }: { words: Word[]; ids: ArtId[] }) {
   );
 }
 
-export function Star() {
+export function Star({ size = 80, className }: { size?: number; className?: string }) {
   return (
-    <svg viewBox="-60 -60 120 120" width={80} height={80} role="img" aria-label="Estrela" data-testid="star">
-      <g className="art-sticker-pop">
-        <path
-          d="M0 -48 l14 30 l33 4 l-24 22 l7 32 l-30 -17 l-30 17 l7 -32 l-24 -22 l33 -4z"
-          fill="#FFC93C"
-          stroke="#F2A71B"
-          strokeWidth="5"
-          strokeLinejoin="round"
-        />
+    <svg viewBox="-60 -60 120 120" width={size} height={size} role="img" aria-label="Estrela" data-testid="star" className={className}>
+      <g>
+        <path d="M0 -48 l14 30 l33 4 l-24 22 l7 32 l-30 -17 l-30 17 l7 -32 l-24 -22 l33 -4z" fill="#FFC93C" stroke="#FFFFFF" strokeWidth="14" strokeLinejoin="round" />
+        <path d="M0 -48 l14 30 l33 4 l-24 22 l7 32 l-30 -17 l-30 17 l7 -32 l-24 -22 l33 -4z" fill="#FFC93C" stroke="#F2A71B" strokeWidth="4" strokeLinejoin="round" />
       </g>
     </svg>
   );
@@ -101,7 +96,7 @@ export function StopOpening({ title, opening, words, wordIds, startLabel = "Come
   }, [opening]);
   return (
     <div className="k-screen">
-      <Backdrop variant="interior" />
+      <Backdrop variant="farol" />
       <div className={`k-stage ${wordIds.length > 3 ? "is-many" : ""}`}>
         <LessonTopBar ratio={0} onExit={onExit} title={title} />
         <div className="k-hello">
@@ -144,22 +139,21 @@ export function StopClosing({ closing, words, wordIds, isChallenge = false, reco
   const label = isChallenge ? "Continuar" : record ? "Voltar ao mapa" : "Voltar";
   return (
     <div className="k-screen">
-      <Backdrop variant="interior" />
-      <div className="k-stage is-closing">
-        <div className="k-hello">
-          <Bubble tail="down">
-            <NarrationText narration={closing} />
-          </Bubble>
+      <Backdrop variant="farol" />
+      <i className="k-rays" aria-hidden="true" />
+      <div className="k-reward-stage is-closing">
+        <div className="k-reward-hero">
+          <Star size={170} className="k-star-big" />
           <span className="k-cat">
-            <Nino pose="happy" size={120} speaks />
+            <Nino pose="happy" size={104} reaction={{ kind: "celebrate", n: 1 }} speaks />
           </span>
         </div>
-        <div className="k-reward">
-          <Star />
-          <p className="k-star-line">
-            <NarrationText narration={lines.star} />
-          </p>
-        </div>
+        <p className="k-reward-title">
+          <NarrationText narration={lines.star} />
+        </p>
+        <p className="k-reward-sub">
+          <NarrationText narration={closing} />
+        </p>
         <WordCards words={words} ids={wordIds} />
         <ChunkyButton label={label} tone="ok" size="lg" className="k-cta" onPress={onContinue}>
           {label}

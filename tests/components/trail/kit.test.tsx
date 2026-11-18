@@ -183,21 +183,36 @@ describe("LessonTopBar lamps", () => {
     expect(container.querySelectorAll(".k-lamps > i.is-on")).toHaveLength(2);
   });
 
-  it("with more than 8 steps it is a rope bar, not lamps", () => {
-    const { container } = render(<LessonTopBar ratio={0.5} steps={9} onExit={() => {}} />);
+  // The lessons have 9 to 11 exercises: the approved look (at-1..3) is a bar of 6 lamps, each standing for a share of them.
+  it("with more than 8 steps it is still 6 lamps, lit in proportion; with no step count it is a rope bar", () => {
+    const { container, rerender } = render(<LessonTopBar ratio={0.5} steps={10} onExit={() => {}} />);
+    expect(container.querySelectorAll(".k-lamps > i")).toHaveLength(6);
+    expect(container.querySelectorAll(".k-lamps > i[data-on]")).toHaveLength(3);
+    rerender(<LessonTopBar ratio={0.5} onExit={() => {}} />);
     expect(container.querySelector(".k-lamps")).toBeNull();
     expect(container.querySelector(".k-bar")).not.toBeNull();
   });
 });
 
 describe("Backdrop", () => {
-  it.each(["sky", "interior", "night"] as const)("%s is a hidden decorative layer with the grain", (variant) => {
+  it.each(["sky", "interior", "night", "farol"] as const)("%s is a hidden decorative layer with the grain", (variant) => {
     const { container } = render(<Backdrop variant={variant} />);
     const root = container.firstElementChild!;
     expect(root).toHaveAttribute("aria-hidden", "true");
     expect(root).toHaveAttribute("data-variant", variant);
     expect(root).toHaveClass("k-backdrop", `is-${variant}`);
     expect(root.querySelector(".k-grain")).not.toBeNull();
+  });
+});
+
+describe("Backdrop farol", () => {
+  it("draws the interior once, with its own ids, blurred under the cream veil", () => {
+    const { container } = render(<Backdrop variant="farol" />);
+    const pic = container.querySelector("svg.k-farol-pic")!;
+    expect(pic).not.toBeNull();
+    expect(container.querySelector(".k-veil")).not.toBeNull();
+    expect(pic.innerHTML).not.toMatch(/id="fi-|#fi-|id="lampRoom"/);
+    expect(pic.innerHTML).toMatch(/id="bd-/);
   });
 });
 

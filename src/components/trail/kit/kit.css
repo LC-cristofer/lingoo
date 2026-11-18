@@ -63,8 +63,9 @@
 .k-tile svg.art-animal { width: 74%; height: 74%; }
 .k-tile:active:not(:disabled) { --lift: 3px; transform: translateY(4px); }
 .k-tile:disabled { cursor: default; }
+.k-tile.is-correct { animation: k-pop 380ms var(--ease-spring); }
 .k-tile.is-correct, .k-tile.is-tapped, .k-tile.is-matched { box-shadow: 0 0 0 5px var(--success), 0 7px 0 5px var(--success-dark), 0 0 30px 6px color-mix(in srgb, var(--success) 35%, transparent); }
-.k-tile.is-wrong { box-shadow: 0 0 0 5px var(--retry), 0 7px 0 5px var(--retry-dark), var(--shadow-soft); transform: rotate(-3deg); }
+.k-tile.is-wrong { box-shadow: 0 0 0 5px var(--retry), 0 7px 0 5px var(--retry-dark), var(--shadow-soft); animation: k-shake 480ms ease-in-out; }
 .k-tile.is-dim { opacity: 0.4; }
 .k-tile.is-hint { box-shadow: 0 0 0 5px var(--hint), 0 7px 0 5px var(--hint-dark), 0 0 30px 6px color-mix(in srgb, var(--hint) 40%, transparent); }
 .k-tile.is-selected { box-shadow: 0 0 0 5px var(--area-linguas), 0 7px 0 5px var(--area-linguas-dark), var(--shadow-soft); }
@@ -73,7 +74,7 @@
 .k-tiles > * { width: min(172px, calc((100% - 14px) / 2)); }
 .k-tiles > .k-tile { aspect-ratio: 1; }
 /* Two choices are tall cards, as in the approved lesson stills. */
-.k-tiles:not(.is-dense, .is-small, .is-six):not(:has(> :nth-child(3))) > .k-tile { aspect-ratio: 1 / 1.25; }
+.k-tiles:not(.is-dense, .is-small, .is-six):not(:has(> :nth-child(3))) > .k-tile { aspect-ratio: auto; height: 222px; }
 .k-tiles.is-dense { gap: 8px; width: calc(100% + 20px); margin: 0 -10px; }
 .k-tiles.is-dense > * { width: calc((100% - 16px) / 3); }
 .k-tiles.is-small { gap: 12px; }
@@ -99,7 +100,7 @@
 .k-feedback { margin: 0 calc(-1 * var(--sp-4)); min-height: calc(160px + env(safe-area-inset-bottom)); display: flex; flex-direction: column; justify-content: flex-end; }
 
 /* ---------- feedback sheet: green for right, warm for retry, never red; a slot for Nino ---------- */
-.k-sheet { position: relative; width: 100%; background: var(--success-bg); border-radius: 30px 30px 0 0; box-shadow: var(--shadow-sheet); padding: 16px 18px calc(26px + env(safe-area-inset-bottom)); display: flex; flex-direction: column; gap: var(--sp-4); }
+.k-sheet { animation: k-rise 460ms var(--ease-out) both; position: relative; width: 100%; background: var(--success-bg); border-radius: 30px 30px 0 0; box-shadow: var(--shadow-sheet); padding: 16px 18px calc(26px + env(safe-area-inset-bottom)); display: flex; flex-direction: column; gap: var(--sp-4); }
 .k-sheet.is-retry { background: var(--retry-bg); padding-bottom: calc(34px + env(safe-area-inset-bottom)); }
 .k-sheet-head { display: flex; align-items: center; gap: var(--sp-3); }
 .k-sheet-who { flex: none; width: 86px; height: 100px; margin: -34px 0 -6px; display: grid; place-items: end center; }
@@ -347,3 +348,53 @@ button.k-unit { cursor: pointer; }
   .k-mem-next { min-height: 96px; padding-bottom: 22px; }
   .k-nav { width: 520px; }
 }
+
+
+/* ---------- the farol interior behind the stops: still, blurred, veiled in cream (spec §6; proto #veil) ---------- */
+.k-backdrop.is-farol { background: var(--stone); }
+.k-farol-pic { position: absolute; left: -24px; top: -24px; width: calc(100% + 48px); height: calc(100% + 48px); display: block; filter: blur(6px); }
+.k-veil { position: absolute; inset: 0; background: linear-gradient(rgba(255, 246, 230, .35), rgba(255, 246, 230, .72) 30%, rgba(255, 246, 230, .86)); }
+
+/* ---------- feedback motion (transform and opacity only) ---------- */
+@keyframes k-pop { 0% { transform: scale(1); } 45% { transform: scale(1.07); } 100% { transform: scale(1); } }
+@keyframes k-shake { 0%, 100% { transform: translateX(0); } 18% { transform: translateX(-9px); } 36% { transform: translateX(8px); } 54% { transform: translateX(-6px); } 72% { transform: translateX(4px); } }
+@keyframes k-rise { from { transform: translateY(100%); opacity: 0; } 60% { opacity: 1; } to { transform: translateY(0); opacity: 1; } }
+@keyframes k-spring { 0% { transform: scale(0) rotate(-24deg); opacity: 0; } 55% { transform: scale(1.18) rotate(6deg); opacity: 1; } 78% { transform: scale(.94) rotate(-2deg); } 100% { transform: scale(1) rotate(0); opacity: 1; } }
+@keyframes k-fade-up { from { transform: translateY(14px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+/* ---------- the closing and the chest: a warm sunburst, the star, the line ---------- */
+.k-rays { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(circle at 50% 38%, rgba(255, 244, 214, .95), rgba(255, 244, 214, 0) 55%), repeating-conic-gradient(from 0deg at 50% 38%, #FFE9B8 0deg 10deg, #FFF3D6 10deg 20deg); }
+.k-reward-stage { position: relative; min-height: 100dvh; display: flex; flex-direction: column; align-items: center; gap: var(--sp-3); padding: var(--sp-4) var(--sp-4) 0; }
+.k-reward-stage > .k-top { width: 100%; }
+.k-reward-stage > .k-cta { margin-top: auto; margin-bottom: calc(30px + env(safe-area-inset-bottom)); width: 100%; max-width: 520px; }
+.k-reward-hero { position: relative; display: grid; place-items: center; margin-top: var(--sp-5); }
+.k-reward-hero .k-star-big { filter: drop-shadow(0 8px 0 color-mix(in srgb, var(--hint-dark) 35%, transparent)); }
+.k-star-big > g { transform-box: fill-box; transform-origin: center; animation: k-spring 640ms var(--ease-spring) both; }
+.k-reward-hero .k-cat { position: absolute; left: calc(50% + 96px); top: 36px; animation: k-fade-up 420ms var(--ease-out) 380ms both; }
+.k-reward-title { margin: var(--sp-2) 0 0; font-family: var(--font-display); font-weight: 700; font-size: 34px; line-height: 1.05; text-align: center; color: var(--cocoa); animation: k-fade-up 420ms var(--ease-out) 260ms both; }
+.k-reward-sub { margin: 0; max-width: 420px; font-family: var(--font-body); font-weight: 800; font-size: 19px; line-height: 1.25; text-align: center; color: var(--cocoa-2); animation: k-fade-up 420ms var(--ease-out) 340ms both; }
+.k-reward-sub b { color: var(--area-linguas-dark); }
+.k-reward-stage .k-words { animation: k-fade-up 420ms var(--ease-out) 420ms both; }
+.k-reward-stage .k-prize { flex: 1; flex-wrap: wrap; }
+.k-reward-stage .k-prize-open svg { filter: drop-shadow(0 8px 10px color-mix(in srgb, var(--cocoa) 22%, transparent)); }
+.k-reward-stage .art-sticker { filter: drop-shadow(0 6px 10px color-mix(in srgb, var(--cocoa) 24%, transparent)); }
+.k-reward-note { margin: 0; font-family: var(--font-body); font-weight: 800; font-size: 19px; text-align: center; color: var(--cocoa-2); animation: k-fade-up 420ms var(--ease-out) 360ms both; }
+
+/* The lamps of the bar pop when they light. */
+.k-lamps > i.is-on { animation: k-pop 380ms var(--ease-spring); }
+
+@media (min-width: 900px) and (orientation: landscape) {
+  .k-reward-stage { padding-top: 18px; gap: 10px; }
+  .k-reward-hero { margin-top: 0; }
+  .k-reward-hero .k-star-big { width: 140px; height: 140px; }
+  .k-reward-title { font-size: 38px; }
+  .k-reward-hero .k-cat { top: -14px; }
+  .k-reward-stage > .k-cta { max-width: 420px; margin-bottom: 22px; }
+}
+
+/* Reduced motion, by the system preference or by the settings choice: nothing moves, everything still shows. */
+@media (prefers-reduced-motion: reduce) {
+  .k-tile.is-correct, .k-tile.is-wrong, .k-sheet, .k-star-big > g, .k-reward-hero .k-cat, .k-reward-title, .k-reward-sub, .k-reward-note, .k-reward-stage .k-words, .k-lamps > i.is-on { animation: none; }
+}
+:root[data-motion="reduzir"] :is(.k-tile.is-correct, .k-tile.is-wrong, .k-sheet, .k-star-big > g, .k-reward-hero .k-cat, .k-reward-title, .k-reward-sub, .k-reward-note, .k-reward-stage .k-words, .k-lamps > i.is-on, .k-bar-shine, .k-stop-ring, .is-glow) { animation: none; }
+:root[data-motion="reduzir"] :is(.k-btn, .k-tile, .k-round, .k-bar > i, .k-lamps > i, .k-stop-disc, .k-music, .k-tab) { transition: none; }

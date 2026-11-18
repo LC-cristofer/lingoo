@@ -102,3 +102,37 @@ describe("ExerciseShell", () => {
     expect(screen.getByRole("button", { name: "Continuar" })).toBeInTheDocument();
   });
 });
+
+describe("ExerciseShell lamps and reactions", () => {
+  it("the lamp bar has 6 lamps and lights one per finished exercise", () => {
+    const { container } = render(
+      <ExerciseShell ratio={2 / 6} steps={6} prompt={prompt} pose="idle" feedback={null} onExit={() => {}}>
+        <div />
+      </ExerciseShell>,
+    );
+    expect(container.querySelectorAll(".k-lamps > i")).toHaveLength(6);
+    expect(container.querySelectorAll(".k-lamps > i[data-on]")).toHaveLength(2);
+  });
+  it("retry puts Nino's retry reaction on the sheet, correct the correct one", () => {
+    const { container, rerender } = render(
+      <ExerciseShell ratio={0} prompt={prompt} pose="help" feedback={{ kind: "retry", line }} onExit={() => {}}>
+        <div />
+      </ExerciseShell>,
+    );
+    expect(container.querySelector('[data-testid="feedback-area"] svg.nino-svg')).toHaveAttribute("data-reaction", "retry");
+    rerender(
+      <ExerciseShell ratio={0} prompt={prompt} pose="happy" feedback={{ kind: "correct", line, onContinue: () => {} }} onExit={() => {}}>
+        <div />
+      </ExerciseShell>,
+    );
+    expect(container.querySelector('[data-testid="feedback-area"] svg.nino-svg')).toHaveAttribute("data-reaction", "correct");
+  });
+  it("the stop screens sit on the farol interior", () => {
+    const { container } = render(
+      <ExerciseShell ratio={0} prompt={prompt} pose="idle" feedback={null} onExit={() => {}}>
+        <div />
+      </ExerciseShell>,
+    );
+    expect(container.querySelector(".k-backdrop")).toHaveAttribute("data-variant", "farol");
+  });
+});

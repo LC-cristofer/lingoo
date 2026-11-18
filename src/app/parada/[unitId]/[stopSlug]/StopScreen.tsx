@@ -2,6 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useRef } from "react";
+import { LandingContext } from "@/components/trail/kit/Backdrop";
 import { SongStop } from "@/components/trail/SongStop";
 import { StopPlayer, type StopExit } from "@/components/trail/StopPlayer";
 import { StoryStop } from "@/components/trail/StoryStop";
@@ -37,7 +38,17 @@ export function StopScreen({ stopId }: { stopId: string }) {
     if (review) router.push("/revisao");
     else router.push(reason === "done" ? `/?volta=${encodeURIComponent(stopId)}` : "/farol");
   };
-  if (stop.kind === "song") return <SongStop unit={unit} stop={stop} record={!review} onExit={exit} />;
-  if (stop.kind === "story") return <StoryStop unit={unit} stop={stop} record={!review} onExit={exit} />;
-  return <StopPlayer unit={unit} stop={stop} record={!review} onExit={exit} />;
+  // The farol's interior behind the screen is centred on this stop's landing.
+  const landing = Math.max(0, unit.stops.findIndex((s) => s.id === stop.id));
+  return (
+    <LandingContext.Provider value={landing}>
+      {stop.kind === "song" ? (
+        <SongStop unit={unit} stop={stop} record={!review} onExit={exit} />
+      ) : stop.kind === "story" ? (
+        <StoryStop unit={unit} stop={stop} record={!review} onExit={exit} />
+      ) : (
+        <StopPlayer unit={unit} stop={stop} record={!review} onExit={exit} />
+      )}
+    </LandingContext.Provider>
+  );
 }

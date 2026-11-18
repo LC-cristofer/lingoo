@@ -11,6 +11,8 @@ export type NinoProps = {
   size: number;
   /** Moves the mouth while the narrator is speaking. */
   speaks?: boolean;
+  /** When defined, forces the mouth (e.g. while a song plays) instead of following the narrator. */
+  talking?: boolean;
   /** A new `n` restarts the reaction; it lasts at most 1400 ms and then returns to `pose`. */
   reaction?: { kind: NinoReaction; n: number };
   className?: string;
@@ -44,7 +46,7 @@ function reactionMotion(kind: NinoReaction, k: number): Partial<NinoState> {
 
 const CONTINUOUS = ["head", "headY", "earL", "earR", "pawL", "pawR", "lookX", "lookY", "sx", "sy", "breathe", "lift", "lean"] as const;
 
-export function Nino({ pose, size, speaks = false, reaction, className }: NinoProps) {
+export function Nino({ pose, size, speaks = false, talking: talkingOverride, reaction, className }: NinoProps) {
   const svgRef = useRef<SVGSVGElement>(null);
   const rigRef = useRef<NinoRig | null>(null);
   const reduced = useSyncExternalStore(subscribeReduced, reducedNow, () => false);
@@ -56,7 +58,7 @@ export function Nino({ pose, size, speaks = false, reaction, className }: NinoPr
     () => (speaks ? (narrator.isSpeaking?.() ?? false) : false),
     () => false,
   );
-  const talking = speaks && speaking;
+  const talking = talkingOverride ?? (speaks && speaking);
 
   const rkind = reaction?.kind;
   const rn = reaction?.n;

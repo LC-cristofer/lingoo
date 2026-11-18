@@ -294,7 +294,7 @@ export function SongStop({ unit, stop, onExit, record = true, createAudio = (src
 
   return (
     <div className="k-screen">
-      <Backdrop variant="interior" />
+      <Backdrop variant="farol" />
       <div className="k-stage k-song">
         <LessonTopBar ratio={0} onExit={exit} title={stop.title} />
         <div className="k-song-card">
@@ -302,12 +302,12 @@ export function SongStop({ unit, stop, onExit, record = true, createAudio = (src
             <Animal id={line.wordId} size={220} />
           ) : (
             <span className="k-song-cat">
-              <Nino pose="happy" size={190} />
+              <Nino pose="happy" size={190} talking={playing} />
             </span>
           )}
           {line?.wordId ? (
             <span className="k-song-mini">
-              <Nino pose="happy" size={84} />
+              <Nino pose="happy" size={84} talking={playing} />
             </span>
           ) : null}
         </div>

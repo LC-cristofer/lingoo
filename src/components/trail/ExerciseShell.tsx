@@ -27,7 +27,7 @@ type ExerciseShellProps = {
 export function ExerciseShell({ ratio, prompt, pose, feedback, onExit, count, steps, children }: ExerciseShellProps) {
   return (
     <div className="k-screen">
-      <Backdrop variant="interior" />
+      <Backdrop variant="farol" />
       <div className="k-lesson">
         <LessonTopBar ratio={ratio} onExit={onExit} count={count} steps={steps} />
         <div className="k-ask">

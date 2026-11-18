@@ -121,6 +121,15 @@ describe("SongStop", () => {
     expect(document.querySelector('svg[data-pose="happy"]')).toBeInTheDocument();
   });
 
+  it("Nino's mouth moves while the song plays and stops when it is paused", async () => {
+    renderSong();
+    await sing();
+    const nino = () => screen.getByRole("img", { name: "Nino" });
+    expect(nino()).toHaveAttribute("data-talking", "true");
+    fireEvent.click(screen.getByRole("button", { name: "Pausar" }));
+    expect(nino()).toHaveAttribute("data-talking", "false");
+  });
+
   it("pauses and plays again", async () => {
     renderSong();
     await sing();

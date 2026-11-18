@@ -195,3 +195,11 @@
     transition: none !important;
   }
 }
+
+/* The settings choice "reduzir" (html[data-motion]) switches the same animations off as the system preference. */
+:root[data-motion="reduzir"] :is(.blink, .art-cat-tail, .art-cat-figure, .art-cat-shadow, .art-cat-mouth, .art-cat-ear-twitch, .art-glow-halo, .art-glow-sparkle, .art-walk, .art-chest-rays, .art-sticker-pop, .art-stop-ring, .art-stop-dash) {
+  animation: none !important;
+}
+:root[data-motion="reduzir"] .art-chest-lid {
+  transition: none !important;
+}

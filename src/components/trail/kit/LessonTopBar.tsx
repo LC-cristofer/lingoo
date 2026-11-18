@@ -1,8 +1,10 @@
 import { CloseIcon } from "../icons";
 import { ProgressBar } from "../ProgressBar";
 
-/** Up to this many steps the progress is shown as lamps; beyond it, as a rope bar. */
+/** Up to this many steps the progress is shown as one lamp per step; beyond it, as LESSON_LAMPS lamps (scaled). With no step count, a rope bar. */
 export const MAX_LAMPS = 8;
+/** A longer lesson still shows this many lamps, each standing for a share of the exercises. */
+export const LESSON_LAMPS = 6;
 
 type LessonTopBarProps = {
   ratio: number;
@@ -22,7 +24,7 @@ const totalOf = (count?: string) => {
 /** A round "×" plus the progress: lamp segments (8 steps or fewer) or a rope bar; or, on the opening, a title pill. */
 export function LessonTopBar({ ratio, onExit, title, count, steps }: LessonTopBarProps) {
   const total = steps ?? totalOf(count);
-  const lamps = total !== undefined && total > 0 && total <= MAX_LAMPS ? total : 0;
+  const lamps = total === undefined || total <= 0 ? 0 : total <= MAX_LAMPS ? total : LESSON_LAMPS;
   const value = Math.round(Math.min(1, Math.max(0, ratio)) * 100);
   const lit = Math.round(Math.min(1, Math.max(0, ratio)) * lamps);
   return (
@@ -35,7 +37,7 @@ export function LessonTopBar({ ratio, onExit, title, count, steps }: LessonTopBa
       ) : lamps ? (
         <div role="progressbar" aria-label="Progresso" aria-valuemin={0} aria-valuemax={100} aria-valuenow={value} className={`k-lamps ${count ? "is-sky" : ""}`}>
           {Array.from({ length: lamps }, (_, i) => (
-            <i key={i} className={i < lit ? "is-on" : ""} />
+            <i key={i} className={i < lit ? "is-on" : ""} data-on={i < lit ? "true" : undefined} />
           ))}
         </div>
       ) : (

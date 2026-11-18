@@ -50,6 +50,11 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     [getStore],
   );
 
+  // The motion choice is mirrored on <html data-motion> so plain CSS can switch its animations off ("reduzir").
+  useEffect(() => {
+    document.documentElement.dataset.motion = settings.motion;
+  }, [settings.motion]);
+
   const value = useMemo(() => ({ settings, update, hydrated }), [settings, update, hydrated]);
   return <SettingsContext.Provider value={value}>{children}</SettingsContext.Provider>;
 }

@@ -98,6 +98,15 @@ describe("<Nino>", () => {
     expect(svg).toHaveAttribute("data-talking", "false");
   });
 
+  it("the talking prop overrides the narrator in both directions", () => {
+    const { getByRole, rerender } = render(<Nino pose="idle" size={100} talking />);
+    expect(getByRole("img", { name: "Nino" })).toHaveAttribute("data-talking", "true");
+    speakingNow = true;
+    rerender(<Nino pose="idle" size={100} speaks talking={false} />);
+    expect(getByRole("img", { name: "Nino" })).toHaveAttribute("data-talking", "false");
+    speakingNow = false;
+  });
+
   it("does not talk without the speaks prop", () => {
     const { getByRole } = render(<Nino pose="idle" size={100} />);
     expect(listener).toBeNull();

@@ -138,7 +138,7 @@ export function StoryStop({ unit, stop, onExit, record = true }: StoryStopProps)
 
   return (
     <div className="k-screen">
-      <Backdrop variant="interior" />
+      <Backdrop variant="farol" />
       <div className="k-stage k-story">
         <LessonTopBar ratio={page / stop.pages.length} onExit={exit} title={stop.title} />
         <div className="k-book">

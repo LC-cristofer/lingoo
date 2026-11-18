@@ -28,8 +28,9 @@ export function ChestReward({ stop, lines, onBack }: ChestRewardProps) {
   if (!sticker) {
     return (
       <div className="k-screen">
-        <Backdrop variant="interior" />
-        <div className="k-stage justify-center">
+        <Backdrop variant="farol" />
+        <i className="k-rays" aria-hidden="true" />
+        <div className="k-reward-stage justify-center">
           <ChunkyButton label="Voltar ao mapa" tone="ok" size="lg" onPress={onBack}>
             Voltar ao mapa
           </ChunkyButton>
@@ -47,23 +48,20 @@ export function ChestReward({ stop, lines, onBack }: ChestRewardProps) {
 
   return (
     <div className="k-screen">
-      <Backdrop variant="interior" />
-      <div className="k-stage">
-        <p className="k-star-line" style={{ marginTop: 24 }}>
+      <Backdrop variant="farol" />
+      <i className="k-rays" aria-hidden="true" />
+      <div className="k-reward-stage">
+        <p className="k-reward-title" style={{ marginTop: 24 }}>
           <NarrationText narration={open ? [...lines.chestOpen, ...sticker.name] : lines.chestPrompt} />
         </p>
-        <div className="k-prize" style={{ flex: 1, flexWrap: "wrap" }}>
-          <button
-            type="button"
-            aria-label="Abrir o baú"
-            disabled={open}
-            onClick={openChest}
-            className="k-prize-open min-h-16 min-w-16"
-          >
-            <Chest open={open} size={open ? 240 : 300} />
+        <div className="k-prize">
+          <button type="button" aria-label="Abrir o baú" disabled={open} onClick={openChest} className="k-prize-open min-h-16 min-w-16">
+            <Chest open={open} size={open ? 210 : 280} />
           </button>
-          {open ? <Sticker art={sticker.art} earned size={200} /> : null}
+          {open ? <Sticker art={sticker.art} earned size={open ? 190 : 200} /> : null}
         </div>
+        {/* Written only (the line above is the one said aloud). */}
+        {open ? <p className="k-reward-note">A figurinha vai morar no ninho.</p> : null}
         <div className="k-cta min-h-16" style={{ display: "flex", justifyContent: "center" }}>
           {open ? (
             <ChunkyButton label="Voltar ao mapa" tone="ok" size="lg" onPress={onBack} className="w-full">
