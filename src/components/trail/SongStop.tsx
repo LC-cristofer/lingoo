@@ -8,7 +8,7 @@ import type { ArtId, SongStop as SongStopData, Unit } from "@/domain/trail/schem
 import { PauseIcon, PlayIcon } from "./icons";
 import { Bubble } from "./kit/Bubble";
 import { ChunkyButton } from "./kit/ChunkyButton";
-import { NightSky } from "./kit/NightSky";
+import { Backdrop } from "./kit/Backdrop";
 import { LessonTopBar } from "./kit/LessonTopBar";
 import { NarrationText } from "./NarrationText";
 import { ExerciseLoop, StopClosing, StopOpening } from "./StopFlow";
@@ -293,7 +293,7 @@ export function SongStop({ unit, stop, onExit, record = true, createAudio = (src
 
   return (
     <div className="k-screen">
-      <NightSky variant="lesson" />
+      <Backdrop variant="interior" />
       <div className="k-stage k-song">
         <LessonTopBar ratio={0} onExit={exit} title={stop.title} />
         <div className="k-song-card">
@@ -322,12 +322,12 @@ export function SongStop({ unit, stop, onExit, record = true, createAudio = (src
         <div className="k-song-controls">
           {ended ? (
             <>
-              <ChunkyButton label="Cantar de novo" tone="white" onPress={singAgain}>
+              <ChunkyButton label="Cantar de novo" tone="cream" onPress={singAgain}>
                 Cantar de novo
               </ChunkyButton>
               <ChunkyButton
                 label="Continuar"
-                tone="accent"
+                tone="ok"
                 size="lg"
                 onPress={() => {
                   silence();
@@ -338,7 +338,7 @@ export function SongStop({ unit, stop, onExit, record = true, createAudio = (src
               </ChunkyButton>
             </>
           ) : (
-            <ChunkyButton label={playing ? "Pausar" : "Tocar"} tone="accent" size="round" onPress={togglePlay}>
+            <ChunkyButton label={playing ? "Pausar" : "Tocar"} tone="ok" size="round" onPress={togglePlay}>
               {playing ? <PauseIcon size={40} /> : <PlayIcon size={40} />}
             </ChunkyButton>
           )}

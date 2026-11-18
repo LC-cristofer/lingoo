@@ -5,7 +5,7 @@ const LETTERS = ["S", "T", "Q", "Q", "S", "S", "D"];
 function StarIcon({ size = 22 }: { size?: number }) {
   return (
     <svg viewBox="-12 -12 24 24" width={size} height={size} aria-hidden="true">
-      <path d="M0 -11 l3.3 6.8 l7.5 1 l-5.4 5.2 l1.3 7.4 l-6.7 -3.5 l-6.7 3.5 l1.3 -7.4 l-5.4 -5.2 l7.5 -1z" fill="var(--current)" stroke="var(--current-edge)" strokeWidth="1.6" strokeLinejoin="round" />
+      <path d="M0 -11 l3.3 6.8 l7.5 1 l-5.4 5.2 l1.3 7.4 l-6.7 -3.5 l-6.7 3.5 l1.3 -7.4 l-5.4 -5.2 l7.5 -1z" fill="var(--hint)" stroke="var(--hint-dark)" strokeWidth="1.6" strokeLinejoin="round" />
     </svg>
   );
 }

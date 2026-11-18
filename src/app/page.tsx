@@ -2,10 +2,11 @@
 
 import { useRouter } from "next/navigation";
 import { Animal } from "@/art/Animal";
+import { Wordmark } from "@/art/brand/Wordmark";
 import { Cat } from "@/art/Cat";
 import { narrator } from "@/audio/narrator";
 import { ChunkyButton } from "@/components/trail/kit/ChunkyButton";
-import { NightSky } from "@/components/trail/kit/NightSky";
+import { Backdrop } from "@/components/trail/kit/Backdrop";
 import { getLines } from "@/domain/trail/content";
 
 export default function Home() {
@@ -17,10 +18,12 @@ export default function Home() {
   };
   return (
     <div className="k-screen">
-      <NightSky variant="start" />
+      <Backdrop variant="sky" />
       <main className="k-start">
         <div className="k-start-text">
-          <h1 className="k-logo">NESTOY</h1>
+          <h1 className="k-logo">
+            <Wordmark className="k-wordmark" />
+          </h1>
           <p className="k-tagline">Um ninho de descobertas</p>
         </div>
         <div className="k-start-cast" aria-hidden="true">
@@ -33,7 +36,7 @@ export default function Home() {
           </span>
         </div>
         <div className="k-start-cta">
-          <ChunkyButton label="Jogar" tone="accent" size="lg" onPress={start}>
+          <ChunkyButton label="Jogar" tone="ok" size="lg" onPress={start}>
             Jogar
             <PlayArrow />
           </ChunkyButton>

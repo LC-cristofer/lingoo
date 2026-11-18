@@ -12,7 +12,7 @@ import { PlayIcon } from "../icons";
 import { BottomNav } from "../kit/BottomNav";
 import { Bubble } from "../kit/Bubble";
 import { ChunkyButton } from "../kit/ChunkyButton";
-import { NightSky } from "../kit/NightSky";
+import { Backdrop } from "../kit/Backdrop";
 import { MusicToggle } from "../kit/MusicToggle";
 import { NarrationText } from "../NarrationText";
 import { useToday } from "../useToday";
@@ -91,7 +91,7 @@ export function MemoryHome() {
 
   return (
     <div className="k-screen">
-      <NightSky variant="map" />
+      <Backdrop variant="sky" />
       <div className="k-fixed-chips">
         <DaysCalendar progress={hydrated ? progress : { ...progress, completedStops: {}, daysPlayed: [] }} />
         <MusicToggle />
@@ -117,7 +117,7 @@ export function MemoryHome() {
             )}
           </div>
           {kind === "due" ? (
-            <ChunkyButton label="Treinar" tone="accent" size="lg" className="k-mtab-cta" onPress={() => setRound(due.slice(0, ROUND_LIMIT))}>
+            <ChunkyButton label="Treinar" tone="ok" size="lg" className="k-mtab-cta" onPress={() => setRound(due.slice(0, ROUND_LIMIT))}>
               Treinar
               <PlayIcon size={28} />
             </ChunkyButton>

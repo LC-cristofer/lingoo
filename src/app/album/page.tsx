@@ -9,7 +9,7 @@ import { useToday } from "@/components/trail/useToday";
 import { useTrailProgress } from "@/components/trail/TrailProgressProvider";
 import { BottomNav } from "@/components/trail/kit/BottomNav";
 import { MusicToggle } from "@/components/trail/kit/MusicToggle";
-import { NightSky } from "@/components/trail/kit/NightSky";
+import { Backdrop } from "@/components/trail/kit/Backdrop";
 import { UnitHeader } from "@/components/trail/kit/UnitHeader";
 import { getLines, getPath, getUnit } from "@/domain/trail/content";
 import { dueCards } from "@/domain/trail/memory";
@@ -62,7 +62,7 @@ export default function AlbumPage() {
 
   return (
     <div className="k-screen">
-      <NightSky variant="map" />
+      <Backdrop variant="sky" />
       <div className="k-fixed-chips">
         <DaysCalendar progress={shown} />
         <MusicToggle />

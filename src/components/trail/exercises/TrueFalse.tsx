@@ -30,8 +30,8 @@ export function TrueFalse({ exercise, phase, onAnswer }: TrueFalseProps) {
   };
 
   const thumbs = [
-    { choice: true, label: "Certo", emoji: "👍", tone: "success" as const },
-    { choice: false, label: "Errado", emoji: "👎", tone: "retry" as const },
+    { choice: true, label: "Certo", emoji: "👍", tone: "ok" as const, className: "" },
+    { choice: false, label: "Errado", emoji: "👎", tone: "area" as const, className: "[--tone:var(--retry)] [--tone-dark:var(--retry-dark)]" },
   ];
 
   return (
@@ -40,7 +40,7 @@ export function TrueFalse({ exercise, phase, onAnswer }: TrueFalseProps) {
         <Animal id={exercise.wordId} size={200} />
       </div>
       <div className="flex items-center justify-center gap-8">
-        {thumbs.map(({ choice, label, emoji, tone }) => {
+        {thumbs.map(({ choice, label, emoji, tone, className }) => {
           const glow = phase === "hint" && choice === exercise.isTrue;
           return (
             <ChunkyButton
@@ -51,7 +51,7 @@ export function TrueFalse({ exercise, phase, onAnswer }: TrueFalseProps) {
               disabled={!isInteractive(phase)}
               onPress={() => choose(choice)}
               data={{ "data-glow": glow ? "true" : undefined }}
-              className={`min-h-[96px] min-w-[96px] ${glow ? "is-glow" : ""}`}
+              className={`min-h-[96px] min-w-[96px] ${className} ${glow ? "is-glow" : ""}`}
             >
               <span aria-hidden="true">{emoji}</span>
             </ChunkyButton>

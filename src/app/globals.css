@@ -4,26 +4,30 @@
 /* Gatinho and animal art animations (blink, tail, jump, glow). */
 @import "../art/art.css";
 /* The visual kit of the approved look (buttons, tiles, sheets, signs, nav, scenes). */
-@import "../components/trail/kit/night-sky.css";
 @import "../components/trail/kit/kit.css";
 @import "../components/trail/trail-map.css";
 
 /* The useful tokens, mirrored for Tailwind utilities (the values live in src/styles/tokens.css). */
 @theme inline {
-  --color-night: var(--sky-0);
-  --color-fg: var(--text-1);
-  --color-fg-2: var(--text-2);
-  --color-fg-3: var(--text-3);
-  --color-ink: var(--ink);
-  --color-card: var(--card);
-  --color-accent: var(--accent);
-  --color-current: var(--current);
+  --color-sky: var(--area-linguas-dark);
+  --color-sky-mid: var(--sky-mid);
+  --color-cream: var(--cream);
+  --color-paper: var(--paper);
+  --color-cocoa: var(--cocoa);
+  --color-fg: var(--cocoa);
+  --color-fg-2: var(--cocoa-2);
+  --color-ink: var(--cocoa);
+  --color-card: var(--paper);
   --color-success: var(--success-text);
-  --color-retry: var(--retry);
+  --color-retry: var(--retry-text);
   --color-hint: var(--hint);
-  --color-sky: var(--accent-text);
-  --color-cat: var(--cat);
-  --font-display: var(--font-baloo), system-ui, sans-serif;
+  --color-area-letras: var(--area-letras);
+  --color-area-numeros: var(--area-numeros);
+  --color-area-cores: var(--area-cores);
+  --color-area-linguas: var(--area-linguas);
+  --color-area-mundo: var(--area-mundo);
+  --color-area-ninho: var(--area-ninho);
+  --font-display: var(--font-fredoka), system-ui, sans-serif;
   --font-body: var(--font-nunito), system-ui, sans-serif;
   --radius-card: var(--r-4);
   --ease-spring: var(--ease-spring);
@@ -31,6 +35,8 @@
 }
 
 body {
+  background: var(--sky-mid);
+  color: var(--cocoa);
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;

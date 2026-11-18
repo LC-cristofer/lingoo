@@ -100,7 +100,7 @@ export function MatchPairs({ exercise, words, phase, onAnswer }: MatchPairsProps
               key={id}
               label={words.find((w) => w.id === id)?.en ?? ART_WORDS[id]}
               lang="en"
-              tone="white"
+              tone="cream"
               disabled={!interactive || f.matched}
               onPress={() => select("word", id)}
               data={{ "data-word": id, "data-glow": glow ? "true" : undefined, ...f.data }}

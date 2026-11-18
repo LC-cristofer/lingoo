@@ -6,7 +6,7 @@ import { Sticker } from "@/art/scenes/Sticker";
 import { narrator } from "@/audio/narrator";
 import type { Lines, LessonStop } from "@/domain/trail/schema";
 import { ChunkyButton } from "./kit/ChunkyButton";
-import { NightSky } from "./kit/NightSky";
+import { Backdrop } from "./kit/Backdrop";
 import { NarrationText } from "./NarrationText";
 
 type ChestRewardProps = {
@@ -28,9 +28,9 @@ export function ChestReward({ stop, lines, onBack }: ChestRewardProps) {
   if (!sticker) {
     return (
       <div className="k-screen">
-        <NightSky variant="start" />
+        <Backdrop variant="interior" />
         <div className="k-stage justify-center">
-          <ChunkyButton label="Voltar ao mapa" tone="accent" size="lg" onPress={onBack}>
+          <ChunkyButton label="Voltar ao mapa" tone="ok" size="lg" onPress={onBack}>
             Voltar ao mapa
           </ChunkyButton>
         </div>
@@ -47,7 +47,7 @@ export function ChestReward({ stop, lines, onBack }: ChestRewardProps) {
 
   return (
     <div className="k-screen">
-      <NightSky variant="start" />
+      <Backdrop variant="interior" />
       <div className="k-stage">
         <p className="k-star-line" style={{ marginTop: 24 }}>
           <NarrationText narration={open ? [...lines.chestOpen, ...sticker.name] : lines.chestPrompt} />
@@ -66,7 +66,7 @@ export function ChestReward({ stop, lines, onBack }: ChestRewardProps) {
         </div>
         <div className="k-cta min-h-16" style={{ display: "flex", justifyContent: "center" }}>
           {open ? (
-            <ChunkyButton label="Voltar ao mapa" tone="accent" size="lg" onPress={onBack} className="w-full">
+            <ChunkyButton label="Voltar ao mapa" tone="ok" size="lg" onPress={onBack} className="w-full">
               Voltar ao mapa
             </ChunkyButton>
           ) : null}

@@ -16,6 +16,8 @@ const eslintConfig = defineConfig([
     "tools/audio/.venv/**",
     "tools/audio/.cache/**",
     "**/__pycache__/**",
+    // The approved prototype (reference only, plain browser scripts), not app code.
+    "tools/visual/ilha/**",
   ]),
 ]);
 

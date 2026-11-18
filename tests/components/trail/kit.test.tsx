@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
+import { Backdrop } from "@/components/trail/kit/Backdrop";
 import { AnswerTile } from "@/components/trail/kit/AnswerTile";
 import { BottomNav } from "@/components/trail/kit/BottomNav";
 import { Bubble } from "@/components/trail/kit/Bubble";
@@ -38,8 +39,14 @@ describe("ChunkyButton", () => {
     expect(onPress).not.toHaveBeenCalled();
   });
 
-  it("offers the four tones: accent (primary), success, white (secondary) and retry (never red)", () => {
-    for (const tone of ["accent", "success", "white", "retry"] as const) {
+  it("defaults to the green ok tone and offers area (coloured by the parent) and cream (secondary); never red", () => {
+    render(
+      <ChunkyButton label="padrão" onPress={() => {}}>
+        x
+      </ChunkyButton>,
+    );
+    expect(screen.getByRole("button", { name: "padrão" }).className).toContain("k-btn-ok");
+    for (const tone of ["ok", "area", "cream"] as const) {
       const { unmount } = render(
         <ChunkyButton label={tone} onPress={() => {}} tone={tone}>
           x
@@ -172,6 +179,49 @@ describe("BottomNav", () => {
     expect(screen.getByText("4")).toHaveClass("k-badge");
     rerender(<BottomNav active="trilha" memoryDue={0} />);
     expect(document.querySelector(".k-badge")).toBeNull();
+  });
+});
+
+describe("FeedbackSheet who slot", () => {
+  it("shows the slot (Nino's place) instead of the round icon when given", () => {
+    const { container, rerender } = render(<FeedbackSheet kind="correct" line="Isso!" who={<svg data-testid="nino" />} onContinue={() => {}} />);
+    expect(screen.getByTestId("nino")).toBeInTheDocument();
+    expect(container.querySelector(".k-sheet-who")).not.toBeNull();
+    expect(container.querySelector(".k-sheet-icon")).toBeNull();
+    rerender(<FeedbackSheet kind="correct" line="Isso!" onContinue={() => {}} />);
+    expect(container.querySelector(".k-sheet-icon")).not.toBeNull();
+  });
+});
+
+describe("LessonTopBar lamps", () => {
+  it("draws one lamp per step up to 8, lighting the done ones, and keeps the progressbar value", () => {
+    const { container } = render(<LessonTopBar ratio={0.5} steps={6} onExit={() => {}} />);
+    expect(container.querySelectorAll(".k-lamps > i")).toHaveLength(6);
+    expect(container.querySelectorAll(".k-lamps > i.is-on")).toHaveLength(3);
+    expect(screen.getByRole("progressbar")).toHaveAttribute("aria-valuenow", "50");
+  });
+
+  it("takes the number of lamps from the count when no steps are given", () => {
+    const { container } = render(<LessonTopBar ratio={0.4} count="2 de 5" onExit={() => {}} />);
+    expect(container.querySelectorAll(".k-lamps > i")).toHaveLength(5);
+    expect(container.querySelectorAll(".k-lamps > i.is-on")).toHaveLength(2);
+  });
+
+  it("with more than 8 steps it is a rope bar, not lamps", () => {
+    const { container } = render(<LessonTopBar ratio={0.5} steps={9} onExit={() => {}} />);
+    expect(container.querySelector(".k-lamps")).toBeNull();
+    expect(container.querySelector(".k-bar")).not.toBeNull();
+  });
+});
+
+describe("Backdrop", () => {
+  it.each(["sky", "interior", "night"] as const)("%s is a hidden decorative layer with the grain", (variant) => {
+    const { container } = render(<Backdrop variant={variant} />);
+    const root = container.firstElementChild!;
+    expect(root).toHaveAttribute("aria-hidden", "true");
+    expect(root).toHaveAttribute("data-variant", variant);
+    expect(root).toHaveClass("k-backdrop", `is-${variant}`);
+    expect(root.querySelector(".k-grain")).not.toBeNull();
   });
 });
 

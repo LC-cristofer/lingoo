@@ -1,68 +1,55 @@
-/* NESTOY design tokens (spec 2026-11-17 §3). The one place colours, type, space, radii, elevation and
-   motion are defined; screens and the kit only reference these (no loose values). Dark "night sky" theme;
-   a light theme later only has to redefine the colour tokens. */
+/* NESTOY design tokens: the "Bíblia visual" (spec 2026-11-18 §1). The one place UI colours, type, space,
+   radii, elevation and motion are defined; screens and the kit only reference these (no loose values).
+   World art colours live in src/world/palette.ts; the kitten's orange belongs to Nino's art only. */
 :root {
-  /* ---- colour: sky and surfaces ---- */
-  --sky-0: #0B1030;
-  --sky-1: #121A45;
-  --sky-2: #221A4F;
-  --surface-1: rgba(255, 255, 255, 0.06);
-  --surface-2: rgba(255, 255, 255, 0.10);
-  --line: rgba(255, 255, 255, 0.10);
-  /* A light card for answers (the animals need a light ground) and its solid bottom edge. */
-  --card: #F4F6FF;
-  --card-edge: #B8C0E6;
-  --card-line: rgba(255, 255, 255, 0.7);
+  /* ---- colour: sky, paper and ink ---- */
+  --sky-top: #7CC4EE;
+  --sky-mid: #CDEBF8;
+  --sky-low: #FFEFD9;
+  --night-top: #0E1640;
+  --night-mid: #1E2A6B;
+  --night-low: #3A3270;
+  --night-ui: #1B2259;
+  --stone: #EFE5D3;
+  --cream: #FFF8EC;
+  --paper: #FFFDF8;
+  --cocoa: #3A2618;
+  --cocoa-2: #8A6A50;
+  --line: rgba(58,38,24,.12);
+  --edge: rgba(58,38,24,.14);
+  --veil: rgba(255, 248, 236, .88);
+  --lamp-off: #E6DCCB;
   --white: #FFFFFF;
-  --highlight: rgba(255, 255, 255, 0.22);
-  /* Glass and raised dark panels (chips, nav, sheet). */
-  --glass: rgba(26, 32, 78, 0.78);
-  --nav: rgba(20, 26, 66, 0.94);
-  --glass-line: rgba(255, 255, 255, 0.12);
-  --panel: #1B2358;
-  --panel-edge: #121842;
 
-  /* ---- colour: text ---- */
-  --text-1: #F4F6FF;
-  --text-2: #B9C2E6;
-  --text-3: #7E89B8;
-  --ink: #151A3A;
-  --ink-2: #4A5384;
+  /* ---- colour: the six areas (+ the nest) ---- */
+  --area-letras: #FF7A5C;
+  --area-numeros: #F5B12E;
+  --area-cores: #A57BEA;
+  --area-linguas: #2E9FD8;
+  --area-linguas-dark: #2384B5;
+  --area-mundo: #2EB8A4;
+  --area-ninho: #C98A4B;
 
-  /* ---- colour: function ---- */
-  --accent: #4470F4;
-  --accent-edge: #2F55D4;
-  --accent-text: #2F55D4;
-  --accent-light: #9DB5FF;
-  --accent-soft: rgba(110, 145, 255, 0.2);
-  --current: #FFB84A;
-  --current-edge: #E08F1E;
-  --success: #34C77B;
-  --success-edge: #1FA463;
-  --success-text: #4FE08E;
-  --retry: #FFA94D;
-  --retry-edge: #E08A2C;
-  --hint: #FFC93C;
-  --hint-edge: #DE9F12;
-  --locked: #303A6E;
-  --locked-edge: #232B58;
-  --locked-icon: #8E99CF;
-  /* The orange of the kitten is his alone. */
-  --cat: #FF9F43;
+  /* ---- colour: feedback (never red) ---- */
+  --success: #5DB55A;
+  --success-dark: #3E8E3E;
+  --success-bg: #E8F6E2;
+  --success-text: #2E7D32;
+  --retry: #F2A93B;
+  --retry-dark: #D98E1F;
+  --retry-bg: #FFF1DA;
+  --retry-text: #8A5200;
+  --hint: #FFC94A;
+  --hint-dark: #D99216;
 
-  /* ---- type (Baloo 2 for titles, numbers and buttons; Nunito for support) ---- */
-  --font-display: var(--font-baloo), system-ui, sans-serif;
+  /* ---- type (Fredoka for titles, numbers and buttons; Nunito for support) ---- */
+  --font-display: var(--font-fredoka), system-ui, sans-serif;
   --font-body: var(--font-nunito), system-ui, sans-serif;
-  --fs-display: 44px;
-  --lh-display: 48px;
-  --fs-title: 28px;
-  --lh-title: 32px;
-  --fs-subtitle: 22px;
-  --lh-subtitle: 26px;
-  --fs-body: 18px;
-  --lh-body: 24px;
-  --fs-caption: 14px;
-  --lh-caption: 18px;
+  --fs-display: 34px;
+  --fs-title: 22px;
+  --fs-sub: 19px;
+  --fs-body: 15px;
+  --fs-caption: 13px;
 
   /* ---- space (4 px scale) ---- */
   --sp-1: 4px;
@@ -74,24 +61,23 @@
   --sp-7: 32px;
   --sp-8: 40px;
   --sp-9: 56px;
+  --sp-10: 72px;
 
   /* ---- radii ---- */
   --r-1: 12px;
-  --r-2: 18px;
+  --r-2: 20px;
   --r-3: 24px;
-  --r-4: 32px;
+  --r-4: 28px;
   --r-pill: 999px;
 
-  /* ---- elevation: a solid bottom edge that sinks on press, plus a soft dark shadow ---- */
-  --edge: 6px;
-  --edge-sunk: 2px;
+  /* ---- elevation: a solid bottom edge that sinks on press, plus a soft cocoa shadow ---- */
+  --lift: 6px;
+  --lift-sunk: 2px;
   --sink: 4px;
-  --shadow-soft: 0 14px 30px rgba(3, 6, 28, 0.45);
-  --shadow-small: 0 8px 20px rgba(3, 6, 28, 0.4);
-  --shadow-sheet: 0 -18px 40px rgba(3, 6, 28, 0.5);
-  /* Light is kept for the "current" state only. */
-  --glow-current: 0 0 0 6px rgba(255, 184, 74, 0.22), 0 0 34px 6px rgba(255, 184, 74, 0.35);
-  --focus-ring: 0 0 0 3px var(--sky-0), 0 0 0 6px var(--accent);
+  --shadow-small: 0 6px 16px rgba(58, 38, 24, .14);
+  --shadow-soft: 0 12px 22px rgba(58, 38, 24, .14);
+  --shadow-sheet: 0 -8px 24px rgba(58, 38, 24, .12);
+  --focus-ring: 0 0 0 3px var(--cream), 0 0 0 6px var(--area-linguas);
 
   /* ---- motion ---- */
   --t-tap: 90ms;

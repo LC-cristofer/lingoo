@@ -7,7 +7,7 @@ import type { ArtId, StoryStop as StoryStopData, Unit } from "@/domain/trail/sch
 import { ArrowIcon, ReplayIcon } from "./icons";
 import { Bubble } from "./kit/Bubble";
 import { ChunkyButton } from "./kit/ChunkyButton";
-import { NightSky } from "./kit/NightSky";
+import { Backdrop } from "./kit/Backdrop";
 import { LessonTopBar } from "./kit/LessonTopBar";
 import { NarrationText } from "./NarrationText";
 import { ExerciseLoop, StopClosing, StopOpening } from "./StopFlow";
@@ -137,7 +137,7 @@ export function StoryStop({ unit, stop, onExit, record = true }: StoryStopProps)
 
   return (
     <div className="k-screen">
-      <NightSky variant="lesson" />
+      <Backdrop variant="interior" />
       <div className="k-stage k-story">
         <LessonTopBar ratio={page / stop.pages.length} onExit={exit} title={stop.title} />
         <div className="k-book">
@@ -156,10 +156,10 @@ export function StoryStop({ unit, stop, onExit, record = true }: StoryStopProps)
         <div className="k-story-controls">
           {ready ? (
             <>
-              <ChunkyButton label="Repetir" tone="white" size="round" onPress={() => setReplays((n) => n + 1)}>
+              <ChunkyButton label="Repetir" tone="cream" size="round" onPress={() => setReplays((n) => n + 1)}>
                 <ReplayIcon size={38} />
               </ChunkyButton>
-              <ChunkyButton label="Avançar" tone="accent" size="lg" onPress={advance}>
+              <ChunkyButton label="Avançar" tone="ok" size="lg" onPress={advance}>
                 <ArrowIcon size={34} />
               </ChunkyButton>
             </>

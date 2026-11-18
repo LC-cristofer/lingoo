@@ -6,7 +6,7 @@ import { Cat, type CatExpression } from "@/art/Cat";
 import type { Narration } from "@/domain/trail/schema";
 import { FeedbackBanner, type FeedbackKind } from "./FeedbackBanner";
 import { Bubble } from "./kit/Bubble";
-import { NightSky } from "./kit/NightSky";
+import { Backdrop } from "./kit/Backdrop";
 import { LessonTopBar } from "./kit/LessonTopBar";
 import { NarrationText } from "./NarrationText";
 
@@ -18,15 +18,17 @@ type ExerciseShellProps = {
   onExit: () => void;
   /** "2 de 5": the memory training's blue bar and count pill. */
   count?: string;
+  /** How many exercises the lesson has: up to 8 the top bar shows lamps. */
+  steps?: number;
   children: ReactNode;
 };
 
-export function ExerciseShell({ ratio, prompt, catExpression, feedback, onExit, count, children }: ExerciseShellProps) {
+export function ExerciseShell({ ratio, prompt, catExpression, feedback, onExit, count, steps, children }: ExerciseShellProps) {
   return (
     <div className="k-screen">
-      <NightSky variant="lesson" />
+      <Backdrop variant="interior" />
       <div className="k-lesson">
-        <LessonTopBar ratio={ratio} onExit={onExit} count={count} />
+        <LessonTopBar ratio={ratio} onExit={onExit} count={count} steps={steps} />
         <div className="k-ask">
           <span className="k-cat">
             <Cat expression={catExpression} size={104} />

@@ -7,6 +7,8 @@ type FeedbackSheetProps = {
   kind: SheetKind;
   line: ReactNode;
   onContinue?: () => void;
+  /** The slot for Nino (his reaction pose): shown on the left of the line instead of the round icon. */
+  who?: ReactNode;
 };
 
 function Icon({ kind }: { kind: SheetKind }) {
@@ -23,16 +25,22 @@ function Icon({ kind }: { kind: SheetKind }) {
   );
 }
 
-/** Bottom sheet on the dark surface: a success tint for a right answer, a warm tint otherwise (never red). */
-export function FeedbackSheet({ kind, line, onContinue }: FeedbackSheetProps) {
+/** Bottom sheet: green (--success-bg) for a right answer, warm (--retry-bg) otherwise, never red; `who` is the slot for Nino. */
+export function FeedbackSheet({ kind, line, onContinue, who }: FeedbackSheetProps) {
   return (
     <div data-kind={kind} role="status" className={`k-sheet is-${kind === "correct" ? "correct" : "retry"}`}>
       <div className="k-sheet-head">
-        <Icon kind={kind} />
+        {who ? (
+          <span className="k-sheet-who" aria-hidden="true">
+            {who}
+          </span>
+        ) : (
+          <Icon kind={kind} />
+        )}
         <p className={`k-sheet-text ${kind === "correct" ? "text-success" : "text-retry"}`}>{line}</p>
       </div>
       {kind === "correct" ? (
-        <ChunkyButton label="Continuar" tone="success" className="k-sheet-btn" onPress={() => onContinue?.()}>
+        <ChunkyButton label="Continuar" tone="ok" className="k-sheet-btn" onPress={() => onContinue?.()}>
           Continuar
         </ChunkyButton>
       ) : null}

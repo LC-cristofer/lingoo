@@ -14,7 +14,7 @@ import { useToday } from "./useToday";
 import { BottomNav } from "./kit/BottomNav";
 import { SpeakerIcon } from "./icons";
 import { MusicToggle } from "./kit/MusicToggle";
-import { NightSky } from "./kit/NightSky";
+import { Backdrop } from "./kit/Backdrop";
 import { StopButton } from "./kit/StopButton";
 import { UnitHeader } from "./kit/UnitHeader";
 
@@ -157,7 +157,7 @@ export function TrailMap({ path, units, progress, onOpenStop }: TrailMapProps) {
 
   return (
     <div ref={rootRef} className="k-screen k-trailmap" data-guide={cat && cat.x < 50 ? "right" : "left"}>
-      <NightSky variant="map" />
+      <Backdrop variant="sky" />
 
       <div className="k-fixed-chips">
         <DaysCalendar progress={progress} />

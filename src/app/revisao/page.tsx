@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { StopIcon } from "@/art/StopIcon";
-import { NightSky } from "@/components/trail/kit/NightSky";
+import { Backdrop } from "@/components/trail/kit/Backdrop";
 import { getPath, getUnit } from "@/domain/trail/content";
 import { stopHref } from "@/domain/trail/routes";
 
@@ -21,7 +21,7 @@ export default function ReviewPage() {
     });
   return (
     <div className="k-screen">
-      <NightSky variant="quiet" />
+      <Backdrop variant="sky" />
       <main className="relative mx-auto w-full max-w-2xl p-6 text-fg">
         <h1 className="font-display text-4xl font-bold">Revisão de conteúdo</h1>
         <p className="mt-2">

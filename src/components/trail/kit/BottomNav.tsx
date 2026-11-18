@@ -16,7 +16,7 @@ const MemoryIcon = (
   <svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true">
     <rect x="9" y="3" width="18" height="23" rx="4" fill="none" stroke="currentColor" strokeWidth="3.4" transform="rotate(10 18 14)" />
     <rect x="4" y="7" width="18" height="23" rx="4" fill="currentColor" />
-    <path d="M10 15 a3 3 0 1 1 4 3 v2" stroke="var(--sky-1)" strokeWidth="2.6" fill="none" strokeLinecap="round" />
+    <path d="M10 15 a3 3 0 1 1 4 3 v2" stroke="var(--cream)" strokeWidth="2.6" fill="none" strokeLinecap="round" />
   </svg>
 );
 const AlbumIcon = (
