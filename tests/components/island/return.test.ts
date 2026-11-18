@@ -91,6 +91,16 @@ describe("playReturn", () => {
     expect(sfx).toHaveBeenCalledWith("thread");
   });
 
+  it("a new thread without a sticker (the first return, after the song) weaves it with the sound but says no sticker line", async () => {
+    make({ threads: 1, level: 1 });
+    const onNest = vi.fn();
+    await run(playReturn(stage, vp, { from: 1, to: 1, newThread: true, sticker: false }, say, sfx, onNest));
+    expect(stage.fx.thread[0]).toBe(1);
+    expect(said).not.toContain("nestSaved");
+    expect(sfx).toHaveBeenCalledWith("thread");
+    expect(onNest).toHaveBeenCalledTimes(1);
+  });
+
   it("a sticker alone (no new thread) still says nestSaved; neither says nothing more", async () => {
     make({ threads: 1, level: 3 });
     await run(playReturn(stage, vp, { from: 3, to: 3, newThread: false, sticker: true }, say, sfx));

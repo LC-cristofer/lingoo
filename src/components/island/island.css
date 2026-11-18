@@ -87,4 +87,8 @@
   .nz-zz span { animation: none; }
   .nz-pin[data-glow="true"] .nz-pin-med::after { animation: none; }
 }
+/* The parents' "Reduzir movimento" choice switches off the same things as the system preference. */
+:root[data-motion="reduzir"] :is(.nz-pin, .nz-pin-med, .nz-island .nz-pins, .nz-island .nz-card, .nz-island .nz-topbar) { transition-duration: 0.01ms; }
+:root[data-motion="reduzir"] .nz-zz span { animation: none; }
+:root[data-motion="reduzir"] .nz-pin[data-glow="true"] .nz-pin-med::after { animation: none; }
 .nz-inert-wrap { display: contents; }

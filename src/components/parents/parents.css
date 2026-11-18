@@ -49,3 +49,4 @@
 }
 /* The ring keeps its fill: it is progress feedback for the 2 s hold, not decoration. */
 @media (prefers-reduced-motion: reduce) { .np-hold { transition: none; } }
+:root[data-motion="reduzir"] .np-hold { transition: none; }

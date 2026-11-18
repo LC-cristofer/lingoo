@@ -230,7 +230,7 @@ export function IslandScreen({ mode = "auto", volta = null, onStage }: IslandScr
 
     const { settings: cfg, level: lv, progress: prog } = live.current;
     const now = new Date();
-    // Opened after bedtime the island is simply night; the tick below puts Nino to bed once per evening on the routine.
+    // Opened after bedtime the island is simply night; the tick below puts Nino to bed once per launch of the app each evening on the routine (the guard lives in sessionStorage).
     const startNight = isNight(cfg, now);
     s.env.night = startNight ? 1 : 0;
     setNight(startNight);
@@ -248,14 +248,14 @@ export function IslandScreen({ mode = "auto", volta = null, onStage }: IslandScr
     if (!plan) pendingVolta.current = null;
     let how = plan ? "return" : live.current.mode === "explore" ? "none" : openingMode(cfg, now, s.env.reduced);
     // Under reduced motion the 400 ms fade marks the day's first arrival only, not every return to the island.
-    if (how === "reduced" && cfg.lastVisit === dateKey(now)) how = "none";
+    if (how === "reduced" && cfg.lastVisit === dateKey(now) && cfg.openingSeen) how = "none"; // a pending "Rever abertura" still plays
     live.current.update({ lastVisit: dateKey(now) });
 
     let interval: ReturnType<typeof setInterval> | undefined;
     const arrive = (keepCard: boolean) => {
       if (cancelled) return;
       pendingVolta.current = null;
-      if (how === "full") live.current.update({ openingSeen: true });
+      if (how === "full" || how === "reduced") live.current.update({ openingSeen: true });
       const v = vpRef.current ?? vp;
       Object.assign(s.cam, rest(v));
       idle.current = true;
@@ -271,15 +271,22 @@ export function IslandScreen({ mode = "auto", volta = null, onStage }: IslandScr
     };
 
     let cardShown = false;
+    // The nest card: with the spoken line when a sticker was kept, chip-only for a new thread alone.
+    const showNestCard = () => {
+      if (!plan || cardShown) return;
+      setView({
+        title: PLACE_NAMES.ninho,
+        text: plan.sticker ? lines.nestSaved[0].text : "",
+        chip: plan.newThread ? "Novo fio no ninho" : "Figurinha guardada",
+        tone: "ok",
+      });
+      setChrome({ top: true, card: true });
+      setPose("happy");
+      cardShown = true;
+    };
     const say: Say = async (key: LineKey) => {
       if (cancelled) return;
-      if (key === "nestSaved" && plan) {
-        // the nest card appears as Nino says he kept the sticker
-        setView({ title: PLACE_NAMES.ninho, text: lines.nestSaved[0].text, chip: plan.newThread ? "Novo fio no ninho" : "Figurinha guardada", tone: "ok" });
-        setChrome({ top: true, card: true });
-        setPose("happy");
-        cardShown = true;
-      }
+      if (key === "nestSaved") showNestCard();
       setSpeaks(true);
       await narrator.playNarration(lines[key]);
       if (!cancelled) setSpeaks(false);
@@ -288,7 +295,7 @@ export function IslandScreen({ mode = "auto", volta = null, onStage }: IslandScr
     if (how === "return" && plan) {
       setPhase("return");
       setChrome({ top: true, card: false });
-      void playReturn(s, vp, plan, say, sfx).then(() => arrive(cardShown));
+      void playReturn(s, vp, plan, say, sfx, showNestCard).then(() => arrive(cardShown));
     } else if (how === "full" || how === "short") {
       setPhase("opening");
       setChrome({ top: false, card: false });

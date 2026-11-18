@@ -45,3 +45,4 @@
   .nn-memory { order: -1; }
 }
 @media (prefers-reduced-motion: reduce) { .nn-sticker { transition: none; } }
+:root[data-motion="reduzir"] .nn-sticker { transition: none; }

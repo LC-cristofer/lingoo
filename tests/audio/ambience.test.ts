@@ -1,7 +1,16 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
 import { createAmbience } from "@/audio/ambience";
 
-function make(enabled = true) {
+function fakeDoc() {
+  const handlers = new Map<string, () => void>();
+  const doc = {
+    visibilityState: "visible" as DocumentVisibilityState,
+    addEventListener: (t: string, h: () => void) => { handlers.set(t, h); },
+  };
+  return { doc: doc as unknown as Pick<Document, "addEventListener" | "visibilityState">, raw: doc, fire: (t: string) => handlers.get(t)?.() };
+}
+
+function make(enabled = true, doc: Pick<Document, "addEventListener" | "visibilityState"> | null = null) {
   const made: { src: string; volume: number; paused: boolean; loop: boolean; play: ReturnType<typeof vi.fn>; pause: ReturnType<typeof vi.fn> }[] = [];
   const createAudio = (src: string) => {
     const a = { src, volume: 0, paused: true, loop: false, play: vi.fn(), pause: vi.fn() };
@@ -10,7 +19,7 @@ function make(enabled = true) {
     made.push(a);
     return a as unknown as HTMLAudioElement;
   };
-  const amb = createAmbience({ createAudio, isEnabled: () => enabled });
+  const amb = createAmbience({ createAudio, isEnabled: () => enabled, doc });
   return { amb, made };
 }
 
@@ -90,5 +99,54 @@ describe("ambience", () => {
     vi.advanceTimersByTime(3000);
     expect(made[2].volume).toBeCloseTo(0.35);
     expect(made[1].volume).toBe(0);
+  });
+
+  it("a rejected play() is retried by the next play() of the same kind and by a gesture", async () => {
+    const d = fakeDoc();
+    const made: { play: ReturnType<typeof vi.fn> }[] = [];
+    let refuse = true;
+    const createAudio = () => {
+      const a = { volume: 0, loop: false, pause: vi.fn(), play: vi.fn(() => (refuse ? Promise.reject(new Error("NotAllowedError")) : Promise.resolve())) };
+      made.push(a);
+      return a as unknown as HTMLAudioElement;
+    };
+    const amb = createAmbience({ createAudio, isEnabled: () => true, doc: d.doc });
+    amb.play("night");
+    await Promise.resolve();
+    await Promise.resolve();
+    expect(made[0].play).toHaveBeenCalledTimes(1);
+    amb.play("night"); // same kind again: retried, not ignored
+    await Promise.resolve();
+    await Promise.resolve();
+    expect(made[0].play).toHaveBeenCalledTimes(2);
+    refuse = false;
+    d.fire("click"); // the first touch
+    await Promise.resolve();
+    await Promise.resolve();
+    expect(made[0].play).toHaveBeenCalledTimes(3);
+    d.fire("click"); // playing now: nothing more to retry
+    expect(made[0].play).toHaveBeenCalledTimes(3);
+    expect(made).toHaveLength(1);
+  });
+
+  it("hidden pauses the loop, visible resumes it, and play() while hidden waits for the foreground", () => {
+    const d = fakeDoc();
+    const { amb, made } = make(true, d.doc);
+    amb.play("day");
+    vi.advanceTimersByTime(2000);
+    d.raw.visibilityState = "hidden";
+    d.fire("visibilitychange");
+    expect(made[0].pause).toHaveBeenCalled();
+    d.raw.visibilityState = "visible";
+    d.fire("visibilitychange");
+    expect(made[0].play).toHaveBeenCalledTimes(2);
+
+    amb.stop();
+    d.raw.visibilityState = "hidden";
+    amb.play("night");
+    expect(made[1].play).not.toHaveBeenCalled();
+    d.raw.visibilityState = "visible";
+    d.fire("visibilitychange");
+    expect(made[1].play).toHaveBeenCalledTimes(1);
   });
 });

@@ -124,12 +124,17 @@ async function openFromFarol(page: Page, slug: string) {
   await expect(page).toHaveURL(new RegExp(`/parada/forest-animals/${slug}$`));
 }
 
-/** Finishing a stop lands on the start page (?volta=<stop>); the next stop is entered from /farol again. */
+/**
+ * Finishing a stop lands on the start page (?volta=<stop>); the next stop is entered from the farol again, all by
+ * client-side navigation (pin, "Entrar no farol"), so a screen the router keeps alive is covered too.
+ */
 async function backToFarol(page: Page) {
   await expect(page.locator('[data-testid="star"]:visible')).toBeVisible({ timeout: 20_000 });
   await page.getByRole("button", { name: "Voltar ao farol" }).click();
   await expect(page).toHaveURL(/\/\?volta=forest-animals%2F/);
-  await page.goto("/farol");
+  await page.getByRole("button", { name: "Farol das Línguas" }).click({ timeout: 60_000 });
+  await page.getByRole("button", { name: "Entrar no farol" }).click({ timeout: 20_000 });
+  await expect(page).toHaveURL(/\/farol$/);
   await expect(page.locator('.nz-hit[data-status="current"], .nz-hit[data-status="done"]').first()).toBeVisible({ timeout: 20_000 });
 }
 
@@ -208,6 +213,14 @@ test("one full unit: song, three lessons, story, challenge, memory and persisten
     await page.getByRole("button", { name: "Continuar" }).click({ timeout: 120_000 });
     for (const ex of song.exercises) await solve(page, ex);
     await backToFarol(page);
+  });
+
+  await test.step("a finished stop opened again starts fresh (the kept-alive screen is reset), and quitting it does not replay the return", async () => {
+    await openFromFarol(page, "song");
+    await expect(page.getByRole("button", { name: "Cantar" })).toBeVisible({ timeout: 20_000 });
+    await expect(page.locator('[data-testid="star"]:visible')).toHaveCount(0);
+    await page.getByRole("button", { name: "Sair" }).click();
+    await expect(page).toHaveURL(/\/farol$/);
   });
 
   await test.step("Lição 1 with one deliberate wrong answer, then the memory round", async () => {

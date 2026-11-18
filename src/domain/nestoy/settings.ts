@@ -51,6 +51,8 @@ export function isNight(s: Settings, now: Date): boolean {
   if (s.ambient === "dia") return false;
   const bedtime = HHMM.test(s.bedtime) ? s.bedtime : DEFAULT_BEDTIME;
   const hhmm = `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+  // A bedtime after midnight (before the morning) is the night between the two, not all day.
+  if (bedtime < MORNING) return hhmm >= bedtime && hhmm < MORNING;
   return hhmm >= bedtime || hhmm < MORNING;
 }
 

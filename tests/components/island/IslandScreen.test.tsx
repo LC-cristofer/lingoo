@@ -246,10 +246,21 @@ describe("IslandScreen", () => {
       expect(screen.queryByText("Pular")).not.toBeInTheDocument();
     });
 
-    it("reduced motion: the island at once (no Pular), the full opening never plays and openingSeen stays false", () => {
+    it("reduced motion: the island at once (no Pular), the full opening never plays and the short fade marks the opening seen", () => {
       render(<IslandScreen mode="auto" />);
       expect(screen.getByTestId("island")).toHaveAttribute("data-phase", "island");
       expect(screen.queryByText("Pular")).not.toBeInTheDocument();
+      expect(update).toHaveBeenCalledWith({ openingSeen: true });
+    });
+
+    it("reduced motion: a pending \"Rever abertura\" (openingSeen false) still plays today; once seen, the same day is quiet", () => {
+      settings = { ...defaultSettings(), motion: "reduzir", openingSeen: false, lastVisit: dateKey(new Date()) };
+      const first = render(<IslandScreen mode="auto" />);
+      expect(update).toHaveBeenCalledWith({ openingSeen: true });
+      first.unmount();
+      update.mockClear();
+      settings = { ...defaultSettings(), motion: "reduzir", openingSeen: true, lastVisit: dateKey(new Date()) };
+      render(<IslandScreen mode="auto" />);
       expect(update).not.toHaveBeenCalledWith({ openingSeen: true });
     });
 
@@ -338,7 +349,8 @@ describe("IslandScreen", () => {
     });
 
     it("on the routine at night: the island darkens for bedtime, once per evening; ambient noite just shows the night", async () => {
-      settings = { ...defaultSettings(), motion: "reduzir", ambient: "rotina", bedtime: "00:00" };
+      // bedtime "06:00" is night at every hour of the clock (>= 06:00 or < 06:00), whatever time the test runs at
+      settings = { ...defaultSettings(), motion: "reduzir", ambient: "rotina", bedtime: "06:00" };
       const { box, onStage } = (() => { const b: { stage: Stage | null } = { stage: null }; return { box: b, onStage: (s: Stage | null) => { if (s) b.stage = s; } }; })();
       const { unmount } = render(<IslandScreen mode="explore" onStage={onStage} />);
       expect(card()).toHaveTextContent("Hora de dormir");

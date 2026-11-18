@@ -161,6 +161,8 @@
   /* The bottom navigation floats as a centred pill. */
 }
 @media (prefers-reduced-motion: reduce) { .is-glow, .k-bar-shine { animation: none; } .k-bar-shine { display: none; } .k-btn, .k-tile, .k-round, .k-bar > i, .k-stop-disc, .k-music { transition: none; } }
+:root[data-motion="reduzir"] .k-bar-shine { display: none; }
+:root[data-motion="reduzir"] :is(.k-btn, .k-tile, .k-round, .k-bar > i, .k-stop-disc, .k-music) { transition: none; }
 
 /* ---------- song (karaoke) ---------- */
 .k-song { height: 100dvh; min-height: 0; overflow: hidden; gap: 8px; padding-bottom: calc(14px + env(safe-area-inset-bottom)); }
@@ -234,6 +236,7 @@
 .k-mem-tile svg.art-animal { width: 76%; height: 76%; }
 .k-mem-tile:has(.k-tile-badge) { border-color: var(--success); box-shadow: 0 8px 0 var(--success-dark), var(--shadow-small); background: color-mix(in srgb, var(--success) 14%, var(--paper)); }
 @media (prefers-reduced-motion: reduce) { .k-mem-card { transition: none; } }
+:root[data-motion="reduzir"] .k-mem-card { transition: none; }
 
 /* ---------- Memória tab (pictures 7 and 8) ---------- */
 .k-mem-exit { position: absolute; z-index: 4; top: max(var(--sp-4), env(safe-area-inset-top)); left: max(var(--sp-4), env(safe-area-inset-left)); }

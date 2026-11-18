@@ -50,3 +50,4 @@ body {
 @keyframes card-shake { 0%,100% { transform: translateX(0) } 20%,60% { transform: translateX(-8px) } 40%,80% { transform: translateX(8px) } }
 .card-shake { animation: card-shake 0.4s ease-in-out; }
 @media (prefers-reduced-motion: reduce) { .card-shake { animation: none; } }
+:root[data-motion="reduzir"] .card-shake { animation: none; }

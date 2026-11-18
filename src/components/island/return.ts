@@ -46,7 +46,7 @@ export function settleFarol(stage: Stage, level: Level): void {
  * pennants fly up and the boat sails in (Nino cheers: "Olha! O farol brilhou mais forte!"); Nino walks home
  * while the camera pulls back; a new thread is woven (and the sticker kept: "Guardei a sua figurinha no ninho.").
  */
-export async function playReturn(stage: Stage, vp: Viewport, o: ReturnOpts, say: Say, sfx: Sfx): Promise<void> {
+export async function playReturn(stage: Stage, vp: Viewport, o: ReturnOpts, say: Say, sfx: Sfx, onNest?: () => void): Promise<void> {
   const { tl, fx, env } = stage, st = stage.nino.st, reduced = env.reduced;
   // the world as it was before the stop
   settleFarol(stage, o.from);
@@ -106,7 +106,10 @@ export async function playReturn(stage: Stage, vp: Viewport, o: ReturnOpts, say:
     sfx("thread");
     if (o.newThread) await tl.tween(fx.thread as Record<number, number>, { [threadAt]: 1 }, 1200, "io");
     void blendPose(stage, "happy", 200, "out");
-    await speakLine(stage, say, "nestSaved");
+    onNest?.();
+    // Nino only says he kept a sticker when there is one; a new thread alone is the sound and the happy pose.
+    if (o.sticker) await speakLine(stage, say, "nestSaved");
+    else await tl.wait(900);
     await blendPose(stage, "idle", 300, "io");
   }
 }

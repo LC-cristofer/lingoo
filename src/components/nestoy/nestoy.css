@@ -32,3 +32,4 @@
   .nz-card { left: var(--sp-3); right: auto; bottom: var(--sp-3); margin: 0; width: min(360px, 44vw); }
 }
 @media (prefers-reduced-motion: reduce) { .nz-card-btn { transition: none; } }
+:root[data-motion="reduzir"] .nz-card-btn { transition: none; }

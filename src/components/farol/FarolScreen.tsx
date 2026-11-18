@@ -234,7 +234,7 @@ export function FarolScreen() {
           </div>
         </>
       ) : null}
-      <button type="button" aria-label="Voltar" className="k-round k-round-glass nz-back min-h-16 min-w-16" onClick={() => router.push("/")}>
+      <button type="button" aria-label="Voltar" className="k-round k-round-glass nz-back min-h-16 min-w-16" onClick={() => { climbing.current = false; narrator.stop(); router.push("/"); }}>
         <CloseIcon size={30} />
       </button>
       <NinoCard

@@ -50,6 +50,15 @@ describe("isNight", () => {
     expect(isNight(r, at(5, 59))).toBe(true);
     expect(isNight(r, at(6, 0))).toBe(false);
   });
+  it("a bedtime after midnight is the night between it and 06:00, not all day", () => {
+    const early = s({ ambient: "rotina", bedtime: "00:30" });
+    expect(isNight(early, at(12, 0))).toBe(false);
+    expect(isNight(early, at(0, 10))).toBe(false);
+    expect(isNight(early, at(0, 30))).toBe(true);
+    expect(isNight(early, at(5, 59))).toBe(true);
+    expect(isNight(early, at(6, 0))).toBe(false);
+    expect(isNight(early, at(23, 0))).toBe(false);
+  });
   it("dia is never night, noite always", () => {
     expect(isNight(s({ ambient: "dia" }), at(23, 0))).toBe(false);
     expect(isNight(s({ ambient: "noite" }), at(12, 0))).toBe(true);
