@@ -40,5 +40,8 @@
 /* a phone on its side: two columns keep the whole sheet within reach */
 @media (orientation: landscape) and (max-height: 520px) {
   .np-sheet { top: 0; max-height: none; width: min(100%, 760px); border-radius: 0; padding-top: var(--sp-3); gap: var(--sp-3); }
+  /* Short screens: Fechar ends the scroll instead of covering half a row. */
+  .np-foot { position: static; margin: 0; padding: var(--sp-2) 0 0; background: none; }
 }
-@media (prefers-reduced-motion: reduce) { .np-hold, .np-hold-fill { transition: none; } }
+/* The ring keeps its fill: it is progress feedback for the 2 s hold, not decoration. */
+@media (prefers-reduced-motion: reduce) { .np-hold { transition: none; } }
