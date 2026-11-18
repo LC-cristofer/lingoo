@@ -118,22 +118,26 @@ async function memoryRound(page: Page): Promise<number> {
   return total;
 }
 
-async function openFromMap(page: Page, slug: string) {
+/** The stops are the landings of the farol's staircase (/farol). */
+async function openFromFarol(page: Page, slug: string) {
   await page.getByRole("button", { name: labelOf(stopOf(slug)), exact: true }).click({ timeout: 20_000 });
   await expect(page).toHaveURL(new RegExp(`/parada/forest-animals/${slug}$`));
 }
 
-async function backToMap(page: Page) {
+/** Finishing a stop lands on the start page (?volta=<stop>); the next stop is entered from /farol again. */
+async function backToFarol(page: Page) {
   await expect(page.locator('[data-testid="star"]:visible')).toBeVisible({ timeout: 20_000 });
   await page.getByRole("button", { name: "Voltar ao mapa" }).click();
-  await expect(page).toHaveURL(/\/mapa$/);
+  await expect(page).toHaveURL(/\/\?volta=forest-animals%2F/);
+  await page.goto("/farol");
+  await expect(page.locator('.nz-hit[data-status="current"], .nz-hit[data-status="done"]').first()).toBeVisible({ timeout: 20_000 });
 }
 
 /** A lesson played through. `wrongAt` is the index of an exercise answered wrong, then wrong again, then right. */
 async function playLesson(page: Page, net: Net, slug: string, wrongAt?: number) {
   const stop = stopOf(slug);
   if (stop.kind !== "lesson") throw new Error("not a lesson");
-  await openFromMap(page, slug);
+  await openFromFarol(page, slug);
   await page.getByRole("button", { name: "Começar" }).click();
   for (let i = 0; i < stop.exercises.length; i++) {
     const ex = stop.exercises[i];
@@ -168,26 +172,34 @@ test("one full unit: song, three lessons, story, challenge, memory and persisten
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
 
-  await test.step("start screen to the map", async () => {
+  await test.step("start screen, then up the farol's staircase", async () => {
     await page.goto("/");
     await page.getByRole("button", { name: "Jogar" }).click();
-    await expect(page).toHaveURL(/\/mapa$/);
-    await expect(page.getByRole("button", { name: labelOf(stopOf("song")), exact: true })).toBeVisible();
-    // A locked stop does not open.
-    await page.getByRole("button", { name: labelOf(stopOf("lesson-2")), exact: true }).click({ force: true });
-    await expect(page).toHaveURL(/\/mapa$/);
+    await expect(page).toHaveURL(/\/mapa$/); // the start page still leads to the map until the island arrives
+    await page.goto("/farol");
+    await expect(page.getByRole("button", { name: labelOf(stopOf("song")), exact: true })).toHaveAttribute("data-status", "current");
+    // A locked stop (the next one up the stairs) does not open: the card says what to do instead.
+    await page.getByRole("button", { name: labelOf(stopOf("lesson-1")), exact: true }).click({ timeout: 20_000 });
+    await expect(page).toHaveURL(/\/farol$/);
+    await expect(page.getByTestId("nino-card")).toContainText("Primeiro a parada que está brilhando!");
+  });
+
+  await test.step("leaving a stop with the ✕ goes back to the farol", async () => {
+    await openFromFarol(page, "song");
+    await page.getByRole("button", { name: "Sair" }).click();
+    await expect(page).toHaveURL(/\/farol$/);
   });
 
   await test.step("Música: karaoke, 3 exercises, star", async () => {
     const song = stopOf("song");
     if (song.kind !== "song") throw new Error("song expected");
-    await openFromMap(page, "song");
+    await openFromFarol(page, "song");
     await page.getByRole("button", { name: "Cantar" }).click();
     await expect(page.locator('[data-state="current"][data-line]:visible')).toBeVisible({ timeout: 30_000 });
     await expect.poll(() => net.requested.includes("song-forest-animals")).toBe(true);
     await page.getByRole("button", { name: "Continuar" }).click({ timeout: 120_000 });
     for (const ex of song.exercises) await solve(page, ex);
-    await backToMap(page);
+    await backToFarol(page);
   });
 
   await test.step("Lição 1 with one deliberate wrong answer, then the memory round", async () => {
@@ -196,10 +208,11 @@ test("one full unit: song, three lessons, story, challenge, memory and persisten
     // 3 right on the first tap: "Yes! You remembered!" and memoryDone[3].
     for (const id of idsOf(lines.memoryPraise)) expect(net.requested).toContain(id);
     for (const id of idsOf(lines.memoryDone[3])) expect(net.requested).toContain(id);
-    await backToMap(page);
+    await backToFarol(page);
   });
 
   await test.step("the day rolls over on an open page and the Memória tab shows the badge", async () => {
+    await page.goto("/mapa"); // the farol has no bottom nav: the badge lives on the pages that do
     const nav = page.getByRole("navigation", { name: "Navegação" });
     await expect(nav.locator(".k-badge:visible")).toHaveCount(0); // today's cards were just trained: none is due
     await page.clock.fastForward("24:00:00");
@@ -215,20 +228,21 @@ test("one full unit: song, three lessons, story, challenge, memory and persisten
     await expect(nav.locator(".k-badge:visible")).toHaveCount(0);
     await nav.getByRole("link", { name: /Trilha/ }).click();
     await expect(page).toHaveURL(/\/mapa$/);
+    await page.goto("/farol");
   });
 
   await test.step("Lição 2 and Lição 3", async () => {
     await playLesson(page, net, "lesson-2");
-    await backToMap(page);
+    await backToFarol(page);
     await playLesson(page, net, "lesson-3");
-    await backToMap(page);
+    await backToFarol(page);
   });
 
   await test.step("História: 6 pages and a hotspot", async () => {
     const story = stopOf("story");
     if (story.kind !== "story") throw new Error("story expected");
     expect(story.pages).toHaveLength(6);
-    await openFromMap(page, "story");
+    await openFromFarol(page, "story");
     await page.getByRole("button", { name: "Começar" }).click();
     await solve(page, story.warmup);
     for (let i = 0; i < story.pages.length; i++) {
@@ -241,13 +255,13 @@ test("one full unit: song, three lessons, story, challenge, memory and persisten
       await page.getByRole("button", { name: "Avançar" }).click({ timeout: 60_000 });
     }
     await solve(page, story.question);
-    await backToMap(page);
+    await backToFarol(page);
   });
 
   await test.step("Desafio, chest and sticker", async () => {
     const challenge = stopOf("challenge");
     if (challenge.kind !== "challenge") throw new Error("challenge expected");
-    await openFromMap(page, "challenge");
+    await openFromFarol(page, "challenge");
     await page.getByRole("button", { name: "Começar" }).click();
     for (const ex of challenge.exercises) await solve(page, ex);
     await expect(page.locator('[data-testid="star"]:visible')).toBeVisible({ timeout: 20_000 });
@@ -256,10 +270,13 @@ test("one full unit: song, three lessons, story, challenge, memory and persisten
     await expect(page.locator('[data-art="bear"][data-earned="true"]:visible')).toBeVisible();
     await expect.poll(() => net.requested.includes("sfx/chest")).toBe(true);
     await page.getByRole("button", { name: "Voltar ao mapa" }).click();
-    await expect(page).toHaveURL(/\/mapa$/);
+    await expect(page).toHaveURL(/\/\?volta=forest-animals%2Fchallenge$/);
   });
 
   const checkEverything = async () => {
+    await page.goto("/farol");
+    await expect(page.locator('.nz-hit[data-status="done"]')).toHaveCount(6);
+    await expect(page.getByTestId("nino-card")).toContainText("6 de 6");
     await page.goto("/mapa");
     await expect(page.locator('[data-kind][data-state="done"]:visible')).toHaveCount(6);
     await page.goto("/album");
@@ -314,6 +331,9 @@ for (const vp of [
 
     await page.goto("/mapa");
     await measure("map");
+    await page.goto("/farol");
+    await expect(page.locator(".nz-hit").first()).toBeAttached();
+    await measure("farol");
     await page.goto("/parada/forest-animals/lesson-2?revisao=1");
     await page.getByRole("button", { name: "Começar" }).waitFor();
     await measure("lesson opening");

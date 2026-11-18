@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { Progress } from "@/domain/trail/progress";
 
@@ -18,11 +18,13 @@ vi.mock("@/components/trail/TrailProgressProvider", () => ({
   useTrailProgress: () => ({ progress, hydrated, markToday, finishStop }),
 }));
 const seenRecord = vi.hoisted(() => [] as (boolean | undefined)[]);
+const seenExit = vi.hoisted(() => ({ current: null as null | ((reason: "done" | "quit") => void) }));
 vi.mock("@/components/trail/StopPlayer", async (importOriginal) => {
   const actual = await importOriginal<typeof import("@/components/trail/StopPlayer")>();
   return {
     StopPlayer: (props: ComponentProps<typeof actual.StopPlayer>) => {
       seenRecord.push(props.record);
+      seenExit.current = props.onExit;
       return <actual.StopPlayer {...props} />;
     },
   };
@@ -67,19 +69,19 @@ describe("stopHref", () => {
 });
 
 describe("StopScreen", () => {
-  it("sends a locked stop to /mapa, but only after hydration", () => {
+  it("sends a locked stop to /farol, but only after hydration", () => {
     hydrated = false;
     const { rerender } = render(<StopScreen stopId="forest-animals/lesson-1" />);
     expect(replace).not.toHaveBeenCalled();
     hydrated = true;
     rerender(<StopScreen stopId="forest-animals/lesson-1" />);
-    expect(replace).toHaveBeenCalledWith("/mapa");
+    expect(replace).toHaveBeenCalledWith("/farol");
     expect(screen.queryByRole("button", { name: "Começar" })).not.toBeInTheDocument();
   });
 
-  it("sends an unknown stop to /mapa", () => {
+  it("sends an unknown stop to /farol", () => {
     render(<StopScreen stopId="nope/nothing" />);
-    expect(replace).toHaveBeenCalledWith("/mapa");
+    expect(replace).toHaveBeenCalledWith("/farol");
   });
 
   it("renders an open stop and marks today", () => {
@@ -117,12 +119,26 @@ describe("StopScreen", () => {
     expect(finishStop).not.toHaveBeenCalled();
   });
 
-  it("normal mode: the player records, and the exit goes to /mapa", () => {
+  it("normal mode: the player records; ✕ goes back to the farol", () => {
     progress = DONE;
     render(<StopScreen stopId="forest-animals/lesson-1" />);
     expect(seenRecord.at(-1)).toBe(true);
     fireEvent.click(screen.getByRole("button", { name: "Começar" }));
     fireEvent.click(screen.getByRole("button", { name: "Sair" }));
-    expect(push).toHaveBeenCalledWith("/mapa");
+    expect(push).toHaveBeenCalledWith("/farol");
+  });
+
+  it("finishing a stop goes to the start page with ?volta=<stop id>", () => {
+    progress = DONE;
+    render(<StopScreen stopId="forest-animals/lesson-1" />);
+    act(() => seenExit.current!("done"));
+    expect(push).toHaveBeenCalledWith("/?volta=forest-animals%2Flesson-1");
+  });
+
+  it("review mode: finishing also goes back to /revisao", () => {
+    search = "revisao=1";
+    render(<StopScreen stopId="forest-animals/lesson-1" />);
+    act(() => seenExit.current!("done"));
+    expect(push).toHaveBeenCalledWith("/revisao");
   });
 });

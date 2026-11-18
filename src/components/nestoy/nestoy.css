@@ -1,0 +1,34 @@
+/* The world screens (island, farol…): the full-bleed stage, the Nino card and the stop hits.
+   Imported by src/app/globals.css. Colours, radii and space only from tokens.css. */
+
+.nz-screen { position: fixed; inset: 0; overflow: hidden; background: var(--stone); touch-action: manipulation; }
+.nz-stage { position: absolute; inset: 0; overflow: hidden; }
+.nz-back { position: absolute; z-index: 5; left: max(var(--sp-4), env(safe-area-inset-left)); top: max(var(--sp-4), env(safe-area-inset-top)); }
+.nz-back svg { width: 30px; height: 30px; }
+
+/* ---------- the stops: transparent 124 px discs laid over the landings, moved and scaled with the camera ---------- */
+.nz-hits { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
+.nz-hit { position: absolute; left: 0; top: 0; width: 124px; height: 124px; padding: 0; border: 0; border-radius: 50%; background: transparent; cursor: pointer; transform-origin: 62px 62px; pointer-events: none; will-change: transform; -webkit-tap-highlight-color: transparent; }
+.nz-screen[data-ready="true"] .nz-hit { pointer-events: auto; }
+.nz-hit:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+
+/* ---------- the Nino card ---------- */
+.nz-card { position: absolute; z-index: 4; left: var(--sp-3); right: var(--sp-3); bottom: calc(18px + env(safe-area-inset-bottom)); margin: 0 auto; max-width: 560px; min-height: 108px; display: flex; align-items: center; gap: var(--sp-3); padding: var(--sp-3) var(--sp-3) var(--sp-3) 112px; background: var(--cream); border-radius: var(--r-4); box-shadow: 0 6px 0 var(--edge), 0 14px 30px color-mix(in srgb, var(--cocoa) 22%, transparent); }
+.nz-card-who { position: absolute; left: var(--sp-1); bottom: var(--sp-2); width: 104px; height: 120px; display: block; pointer-events: none; }
+.nz-card-who svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.nz-card-txt { flex: 1; min-width: 0; display: grid; gap: var(--sp-1); }
+.nz-card-title { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: var(--fs-sub); line-height: 1.12; color: var(--cocoa); }
+.nz-card-text { margin: 0; font-family: var(--font-body); font-weight: 800; font-size: var(--fs-caption); line-height: 1.3; color: var(--cocoa-2); }
+.nz-chip { justify-self: start; font-family: var(--font-body); font-weight: 800; font-size: 11px; line-height: 1; letter-spacing: 0.04em; text-transform: uppercase; padding: 5px var(--sp-2); border-radius: 8px; background: var(--success-bg); color: var(--success-text); }
+.nz-chip.is-obra { background: color-mix(in srgb, var(--area-letras) 18%, var(--paper)); color: var(--cocoa); }
+.nz-chip.is-futuro { background: color-mix(in srgb, var(--area-cores) 18%, var(--paper)); color: var(--cocoa); }
+.nz-chip.is-noite { background: color-mix(in srgb, var(--night-ui) 14%, var(--paper)); color: var(--night-ui); }
+.nz-card-btn { flex: none; width: 64px; height: 64px; display: grid; place-items: center; border: 0; border-radius: 50%; padding: 0; cursor: pointer; background: var(--area-linguas); color: var(--white); box-shadow: 0 5px 0 var(--area-linguas-dark); margin-bottom: var(--sp-1); transition: transform var(--t-tap) var(--ease-out), box-shadow var(--t-tap) var(--ease-out); }
+.nz-card-btn:active { transform: translateY(var(--sink)); box-shadow: 0 1px 0 var(--area-linguas-dark); }
+.nz-card-btn:focus-visible { outline: none; box-shadow: 0 5px 0 var(--area-linguas-dark), var(--focus-ring); }
+
+/* A short landscape screen (phone on its side): the card moves to the left column so the stairs keep the screen. */
+@media (orientation: landscape) and (max-height: 520px) {
+  .nz-card { left: var(--sp-3); right: auto; bottom: var(--sp-3); margin: 0; width: min(360px, 44vw); }
+}
+@media (prefers-reduced-motion: reduce) { .nz-card-btn { transition: none; } }

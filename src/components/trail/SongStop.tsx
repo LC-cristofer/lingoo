@@ -11,13 +11,14 @@ import { ChunkyButton } from "./kit/ChunkyButton";
 import { Backdrop } from "./kit/Backdrop";
 import { LessonTopBar } from "./kit/LessonTopBar";
 import { NarrationText } from "./NarrationText";
+import type { StopExit } from "./StopPlayer";
 import { ExerciseLoop, StopClosing, StopOpening } from "./StopFlow";
 import { useTrailProgress } from "./TrailProgressProvider";
 
 type SongStopProps = {
   unit: Unit;
   stop: SongStopData;
-  onExit: () => void;
+  onExit: (reason: StopExit) => void;
   /** False in review mode: nothing is saved. */
   record?: boolean;
   /** Injectable so tests can fake currentTime, play, pause and the events. */
@@ -241,7 +242,7 @@ export function SongStop({ unit, stop, onExit, record = true, createAudio = (src
 
   const exit = () => {
     silence();
-    onExit();
+    onExit("quit");
   };
 
   if (step === "opening") {
@@ -259,7 +260,7 @@ export function SongStop({ unit, stop, onExit, record = true, createAudio = (src
   }
 
   if (step === "closing") {
-    return <StopClosing closing={stop.closing} words={unit.words} wordIds={wordIds} record={record} onContinue={onExit} />;
+    return <StopClosing closing={stop.closing} words={unit.words} wordIds={wordIds} record={record} onContinue={() => onExit("done")} />;
   }
 
   if (step === "session") {

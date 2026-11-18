@@ -10,13 +10,14 @@ import { ChunkyButton } from "./kit/ChunkyButton";
 import { Backdrop } from "./kit/Backdrop";
 import { LessonTopBar } from "./kit/LessonTopBar";
 import { NarrationText } from "./NarrationText";
+import type { StopExit } from "./StopPlayer";
 import { ExerciseLoop, StopClosing, StopOpening } from "./StopFlow";
 import { useTrailProgress } from "./TrailProgressProvider";
 
 type StoryStopProps = {
   unit: Unit;
   stop: StoryStopData;
-  onExit: () => void;
+  onExit: (reason: StopExit) => void;
   /** False in review mode: nothing is saved. */
   record?: boolean;
 };
@@ -64,7 +65,7 @@ export function StoryStop({ unit, stop, onExit, record = true }: StoryStopProps)
 
   const exit = () => {
     narrator.stop();
-    onExit();
+    onExit("quit");
   };
 
   if (step === "opening") {
@@ -116,7 +117,7 @@ export function StoryStop({ unit, stop, onExit, record = true }: StoryStopProps)
   }
 
   if (step === "closing") {
-    return <StopClosing closing={stop.closing} words={unit.words} wordIds={wordIds} record={record} onContinue={onExit} />;
+    return <StopClosing closing={stop.closing} words={unit.words} wordIds={wordIds} record={record} onContinue={() => onExit("done")} />;
   }
 
   const current = stop.pages[page];

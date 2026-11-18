@@ -3,7 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useRef } from "react";
 import { SongStop } from "@/components/trail/SongStop";
-import { StopPlayer } from "@/components/trail/StopPlayer";
+import { StopPlayer, type StopExit } from "@/components/trail/StopPlayer";
 import { StoryStop } from "@/components/trail/StoryStop";
 import { useTrailProgress } from "@/components/trail/TrailProgressProvider";
 import { getStop } from "@/domain/trail/content";
@@ -16,11 +16,10 @@ export function StopScreen({ stopId }: { stopId: string }) {
   const found = useMemo(() => getStop(stopId), [stopId]);
   const locked = found !== null && stopStatus(found.unit, progress, stopId) === "locked";
   const allowed = found !== null && (review || !locked);
-  const back = review ? "/revisao" : "/mapa";
   const marked = useRef(false);
 
   useEffect(() => {
-    if (hydrated && !allowed) router.replace("/mapa");
+    if (hydrated && !allowed) router.replace("/farol");
   }, [hydrated, allowed, router]);
 
   useEffect(() => {
@@ -33,7 +32,11 @@ export function StopScreen({ stopId }: { stopId: string }) {
   if (!hydrated || !found || !allowed) return null;
   const { unit, stop } = found;
 
-  const exit = () => router.push(back);
+  // Quit goes back up the staircase; finishing goes to the start page, which will show the reward (?volta).
+  const exit = (reason: StopExit) => {
+    if (review) router.push("/revisao");
+    else router.push(reason === "done" ? `/?volta=${encodeURIComponent(stopId)}` : "/farol");
+  };
   if (stop.kind === "song") return <SongStop unit={unit} stop={stop} record={!review} onExit={exit} />;
   if (stop.kind === "story") return <StoryStop unit={unit} stop={stop} record={!review} onExit={exit} />;
   return <StopPlayer unit={unit} stop={stop} record={!review} onExit={exit} />;

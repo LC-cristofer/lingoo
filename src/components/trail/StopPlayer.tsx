@@ -10,10 +10,13 @@ import { MemoryRound } from "./memory/MemoryRound";
 import { ExerciseLoop, StopClosing, StopOpening } from "./StopFlow";
 import { useTrailProgress } from "./TrailProgressProvider";
 
+/** How the child leaves a stop: finished it ("done") or tapped "×" ("quit"). */
+export type StopExit = "done" | "quit";
+
 type StopPlayerProps = {
   unit: Unit;
   stop: LessonStop;
-  onExit: () => void;
+  onExit: (reason: StopExit) => void;
   /** False in review mode: nothing is saved. */
   record?: boolean;
 };
@@ -40,13 +43,13 @@ export function StopPlayer({ unit, stop, onExit, record = true }: StopPlayerProp
           narrator.unlock();
           setStep("session");
         }}
-        onExit={onExit}
+        onExit={() => onExit("quit")}
       />
     );
   }
 
   if (step === "memory") {
-    return <MemoryRound unit={unit} cardIds={round} record={record} intro onDone={() => setStep("closing")} onExit={onExit} />;
+    return <MemoryRound unit={unit} cardIds={round} record={record} intro onDone={() => setStep("closing")} onExit={() => onExit("quit")} />;
   }
 
   if (step === "closing") {
@@ -58,13 +61,13 @@ export function StopPlayer({ unit, stop, onExit, record = true }: StopPlayerProp
         wordIds={stop.wordIds}
         isChallenge={isChallenge}
         record={record}
-        onContinue={isChallenge ? () => setStep("chest") : onExit}
+        onContinue={isChallenge ? () => setStep("chest") : () => onExit("done")}
       />
     );
   }
 
   if (step === "chest") {
-    return <ChestReward stop={stop} lines={lines} onBack={onExit} />;
+    return <ChestReward stop={stop} lines={lines} onBack={() => onExit("done")} />;
   }
 
   return (
@@ -72,7 +75,7 @@ export function StopPlayer({ unit, stop, onExit, record = true }: StopPlayerProp
       exercises={stop.exercises}
       sessionId={stop.id}
       words={unit.words}
-      onExit={onExit}
+      onExit={() => onExit("quit")}
       onFinished={() => {
         // A lesson ends with the memory round: its new words become cards, plus a few old ones that are due.
         let next: Step = "closing";

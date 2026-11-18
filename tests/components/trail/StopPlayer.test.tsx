@@ -163,6 +163,7 @@ describe("StopPlayer session", () => {
     expect(screen.getByTestId("star")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Voltar ao mapa" }));
     expect(onExit).toHaveBeenCalledTimes(1);
+    expect(onExit).toHaveBeenCalledWith("done");
     expect(finishStop).toHaveBeenCalledTimes(1);
   });
 
@@ -271,6 +272,7 @@ describe("StopPlayer session", () => {
     await flush();
     fireEvent.click(screen.getByRole("button", { name: "Sair" }));
     expect(onExit).toHaveBeenCalledTimes(1);
+    expect(onExit).toHaveBeenCalledWith("quit");
     expect(finishStop).not.toHaveBeenCalled();
   });
 
@@ -376,6 +378,7 @@ describe("StopPlayer challenge", () => {
     expect(finishStop).toHaveBeenCalledTimes(1);
     fireEvent.click(screen.getByRole("button", { name: "Voltar ao mapa" }));
     expect(onExit).toHaveBeenCalledTimes(1);
+    expect(onExit).toHaveBeenCalledWith("done");
   });
 
   it("with record false nothing is saved, not even when the chest opens", async () => {
