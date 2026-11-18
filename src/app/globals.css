@@ -7,6 +7,8 @@
 @import "../components/trail/kit/kit.css";
 @import "../components/nestoy/nestoy.css";
 @import "../components/island/island.css";
+@import "../components/ninho/ninho.css";
+@import "../components/parents/parents.css";
 
 /* The useful tokens, mirrored for Tailwind utilities (the values live in src/styles/tokens.css). */
 @theme inline {

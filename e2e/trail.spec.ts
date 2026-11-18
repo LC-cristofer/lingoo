@@ -219,23 +219,25 @@ test("one full unit: song, three lessons, story, challenge, memory and persisten
     await backToFarol(page);
   });
 
-  await test.step("the day rolls over on an open page and the Memória tab shows the badge", async () => {
-    await page.goto("/album"); // the island and the farol have no bottom nav: the badge lives on the pages that do
-    const nav = page.getByRole("navigation", { name: "Navegação" });
-    await expect(nav.locator(".k-badge:visible")).toHaveCount(0); // today's cards were just trained: none is due
+  await test.step("the day rolls over on an open nest and the training shows its cards", async () => {
+    await page.goto("/ninho");
+    const memory = page.getByRole("region", { name: "Treino de memória" });
+    await expect(memory.getByText("Tudo em dia!")).toBeVisible(); // today's cards were just trained: none is due
     await page.clock.fastForward("24:00:00");
-    await expect(nav.locator(".k-badge:visible")).toHaveText("3", { timeout: 10_000 }); // no reload needed
-    await nav.getByRole("link", { name: /Memória/ }).click();
+    await expect(memory.getByText("cartões prontos hoje")).toBeVisible({ timeout: 10_000 }); // no reload needed
+    await expect(memory.getByText("3", { exact: true })).toBeVisible();
+    await memory.getByRole("button", { name: "Treinar" }).click();
     await expect(page).toHaveURL(/\/memoria$/);
-    await expect(page.getByText("3", { exact: true }).first()).toBeVisible();
-    await expect(page.getByText("cartões prontos hoje")).toBeVisible();
+    await expect(page.locator(".k-mem-count:visible")).toContainText("cartões prontos hoje");
     for (const id of idsOf(lines.memoryHome)) await expect.poll(() => net.requested.includes(id)).toBe(true);
     await page.getByRole("button", { name: "Treinar" }).click();
     expect(await memoryRound(page)).toBe(3);
-    await expect(page.getByText("Próximo treino: em 3 dias")).toBeVisible({ timeout: 20_000 }); // box 2: three days
-    await expect(nav.locator(".k-badge:visible")).toHaveCount(0);
-    await nav.getByRole("link", { name: /Trilha/ }).click();
-    await expect(page).toHaveURL(/\/$/); // /mapa leads to the island now
+    await expect(page.getByText("Próximo treino: em 3 dias").locator("visible=true")).toBeVisible({ timeout: 20_000 }); // box 2: three days
+    await page.getByRole("button", { name: "Voltar ao ninho" }).click();
+    await expect(page).toHaveURL(/\/ninho$/);
+    await expect(memory.getByText("Tudo em dia!")).toBeVisible();
+    await page.getByRole("button", { name: "Voltar para a ilha" }).click();
+    await expect(page).toHaveURL(/\/$/);
     await page.goto("/farol");
   });
 
@@ -285,11 +287,11 @@ test("one full unit: song, three lessons, story, challenge, memory and persisten
     await page.goto("/farol");
     await expect(page.locator('.nz-hit[data-status="done"]')).toHaveCount(6);
     await expect(page.locator('[data-testid="nino-card"]:visible')).toContainText("6 de 6");
-    await page.goto("/album");
+    await page.goto("/ninho");
     await expect(page.locator('[data-art="bear"][data-earned="true"]:visible')).toBeVisible();
   };
 
-  await test.step("the farol shows 6 done stops and the album the sticker", checkEverything);
+  await test.step("the farol shows 6 done stops and the nest the sticker", checkEverything);
   await test.step("reloading keeps everything", async () => {
     await page.reload();
     await expect(page.locator('[data-art="bear"][data-earned="true"]:visible')).toBeVisible();

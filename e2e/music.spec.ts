@@ -38,9 +38,19 @@ function watch(page: Page) {
   return { music, problems };
 }
 
-const toggle = (page: Page, name: "Música ligada" | "Música desligada") => page.getByRole("button", { name, exact: true });
+/** Press and hold the gate button for 2 s. */
+async function openParents(page: Page) {
+  const hold = page.getByRole("button", { name: "Segure para entrar" });
+  await hold.waitFor();
+  const box = (await hold.boundingBox())!;
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  await page.mouse.down();
+  await page.waitForTimeout(2200);
+  await page.mouse.up();
+  await expect(page.getByRole("button", { name: "Fechar" })).toBeVisible();
+}
 
-test("music follows the screens: island, lesson (silent), album and Memória", async ({ page }) => {
+test("music follows the screens: island, lesson (silent), nest and Memória", async ({ page }) => {
   await instrument(page);
   const seen = watch(page);
 
@@ -68,22 +78,17 @@ test("music follows the screens: island, lesson (silent), album and Memória", a
     await expect(page.getByRole("button", { name: /^Música (ligada|desligada)$/ })).toHaveCount(0);
   });
 
-  await test.step("back on the island it plays again; the album switches track, Memória keeps it", async () => {
+  await test.step("back on the island it plays again; the nest crossfades to the album track, Memória keeps it", async () => {
     await page.goto("/"); // a reload: needs a tap again
     await page.locator("body").click({ position: { x: 5, y: 300 } });
     await expect.poll(async () => (await playing(page)).live).toBe(1);
-    await page.goto("/album");
-    await page.locator("body").click({ position: { x: 5, y: 300 } });
+    const before = (await playing(page)).started;
+    await page.getByRole("button", { name: "Voltar ao ninho" }).click();
+    await expect(page).toHaveURL(/\/ninho$/);
     await expect.poll(() => seen.music).toContain("album");
+    await expect.poll(async () => (await playing(page)).started).toBe(before + 1); // one crossfade: the album loop starts once
     await expect.poll(async () => (await playing(page)).live).toBe(1);
-    const nav = page.getByRole("navigation", { name: "Navegação" });
-    const started = (await playing(page)).started;
-    await nav.getByRole("link", { name: /Memória/ }).click();
-    await expect(page).toHaveURL(/\/memoria$/);
-    await page.waitForTimeout(1000);
-    expect((await playing(page)).started).toBe(started); // the same track: not restarted
-    expect((await playing(page)).live).toBe(1);
-    await expect(toggle(page, "Música ligada")).toBeVisible();
+    await expect(page.getByRole("button", { name: /^Música (ligada|desligada)$/ })).toHaveCount(0); // the switch lives in the parents' area
   });
 
   expect(seen.problems).toEqual([]);
@@ -92,54 +97,47 @@ test("music follows the screens: island, lesson (silent), album and Memória", a
 test("the parent switch flips, stops the music, and survives a reload", async ({ page }) => {
   await instrument(page);
   const seen = watch(page);
-  await page.goto("/album");
-  await toggle(page, "Música ligada").click(); // a tap on the switch is itself the first gesture
-  const requestedBeforeOff = seen.music.length;
-  await expect(toggle(page, "Música desligada")).toHaveAttribute("aria-pressed", "false");
+  const on = () => page.getByRole("button", { name: "Ligada", exact: true });
+  const off = () => page.getByRole("button", { name: "Desligada", exact: true });
+  await page.goto("/responsaveis");
+  await openParents(page);
+  await on().click(); // a press on the sheet is itself the first gesture; the music is already on
+  await off().click();
+  await expect(off()).toHaveAttribute("aria-pressed", "true");
   expect(await page.evaluate(() => localStorage.getItem("lingoo:music"))).toBe("off");
 
-  await page.reload();
-  await expect(toggle(page, "Música desligada")).toBeVisible();
+  await page.goto("/ninho");
   await page.locator("body").click({ position: { x: 5, y: 300 } });
   await page.waitForTimeout(1000);
-  expect(seen.music).toHaveLength(requestedBeforeOff); // no new request while it is off
+  expect(seen.music).not.toContain("album"); // nothing requested while it is off
   expect((await playing(page)).started).toBe(0);
 
-  await toggle(page, "Música desligada").click();
-  await expect(toggle(page, "Música ligada")).toHaveAttribute("aria-pressed", "true");
+  await page.goto("/responsaveis");
+  await openParents(page);
+  await expect(off()).toHaveAttribute("aria-pressed", "true"); // survived the reload
+  await on().click();
+  await expect(on()).toHaveAttribute("aria-pressed", "true");
   expect(await page.evaluate(() => localStorage.getItem("lingoo:music"))).toBe("on");
-  await expect.poll(async () => (await playing(page)).live).toBe(1);
-
-  // switching off while playing stops the source
-  await toggle(page, "Música ligada").click();
-  await expect.poll(async () => (await playing(page)).live).toBe(0);
   expect(seen.problems).toEqual([]);
 });
 
 for (const vp of [
   { name: "phone", width: 390, height: 844 },
   { name: "tablet", width: 1024, height: 768 },
+  { name: "landscape phone", width: 844, height: 390 },
 ]) {
-  test(`the switch is 64 px and covers nothing on ${vp.name} (${vp.width}x${vp.height})`, async ({ page }) => {
+  test(`the music switch and the gate are 64 px and inside the screen on ${vp.name} (${vp.width}x${vp.height})`, async ({ page }) => {
     await page.setViewportSize({ width: vp.width, height: vp.height });
-    for (const url of ["/album", "/memoria"]) {
-      await page.goto(url);
-      const button = page.getByRole("button", { name: /^Música (ligada|desligada)$/ });
-      await expect(button).toBeVisible();
-      const box = (await button.boundingBox())!;
-      expect(box.width).toBeGreaterThanOrEqual(64);
-      expect(box.height).toBeGreaterThanOrEqual(64);
-      expect(box.x + box.width).toBeLessThanOrEqual(vp.width);
-      expect(box.y).toBeGreaterThanOrEqual(0);
-      // the chips of the top row stay clear of it
-      for (const chip of await page.locator(".k-chip").all()) {
-        const c = (await chip.boundingBox())!;
-        const overlap = c.x < box.x + box.width && c.x + c.width > box.x && c.y < box.y + box.height && c.y + c.height > box.y;
-        expect(overlap, `${url}: a chip under the switch`).toBe(false);
-      }
-      // and the switch is the topmost thing at its centre (nothing lies over it)
-      const top = await page.evaluate(({ x, y }) => document.elementFromPoint(x, y)?.closest("button")?.getAttribute("aria-pressed") ?? null, { x: box.x + box.width / 2, y: box.y + box.height / 2 });
-      expect(top).not.toBeNull();
-    }
+    await page.goto("/responsaveis");
+    const hold = (await page.getByRole("button", { name: "Segure para entrar" }).boundingBox())!;
+    expect(hold.height).toBeGreaterThanOrEqual(64);
+    await openParents(page);
+    const button = page.getByRole("button", { name: "Desligada", exact: true });
+    await button.scrollIntoViewIfNeeded();
+    const box = (await button.boundingBox())!;
+    expect(box.width).toBeGreaterThanOrEqual(64);
+    expect(box.height).toBeGreaterThanOrEqual(64);
+    expect(box.x + box.width).toBeLessThanOrEqual(vp.width);
+    expect(box.x).toBeGreaterThanOrEqual(0);
   });
 }

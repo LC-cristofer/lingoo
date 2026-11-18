@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { Nino } from "@/art/nino/Nino";
 import { narrator } from "@/audio/narrator";
@@ -7,13 +8,10 @@ import { useBackgroundMusic } from "@/audio/useBackgroundMusic";
 import { getLines, getPath, getUnit } from "@/domain/trail/content";
 import { daysBetween, dueCards, nextDue, ROUND_LIMIT, unitOfCard, wordOfCard, type CardId } from "@/domain/trail/memory";
 import type { ArtId, Narration, Unit } from "@/domain/trail/schema";
-import { DaysCalendar } from "../DaysCalendar";
-import { PlayIcon } from "../icons";
-import { BottomNav } from "../kit/BottomNav";
+import { CloseIcon, PlayIcon } from "../icons";
 import { Bubble } from "../kit/Bubble";
 import { ChunkyButton } from "../kit/ChunkyButton";
 import { Backdrop } from "../kit/Backdrop";
-import { MusicToggle } from "../kit/MusicToggle";
 import { NarrationText } from "../NarrationText";
 import { useToday } from "../useToday";
 import { useTrailProgress } from "../TrailProgressProvider";
@@ -29,8 +27,9 @@ function trainingUnit(): Unit | null {
   return entry ? getUnit(entry.unitId) : null;
 }
 
-/** The Memória tab: how many cards are ready today and the big Treinar button. */
+/** The memory training door (reached from the nest): how many cards are ready today and the big Treinar button; "×" goes back to the nest. */
 export function MemoryHome() {
+  const router = useRouter();
   const lines = useMemo(() => getLines(), []);
   const unit = useMemo(() => trainingUnit(), []);
   const { progress, hydrated } = useTrailProgress();
@@ -92,9 +91,10 @@ export function MemoryHome() {
   return (
     <div className="k-screen">
       <Backdrop variant="sky" />
-      <div className="k-fixed-chips">
-        <DaysCalendar progress={hydrated ? progress : { ...progress, completedStops: {}, daysPlayed: [] }} />
-        <MusicToggle />
+      <div className="k-mem-exit">
+        <button type="button" aria-label="Voltar ao ninho" className="k-round k-round-glass" onClick={() => router.push("/ninho")}>
+          <CloseIcon size={24} />
+        </button>
       </div>
       <main className={`k-mtab is-${kind}`}>
         <div className="k-mtab-side">
@@ -133,7 +133,6 @@ export function MemoryHome() {
           {kind === "empty-tomorrow" || kind === "empty-later" ? <span className="k-soon">Próximo treino: {nextLabel}</span> : null}
         </div>
       </main>
-      <BottomNav active="memoria" memoryDue={due.length} />
     </div>
   );
 }

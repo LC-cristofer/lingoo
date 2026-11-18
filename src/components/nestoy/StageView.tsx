@@ -38,6 +38,20 @@ export function useReducedMotion(): boolean {
   return settings.motion === "reduzir" || media;
 }
 
+const SIDE_QUERY = "(orientation: landscape) and (max-height: 520px)";
+function subscribeSide(cb: () => void) {
+  if (typeof window === "undefined" || !window.matchMedia) return () => {};
+  const mq = window.matchMedia(SIDE_QUERY);
+  mq.addEventListener?.("change", cb);
+  return () => mq.removeEventListener?.("change", cb);
+}
+const sideNow = () => typeof window !== "undefined" && !!window.matchMedia && window.matchMedia(SIDE_QUERY).matches;
+
+/** A phone on its side (short landscape): panels move to a column at the edge instead of a sheet at the bottom. */
+export function useSideLayout(): boolean {
+  return useSyncExternalStore(subscribeSide, sideNow, () => false);
+}
+
 const NO_STATES: IslandStates = { letras: "obra", numeros: "futuro", cores: "futuro", lago: "futuro" };
 
 /** A full-bleed host for the world stage: builds it, keeps its viewport in step with the box, destroys it on unmount. */

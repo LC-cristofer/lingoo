@@ -75,12 +75,11 @@ test("progress from older builds: the trail keeps v2 and its memory, the album k
   await expect(stop(page, "Lição 2")).toHaveAttribute("data-status", "current");
   // The v1 lesson gave no extra stop.
   await expect(stop(page, "Lição 3")).toHaveAttribute("data-status", "locked");
-  // The memory card carried over from v2 is due: the Memória tab shows it (the farol has no bottom nav).
-  await page.goto("/memoria", { waitUntil: "networkidle" });
-  await expect(page.getByRole("link", { name: /Memória/ })).toContainText("1");
-
-  await page.getByRole("link", { name: /Álbum/ }).click();
-  await expect(page).toHaveURL(/\/album$/);
+  // The memory card carried over from v2 is due: the nest shows it, with Treinar.
+  await page.goto("/album", { waitUntil: "networkidle" });
+  await expect(page).toHaveURL(/\/ninho$/); // the old album address leads to the nest
+  await expect(page.getByRole("region", { name: "Treino de memória" })).toContainText("1");
+  await expect(page.getByRole("button", { name: "Treinar" })).toBeVisible();
   const special = page.getByRole("region", { name: "Figurinhas especiais" });
   await expect(special).toBeVisible();
   const fox = page.locator('[data-sticker="sticker-fox"]');
@@ -113,7 +112,7 @@ test("v1 alone: no stop credit on the trail, the fox kept in the album", async (
   await page.goto("/farol", { waitUntil: "networkidle" });
   await expect(stop(page, "Música")).toHaveAttribute("data-status", "current");
   await expect(stop(page, "Lição 1")).toHaveAttribute("data-status", "locked");
-  await page.goto("/album", { waitUntil: "networkidle" });
+  await page.goto("/ninho", { waitUntil: "networkidle" });
   await expect(page.locator('[data-sticker="sticker-fox"]')).toBeVisible();
   expect(await read(page, V1_KEY)).toBe(V1);
   expect(await read(page, V2_KEY)).toBeNull();

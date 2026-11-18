@@ -3,13 +3,10 @@ import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { Backdrop } from "@/components/trail/kit/Backdrop";
 import { AnswerTile } from "@/components/trail/kit/AnswerTile";
-import { BottomNav } from "@/components/trail/kit/BottomNav";
 import { Bubble } from "@/components/trail/kit/Bubble";
 import { ChunkyButton } from "@/components/trail/kit/ChunkyButton";
 import { FeedbackSheet } from "@/components/trail/kit/FeedbackSheet";
 import { LessonTopBar } from "@/components/trail/kit/LessonTopBar";
-import { TopChips } from "@/components/trail/kit/TopChips";
-import { UnitHeader } from "@/components/trail/kit/UnitHeader";
 import { ProgressBar } from "@/components/trail/ProgressBar";
 
 describe("ChunkyButton", () => {
@@ -133,31 +130,6 @@ describe("FeedbackSheet", () => {
   });
 });
 
-describe("BottomNav", () => {
-  it("has Trilha, Memória, Álbum in order and marks the active one", () => {
-    render(<BottomNav active="memoria" />);
-    const links = screen.getAllByRole("link");
-    expect(links.map((l) => l.textContent)).toEqual(["Trilha", "Memória", "Álbum"]);
-    expect(links.map((l) => l.getAttribute("href"))).toEqual(["/mapa", "/memoria", "/album"]);
-    expect(links.map((l) => l.getAttribute("aria-current"))).toEqual([null, "page", null]);
-  });
-
-  it("Memória is enabled, and sky blue when active", () => {
-    render(<BottomNav active="memoria" />);
-    const memory = screen.getByRole("link", { name: "Memória" });
-    expect(memory).not.toHaveAttribute("aria-disabled");
-    expect(memory).toHaveClass("is-active", "is-sky");
-    expect(screen.getByRole("link", { name: "Trilha" })).not.toHaveClass("is-sky");
-  });
-
-  it("shows the memoryDue badge only when there is something due", () => {
-    const { rerender } = render(<BottomNav active="trilha" memoryDue={4} />);
-    expect(screen.getByText("4")).toHaveClass("k-badge");
-    rerender(<BottomNav active="trilha" memoryDue={0} />);
-    expect(document.querySelector(".k-badge")).toBeNull();
-  });
-});
-
 describe("FeedbackSheet who slot", () => {
   it("shows the slot (Nino's place) instead of the round icon when given", () => {
     const { container, rerender } = render(<FeedbackSheet kind="correct" line="Isso!" who={<svg data-testid="nino" />} onContinue={() => {}} />);
@@ -252,48 +224,9 @@ describe("other pieces", () => {
     expect(onReplay).toHaveBeenCalledOnce();
   });
 
-  it("UnitHeader shows the unit, the title and the progress, card-less; locked shows a lock and no progress", () => {
-    const { container, rerender } = render(<UnitHeader unitLabel="Unidade 1" title="Animais da floresta" done={2} total={6} />);
-    expect(screen.getByText("Unidade 1")).toBeInTheDocument();
-    expect(screen.getByText("Animais da floresta")).toBeInTheDocument();
-    expect(screen.getByText("2 de 6")).toBeInTheDocument();
-    expect(container.querySelector(".k-unit-icon")).not.toBeNull();
-    expect(parseFloat((container.querySelector(".k-unit-bar > i") as HTMLElement).style.width)).toBeCloseTo(33.33, 1);
-    rerender(<UnitHeader unitLabel="Unidade 2" title="Cores" locked />);
-    expect(screen.queryByText(/ de /)).toBeNull();
-    expect(container.querySelector(".k-unit-lock")).not.toBeNull();
-    expect(container.firstElementChild).toHaveClass("is-locked");
-  });
-
-  it("UnitHeader shows the unit's sticker in the icon chip when given a unitId, dimmed when locked", () => {
-    const { container, rerender } = render(<UnitHeader unitLabel="Unidade 1" title="Animais" unitId="forest-animals" done={0} total={6} />);
-    const img = container.querySelector(".k-unit-icon img") as HTMLImageElement;
-    expect(img).not.toBeNull();
-    expect(img.getAttribute("src")).toBe("/art/units/forest-animals.webp");
-    expect(img).toHaveAttribute("alt", "");
-    rerender(<UnitHeader unitLabel="Unidade 2" title="Cores" unitId="colors" locked />);
-    expect(container.firstElementChild).toHaveClass("is-locked");
-    expect(container.querySelector(".k-unit-icon img")!.getAttribute("src")).toBe("/art/units/colors.webp");
-  });
-
-  it("UnitHeader is pressable with its accessible name when onPress is given", async () => {
-    const onPress = vi.fn();
-    render(<UnitHeader unitLabel="Unidade 1" title="Animais" done={0} total={6} ariaLabel="Unidade 1, Animais" onPress={onPress} />);
-    await userEvent.click(screen.getByRole("button", { name: "Unidade 1, Animais" }));
-    expect(onPress).toHaveBeenCalledOnce();
-  });
-
   it("the progress bar has a moving shine on its fill and keeps its value", () => {
     const { container } = render(<ProgressBar ratio={0.5} />);
     expect(container.querySelector(".k-bar > i .k-bar-shine")).not.toBeNull();
     expect(screen.getByRole("progressbar")).toHaveAttribute("aria-valuenow", "50");
-  });
-
-  it("TopChips shows the stars and the seven days", () => {
-    const week = Array.from({ length: 7 }, (_, i) => ({ date: `2026-11-${String(9 + i).padStart(2, "0")}`, played: i < 3, isToday: i === 2 }));
-    const { container } = render(<TopChips stars={5} week={week} />);
-    expect(screen.getByText("5")).toBeInTheDocument();
-    expect(container.querySelectorAll(".k-day")).toHaveLength(7);
-    expect(container.querySelectorAll(".k-day.is-on")).toHaveLength(3);
   });
 });

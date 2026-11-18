@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
-  LAYER_K, farolCloseCam, focusCam, layerViewBox, lerpCam, nestCloseCam, overviewCam, ppu, toScreen, type Viewport,
+  LAYER_K, farolCloseCam, focusCam, layerViewBox, lerpCam, nestCloseCam, nestViewCam, overviewCam, ppu, toScreen, type Viewport,
 } from "@/world/camera";
 
 const P: Viewport = { w: 390, h: 844, top: 108, bottom: 150 };
@@ -88,5 +88,16 @@ describe("camera", () => {
     expect(end.Y).toBeCloseTo(1250, 6);
     const m = lerpCam(a, b, 0.5);
     expect(m.Y).toBeLessThan(789 + (1250 - 789) * 0.99 - 40);
+  });
+
+  it("nestViewCam centres the nest in the band the UI leaves free, below or beside the sheet", () => {
+    const below: Viewport = { w: 390, h: 844, top: 96, bottom: 470 };
+    const [x, y] = toScreen(nestViewCam(below), 500, 850, below);
+    expect(x).toBeCloseTo(195, 6);
+    expect(y).toBeCloseTo((96 + (844 - 470)) / 2, 6);
+    const beside: Viewport = { w: 844, h: 390, top: 16, bottom: 16, left: 0, right: 400 };
+    const [sx, sy] = toScreen(nestViewCam(beside), 500, 850, beside);
+    expect(sx).toBeCloseTo((844 - 400) / 2, 6);
+    expect(sy).toBeCloseTo(195, 6);
   });
 });

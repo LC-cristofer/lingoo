@@ -11,6 +11,9 @@ const narratorMock = vi.hoisted(() => ({
 }));
 vi.mock("@/audio/narrator", () => ({ narrator: narratorMock }));
 
+const push = vi.fn();
+vi.mock("next/navigation", () => ({ useRouter: () => ({ push, replace: vi.fn() }) }));
+
 const markToday = vi.fn();
 const gradeCards = vi.fn();
 let memory: Record<string, { box: number; due: string }> = {};
@@ -45,6 +48,7 @@ beforeEach(() => {
   for (const fn of Object.values(narratorMock)) fn.mockClear();
   markToday.mockClear();
   gradeCards.mockClear();
+  push.mockClear();
   hydrated = true;
   memory = {};
 });
@@ -55,16 +59,16 @@ describe("MemoriaPage with cards ready", () => {
     memory = Object.fromEntries([card("bear", TODAY), card("bird", "2026-11-10")]);
   });
 
-  it("shows the count of ready cards, the Treinar button, the pile and the badge on the tab", () => {
+  it("shows the count of ready cards, the Treinar button and the pile; × goes back to the nest", () => {
     render(<MemoriaPage />);
     expect(screen.getByRole("heading", { name: "Treino de memória" })).toBeInTheDocument();
     expect(document.querySelector(".k-mem-count-n")).toHaveTextContent(/^2$/);
     expect(screen.getByText(/cartões prontos hoje/)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Treinar" })).toBeInTheDocument();
     expect(document.querySelectorAll(".k-pile-card")).toHaveLength(2);
-    const memoryTab = screen.getByRole("link", { name: /Memória/ });
-    expect(memoryTab).toHaveAttribute("aria-current", "page");
-    expect(within(memoryTab).getByText("2")).toHaveClass("k-badge");
+    expect(screen.queryByRole("navigation")).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Voltar ao ninho" }));
+    expect(push).toHaveBeenCalledWith("/ninho");
   });
 
   it("the bubble says memoryHome (shown and narrated)", async () => {
@@ -140,7 +144,6 @@ describe("MemoriaPage with nothing due", () => {
     expect(screen.getByText("Próximo treino: amanhã")).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Treinar" })).not.toBeInTheDocument();
     expect(document.querySelector(".k-pile")).toHaveClass("is-faded");
-    expect(document.querySelector(".k-badge")).toBeNull();
   });
 
   it("later: the bubble stays 'Tudo em dia!' and the chip says in how many days", async () => {

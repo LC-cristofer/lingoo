@@ -42,6 +42,18 @@ export function nestCloseCam(vp: Viewport): Cam {
   return { X: 500, Y: 850 - (0.13 * vp.h) / (base(vp) / D), D };
 }
 
+/** The nest close-up between the UI insets: its centre (500, 850) sits at the centre of the free band, and the nest with Nino (about 300 x 220 world units) always fits it. */
+export function nestViewCam(vp: Viewport): Cam {
+  const l = vp.left ?? 0, r = vp.right ?? 0;
+  const availW = Math.max(60, vp.w - 24 - l - r), availH = Math.max(60, vp.h - vp.top - vp.bottom);
+  const pMax = base(vp) / 0.22;
+  const p = Math.min(pMax, availW / 300, availH / 220);
+  const D = base(vp) / p;
+  const shiftY = (vp.top + (vp.h - vp.bottom)) / 2 - vp.h / 2;
+  const shiftX = (l + (vp.w - r)) / 2 - vp.w / 2;
+  return { X: 500 - shiftX / p, Y: 850 - shiftY / p, D };
+}
+
 /* eslint-disable @typescript-eslint/no-unused-vars -- vp kept for a uniform camera signature */
 export function farolCloseCam(_vp: Viewport): Cam { return { X: 790, Y: 1080, D: 0.36 }; }
 

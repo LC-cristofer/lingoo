@@ -1,0 +1,43 @@
+/* The nest (/ninho): Nino in the nest on top, a cream sheet with the stickers and the memory training.
+   Imported by src/app/globals.css. Colours, radii and space only from tokens.css. */
+
+.nn-top { position: absolute; z-index: 5; top: max(var(--sp-4), env(safe-area-inset-top)); left: max(var(--sp-4), env(safe-area-inset-left)); }
+.nn-top .k-round { margin-bottom: 0; }
+
+.nn-sheet { position: absolute; z-index: 4; left: 0; right: 0; bottom: 0; margin: 0 auto; width: min(100%, 640px); max-height: 64dvh; overflow-y: auto; scrollbar-gutter: stable; overscroll-behavior: contain; display: grid; gap: var(--sp-4); align-content: start; padding: var(--sp-4) var(--sp-5) calc(var(--sp-5) + env(safe-area-inset-bottom)); background: var(--cream); border-radius: var(--r-4) var(--r-4) 0 0; box-shadow: var(--shadow-sheet); }
+.nn-part { display: grid; gap: var(--sp-3); }
+.nn-head { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3); }
+.nn-title { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: var(--fs-title); line-height: 1.1; color: var(--cocoa); }
+.nn-count { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-body); line-height: 1; padding: 6px var(--sp-3); border-radius: var(--r-pill); background: var(--paper); color: var(--cocoa-2); box-shadow: inset 0 0 0 2px var(--line); }
+
+/* stickers: earned ones keep their white die-cut border, missing ones are silhouettes.
+   No CSS filter on them: a drop-shadow on SVG inside the scrolling sheet stalls software-rendered Chromium. */
+.nn-grid { display: grid; grid-template-columns: repeat(auto-fill, 72px); gap: var(--sp-3); justify-content: start; justify-items: center; align-items: center; }
+.nn-sticker { flex: none; display: grid; place-items: center; min-width: 64px; min-height: 64px; padding: 0; border: 0; background: transparent; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: transform var(--t-tap) var(--ease-out); }
+.nn-sticker:active { transform: scale(0.96); }
+.nn-sticker[aria-disabled="true"] { cursor: default; }
+.nn-sticker:focus-visible { outline: none; box-shadow: var(--focus-ring); border-radius: var(--r-2); }
+.nn-sticker svg, .nn-sticker img { display: block; }
+.nn-legacy img { border-radius: 50%; background: var(--paper); border: 4px solid var(--white); box-sizing: content-box; box-shadow: 0 3px 0 var(--edge); }
+.nn-soon { flex: none; width: 56px; height: 56px; display: grid; place-items: center; border-radius: 50%; background: var(--paper); box-shadow: inset 0 0 0 3px var(--line); opacity: 0.8; }
+.nn-special { display: grid; gap: var(--sp-3); padding-top: var(--sp-2); }
+.nn-special-title { justify-self: start; min-height: 48px; padding: 0 var(--sp-4); border: 0; border-radius: var(--r-pill); background: var(--paper); box-shadow: inset 0 0 0 2px var(--line); font-family: var(--font-display); font-weight: 700; font-size: var(--fs-body); color: var(--cocoa); cursor: pointer; }
+
+/* memory training */
+.nn-mem-row { display: flex; align-items: center; gap: var(--sp-3); min-height: 72px; padding: var(--sp-2) var(--sp-3); border-radius: var(--r-3); background: var(--paper); box-shadow: inset 0 0 0 2px var(--line); }
+.nn-mem-n { flex: none; display: grid; place-items: center; min-width: 56px; height: 56px; padding: 0 var(--sp-2); border-radius: var(--r-pill); background: var(--success-bg); color: var(--success-text); font-family: var(--font-display); font-weight: 700; font-size: var(--fs-display); line-height: 1; }
+.nn-mem-txt { flex: 1; min-width: 0; display: grid; gap: var(--sp-1); font-family: var(--font-body); font-weight: 800; font-size: var(--fs-body); line-height: 1.2; color: var(--cocoa-2); }
+.nn-mem-txt b { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-sub); color: var(--cocoa); }
+.nn-mem-txt small { font-size: var(--fs-caption); }
+.nn-mem-nino { flex: none; width: 64px; height: 64px; display: grid; place-items: center; }
+.nn-mem-nino svg { width: 64px; height: auto; display: block; overflow: visible; }
+.nn-mem-cta { flex: none; display: inline-flex; align-items: center; gap: var(--sp-2); font-size: 20px; padding: 14px var(--sp-5) 12px; }
+
+/* a phone on its side: the sheet becomes a column on the right */
+@media (orientation: landscape) and (max-height: 520px) {
+  .nn-sheet { top: 0; left: auto; right: 0; margin: 0; width: min(48%, 440px); max-height: none; border-radius: var(--r-4) 0 0 var(--r-4); box-shadow: -8px 0 24px color-mix(in srgb, var(--cocoa) 12%, transparent); padding: var(--sp-4) var(--sp-5); gap: var(--sp-3); }
+  .nn-mem-row { padding: var(--sp-2) var(--sp-3); }
+  /* the column is short: the training, with its Treinar button, comes first so it is never below the fold */
+  .nn-memory { order: -1; }
+}
+@media (prefers-reduced-motion: reduce) { .nn-sticker { transition: none; } }

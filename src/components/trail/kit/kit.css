@@ -110,48 +110,12 @@
 .k-sheet-text { margin: 0; word-spacing: .08em; font-family: var(--font-display); font-weight: 700; font-size: 26px; line-height: 1.05; }
 .k-sheet .k-sheet-btn { width: 100%; }
 
-/* ---------- unit header (no card) ---------- */
-.k-unit { position: relative; display: flex; align-items: center; gap: 14px; width: 100%; padding: 6px 0 14px; border: 0; border-bottom: 1px solid var(--line); background: none; color: var(--cocoa); text-align: left; font: inherit; }
-button.k-unit { cursor: pointer; }
-.k-unit::after { content: ""; position: absolute; left: 0; bottom: -1px; width: 22%; height: 2px; background: var(--area-linguas); opacity: 0.9; }
-.k-unit.is-locked::after { display: none; }
-.k-unit-icon { flex: none; width: 44px; height: 44px; border-radius: var(--r-1); display: grid; place-items: center; background: var(--cream); color: var(--cocoa); box-shadow: 0 3px 0 var(--edge); }
-.k-unit-icon.has-art, .k-unit.is-locked .k-unit-icon.has-art { width: 52px; height: 52px; background: none; }
-.k-unit-icon img { display: block; width: 48px; height: 48px; object-fit: contain; }
-.k-unit.is-locked .k-unit-icon img { opacity: 0.45; filter: grayscale(0.6); }
-.k-unit-text { flex: 1; min-width: 0; }
-.k-unit-text small { display: block; font-weight: 800; font-size: var(--fs-caption); line-height: 18px; color: var(--cocoa-2); }
-.k-unit-text strong { display: block; font-family: var(--font-display); font-weight: 700; font-size: var(--fs-sub); line-height: 1.1; color: var(--cocoa); }
-.k-unit-progress { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex: none; }
-.k-unit-progress em { font-style: normal; font-weight: 800; font-size: var(--fs-caption); line-height: 1; color: var(--cocoa-2); }
-.k-unit-bar { width: 64px; height: 8px; border-radius: var(--r-pill); background: var(--lamp-off); display: block; overflow: hidden; }
-.k-unit-bar > i { display: block; height: 100%; border-radius: var(--r-pill); background: var(--hint); }
-.k-unit-lock { flex: none; width: 44px; height: 44px; display: grid; place-items: center; color: var(--cocoa-2); }
-.k-unit.is-locked .k-unit-icon { background: var(--lamp-off); color: var(--cocoa-2); box-shadow: none; }
-.k-unit.is-locked .k-unit-text small, .k-unit.is-locked .k-unit-text strong { color: var(--cocoa-2); }
 
-/* ---------- chips (glass) ---------- */
-.k-chips { position: absolute; left: var(--sp-4); right: var(--sp-4); top: var(--sp-3); display: flex; justify-content: space-between; align-items: center; z-index: 3; }
-.k-chip { display: inline-flex; align-items: center; gap: 6px; background: var(--veil); border: 1px solid var(--line); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-radius: var(--r-2); padding: 8px 14px; box-shadow: var(--shadow-small); font-family: var(--font-display); font-weight: 700; font-size: 20px; line-height: 1; color: var(--cocoa); }
-.k-chip-days { gap: 7px; padding: 8px 12px 6px; }
-.k-day { display: inline-flex; flex-direction: column; align-items: center; gap: 2px; }
-.k-day > i { width: 15px; height: 15px; border-radius: 50%; background: var(--lamp-off); display: block; }
-.k-day.is-on > i { background: var(--hint); box-shadow: inset 0 0 0 3px color-mix(in srgb, var(--hint) 55%, var(--white)); }
-.k-day.is-today > i { outline: 2px solid var(--hint); outline-offset: 2px; }
-.k-day > em { font-style: normal; font-weight: 800; font-size: 10px; color: var(--cocoa-2); }
 
-/* The parent switch for the music sits at the end of the top row; the chips stop short of it. */
-.k-fixed-chips .k-chips { right: 92px; }
 .k-music { position: absolute; right: var(--sp-4); top: 6px; z-index: 4; pointer-events: auto; display: grid; place-items: center; width: 64px; height: 64px; min-width: 64px; min-height: 64px; padding: 0; border: 1px solid var(--line); border-radius: var(--r-3); background: var(--veil); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); color: var(--area-linguas); cursor: pointer; box-shadow: var(--shadow-small); transition: transform var(--t-tap) var(--ease-out); }
 .k-music.is-off { color: var(--cocoa-2); }
 .k-music:active { transform: translateY(2px); }
 
-/* ---------- bottom nav: a glass pill ---------- */
-.k-nav { position: fixed; left: var(--sp-3); right: var(--sp-3); bottom: calc(var(--sp-3) + env(safe-area-inset-bottom)); z-index: 5; min-height: 72px; background: var(--veil); border: 1px solid var(--line); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-radius: var(--r-4); display: flex; justify-content: space-around; align-items: center; gap: var(--sp-1); padding: 6px; box-shadow: var(--shadow-soft); }
-.k-tab { position: relative; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-family: var(--font-display); font-weight: 700; font-size: 15px; line-height: 1; color: var(--cocoa-2); padding: 8px 10px; border-radius: var(--r-3); text-decoration: none; transition: background-color var(--t-quick), color var(--t-quick); }
-.k-tab.is-active { background: color-mix(in srgb, var(--area-linguas) 18%, transparent); color: var(--cocoa); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--area-linguas) 30%, transparent); }
-.k-tab.is-active svg { color: var(--area-linguas-dark); }
-.k-badge { position: absolute; right: 18%; top: 2px; min-width: 20px; height: 20px; padding: 0 3px; border-radius: var(--r-1); background: var(--hint); color: var(--cocoa); font-family: var(--font-body); font-weight: 900; font-size: 14px; line-height: 20px; text-align: center; border: 2px solid var(--paper); box-sizing: content-box; }
 
 /* ---------- stops ---------- */
 .k-stop { position: relative; display: block; padding: 0; border: 0; background: none; cursor: pointer; }
@@ -216,9 +180,8 @@ button.k-unit { cursor: pointer; }
   .k-big-word { font-size: 36px; }
   .k-stage > .k-cta { max-width: 420px; margin-bottom: 22px; }
   /* The bottom navigation floats as a centred pill. */
-  .k-nav { left: 50%; right: auto; transform: translateX(-50%); width: 380px; bottom: 14px; }
 }
-@media (prefers-reduced-motion: reduce) { .is-glow, .k-bar-shine, .k-stop-ring { animation: none; } .k-bar-shine { display: none; } .k-btn, .k-tile, .k-round, .k-bar > i, .k-stop-disc, .k-music, .k-tab { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .is-glow, .k-bar-shine, .k-stop-ring { animation: none; } .k-bar-shine { display: none; } .k-btn, .k-tile, .k-round, .k-bar > i, .k-stop-disc, .k-music { transition: none; } }
 
 /* ---------- song (karaoke) ---------- */
 .k-song { height: 100dvh; min-height: 0; overflow: hidden; gap: 8px; padding-bottom: calc(14px + env(safe-area-inset-bottom)); }
@@ -294,7 +257,9 @@ button.k-unit { cursor: pointer; }
 @media (prefers-reduced-motion: reduce) { .k-mem-card { transition: none; } }
 
 /* ---------- Memória tab (pictures 7 and 8) ---------- */
-.k-mtab { position: relative; min-height: 100dvh; padding: 78px 20px calc(110px + env(safe-area-inset-bottom)); display: flex; flex-direction: column; align-items: center; gap: 14px; }
+.k-mem-exit { position: absolute; z-index: 4; top: max(var(--sp-4), env(safe-area-inset-top)); left: max(var(--sp-4), env(safe-area-inset-left)); }
+.k-mem-exit .k-round { margin-bottom: 0; }
+.k-mtab { position: relative; min-height: 100dvh; padding: 92px 20px calc(40px + env(safe-area-inset-bottom)); display: flex; flex-direction: column; align-items: center; gap: 14px; }
 .k-mtab-side { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 14px; }
 .k-mtab-side.is-pile { gap: 12px; }
 .k-mtab-title { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: var(--fs-title); line-height: 1.1; color: var(--cocoa); text-align: center; }
@@ -314,7 +279,7 @@ button.k-unit { cursor: pointer; }
 .k-mtab > .k-mtab-side:first-child { flex: none; }
 .k-mtab-cta { width: 100%; max-width: 520px; }
 /* Phone: the button sits above the nav (the pile column comes after it in the markup, so it is ordered first). */
-.k-mtab.is-due { padding-bottom: calc(100px + env(safe-area-inset-bottom)); }
+.k-mtab.is-due { padding-bottom: calc(40px + env(safe-area-inset-bottom)); }
 .k-mtab.is-due .k-mtab-side:first-child { display: contents; }
 .k-mtab.is-due .k-mtab-title { order: 0; }
 .k-mtab.is-due .k-guide-row { order: 1; }
@@ -323,7 +288,7 @@ button.k-unit { cursor: pointer; }
 .k-mtab.is-empty-tomorrow .k-mtab-side.is-pile, .k-mtab.is-empty-later .k-mtab-side.is-pile { flex: 1; justify-content: flex-start; }
 
 @media (min-width: 900px) and (orientation: landscape) {
-  .k-mtab { flex-direction: row; justify-content: center; align-items: center; gap: 60px; padding: 70px 60px 110px; }
+  .k-mtab { flex-direction: row; justify-content: center; align-items: center; gap: 60px; padding: 70px 60px 50px; }
   .k-mtab-side { width: 420px; align-items: flex-start; gap: 24px; }
   .k-mtab-side.is-pile { align-items: center; width: auto; }
   .k-mtab-title { font-size: var(--fs-display); line-height: 1.1; text-align: left; }
@@ -331,7 +296,7 @@ button.k-unit { cursor: pointer; }
   .k-guide-row .k-cat svg { width: 130px; }
   .k-guide-col { align-items: flex-start; }
   .k-mtab-cta { width: auto; min-width: 300px; }
-  .k-mtab.is-due { padding-bottom: 110px; }
+  .k-mtab.is-due { padding-bottom: 50px; }
   .k-mtab.is-due .k-mtab-side:first-child { display: flex; }
   .k-mtab.is-due .k-mtab-cta { margin-top: 0; }
   .k-mtab.is-due .k-mtab-side.is-pile { order: 0; }
@@ -346,7 +311,6 @@ button.k-unit { cursor: pointer; }
   .k-mem-ask .k-bubble::before { display: none; }
   .k-mem-stack { width: 330px; height: 420px; }
   .k-mem-next { min-height: 96px; padding-bottom: 22px; }
-  .k-nav { width: 520px; }
 }
 
 
@@ -397,4 +361,4 @@ button.k-unit { cursor: pointer; }
   .k-tile.is-correct, .k-tile.is-wrong, .k-sheet, .k-star-big > g, .k-reward-hero .k-cat, .k-reward-title, .k-reward-sub, .k-reward-note, .k-reward-stage .k-words, .k-lamps > i.is-on { animation: none; }
 }
 :root[data-motion="reduzir"] :is(.k-tile.is-correct, .k-tile.is-wrong, .k-sheet, .k-star-big > g, .k-reward-hero .k-cat, .k-reward-title, .k-reward-sub, .k-reward-note, .k-reward-stage .k-words, .k-lamps > i.is-on, .k-bar-shine, .k-stop-ring, .is-glow) { animation: none; }
-:root[data-motion="reduzir"] :is(.k-btn, .k-tile, .k-round, .k-bar > i, .k-lamps > i, .k-stop-disc, .k-music, .k-tab) { transition: none; }
+:root[data-motion="reduzir"] :is(.k-btn, .k-tile, .k-round, .k-bar > i, .k-lamps > i, .k-stop-disc, .k-music) { transition: none; }

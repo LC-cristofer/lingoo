@@ -29,7 +29,7 @@ vi.mock("@/components/trail/TrailProgressProvider", () => ({
   }),
 }));
 
-import AlbumPage from "@/app/album/page";
+import NinhoPage from "@/app/ninho/page";
 import Home from "@/app/page";
 import MemoriaPage from "@/app/memoria/page";
 
@@ -56,17 +56,16 @@ describe("music on the screens", () => {
     expect(asked.length).toBeGreaterThan(0);
   });
 
-  it("the album plays the album track and carries the switch", () => {
-    render(<AlbumPage />);
+  it("the nest plays the album track; the switch lives in the parents' area only", () => {
+    render(<NinhoPage />);
     expect(calls().every((t) => t === "album")).toBe(true);
     expect(calls().length).toBeGreaterThan(0);
-    expect(screen.getByRole("button", { name: /^Música (ligada|desligada)$/ })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /^Música (ligada|desligada)$/ })).not.toBeInTheDocument();
   });
 
-  it("the Memória home plays the album track and carries the switch", () => {
+  it("the Memória home plays the album track", () => {
     render(<MemoriaPage />);
     expect(calls().at(-1)).toBe("album");
-    expect(screen.getByRole("button", { name: /^Música (ligada|desligada)$/ })).toBeInTheDocument();
   });
 
   it("the Memória round is silent (the child must hear the words) and the music returns with the home", async () => {
