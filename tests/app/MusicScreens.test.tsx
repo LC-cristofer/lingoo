@@ -13,6 +13,10 @@ vi.mock("@/audio/narrator", () => ({
   },
 }));
 vi.mock("next/navigation", () => ({ useRouter: () => ({ push: vi.fn() }) }));
+vi.mock("@/components/nestoy/SettingsProvider", () => ({
+  useSettings: () => ({ settings: { motion: "reduzir", ambient: "dia" }, update: vi.fn(), hydrated: true }),
+}));
+vi.mock("@/audio/ambience", () => ({ ambience: { play: vi.fn(), stop: vi.fn(), current: vi.fn(() => null) } }));
 let memory: Record<string, { box: number; due: string }> = {};
 vi.mock("@/components/trail/TrailProgressProvider", () => ({
   useTrailProgress: () => ({
@@ -26,7 +30,7 @@ vi.mock("@/components/trail/TrailProgressProvider", () => ({
 }));
 
 import AlbumPage from "@/app/album/page";
-import MapPage from "@/app/mapa/page";
+import Home from "@/app/page";
 import MemoriaPage from "@/app/memoria/page";
 
 const calls = () => hook.useBackgroundMusic.mock.calls.map((c) => c[0]);
@@ -44,11 +48,10 @@ beforeEach(() => {
 afterEach(() => vi.useRealTimers());
 
 describe("music on the screens", () => {
-  it("the map plays the trail track and carries the switch", () => {
-    render(<MapPage />);
+  it("the island (the home) plays the trail track", () => {
+    render(<Home />);
     expect(calls().every((t) => t === "trail")).toBe(true);
     expect(calls().length).toBeGreaterThan(0);
-    expect(screen.getByRole("button", { name: /^Música (ligada|desligada)$/ })).toBeInTheDocument();
   });
 
   it("the album plays the album track and carries the switch", () => {

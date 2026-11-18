@@ -2,8 +2,8 @@
    (smaller = closer). Layers offset D by LAYER_K so far ones zoom faster, near ones slower. */
 
 export type Cam = { X: number; Y: number; D: number };
-/** top/bottom are the UI insets in px (what the overview must leave free). */
-export type Viewport = { w: number; h: number; top: number; bottom: number };
+/** top/bottom are the UI insets in px (what the overview must leave free); left/right are the side panels' (0 when absent). */
+export type Viewport = { w: number; h: number; top: number; bottom: number; left?: number; right?: number };
 
 export const LAYER_K = { far: 2, mid: 0.8, island: 0, near: -0.12 } as const;
 
@@ -26,12 +26,14 @@ export function toScreen(cam: Cam, x: number, y: number, vp: Viewport): [number,
 
 /** Whole island (x 60–940, y 540–1880) between the UI insets, 12 px side margins. */
 export function overviewCam(vp: Viewport): Cam {
-  const availW = Math.max(60, vp.w - 24), availH = Math.max(60, vp.h - vp.top - vp.bottom);
+  const l = vp.left ?? 0, r = vp.right ?? 0;
+  const availW = Math.max(60, vp.w - 24 - l - r), availH = Math.max(60, vp.h - vp.top - vp.bottom);
   const pMax = Math.min(availW / 880, availH / 1340);
   const D = base(vp) / pMax;
   const p = base(vp) / D;
   const shift = (vp.top + (vp.h - vp.bottom)) / 2 - vp.h / 2; // px the free band's centre sits below the screen centre
-  return { X: 500, Y: 1210 - shift / p, D };
+  const shiftX = (l + (vp.w - r)) / 2 - vp.w / 2; // px the free band's centre sits right of the screen centre
+  return { X: 500 - shiftX / p, Y: 1210 - shift / p, D };
 }
 
 /** Nest centre (500, 850) sits at 63% of the height. */
@@ -43,8 +45,11 @@ export function nestCloseCam(vp: Viewport): Cam {
 /* eslint-disable @typescript-eslint/no-unused-vars -- vp kept for a uniform camera signature */
 export function farolCloseCam(_vp: Viewport): Cam { return { X: 790, Y: 1080, D: 0.36 }; }
 
-export function focusCam(a: { x: number; y: number }, _vp: Viewport): Cam {
-  return { X: 500 + (a.x - 500) * 0.7, Y: a.y + 230, D: 0.55 };
+/** Zoomed on a place: the approved phone framing, shifted sideways when a panel covers the left or right edge. */
+export function focusCam(a: { x: number; y: number }, vp: Viewport): Cam {
+  const cam = { X: 500 + (a.x - 500) * 0.7, Y: a.y + 230, D: 0.55 };
+  const shiftX = ((vp.left ?? 0) - (vp.right ?? 0)) / 2;
+  return shiftX ? { ...cam, X: cam.X - shiftX / ppu(cam, vp) } : cam;
 }
 
 /* eslint-enable @typescript-eslint/no-unused-vars */

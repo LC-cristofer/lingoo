@@ -172,16 +172,16 @@ test("one full unit: song, three lessons, story, challenge, memory and persisten
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
 
-  await test.step("start screen, then up the farol's staircase", async () => {
+  await test.step("the island, the farol pin, then up the staircase", async () => {
     await page.goto("/");
-    await page.getByRole("button", { name: "Jogar" }).click();
-    await expect(page).toHaveURL(/\/mapa$/); // the start page still leads to the map until the island arrives
-    await page.goto("/farol");
+    await page.getByRole("button", { name: "Farol das Línguas" }).click();
+    await page.getByRole("button", { name: "Entrar no farol" }).click();
+    await expect(page).toHaveURL(/\/farol$/);
     await expect(page.getByRole("button", { name: labelOf(stopOf("song")), exact: true })).toHaveAttribute("data-status", "current");
     // A locked stop (the next one up the stairs) does not open: the card says what to do instead.
     await page.getByRole("button", { name: labelOf(stopOf("lesson-1")), exact: true }).click({ timeout: 20_000 });
     await expect(page).toHaveURL(/\/farol$/);
-    await expect(page.getByTestId("nino-card")).toContainText("Primeiro a parada que está brilhando!");
+    await expect(page.locator('[data-testid="nino-card"]:visible')).toContainText("Primeiro a parada que está brilhando!");
   });
 
   await test.step("leaving a stop with the ✕ goes back to the farol", async () => {
@@ -212,7 +212,7 @@ test("one full unit: song, three lessons, story, challenge, memory and persisten
   });
 
   await test.step("the day rolls over on an open page and the Memória tab shows the badge", async () => {
-    await page.goto("/mapa"); // the farol has no bottom nav: the badge lives on the pages that do
+    await page.goto("/album"); // the island and the farol have no bottom nav: the badge lives on the pages that do
     const nav = page.getByRole("navigation", { name: "Navegação" });
     await expect(nav.locator(".k-badge:visible")).toHaveCount(0); // today's cards were just trained: none is due
     await page.clock.fastForward("24:00:00");
@@ -227,7 +227,7 @@ test("one full unit: song, three lessons, story, challenge, memory and persisten
     await expect(page.getByText("Próximo treino: em 3 dias")).toBeVisible({ timeout: 20_000 }); // box 2: three days
     await expect(nav.locator(".k-badge:visible")).toHaveCount(0);
     await nav.getByRole("link", { name: /Trilha/ }).click();
-    await expect(page).toHaveURL(/\/mapa$/);
+    await expect(page).toHaveURL(/\/$/); // /mapa leads to the island now
     await page.goto("/farol");
   });
 
@@ -276,14 +276,12 @@ test("one full unit: song, three lessons, story, challenge, memory and persisten
   const checkEverything = async () => {
     await page.goto("/farol");
     await expect(page.locator('.nz-hit[data-status="done"]')).toHaveCount(6);
-    await expect(page.getByTestId("nino-card")).toContainText("6 de 6");
-    await page.goto("/mapa");
-    await expect(page.locator('[data-kind][data-state="done"]:visible')).toHaveCount(6);
+    await expect(page.locator('[data-testid="nino-card"]:visible')).toContainText("6 de 6");
     await page.goto("/album");
     await expect(page.locator('[data-art="bear"][data-earned="true"]:visible')).toBeVisible();
   };
 
-  await test.step("the map shows 6 done stops and the album the sticker", checkEverything);
+  await test.step("the farol shows 6 done stops and the album the sticker", checkEverything);
   await test.step("reloading keeps everything", async () => {
     await page.reload();
     await expect(page.locator('[data-art="bear"][data-earned="true"]:visible')).toBeVisible();
@@ -329,8 +327,9 @@ for (const vp of [
       if (expectTiles) expect(m.tiles.length, `${label}: tiles`).toBe(4);
     };
 
-    await page.goto("/mapa");
-    await measure("map");
+    await page.goto("/");
+    await expect(page.getByRole("button", { name: "Farol das Línguas" })).toBeVisible();
+    await measure("island");
     await page.goto("/farol");
     await expect(page.locator(".nz-hit").first()).toBeAttached();
     await measure("farol");

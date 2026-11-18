@@ -8,7 +8,6 @@ import { Bubble } from "@/components/trail/kit/Bubble";
 import { ChunkyButton } from "@/components/trail/kit/ChunkyButton";
 import { FeedbackSheet } from "@/components/trail/kit/FeedbackSheet";
 import { LessonTopBar } from "@/components/trail/kit/LessonTopBar";
-import { StopButton } from "@/components/trail/kit/StopButton";
 import { TopChips } from "@/components/trail/kit/TopChips";
 import { UnitHeader } from "@/components/trail/kit/UnitHeader";
 import { ProgressBar } from "@/components/trail/ProgressBar";
@@ -134,29 +133,6 @@ describe("FeedbackSheet", () => {
   });
 });
 
-describe("StopButton", () => {
-  it("sets data-kind and data-state and calls onPress", async () => {
-    const onPress = vi.fn();
-    render(<StopButton kind="lesson" state="current" label="Lição 2" labelSide="right" onPress={onPress} />);
-    const button = screen.getByRole("button", { name: "Lição 2" });
-    expect(button).toHaveAttribute("data-kind", "lesson");
-    expect(button).toHaveAttribute("data-state", "current");
-    expect(button).not.toHaveAttribute("aria-disabled");
-    await userEvent.click(button);
-    expect(onPress).toHaveBeenCalledOnce();
-  });
-
-  it("a locked one is aria-disabled and ignores presses", async () => {
-    const onPress = vi.fn();
-    render(<StopButton kind="story" state="locked" label="História" labelSide="left" onPress={onPress} />);
-    const button = screen.getByRole("button", { name: "História" });
-    expect(button).toHaveAttribute("data-state", "locked");
-    expect(button).toHaveAttribute("aria-disabled", "true");
-    await userEvent.click(button);
-    expect(onPress).not.toHaveBeenCalled();
-  });
-});
-
 describe("BottomNav", () => {
   it("has Trilha, Memória, Álbum in order and marks the active one", () => {
     render(<BottomNav active="memoria" />);
@@ -233,17 +209,6 @@ describe("LessonTopBar count", () => {
   });
 });
 
-describe("StopButton locked press", () => {
-  it("calls onLockedPress (not onPress) for a locked stop", async () => {
-    const onPress = vi.fn();
-    const onLockedPress = vi.fn();
-    render(<StopButton kind="lesson" state="locked" label="Lição 3" labelSide="right" onPress={onPress} onLockedPress={onLockedPress} />);
-    await userEvent.click(screen.getByRole("button", { name: "Lição 3" }));
-    expect(onLockedPress).toHaveBeenCalledOnce();
-    expect(onPress).not.toHaveBeenCalled();
-  });
-});
-
 describe("other pieces", () => {
   it("LessonTopBar has the exit button and a progress bar, or a title pill", async () => {
     const onExit = vi.fn();
@@ -308,27 +273,5 @@ describe("other pieces", () => {
     expect(screen.getByText("5")).toBeInTheDocument();
     expect(container.querySelectorAll(".k-day")).toHaveLength(7);
     expect(container.querySelectorAll(".k-day.is-on")).toHaveLength(3);
-  });
-
-  it("StopButton: the current stop has the glow ring, the done one the check, a locked one neither", () => {
-    const { container, rerender } = render(<StopButton kind="lesson" state="current" label="Lição 2" labelSide="right" onPress={() => {}} />);
-    expect(container.querySelector(".k-stop-ring")).not.toBeNull();
-    expect(container.querySelector(".k-stop-check")).toBeNull();
-    rerender(<StopButton kind="lesson" state="done" label="Lição 1" labelSide="right" onPress={() => {}} />);
-    expect(container.querySelector(".k-stop-check")).not.toBeNull();
-    expect(container.querySelector(".k-stop-ring")).toBeNull();
-    rerender(<StopButton kind="lesson" state="locked" label="Lição 3" labelSide="right" onPress={() => {}} />);
-    expect(container.querySelector(".k-stop-check, .k-stop-ring")).toBeNull();
-  });
-
-  it("no kit primitive uses a loose hex colour for its look (tokens only), except icon strokes", () => {
-    const { container } = render(
-      <>
-        <StopButton kind="song" state="done" label="a" labelSide="left" onPress={() => {}} />
-        <StopButton kind="story" state="current" label="b" labelSide="left" onPress={() => {}} />
-        <StopButton kind="challenge" state="locked" label="c" labelSide="left" onPress={() => {}} />
-      </>,
-    );
-    expect(container.querySelector("[style*='#']")).toBeNull();
   });
 });

@@ -66,6 +66,19 @@ describe("camera", () => {
     expect(focusCam({ x: 876, y: 862 }, P)).toEqual({ X: 500 + 376 * 0.7, Y: 862 + 230, D: 0.55 });
   });
 
+  it("side panels: the overview centres the island in what is left, and focusCam leans the same way", () => {
+    const S: Viewport = { w: 844, h: 390, top: 48, bottom: 16, left: 380, right: 100 };
+    const c = overviewCam(S);
+    const [xl] = toScreen(c, 60, 1000, S);
+    const [xr] = toScreen(c, 940, 1000, S);
+    expect(xl).toBeGreaterThanOrEqual(S.left! - 0.01);
+    expect(xr).toBeLessThanOrEqual(S.w - S.right! + 0.01);
+    const f = focusCam({ x: 240, y: 556 }, S);
+    const [fx] = toScreen(f, 240, 556, S);
+    expect(fx).toBeGreaterThan(S.left!);
+    expect(overviewCam({ ...S, left: 0, right: 0 }).X).toBeCloseTo(500, 9);
+  });
+
   it("lerpCam interpolates D in log space and arcs upward mid-way", () => {
     const a = { X: 500, Y: 789, D: 0.22 }, b = { X: 500, Y: 1250, D: 0.9 };
     expect(lerpCam(a, b, 0.5).D).toBeCloseTo(Math.sqrt(a.D * b.D), 9);

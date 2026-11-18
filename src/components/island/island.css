@@ -1,0 +1,49 @@
+/* The island home: pins, top bar, the day/night indicator and the cream veil of the dive.
+   Imported by src/app/globals.css. Colours, radii and space only from tokens.css. */
+
+.nz-island-sky { position: absolute; inset: 0; z-index: 1; cursor: pointer; }
+
+/* ---------- pins: 64 px buttons, 46 px medallions, moved with the camera ---------- */
+.nz-pins { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
+.nz-pin { position: absolute; left: 0; top: 0; width: 64px; height: 64px; padding: 0; border: 0; background: transparent; display: grid; place-items: center; cursor: pointer; pointer-events: none; opacity: 0; will-change: transform; -webkit-tap-highlight-color: transparent; transition: opacity var(--t-slow) var(--ease-out); }
+.nz-island[data-ready="true"] .nz-pin { pointer-events: auto; opacity: 1; }
+.nz-pin-med { position: relative; width: 46px; height: 46px; display: grid; place-items: center; border-radius: 50%; background: var(--cream); border: 3px solid var(--c); box-shadow: 0 4px 10px color-mix(in srgb, var(--cocoa) 25%, transparent); font-family: var(--font-display); font-weight: 700; font-size: 14px; line-height: 1; color: var(--cocoa); transition: transform var(--t-quick) var(--ease-out); }
+.nz-pin-med b { font-weight: 700; }
+.nz-pin-med svg { width: 30px; display: block; }
+.nz-pin-ico { display: grid; place-items: center; }
+.nz-pin:active .nz-pin-med { transform: scale(0.94); }
+.nz-pin[data-state="futuro"] .nz-pin-med { opacity: 0.92; }
+.nz-pin:focus-visible { outline: none; }
+.nz-pin:focus-visible .nz-pin-med { box-shadow: var(--focus-ring); }
+.nz-pin-badge { position: absolute; top: -6px; right: -8px; width: 22px; height: 22px; display: grid; place-items: center; border-radius: 50%; color: var(--white); box-shadow: 0 0 0 2.5px var(--cream); }
+.nz-pin-badge svg { width: 14px; }
+.nz-pin-badge.is-obra { background: var(--area-letras); }
+.nz-pin-badge.is-futuro { background: var(--success); }
+/* the glow of the suggested (or focused) place: a ring that only scales and fades */
+.nz-pin[data-glow="true"] .nz-pin-med::after { content: ""; position: absolute; inset: -7px; border-radius: 50%; border: 4px solid var(--hint); opacity: 0.8; animation: nz-glow 1.7s ease-in-out infinite; pointer-events: none; }
+@keyframes nz-glow { 0%, 100% { transform: scale(0.94); opacity: 0.35; } 50% { transform: scale(1.1); opacity: 0.95; } }
+
+/* ---------- top bar ---------- */
+.nz-topbar { position: absolute; z-index: 5; top: max(var(--sp-4), env(safe-area-inset-top)); left: max(var(--sp-4), env(safe-area-inset-left)); right: max(var(--sp-4), env(safe-area-inset-right)); display: flex; align-items: center; gap: var(--sp-3); pointer-events: none; }
+.nz-topbar > * { pointer-events: auto; }
+.nz-topbar-sp { flex: 1; }
+.nz-topbar .k-round { margin-bottom: 0; }
+.nz-topbar-nest { display: grid; place-items: center; }
+.nz-time { display: inline-flex; align-items: center; gap: var(--sp-2); height: 48px; padding: 0 var(--sp-4); border-radius: var(--r-pill); background: var(--cream); box-shadow: 0 5px 0 var(--edge), 0 8px 16px color-mix(in srgb, var(--cocoa) 16%, transparent); font-family: var(--font-display); font-weight: 700; font-size: var(--fs-body); line-height: 1; color: var(--cocoa); }
+.nz-time[data-night="true"] { color: var(--night-ui); }
+
+/* ---------- the dive: the cream veil that covers the cut, and the UI stepping away ---------- */
+.nz-veil { position: absolute; inset: 0; z-index: 8; background: var(--cream); opacity: 0; pointer-events: none; }
+.nz-island .nz-pins, .nz-island .nz-card, .nz-island .nz-topbar { transition: opacity var(--t-slow) var(--ease-out); }
+.nz-island[data-away="true"] .nz-pins, .nz-island[data-away="true"] .nz-card, .nz-island[data-away="true"] .nz-topbar { opacity: 0; pointer-events: none; }
+.nz-island[data-away="true"] .nz-pin { pointer-events: none; }
+
+/* A short landscape screen (phone on its side): the bar becomes a column on the right, the card sits on the left. */
+@media (orientation: landscape) and (max-height: 520px) {
+  .nz-topbar { left: auto; top: var(--sp-3); right: max(var(--sp-3), env(safe-area-inset-right)); flex-direction: column; gap: var(--sp-2); }
+  .nz-topbar-sp { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nz-pin, .nz-pin-med, .nz-island .nz-pins, .nz-island .nz-card, .nz-island .nz-topbar { transition-duration: 0.01ms; }
+  .nz-pin[data-glow="true"] .nz-pin-med::after { animation: none; }
+}

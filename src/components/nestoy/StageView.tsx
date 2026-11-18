@@ -6,7 +6,7 @@ import type { Viewport } from "@/world/camera";
 import type { IslandStates } from "@/world/island";
 import { createStage, type Stage } from "@/world/stage";
 
-export type StageInsets = { top: number; bottom: number };
+export type StageInsets = { top: number; bottom: number; left?: number; right?: number };
 
 type StageViewProps = {
   scene: "island" | "farol";
@@ -61,7 +61,7 @@ export function StageView({ scene, states = NO_STATES, threads = 0, farolLevel, 
     stageRef.current = stage;
     const sync = () => {
       const { insets: i, onViewport: cb } = live.current;
-      const vp: Viewport = { w: host.clientWidth || 390, h: host.clientHeight || 844, top: i.top, bottom: i.bottom };
+      const vp: Viewport = { w: host.clientWidth || 390, h: host.clientHeight || 844, top: i.top, bottom: i.bottom, left: i.left ?? 0, right: i.right ?? 0 };
       stage.setViewport(vp);
       cb?.(vp);
     };
@@ -82,7 +82,7 @@ export function StageView({ scene, states = NO_STATES, threads = 0, farolLevel, 
 
   useEffect(() => {
     push.current();
-  }, [insets.top, insets.bottom]);
+  }, [insets.top, insets.bottom, insets.left, insets.right]);
 
   useEffect(() => {
     if (stageRef.current) stageRef.current.env.farolLevel = farolLevel;

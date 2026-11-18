@@ -5,8 +5,8 @@
 @import "../art/art.css";
 /* The visual kit of the approved look (buttons, tiles, sheets, signs, nav, scenes). */
 @import "../components/trail/kit/kit.css";
-@import "../components/trail/trail-map.css";
 @import "../components/nestoy/nestoy.css";
+@import "../components/island/island.css";
 
 /* The useful tokens, mirrored for Tailwind utilities (the values live in src/styles/tokens.css). */
 @theme inline {

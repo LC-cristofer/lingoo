@@ -1,26 +1,33 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
+import { defaultSettings } from "@/domain/nestoy/settings";
 
-const push = vi.fn();
-vi.mock("next/navigation", () => ({ useRouter: () => ({ push }) }));
-const narratorMock = vi.hoisted(() => ({ unlock: vi.fn(), playNarration: vi.fn(() => Promise.resolve()) }));
-vi.mock("@/audio/narrator", () => ({ narrator: narratorMock }));
+vi.mock("next/navigation", () => ({ useRouter: () => ({ push: vi.fn(), replace: vi.fn() }) }));
+vi.mock("@/audio/narrator", () => ({
+  narrator: { playNarration: vi.fn(() => Promise.resolve()), playSfx: vi.fn(), stop: vi.fn(), unlock: vi.fn(), isUnlocked: vi.fn(() => true) },
+}));
+vi.mock("@/audio/ambience", () => ({ ambience: { play: vi.fn(), stop: vi.fn(), current: vi.fn(() => null) } }));
+vi.mock("@/components/trail/TrailProgressProvider", () => ({
+  useTrailProgress: () => ({
+    progress: { completedStops: {}, stickers: {}, daysPlayed: [], memory: {}, version: 3, legacy: null },
+    hydrated: true,
+    finishStop: vi.fn(),
+    markToday: vi.fn(),
+  }),
+}));
+vi.mock("@/components/nestoy/SettingsProvider", () => ({
+  useSettings: () => ({ settings: { ...defaultSettings(), motion: "reduzir" }, update: vi.fn(), hydrated: true }),
+}));
 
 import Home from "@/app/page";
 
 describe("Home", () => {
-  it("has one button whose accessible name is its visible text, Jogar", () => {
+  it("is the island: six places, the parents' door and no start button", () => {
     render(<Home />);
-    const button = screen.getByRole("button", { name: "Jogar" });
-    expect(button).toHaveTextContent("Jogar");
-    expect(screen.queryByRole("button", { name: "Começar" })).not.toBeInTheDocument();
-  });
-
-  it("unlocks audio, narrates and goes to the map", () => {
-    render(<Home />);
-    fireEvent.click(screen.getByRole("button", { name: "Jogar" }));
-    expect(narratorMock.unlock).toHaveBeenCalled();
-    expect(narratorMock.playNarration).toHaveBeenCalled();
-    expect(push).toHaveBeenCalledWith("/mapa");
+    for (const n of ["Ninho do Nino", "Farol das Línguas", "Árvore das Letras", "Torre dos Números", "Jardim das Cores", "Lago das Descobertas"]) {
+      expect(screen.getByRole("button", { name: n })).toBeInTheDocument();
+    }
+    expect(screen.getByRole("button", { name: "Área dos responsáveis" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Jogar" })).not.toBeInTheDocument();
   });
 });

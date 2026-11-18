@@ -69,13 +69,14 @@ test("progress from older builds: the trail keeps v2 and its memory, the album k
   await prepare(page, { [V1_KEY]: V1, [V2_KEY]: V2 });
   const audio = recordAudio(page);
 
-  await page.goto("/mapa", { waitUntil: "networkidle" });
-  await expect(stop(page, "Música")).toHaveAttribute("data-state", "done");
-  await expect(stop(page, "Lição 1")).toHaveAttribute("data-state", "done");
-  await expect(stop(page, "Lição 2")).toHaveAttribute("data-state", "current");
+  await page.goto("/farol", { waitUntil: "networkidle" });
+  await expect(stop(page, "Música")).toHaveAttribute("data-status", "done");
+  await expect(stop(page, "Lição 1")).toHaveAttribute("data-status", "done");
+  await expect(stop(page, "Lição 2")).toHaveAttribute("data-status", "current");
   // The v1 lesson gave no extra stop.
-  await expect(stop(page, "Lição 3")).toHaveAttribute("data-state", "locked");
-  // The memory card carried over from v2 is due: the Memória tab shows it.
+  await expect(stop(page, "Lição 3")).toHaveAttribute("data-status", "locked");
+  // The memory card carried over from v2 is due: the Memória tab shows it (the farol has no bottom nav).
+  await page.goto("/memoria", { waitUntil: "networkidle" });
   await expect(page.getByRole("link", { name: /Memória/ })).toContainText("1");
 
   await page.getByRole("link", { name: /Álbum/ }).click();
@@ -109,9 +110,9 @@ test("progress from older builds: the trail keeps v2 and its memory, the album k
 
 test("v1 alone: no stop credit on the trail, the fox kept in the album", async ({ page }) => {
   await prepare(page, { [V1_KEY]: V1 });
-  await page.goto("/mapa", { waitUntil: "networkidle" });
-  await expect(stop(page, "Música")).toHaveAttribute("data-state", "current");
-  await expect(stop(page, "Lição 1")).toHaveAttribute("data-state", "locked");
+  await page.goto("/farol", { waitUntil: "networkidle" });
+  await expect(stop(page, "Música")).toHaveAttribute("data-status", "current");
+  await expect(stop(page, "Lição 1")).toHaveAttribute("data-status", "locked");
   await page.goto("/album", { waitUntil: "networkidle" });
   await expect(page.locator('[data-sticker="sticker-fox"]')).toBeVisible();
   expect(await read(page, V1_KEY)).toBe(V1);
@@ -120,8 +121,8 @@ test("v1 alone: no stop credit on the trail, the fox kept in the album", async (
 
 test("a corrupt v3 is backed up and the progress is rebuilt from v2", async ({ page }) => {
   await prepare(page, { [V3_KEY]: "{oops", [V2_KEY]: V2 });
-  await page.goto("/mapa", { waitUntil: "networkidle" });
-  await expect(stop(page, "Lição 2")).toHaveAttribute("data-state", "current");
+  await page.goto("/farol", { waitUntil: "networkidle" });
+  await expect(stop(page, "Lição 2")).toHaveAttribute("data-status", "current");
   expect(await read(page, BACKUP_KEY)).toBe("{oops");
   expect(await read(page, V2_KEY)).toBe(V2);
   expect(JSON.parse((await read(page, V3_KEY))!)).toMatchObject({ version: 3, completedStops: JSON.parse(V2).completedStops });

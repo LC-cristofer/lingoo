@@ -40,26 +40,25 @@ function watch(page: Page) {
 
 const toggle = (page: Page, name: "Música ligada" | "Música desligada") => page.getByRole("button", { name, exact: true });
 
-test("music follows the screens: map, lesson (silent), album and Memória", async ({ page }) => {
+test("music follows the screens: island, lesson (silent), album and Memória", async ({ page }) => {
   await instrument(page);
   const seen = watch(page);
 
-  await test.step("the start screen is silent, even after a tap", async () => {
+  await test.step("the island: nothing plays before a tap, then the trail loop is requested and plays", async () => {
     await page.goto("/");
-    await page.getByRole("heading", { name: "NESTOY" }).click();
+    await page.getByRole("button", { name: "Farol das Línguas" }).waitFor();
     await page.waitForTimeout(800);
     expect(seen.music).toEqual([]);
-  });
-
-  await test.step("Jogar: the map's loop is requested and plays", async () => {
-    await page.getByRole("button", { name: "Jogar" }).click();
-    await expect(page).toHaveURL(/\/mapa$/);
+    await page.locator("body").click({ position: { x: 5, y: 300 } });
     await expect.poll(() => seen.music).toContain("trail");
     await expect.poll(async () => (await playing(page)).live).toBe(1);
-    await expect(toggle(page, "Música ligada")).toBeVisible();
   });
 
   await test.step("inside a stop there is no music and none is requested", async () => {
+    await page.getByRole("button", { name: "Farol das Línguas" }).click();
+    await page.getByRole("button", { name: "Entrar no farol" }).click();
+    await expect(page).toHaveURL(/\/farol$/);
+    await expect.poll(async () => (await playing(page)).live).toBe(1); // the farol keeps the trail loop
     const before = seen.music.length;
     await page.getByRole("button", { name: "Música", exact: true }).click();
     await expect(page).toHaveURL(/\/parada\//);
@@ -69,16 +68,15 @@ test("music follows the screens: map, lesson (silent), album and Memória", asyn
     await expect(page.getByRole("button", { name: /^Música (ligada|desligada)$/ })).toHaveCount(0);
   });
 
-  await test.step("back on the map it plays again; the album switches track, Memória keeps it", async () => {
-    await page.goto("/mapa"); // a reload: needs a tap again
+  await test.step("back on the island it plays again; the album switches track, Memória keeps it", async () => {
+    await page.goto("/"); // a reload: needs a tap again
     await page.locator("body").click({ position: { x: 5, y: 300 } });
     await expect.poll(async () => (await playing(page)).live).toBe(1);
-    const nav = page.getByRole("navigation", { name: "Navegação" });
-    await nav.getByRole("link", { name: /Álbum/ }).click();
-    await expect(page).toHaveURL(/\/album$/);
+    await page.goto("/album");
+    await page.locator("body").click({ position: { x: 5, y: 300 } });
     await expect.poll(() => seen.music).toContain("album");
-    await expect.poll(async () => (await playing(page)).started, { timeout: 5000 }).toBe(2); // trail, then album (crossfade)
     await expect.poll(async () => (await playing(page)).live).toBe(1);
+    const nav = page.getByRole("navigation", { name: "Navegação" });
     const started = (await playing(page)).started;
     await nav.getByRole("link", { name: /Memória/ }).click();
     await expect(page).toHaveURL(/\/memoria$/);
@@ -94,7 +92,7 @@ test("music follows the screens: map, lesson (silent), album and Memória", asyn
 test("the parent switch flips, stops the music, and survives a reload", async ({ page }) => {
   await instrument(page);
   const seen = watch(page);
-  await page.goto("/mapa");
+  await page.goto("/album");
   await toggle(page, "Música ligada").click(); // a tap on the switch is itself the first gesture
   const requestedBeforeOff = seen.music.length;
   await expect(toggle(page, "Música desligada")).toHaveAttribute("aria-pressed", "false");
@@ -124,7 +122,7 @@ for (const vp of [
 ]) {
   test(`the switch is 64 px and covers nothing on ${vp.name} (${vp.width}x${vp.height})`, async ({ page }) => {
     await page.setViewportSize({ width: vp.width, height: vp.height });
-    for (const url of ["/mapa", "/album", "/memoria"]) {
+    for (const url of ["/album", "/memoria"]) {
       await page.goto(url);
       const button = page.getByRole("button", { name: /^Música (ligada|desligada)$/ });
       await expect(button).toBeVisible();
