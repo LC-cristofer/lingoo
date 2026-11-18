@@ -1,3 +1,2 @@
 /* Nino: the rig is driven by script (transform and SVG attributes only); this is just the box. */
 .nino-svg { display: block; overflow: visible; flex: none; }
-.nino-svg[data-reduced="true"] .n-root { will-change: auto; }

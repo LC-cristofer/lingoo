@@ -12,6 +12,7 @@ const BASE = process.argv[2] ?? "http://localhost:3300";
 const FORMS = [
   { name: "phone", width: 390, height: 844 },
   { name: "tablet", width: 1024, height: 768 },
+  { name: "phone-landscape", width: 844, height: 390 },
 ];
 const today = new Date().toISOString().slice(0, 10);
 const SETTINGS = { version: 1, ambient: "dia", bedtime: "19:30", pauseMinutes: 0, opening: "auto", motion: "reduzir", openingSeen: true, lastVisit: today };

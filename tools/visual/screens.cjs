@@ -38,8 +38,8 @@ async function report(page, label) {
       const tile = el.hasAttribute("data-card");
       const min = tile ? (innerHeight <= 520 ? 96 : 120) : 64; // a phone on its side fits cards of 96 px and up
       if (r.width < min - 0.5 || r.height < min - 0.5) out.push(`${tile ? "tile" : "button"} ${el.getAttribute("aria-label") ?? el.textContent} is ${Math.round(r.width)}x${Math.round(r.height)}`);
-      // (the farol's hit discs follow stops the camera has moved off screen; the parents' sheet scrolls)
-      if (el.closest(".nz-hit, .np-sheet") || el.classList.contains("nz-hit")) continue;
+      // (the farol hit discs and the island pins follow places the camera has moved off screen; the parents sheet scrolls)
+      if (el.closest(".nz-hit, .nz-pin, .np-sheet") || el.classList.contains("nz-hit") || el.classList.contains("nz-pin")) continue;
       if (r.bottom > innerHeight + 1 || r.right > innerWidth + 1 || r.left < -1) out.push(`${el.getAttribute("aria-label") ?? el.textContent} is clipped by the viewport`);
     }
     return out;
