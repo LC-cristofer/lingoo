@@ -77,7 +77,7 @@ Nas palavras do Lucas: "Várias atividades no banco e conforme as respostas do o
 - **Depois:** "Pronto!" e segue a abertura normal.
 - **Ver e mudar:** os mesmos campos ficam na área dos responsáveis (`/responsaveis`), seção "Criança". Mudar o cadastro muda só a sugestão de partida, não apaga progresso.
 - **Onde o nome aparece, só escrito:** título do ninho ("Ninho da Ana"), cartão da volta e área dos responsáveis.
-- **Armazenamento:** `lingoo:profile:v1` no aparelho (`{ name, age, english: "none"|"words"|"alphabet"|"reads", createdAt, areas }`). Fica separado do progresso v3 e das preferências.
+- **Armazenamento:** `lingoo:profile:v1` no aparelho (`{ name, age, english: "none"|"words"|"alphabet"|"reads", createdAt, islands: { descoberta: { letras: … } } }`). Fica separado do progresso v3 e das preferências.
 - **Quem já usa o app:** vê a tela de cadastro uma vez na próxima abertura, com "Agora não". Depois o cadastro fica só na área dos responsáveis. Sem cadastro, a partida é o galho 1.
 
 **Galho de partida** (decide o contato com inglês; a idade só ajusta o ritmo das lições — mais opções e menos repetição a partir de 7 anos):
@@ -155,7 +155,7 @@ A **História** usa um formato mais simples que as cenas da floresta: cada pági
 
 - **Voz:** a narração já é feita de trechos com língua própria (português e inglês), como em "Qual é o **bear**?" do farol. Os modelos juntam trechos gravados do mesmo jeito: a instrução em português e a letra ou palavra em inglês. Cada trecho é gravado uma vez pelo pipeline atual. Estimativa: 150 a 250 falas novas (letras, palavras e instruções). Uma combinação com trecho sem gravação não pode ser sorteada; o teste do banco garante isso.
 - **Formato do conteúdo:** a lista fixa de figuras (hoje só os 6 animais) vira um registro de figuras que aceita novas, e os cartões ganham um tipo "texto grande" (letra ou palavra) ao lado de "figura". O farol e o Treino de memória continuam funcionando igual; os testes atuais deles precisam continuar passando sem mudança de comportamento.
-- **Onde fica o histórico:** `lingoo:profile:v1` guarda, por área e galho, o nível atual (1–3) e os últimos erros por item (no máximo 20, os mais recentes).
+- **Onde fica o histórico:** `lingoo:profile:v1` guarda, por ilha, área e galho, o nível atual (1–3) e os últimos erros por item (no máximo 20, os mais recentes).
 - **Música e História:** as perguntas dentro dessas paradas ficam fixas no nível 1 e não mexem no nível.
 - **Perfil:** é validado e saneado ao ler, como as preferências: campo inválido volta ao padrão e nunca derruba o app. Se o formato mudar, o v1 é migrado sem perder nada.
 
