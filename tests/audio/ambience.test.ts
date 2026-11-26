@@ -129,6 +129,27 @@ describe("ambience", () => {
     expect(made).toHaveLength(1);
   });
 
+  it("after a refused autoplay, the first gesture fades the loop in from silence", async () => {
+    const d = fakeDoc();
+    let refuse = true;
+    const made: { volume: number }[] = [];
+    const createAudio = () => {
+      const a = { volume: 0, loop: false, pause: vi.fn(), play: vi.fn(() => (refuse ? Promise.reject(new Error("NotAllowedError")) : Promise.resolve())) };
+      made.push(a);
+      return a as unknown as HTMLAudioElement;
+    };
+    const amb = createAmbience({ createAudio, isEnabled: () => true, doc: d.doc });
+    amb.play("day");
+    await Promise.resolve();
+    await Promise.resolve();
+    vi.advanceTimersByTime(5000); // the first fade ran to full while blocked
+    refuse = false;
+    d.fire("click");
+    expect(made[0].volume).toBe(0);
+    vi.advanceTimersByTime(5000);
+    expect(made[0].volume).toBeCloseTo(0.35);
+  });
+
   it("hidden pauses the loop, visible resumes it, and play() while hidden waits for the foreground", () => {
     const d = fakeDoc();
     const { amb, made } = make(true, d.doc);

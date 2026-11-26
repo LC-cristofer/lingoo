@@ -51,7 +51,10 @@ export function createAmbience(deps: Deps = {}): Ambience {
   }
 
   function onGesture(): void {
-    if (active?.blocked) start(active);
+    if (!active?.blocked) return;
+    // After a refused autoplay the loop fades in from silence instead of starting at full volume.
+    ramp(active, 0, VOLUME);
+    start(active);
   }
 
   function onVisibility(): void {
