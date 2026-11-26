@@ -5,7 +5,15 @@
 
 ## 0. Regra do produto (vale para toda a ilha)
 
-**O NESTOY é um app para crianças brasileiras aprenderem inglês brincando.** Toda área da ilha ensina **inglês**: letras, números, cores, o mundo do lago. O Nino conversa com a criança em português (instruções, incentivo, ajuda), como já faz no farol. O conteúdo que ela aprende — letras, palavras, números, frases — é sempre em inglês. Nenhuma área ensina alfabetização ou matemática em português.
+**O NESTOY é um app para crianças brasileiras aprenderem inglês brincando.** Toda área da ilha ensina **inglês** (e, por escolha, também português: ver 0.1): letras, números, cores, o mundo do lago. O Nino conversa com a criança em português (instruções, incentivo, ajuda), como já faz no farol. O conteúdo que ela aprende — letras, palavras, números, frases — é sempre em inglês. O caminho em português é opcional e nunca substitui o inglês.
+
+### 0.1 Bilíngue por escolha (pedido do Lucas)
+
+Cada área pode ter **dois caminhos**: 🇺🇸 inglês (sempre presente, é o produto) e 🇧🇷 português (alfabetização e números em português, para quem precisa). **Os responsáveis decidem o que fica disponível** no cadastro e na área dos responsáveis: "Inglês", "Português" ou "Os dois". Com "Os dois", **a criança escolhe** o caminho na entrada da área tocando numa bandeira, sem precisar ler. "Sempre pense no bilíngue": toda área nova é desenhada com os dois caminhos em mente.
+
+- **Abordagem escolhida (B):** dois caminhos por área, cada um com o método de ensino certo para a sua língua. As figuras, o banco, o motor, o nível adaptativo, as estrelas e as figurinhas são compartilhados; cada item do banco tem as duas línguas (ball/bola).
+- **Descartadas:** (A) uma chave que troca o idioma do app inteiro, porque força o português no formato do inglês; (C) as duas línguas misturadas em cada lição, porque confunde a alfabetização ("bi" e "bê" para o mesmo B).
+- **Ordem de construção:** primeiro a base bilíngue e o caminho em inglês da Árvore; depois o caminho em português. Antes de produzir o português, um teste de pronúncia de cerca de 20 sílabas pela voz gerada, conferido por transcrição; se falhar, as sílabas são gravadas por voz humana.
 
 ## 1. Intenção
 
@@ -43,11 +51,10 @@ Nas palavras do Lucas: "Várias atividades no banco e conforme as respostas do o
 - O Nino falar o nome da criança.
 - Servidor ou conta online.
 - Relatório para os responsáveis.
-- Alfabetização em português.
 
 **Anti-objetivos (falharia mesmo funcionando)**
 
-- Ensinar qualquer coisa em português como conteúdo: o português é só a língua das instruções.
+- Um app que deixa de ser de inglês: o caminho em inglês existe em toda área, e o português é uma opção ao lado dele.
 - A criança perceber que "caiu de nível", ou ver contador, vida ou tempo.
 - Exigir leitura de quem ainda não lê. As instruções são faladas pelo Nino, e o texto na tela é só apoio.
 - Sons isolados de letra ("/b/") gerados por voz sintética, que soam errados. Usamos o nome da letra em inglês e palavras: "**B** is for **ball**".
@@ -61,7 +68,9 @@ Nas palavras do Lucas: "Várias atividades no banco e conforme as respostas do o
 - **Perguntas, uma por vez, com botões grandes:**
   1. **Nome da criança.** Campo de texto com até 20 caracteres. Pode ficar vazio ("Pular").
   2. **Idade:** 5, 6, 7 ou 8 anos (também "4" e "9+", tratados como 5 e 8).
-  3. **Contato com inglês:** "Nenhum ainda", "Conhece algumas palavras", "Sabe o alfabeto em inglês" ou "Lê palavras simples em inglês".
+  3. **O que a criança vai aprender:** "Inglês", "Português" ou "Os dois" (padrão: "Inglês").
+  4. **Contato com inglês** (se inglês): "Nenhum ainda", "Conhece algumas palavras", "Sabe o alfabeto em inglês" ou "Lê palavras simples em inglês".
+  5. **Leitura em português** (se português): "Ainda não conhece as letras", "Conhece as vogais", "Junta sílabas" ou "Lê palavras".
 - **Depois:** "Pronto!" e segue a abertura normal.
 - **Ver e mudar:** os mesmos campos ficam na área dos responsáveis (`/responsaveis`), seção "Criança". Mudar o cadastro muda só a sugestão de partida, não apaga progresso.
 - **Onde o nome aparece, só escrito:** título do ninho ("Ninho da Ana"), cartão da volta e área dos responsáveis.
@@ -76,6 +85,8 @@ Nas palavras do Lucas: "Várias atividades no banco e conforme as respostas do o
 | Conhece algumas palavras | Galho 1 |
 | Sabe o alfabeto em inglês | Galho 3 |
 | Lê palavras simples em inglês | Galho 4 (para quem tem 7 anos ou mais; com 5 ou 6 anos, galho 3) |
+
+**Galho de partida no caminho em português:** "Ainda não conhece" → galho 1; "Conhece as vogais" → galho 2; "Junta sílabas" → galho 3; "Lê palavras" → galho 4.
 
 ## 4. A Árvore das Letras
 
@@ -110,6 +121,17 @@ O desenho é feito em SVG por funções puras, como `farol-interior.ts`, seguind
 | 2 | ABC: N a Z | O nome das letras N–Z em inglês e uma palavra para cada ("**S** is for **sun**") | 13 letras, 13–15 palavras |
 | 3 | Letter sounds | Com que letra a palavra em inglês começa ("Which one starts with **B**?": ball, cat, dog) | as 26 letras e as palavras dos galhos 1–2 |
 | 4 | First words | Reconhecer palavras curtas escritas em inglês (cat, dog, sun, hat, bed…) e tocar na figura certa | 15 palavras de 3 letras, reaproveitando as figuras |
+
+**Caminho em português (segunda etapa),** alinhado às habilidades de consciência silábica do 1º ano da BNCC (EF01LP06, 08, 09 e 13):
+
+| Galho | Tema | A criança aprende | Exemplo |
+|---|---|---|---|
+| 1 | Vogais | Reconhecer A E I O U e a palavra que começa com cada uma | "**A** de **abelha**" |
+| 2 | Famílias silábicas | Consoante + vogal | "**B** com **A** faz **BA**" (BA BE BI BO BU) |
+| 3 | Juntar sílabas | Separar e juntar sílabas, bater palmas, contar sílabas | "**BO** + **LA** = **BOLA**" |
+| 4 | Ler palavras | Ler palavras e frases curtas, sílaba inicial e final, rimas | "**GATO**": toque na figura |
+
+Na árvore, os galhos em inglês sobem por um lado do tronco e os em português pelo outro; com só um caminho ativo, o outro lado fica com folhas, sem broto nem aviso. As duas metades somam para o crescimento da árvore e para o fio do ninho.
 
 Cada galho tem: **Música** (canção do alfabeto ou das palavras do galho, em inglês), **Lição 1–3**, **História** curta e **Desafio** com figurinha.
 
