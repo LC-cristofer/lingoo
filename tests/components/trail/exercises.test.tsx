@@ -1,6 +1,6 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { Exercise, Narration } from "@/domain/trail/schema";
+import type { Exercise, Narration, StopExercise } from "@/domain/trail/schema";
 
 const narratorMock = vi.hoisted(() => ({
   playNarration: vi.fn<(n: Narration) => Promise<void>>(() => Promise.resolve()),
@@ -19,7 +19,7 @@ const lesson1 = unit.stops[1];
 const lesson3 = unit.stops[3];
 if (!("exercises" in lesson1) || !("exercises" in lesson3)) throw new Error("lesson stops expected");
 
-function find<K extends Exercise["kind"]>(list: Exercise[], kind: K, nth = 0): Extract<Exercise, { kind: K }> {
+function find<K extends Exercise["kind"]>(list: StopExercise[], kind: K, nth = 0): Extract<Exercise, { kind: K }> {
   const found = list.filter((e): e is Extract<Exercise, { kind: K }> => e.kind === kind)[nth];
   if (!found) throw new Error(`no ${kind}`);
   return found;

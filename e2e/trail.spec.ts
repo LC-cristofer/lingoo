@@ -2,7 +2,8 @@ import { expect, test, type Locator, type Page } from "@playwright/test";
 import { skipOnboarding } from "./helpers";
 import { segmentId } from "../src/domain/trail/audio-id";
 import { getLines, getUnit } from "../src/domain/trail/content";
-import type { Exercise, Narration, Stop } from "../src/domain/trail/schema";
+import { resolve } from "../src/domain/nestoy/level";
+import type { Exercise, Narration, Stop, StopExercise } from "../src/domain/trail/schema";
 
 const unit = getUnit("forest-animals")!;
 const lines = getLines();
@@ -71,7 +72,9 @@ async function continueSheet(page: Page) {
 }
 
 /** Answers one exercise right (a wrong first answer is staged by the caller). */
-async function solve(page: Page, ex: Exercise) {
+async function solve(page: Page, slot: StopExercise) {
+  // No profile is saved in these runs: an adaptive slot (none in the farol) would show its level 1.
+  const ex: Exercise = resolve(slot, 1);
   switch (ex.kind) {
     case "intro":
       await page.locator('main:visible button[aria-label="Continuar"]').click({ timeout: 20_000 });

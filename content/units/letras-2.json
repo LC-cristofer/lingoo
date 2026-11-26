@@ -1,0 +1,2818 @@
+{
+  "id": "letras-2",
+  "title": "ABC: N a Z",
+  "banner": [
+    {
+      "lang": "pt-BR",
+      "text": "Galho dois:"
+    },
+    {
+      "lang": "en-US",
+      "text": "N to Z!"
+    }
+  ],
+  "words": [
+    {
+      "id": "letter-n",
+      "en": "N",
+      "pt": "a letra N",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "N"
+        }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Toque no"
+        },
+        {
+          "lang": "en-US",
+          "text": "N"
+        }
+      ]
+    },
+    {
+      "id": "letter-o",
+      "en": "O",
+      "pt": "a letra O",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "O"
+        }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Toque no"
+        },
+        {
+          "lang": "en-US",
+          "text": "O"
+        }
+      ]
+    },
+    {
+      "id": "letter-p",
+      "en": "P",
+      "pt": "a letra P",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "P"
+        }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Toque no"
+        },
+        {
+          "lang": "en-US",
+          "text": "P"
+        }
+      ]
+    },
+    {
+      "id": "letter-q",
+      "en": "Q",
+      "pt": "a letra Q",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "Q"
+        }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Toque no"
+        },
+        {
+          "lang": "en-US",
+          "text": "Q"
+        }
+      ]
+    },
+    {
+      "id": "letter-r",
+      "en": "R",
+      "pt": "a letra R",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "R"
+        }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Toque no"
+        },
+        {
+          "lang": "en-US",
+          "text": "R"
+        }
+      ]
+    },
+    {
+      "id": "letter-s",
+      "en": "S",
+      "pt": "a letra S",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "S"
+        }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Toque no"
+        },
+        {
+          "lang": "en-US",
+          "text": "S"
+        }
+      ]
+    },
+    {
+      "id": "letter-t",
+      "en": "T",
+      "pt": "a letra T",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "T"
+        }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Toque no"
+        },
+        {
+          "lang": "en-US",
+          "text": "T"
+        }
+      ]
+    },
+    {
+      "id": "letter-u",
+      "en": "U",
+      "pt": "a letra U",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "U"
+        }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Toque no"
+        },
+        {
+          "lang": "en-US",
+          "text": "U"
+        }
+      ]
+    },
+    {
+      "id": "letter-v",
+      "en": "V",
+      "pt": "a letra V",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "V"
+        }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Toque no"
+        },
+        {
+          "lang": "en-US",
+          "text": "V"
+        }
+      ]
+    },
+    {
+      "id": "letter-w",
+      "en": "W",
+      "pt": "a letra W",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "W"
+        }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Toque no"
+        },
+        {
+          "lang": "en-US",
+          "text": "W"
+        }
+      ]
+    },
+    {
+      "id": "letter-x",
+      "en": "X",
+      "pt": "a letra X",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "X"
+        }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Toque no"
+        },
+        {
+          "lang": "en-US",
+          "text": "X"
+        }
+      ]
+    },
+    {
+      "id": "letter-y",
+      "en": "Y",
+      "pt": "a letra Y",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "Y"
+        }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Toque no"
+        },
+        {
+          "lang": "en-US",
+          "text": "Y"
+        }
+      ]
+    },
+    {
+      "id": "letter-z",
+      "en": "Z",
+      "pt": "a letra Z",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "Z"
+        }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Toque no"
+        },
+        {
+          "lang": "en-US",
+          "text": "Z"
+        }
+      ]
+    },
+    {
+      "id": "nest",
+      "en": "nest",
+      "pt": "o ninho",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "nest!"
+        }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Qual é o"
+        },
+        {
+          "lang": "en-US",
+          "text": "nest?"
+        },
+        {
+          "lang": "pt-BR",
+          "text": "Toque nele!"
+        }
+      ]
+    },
+    {
+      "id": "orange",
+      "en": "orange",
+      "pt": "a laranja",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "orange!"
+        }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Qual é a"
+        },
+        {
+          "lang": "en-US",
+          "text": "orange?"
+        },
+        {
+          "lang": "pt-BR",
+          "text": "Toque nela!"
+        }
+      ]
+    },
+    {
+      "id": "pig",
+      "en": "pig",
+      "pt": "o porco",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "pig!"
+        }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Qual é o"
+        },
+        {
+          "lang": "en-US",
+          "text": "pig?"
+        },
+        {
+          "lang": "pt-BR",
+          "text": "Toque nele!"
+        }
+      ]
+    },
+    {
+      "id": "queen",
+      "en": "queen",
+      "pt": "a rainha",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "queen!"
+        }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Qual é a"
+        },
+        {
+          "lang": "en-US",
+          "text": "queen?"
+        },
+        {
+          "lang": "pt-BR",
+          "text": "Toque nela!"
+        }
+      ]
+    },
+    {
+      "id": "rain",
+      "en": "rain",
+      "pt": "a chuva",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "rain!"
+        }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Qual é a"
+        },
+        {
+          "lang": "en-US",
+          "text": "rain?"
+        },
+        {
+          "lang": "pt-BR",
+          "text": "Toque nela!"
+        }
+      ]
+    },
+    {
+      "id": "sun",
+      "en": "sun",
+      "pt": "o sol",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "sun!"
+        }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Qual é o"
+        },
+        {
+          "lang": "en-US",
+          "text": "sun?"
+        },
+        {
+          "lang": "pt-BR",
+          "text": "Toque nele!"
+        }
+      ]
+    },
+    {
+      "id": "tree",
+      "en": "tree",
+      "pt": "a árvore",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "tree!"
+        }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Qual é a"
+        },
+        {
+          "lang": "en-US",
+          "text": "tree?"
+        },
+        {
+          "lang": "pt-BR",
+          "text": "Toque nela!"
+        }
+      ]
+    },
+    {
+      "id": "umbrella",
+      "en": "umbrella",
+      "pt": "o guarda-chuva",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "umbrella!"
+        }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Qual é o"
+        },
+        {
+          "lang": "en-US",
+          "text": "umbrella?"
+        },
+        {
+          "lang": "pt-BR",
+          "text": "Toque nele!"
+        }
+      ]
+    },
+    {
+      "id": "van",
+      "en": "van",
+      "pt": "a van",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "van!"
+        }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Qual é a"
+        },
+        {
+          "lang": "en-US",
+          "text": "van?"
+        },
+        {
+          "lang": "pt-BR",
+          "text": "Toque nela!"
+        }
+      ]
+    },
+    {
+      "id": "web",
+      "en": "web",
+      "pt": "a teia",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "web!"
+        }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Qual é a"
+        },
+        {
+          "lang": "en-US",
+          "text": "web?"
+        },
+        {
+          "lang": "pt-BR",
+          "text": "Toque nela!"
+        }
+      ]
+    },
+    {
+      "id": "box",
+      "en": "box",
+      "pt": "a caixa",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "box!"
+        }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Qual é a"
+        },
+        {
+          "lang": "en-US",
+          "text": "box?"
+        },
+        {
+          "lang": "pt-BR",
+          "text": "Toque nela!"
+        }
+      ]
+    },
+    {
+      "id": "yoyo",
+      "en": "yoyo",
+      "pt": "o ioiô",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "yoyo!"
+        }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Qual é o"
+        },
+        {
+          "lang": "en-US",
+          "text": "yoyo?"
+        },
+        {
+          "lang": "pt-BR",
+          "text": "Toque nele!"
+        }
+      ]
+    },
+    {
+      "id": "zebra",
+      "en": "zebra",
+      "pt": "a zebra",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "zebra!"
+        }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Qual é a"
+        },
+        {
+          "lang": "en-US",
+          "text": "zebra?"
+        },
+        {
+          "lang": "pt-BR",
+          "text": "Toque nela!"
+        }
+      ]
+    }
+  ],
+  "stops": [
+    {
+      "kind": "song",
+      "id": "letras-2/song",
+      "title": "Música",
+      "opening": [
+        {
+          "lang": "pt-BR",
+          "text": "Vamos cantar o fim do alfabeto em inglês! Escute e cante comigo!"
+        }
+      ],
+      "bpm": 100,
+      "introBars": 1,
+      "lyrics": [
+        {
+          "bar": 1,
+          "say": [
+            {
+              "lang": "en-US",
+              "text": "N, O, P, Q, R, S, T!"
+            }
+          ]
+        },
+        {
+          "bar": 3,
+          "say": [
+            {
+              "lang": "en-US",
+              "text": "U, V, W, X, Y, Z!"
+            }
+          ]
+        },
+        {
+          "bar": 5,
+          "say": [
+            {
+              "lang": "en-US",
+              "text": "S is for sun!"
+            }
+          ],
+          "wordId": "sun"
+        },
+        {
+          "bar": 7,
+          "say": [
+            {
+              "lang": "en-US",
+              "text": "T is for tree!"
+            }
+          ],
+          "wordId": "tree"
+        },
+        {
+          "bar": 9,
+          "say": [
+            {
+              "lang": "en-US",
+              "text": "V is for van!"
+            }
+          ],
+          "wordId": "van"
+        },
+        {
+          "bar": 11,
+          "say": [
+            {
+              "lang": "en-US",
+              "text": "Z is for zebra!"
+            }
+          ],
+          "wordId": "zebra"
+        },
+        {
+          "bar": 13,
+          "say": [
+            {
+              "lang": "en-US",
+              "text": "Now I know my N to Z!"
+            }
+          ]
+        }
+      ],
+      "exercises": [
+        {
+          "kind": "listenTap",
+          "prompt": [
+            {
+              "lang": "pt-BR",
+              "text": "Qual é o"
+            },
+            {
+              "lang": "en-US",
+              "text": "sun?"
+            },
+            {
+              "lang": "pt-BR",
+              "text": "Toque nele!"
+            }
+          ],
+          "optionIds": [
+            "tree",
+            "sun"
+          ],
+          "answerId": "sun"
+        },
+        {
+          "kind": "listenTap",
+          "prompt": [
+            {
+              "lang": "pt-BR",
+              "text": "Qual é a"
+            },
+            {
+              "lang": "en-US",
+              "text": "tree?"
+            },
+            {
+              "lang": "pt-BR",
+              "text": "Toque nela!"
+            }
+          ],
+          "optionIds": [
+            "tree",
+            "yoyo"
+          ],
+          "answerId": "tree"
+        },
+        {
+          "kind": "listenTap",
+          "prompt": [
+            {
+              "lang": "pt-BR",
+              "text": "Qual é a"
+            },
+            {
+              "lang": "en-US",
+              "text": "van?"
+            },
+            {
+              "lang": "pt-BR",
+              "text": "Toque nela!"
+            }
+          ],
+          "optionIds": [
+            "van",
+            "web"
+          ],
+          "answerId": "van"
+        }
+      ],
+      "closing": [
+        {
+          "lang": "en-US",
+          "text": "Great job!"
+        },
+        {
+          "lang": "pt-BR",
+          "text": "Você cantou o alfabeto até o fim!"
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "letras-2/lesson-1",
+      "title": "Lição 1",
+      "opening": [
+        {
+          "lang": "pt-BR",
+          "text": "Oi! Hoje nós vamos aprender quatro letras novas em inglês!"
+        }
+      ],
+      "wordIds": [
+        "letter-n",
+        "letter-o",
+        "letter-p",
+        "letter-q"
+      ],
+      "exercises": [
+        {
+          "kind": "intro",
+          "wordId": "letter-n",
+          "say": [
+            {
+              "lang": "pt-BR",
+              "text": "Esta é a letra"
+            },
+            {
+              "lang": "en-US",
+              "text": "N. N is for nest."
+            }
+          ]
+        },
+        {
+          "kind": "adaptive",
+          "levels": [
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque no"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "N"
+                }
+              ],
+              "optionIds": [
+                "letter-t",
+                "letter-n"
+              ],
+              "answerId": "letter-n"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque no"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "N"
+                }
+              ],
+              "optionIds": [
+                "letter-n",
+                "letter-u",
+                "letter-t"
+              ],
+              "answerId": "letter-n"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque no"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "N"
+                }
+              ],
+              "optionIds": [
+                "letter-t",
+                "letter-u",
+                "letter-x",
+                "letter-n"
+              ],
+              "answerId": "letter-n"
+            }
+          ]
+        },
+        {
+          "kind": "intro",
+          "wordId": "letter-o",
+          "say": [
+            {
+              "lang": "pt-BR",
+              "text": "Esta é a letra"
+            },
+            {
+              "lang": "en-US",
+              "text": "O. O is for orange."
+            }
+          ]
+        },
+        {
+          "kind": "adaptive",
+          "levels": [
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque no"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "O"
+                }
+              ],
+              "optionIds": [
+                "letter-s",
+                "letter-o"
+              ],
+              "answerId": "letter-o"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque no"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "O"
+                }
+              ],
+              "optionIds": [
+                "letter-q",
+                "letter-o",
+                "letter-s"
+              ],
+              "answerId": "letter-o"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque no"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "O"
+                }
+              ],
+              "optionIds": [
+                "letter-o",
+                "letter-y",
+                "letter-s",
+                "letter-q"
+              ],
+              "answerId": "letter-o"
+            }
+          ]
+        },
+        {
+          "kind": "intro",
+          "wordId": "letter-p",
+          "say": [
+            {
+              "lang": "pt-BR",
+              "text": "Esta é a letra"
+            },
+            {
+              "lang": "en-US",
+              "text": "P. P is for pig."
+            }
+          ]
+        },
+        {
+          "kind": "adaptive",
+          "levels": [
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque no"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "P"
+                }
+              ],
+              "optionIds": [
+                "letter-p",
+                "letter-v"
+              ],
+              "answerId": "letter-p"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque no"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "P"
+                }
+              ],
+              "optionIds": [
+                "letter-q",
+                "letter-p",
+                "letter-v"
+              ],
+              "answerId": "letter-p"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque no"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "P"
+                }
+              ],
+              "optionIds": [
+                "letter-y",
+                "letter-q",
+                "letter-v",
+                "letter-p"
+              ],
+              "answerId": "letter-p"
+            }
+          ]
+        },
+        {
+          "kind": "intro",
+          "wordId": "letter-q",
+          "say": [
+            {
+              "lang": "pt-BR",
+              "text": "Esta é a letra"
+            },
+            {
+              "lang": "en-US",
+              "text": "Q. Q is for queen."
+            }
+          ]
+        },
+        {
+          "kind": "adaptive",
+          "levels": [
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque no"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "Q"
+                }
+              ],
+              "optionIds": [
+                "letter-y",
+                "letter-q"
+              ],
+              "answerId": "letter-q"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque no"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "Q"
+                }
+              ],
+              "optionIds": [
+                "letter-q",
+                "letter-o",
+                "letter-y"
+              ],
+              "answerId": "letter-q"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque no"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "Q"
+                }
+              ],
+              "optionIds": [
+                "letter-p",
+                "letter-y",
+                "letter-q",
+                "letter-o"
+              ],
+              "answerId": "letter-q"
+            }
+          ]
+        },
+        {
+          "kind": "adaptive",
+          "levels": [
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Qual começa com"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "Q?"
+                }
+              ],
+              "optionIds": [
+                "queen",
+                "zebra"
+              ],
+              "answerId": "queen"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Qual começa com"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "Q?"
+                }
+              ],
+              "optionIds": [
+                "queen",
+                "zebra",
+                "pig"
+              ],
+              "answerId": "queen"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Qual começa com"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "Q?"
+                }
+              ],
+              "optionIds": [
+                "zebra",
+                "orange",
+                "queen",
+                "pig"
+              ],
+              "answerId": "queen"
+            }
+          ]
+        },
+        {
+          "kind": "matchPairs",
+          "prompt": [
+            {
+              "lang": "pt-BR",
+              "text": "Ligue cada figura à palavra!"
+            }
+          ],
+          "wordIds": [
+            "nest",
+            "orange",
+            "pig",
+            "queen"
+          ]
+        },
+        {
+          "kind": "trueFalse",
+          "wordId": "nest",
+          "say": [
+            {
+              "lang": "en-US",
+              "text": "nest!"
+            },
+            {
+              "lang": "pt-BR",
+              "text": "Começa com"
+            },
+            {
+              "lang": "en-US",
+              "text": "N?"
+            },
+            {
+              "lang": "pt-BR",
+              "text": "Certo ou errado?"
+            }
+          ],
+          "isTrue": true
+        },
+        {
+          "kind": "tapRepeat",
+          "prompt": [
+            {
+              "lang": "pt-BR",
+              "text": "Toque em cada letra e repita comigo!"
+            }
+          ],
+          "items": [
+            {
+              "wordId": "letter-n",
+              "say": [
+                {
+                  "lang": "en-US",
+                  "text": "N is for nest!"
+                }
+              ]
+            },
+            {
+              "wordId": "letter-o",
+              "say": [
+                {
+                  "lang": "en-US",
+                  "text": "O is for orange!"
+                }
+              ]
+            },
+            {
+              "wordId": "letter-p",
+              "say": [
+                {
+                  "lang": "en-US",
+                  "text": "P is for pig!"
+                }
+              ]
+            },
+            {
+              "wordId": "letter-q",
+              "say": [
+                {
+                  "lang": "en-US",
+                  "text": "Q is for queen!"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "closing": [
+        {
+          "lang": "en-US",
+          "text": "Great job!"
+        },
+        {
+          "lang": "pt-BR",
+          "text": "Hoje você aprendeu:"
+        },
+        {
+          "lang": "en-US",
+          "text": "N, O, P, Q!"
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "letras-2/lesson-2",
+      "title": "Lição 2",
+      "opening": [
+        {
+          "lang": "pt-BR",
+          "text": "Oi! Hoje tem mais quatro letras em inglês!"
+        }
+      ],
+      "wordIds": [
+        "letter-r",
+        "letter-s",
+        "letter-t",
+        "letter-u"
+      ],
+      "exercises": [
+        {
+          "kind": "intro",
+          "wordId": "letter-r",
+          "say": [
+            {
+              "lang": "pt-BR",
+              "text": "Esta é a letra"
+            },
+            {
+              "lang": "en-US",
+              "text": "R. R is for rain."
+            }
+          ]
+        },
+        {
+          "kind": "adaptive",
+          "levels": [
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque no"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "R"
+                }
+              ],
+              "optionIds": [
+                "letter-r",
+                "letter-v"
+              ],
+              "answerId": "letter-r"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque no"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "R"
+                }
+              ],
+              "optionIds": [
+                "letter-n",
+                "letter-r",
+                "letter-v"
+              ],
+              "answerId": "letter-r"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque no"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "R"
+                }
+              ],
+              "optionIds": [
+                "letter-r",
+                "letter-n",
+                "letter-v",
+                "letter-p"
+              ],
+              "answerId": "letter-r"
+            }
+          ]
+        },
+        {
+          "kind": "intro",
+          "wordId": "letter-s",
+          "say": [
+            {
+              "lang": "pt-BR",
+              "text": "Esta é a letra"
+            },
+            {
+              "lang": "en-US",
+              "text": "S. S is for sun."
+            }
+          ]
+        },
+        {
+          "kind": "adaptive",
+          "levels": [
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque no"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "S"
+                }
+              ],
+              "optionIds": [
+                "letter-v",
+                "letter-s"
+              ],
+              "answerId": "letter-s"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque no"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "S"
+                }
+              ],
+              "optionIds": [
+                "letter-s",
+                "letter-z",
+                "letter-v"
+              ],
+              "answerId": "letter-s"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque no"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "S"
+                }
+              ],
+              "optionIds": [
+                "letter-z",
+                "letter-s",
+                "letter-v",
+                "letter-q"
+              ],
+              "answerId": "letter-s"
+            }
+          ]
+        },
+        {
+          "kind": "intro",
+          "wordId": "letter-t",
+          "say": [
+            {
+              "lang": "pt-BR",
+              "text": "Esta é a letra"
+            },
+            {
+              "lang": "en-US",
+              "text": "T. T is for tree."
+            }
+          ]
+        },
+        {
+          "kind": "adaptive",
+          "levels": [
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque no"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "T"
+                }
+              ],
+              "optionIds": [
+                "letter-v",
+                "letter-t"
+              ],
+              "answerId": "letter-t"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque no"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "T"
+                }
+              ],
+              "optionIds": [
+                "letter-t",
+                "letter-r",
+                "letter-v"
+              ],
+              "answerId": "letter-t"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque no"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "T"
+                }
+              ],
+              "optionIds": [
+                "letter-v",
+                "letter-r",
+                "letter-t",
+                "letter-x"
+              ],
+              "answerId": "letter-t"
+            }
+          ]
+        },
+        {
+          "kind": "intro",
+          "wordId": "letter-u",
+          "say": [
+            {
+              "lang": "pt-BR",
+              "text": "Esta é a letra"
+            },
+            {
+              "lang": "en-US",
+              "text": "U. U is for umbrella."
+            }
+          ]
+        },
+        {
+          "kind": "adaptive",
+          "levels": [
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque no"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "U"
+                }
+              ],
+              "optionIds": [
+                "letter-u",
+                "letter-s"
+              ],
+              "answerId": "letter-u"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque no"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "U"
+                }
+              ],
+              "optionIds": [
+                "letter-u",
+                "letter-n",
+                "letter-s"
+              ],
+              "answerId": "letter-u"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque no"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "U"
+                }
+              ],
+              "optionIds": [
+                "letter-u",
+                "letter-v",
+                "letter-n",
+                "letter-s"
+              ],
+              "answerId": "letter-u"
+            }
+          ]
+        },
+        {
+          "kind": "adaptive",
+          "levels": [
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Qual começa com"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "U?"
+                }
+              ],
+              "optionIds": [
+                "umbrella",
+                "sun"
+              ],
+              "answerId": "umbrella"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Qual começa com"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "U?"
+                }
+              ],
+              "optionIds": [
+                "van",
+                "umbrella",
+                "sun"
+              ],
+              "answerId": "umbrella"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Qual começa com"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "U?"
+                }
+              ],
+              "optionIds": [
+                "nest",
+                "van",
+                "umbrella",
+                "sun"
+              ],
+              "answerId": "umbrella"
+            }
+          ]
+        },
+        {
+          "kind": "matchPairs",
+          "prompt": [
+            {
+              "lang": "pt-BR",
+              "text": "Ligue cada figura à palavra!"
+            }
+          ],
+          "wordIds": [
+            "rain",
+            "sun",
+            "tree",
+            "umbrella"
+          ]
+        },
+        {
+          "kind": "trueFalse",
+          "wordId": "rain",
+          "say": [
+            {
+              "lang": "en-US",
+              "text": "rain!"
+            },
+            {
+              "lang": "pt-BR",
+              "text": "Começa com"
+            },
+            {
+              "lang": "en-US",
+              "text": "R?"
+            },
+            {
+              "lang": "pt-BR",
+              "text": "Certo ou errado?"
+            }
+          ],
+          "isTrue": true
+        },
+        {
+          "kind": "tapRepeat",
+          "prompt": [
+            {
+              "lang": "pt-BR",
+              "text": "Toque em cada letra e repita comigo!"
+            }
+          ],
+          "items": [
+            {
+              "wordId": "letter-r",
+              "say": [
+                {
+                  "lang": "en-US",
+                  "text": "R is for rain!"
+                }
+              ]
+            },
+            {
+              "wordId": "letter-s",
+              "say": [
+                {
+                  "lang": "en-US",
+                  "text": "S is for sun!"
+                }
+              ]
+            },
+            {
+              "wordId": "letter-t",
+              "say": [
+                {
+                  "lang": "en-US",
+                  "text": "T is for tree!"
+                }
+              ]
+            },
+            {
+              "wordId": "letter-u",
+              "say": [
+                {
+                  "lang": "en-US",
+                  "text": "U is for umbrella!"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "closing": [
+        {
+          "lang": "en-US",
+          "text": "Awesome!"
+        },
+        {
+          "lang": "pt-BR",
+          "text": "Hoje você aprendeu:"
+        },
+        {
+          "lang": "en-US",
+          "text": "R, S, T, U!"
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "letras-2/lesson-3",
+      "title": "Lição 3",
+      "opening": [
+        {
+          "lang": "pt-BR",
+          "text": "Oi! Hoje vamos chegar ao fim do alfabeto!"
+        }
+      ],
+      "wordIds": [
+        "letter-v",
+        "letter-w",
+        "letter-x",
+        "letter-y",
+        "letter-z"
+      ],
+      "exercises": [
+        {
+          "kind": "intro",
+          "wordId": "letter-v",
+          "say": [
+            {
+              "lang": "pt-BR",
+              "text": "Esta é a letra"
+            },
+            {
+              "lang": "en-US",
+              "text": "V. V is for van."
+            }
+          ]
+        },
+        {
+          "kind": "adaptive",
+          "levels": [
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque no"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "V"
+                }
+              ],
+              "optionIds": [
+                "letter-n",
+                "letter-v"
+              ],
+              "answerId": "letter-v"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque no"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "V"
+                }
+              ],
+              "optionIds": [
+                "letter-n",
+                "letter-u",
+                "letter-v"
+              ],
+              "answerId": "letter-v"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque no"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "V"
+                }
+              ],
+              "optionIds": [
+                "letter-w",
+                "letter-v",
+                "letter-u",
+                "letter-n"
+              ],
+              "answerId": "letter-v"
+            }
+          ]
+        },
+        {
+          "kind": "intro",
+          "wordId": "letter-w",
+          "say": [
+            {
+              "lang": "pt-BR",
+              "text": "Esta é a letra"
+            },
+            {
+              "lang": "en-US",
+              "text": "W. W is for web."
+            }
+          ]
+        },
+        {
+          "kind": "adaptive",
+          "levels": [
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque no"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "W"
+                }
+              ],
+              "optionIds": [
+                "letter-x",
+                "letter-w"
+              ],
+              "answerId": "letter-w"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque no"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "W"
+                }
+              ],
+              "optionIds": [
+                "letter-x",
+                "letter-w",
+                "letter-v"
+              ],
+              "answerId": "letter-w"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque no"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "W"
+                }
+              ],
+              "optionIds": [
+                "letter-n",
+                "letter-w",
+                "letter-x",
+                "letter-v"
+              ],
+              "answerId": "letter-w"
+            }
+          ]
+        },
+        {
+          "kind": "intro",
+          "wordId": "letter-x",
+          "say": [
+            {
+              "lang": "pt-BR",
+              "text": "Esta é a letra"
+            },
+            {
+              "lang": "en-US",
+              "text": "X. Box ends with X."
+            }
+          ]
+        },
+        {
+          "kind": "adaptive",
+          "levels": [
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque no"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "X"
+                }
+              ],
+              "optionIds": [
+                "letter-z",
+                "letter-x"
+              ],
+              "answerId": "letter-x"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque no"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "X"
+                }
+              ],
+              "optionIds": [
+                "letter-z",
+                "letter-s",
+                "letter-x"
+              ],
+              "answerId": "letter-x"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque no"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "X"
+                }
+              ],
+              "optionIds": [
+                "letter-n",
+                "letter-z",
+                "letter-s",
+                "letter-x"
+              ],
+              "answerId": "letter-x"
+            }
+          ]
+        },
+        {
+          "kind": "intro",
+          "wordId": "letter-y",
+          "say": [
+            {
+              "lang": "pt-BR",
+              "text": "Esta é a letra"
+            },
+            {
+              "lang": "en-US",
+              "text": "Y. Y is for yoyo."
+            }
+          ]
+        },
+        {
+          "kind": "adaptive",
+          "levels": [
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque no"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "Y"
+                }
+              ],
+              "optionIds": [
+                "letter-y",
+                "letter-x"
+              ],
+              "answerId": "letter-y"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque no"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "Y"
+                }
+              ],
+              "optionIds": [
+                "letter-x",
+                "letter-v",
+                "letter-y"
+              ],
+              "answerId": "letter-y"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque no"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "Y"
+                }
+              ],
+              "optionIds": [
+                "letter-v",
+                "letter-x",
+                "letter-z",
+                "letter-y"
+              ],
+              "answerId": "letter-y"
+            }
+          ]
+        },
+        {
+          "kind": "intro",
+          "wordId": "letter-z",
+          "say": [
+            {
+              "lang": "pt-BR",
+              "text": "Esta é a letra"
+            },
+            {
+              "lang": "en-US",
+              "text": "Z. Z is for zebra."
+            }
+          ]
+        },
+        {
+          "kind": "adaptive",
+          "levels": [
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque no"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "Z"
+                }
+              ],
+              "optionIds": [
+                "letter-n",
+                "letter-z"
+              ],
+              "answerId": "letter-z"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque no"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "Z"
+                }
+              ],
+              "optionIds": [
+                "letter-z",
+                "letter-x",
+                "letter-n"
+              ],
+              "answerId": "letter-z"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque no"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "Z"
+                }
+              ],
+              "optionIds": [
+                "letter-x",
+                "letter-s",
+                "letter-z",
+                "letter-n"
+              ],
+              "answerId": "letter-z"
+            }
+          ]
+        },
+        {
+          "kind": "adaptive",
+          "levels": [
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Qual começa com"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "Z?"
+                }
+              ],
+              "optionIds": [
+                "zebra",
+                "tree"
+              ],
+              "answerId": "zebra"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Qual começa com"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "Z?"
+                }
+              ],
+              "optionIds": [
+                "zebra",
+                "tree",
+                "sun"
+              ],
+              "answerId": "zebra"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Qual começa com"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "Z?"
+                }
+              ],
+              "optionIds": [
+                "tree",
+                "nest",
+                "zebra",
+                "sun"
+              ],
+              "answerId": "zebra"
+            }
+          ]
+        },
+        {
+          "kind": "matchPairs",
+          "prompt": [
+            {
+              "lang": "pt-BR",
+              "text": "Ligue cada figura à palavra!"
+            }
+          ],
+          "wordIds": [
+            "van",
+            "web",
+            "box",
+            "yoyo"
+          ]
+        }
+      ],
+      "closing": [
+        {
+          "lang": "en-US",
+          "text": "Well done!"
+        },
+        {
+          "lang": "pt-BR",
+          "text": "Hoje você aprendeu:"
+        },
+        {
+          "lang": "en-US",
+          "text": "V, W, X, Y, Z!"
+        }
+      ]
+    },
+    {
+      "kind": "story",
+      "id": "letras-2/story",
+      "title": "Sol e chuva",
+      "opening": [
+        {
+          "lang": "pt-BR",
+          "text": "Hora da história! Primeiro, vamos lembrar as figuras."
+        }
+      ],
+      "warmup": {
+        "kind": "matchPairs",
+        "prompt": [
+          {
+            "lang": "pt-BR",
+            "text": "Ligue cada figura à palavra!"
+          }
+        ],
+        "wordIds": [
+          "sun",
+          "rain",
+          "umbrella"
+        ]
+      },
+      "pages": [
+        {
+          "scene": "tree-room",
+          "say": [
+            {
+              "lang": "pt-BR",
+              "text": "De manhã, o sol brilhava lá fora."
+            },
+            {
+              "lang": "en-US",
+              "text": "The sun! S is for sun!"
+            }
+          ],
+          "hotspots": [
+            {
+              "wordId": "sun",
+              "x": 0.7,
+              "y": 0.3
+            }
+          ]
+        },
+        {
+          "scene": "tree-room",
+          "say": [
+            {
+              "lang": "pt-BR",
+              "text": "De repente, começou a chover!"
+            },
+            {
+              "lang": "en-US",
+              "text": "Rain! R is for rain!"
+            }
+          ],
+          "hotspots": [
+            {
+              "wordId": "rain",
+              "x": 0.68,
+              "y": 0.32
+            }
+          ]
+        },
+        {
+          "scene": "tree-room",
+          "say": [
+            {
+              "lang": "pt-BR",
+              "text": "O gatinho abriu o guarda-chuva e ficou sequinho."
+            },
+            {
+              "lang": "en-US",
+              "text": "An umbrella! U is for umbrella!"
+            }
+          ],
+          "hotspots": [
+            {
+              "wordId": "rain",
+              "x": 0.8,
+              "y": 0.24
+            },
+            {
+              "wordId": "umbrella",
+              "x": 0.6,
+              "y": 0.58
+            }
+          ]
+        }
+      ],
+      "question": {
+        "kind": "listenTap",
+        "prompt": [
+          {
+            "lang": "pt-BR",
+            "text": "O que o gatinho abriu? Toque!"
+          }
+        ],
+        "optionIds": [
+          "umbrella",
+          "sun"
+        ],
+        "answerId": "umbrella"
+      },
+      "closing": [
+        {
+          "lang": "en-US",
+          "text": "Well done!"
+        },
+        {
+          "lang": "pt-BR",
+          "text": "Você ouviu uma história em inglês!"
+        }
+      ]
+    },
+    {
+      "kind": "challenge",
+      "id": "letras-2/challenge",
+      "title": "Desafio",
+      "opening": [
+        {
+          "lang": "pt-BR",
+          "text": "É hora do desafio! Mostre tudo o que você aprendeu!"
+        }
+      ],
+      "wordIds": [
+        "letter-s",
+        "letter-z",
+        "letter-w",
+        "letter-v",
+        "letter-r"
+      ],
+      "exercises": [
+        {
+          "kind": "adaptive",
+          "levels": [
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque no"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "P"
+                }
+              ],
+              "optionIds": [
+                "letter-x",
+                "letter-p"
+              ],
+              "answerId": "letter-p"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque no"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "P"
+                }
+              ],
+              "optionIds": [
+                "letter-x",
+                "letter-q",
+                "letter-p"
+              ],
+              "answerId": "letter-p"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque no"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "P"
+                }
+              ],
+              "optionIds": [
+                "letter-q",
+                "letter-n",
+                "letter-x",
+                "letter-p"
+              ],
+              "answerId": "letter-p"
+            }
+          ]
+        },
+        {
+          "kind": "adaptive",
+          "levels": [
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Qual começa com"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "U?"
+                }
+              ],
+              "optionIds": [
+                "queen",
+                "umbrella"
+              ],
+              "answerId": "umbrella"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Qual começa com"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "U?"
+                }
+              ],
+              "optionIds": [
+                "nest",
+                "queen",
+                "umbrella"
+              ],
+              "answerId": "umbrella"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Qual começa com"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "U?"
+                }
+              ],
+              "optionIds": [
+                "umbrella",
+                "nest",
+                "van",
+                "queen"
+              ],
+              "answerId": "umbrella"
+            }
+          ]
+        },
+        {
+          "kind": "trueFalse",
+          "wordId": "yoyo",
+          "say": [
+            {
+              "lang": "en-US",
+              "text": "yoyo!"
+            },
+            {
+              "lang": "pt-BR",
+              "text": "Começa com"
+            },
+            {
+              "lang": "en-US",
+              "text": "Y?"
+            },
+            {
+              "lang": "pt-BR",
+              "text": "Certo ou errado?"
+            }
+          ],
+          "isTrue": true
+        },
+        {
+          "kind": "adaptive",
+          "levels": [
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque no"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "Y"
+                }
+              ],
+              "optionIds": [
+                "letter-z",
+                "letter-y"
+              ],
+              "answerId": "letter-y"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque no"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "Y"
+                }
+              ],
+              "optionIds": [
+                "letter-y",
+                "letter-z",
+                "letter-v"
+              ],
+              "answerId": "letter-y"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque no"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "Y"
+                }
+              ],
+              "optionIds": [
+                "letter-t",
+                "letter-v",
+                "letter-y",
+                "letter-z"
+              ],
+              "answerId": "letter-y"
+            }
+          ]
+        },
+        {
+          "kind": "matchPairs",
+          "prompt": [
+            {
+              "lang": "pt-BR",
+              "text": "Ligue cada figura à palavra!"
+            }
+          ],
+          "wordIds": [
+            "nest",
+            "orange",
+            "queen",
+            "tree"
+          ]
+        },
+        {
+          "kind": "adaptive",
+          "levels": [
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Qual começa com"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "O?"
+                }
+              ],
+              "optionIds": [
+                "orange",
+                "yoyo"
+              ],
+              "answerId": "orange"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Qual começa com"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "O?"
+                }
+              ],
+              "optionIds": [
+                "yoyo",
+                "queen",
+                "orange"
+              ],
+              "answerId": "orange"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Qual começa com"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "O?"
+                }
+              ],
+              "optionIds": [
+                "tree",
+                "orange",
+                "queen",
+                "yoyo"
+              ],
+              "answerId": "orange"
+            }
+          ]
+        },
+        {
+          "kind": "trueFalse",
+          "wordId": "tree",
+          "say": [
+            {
+              "lang": "en-US",
+              "text": "tree!"
+            },
+            {
+              "lang": "pt-BR",
+              "text": "Começa com"
+            },
+            {
+              "lang": "en-US",
+              "text": "L?"
+            },
+            {
+              "lang": "pt-BR",
+              "text": "Certo ou errado?"
+            }
+          ],
+          "isTrue": false
+        },
+        {
+          "kind": "adaptive",
+          "levels": [
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque no"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "T"
+                }
+              ],
+              "optionIds": [
+                "letter-u",
+                "letter-t"
+              ],
+              "answerId": "letter-t"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque no"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "T"
+                }
+              ],
+              "optionIds": [
+                "letter-s",
+                "letter-t",
+                "letter-u"
+              ],
+              "answerId": "letter-t"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque no"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "T"
+                }
+              ],
+              "optionIds": [
+                "letter-s",
+                "letter-q",
+                "letter-t",
+                "letter-u"
+              ],
+              "answerId": "letter-t"
+            }
+          ]
+        },
+        {
+          "kind": "tapRepeat",
+          "prompt": [
+            {
+              "lang": "pt-BR",
+              "text": "Toque em cada letra e repita comigo!"
+            }
+          ],
+          "items": [
+            {
+              "wordId": "letter-s",
+              "say": [
+                {
+                  "lang": "en-US",
+                  "text": "S is for sun!"
+                }
+              ]
+            },
+            {
+              "wordId": "letter-z",
+              "say": [
+                {
+                  "lang": "en-US",
+                  "text": "Z is for zebra!"
+                }
+              ]
+            },
+            {
+              "wordId": "letter-w",
+              "say": [
+                {
+                  "lang": "en-US",
+                  "text": "W is for web!"
+                }
+              ]
+            },
+            {
+              "wordId": "letter-v",
+              "say": [
+                {
+                  "lang": "en-US",
+                  "text": "V is for van!"
+                }
+              ]
+            },
+            {
+              "wordId": "letter-r",
+              "say": [
+                {
+                  "lang": "en-US",
+                  "text": "R is for rain!"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "closing": [
+        {
+          "lang": "en-US",
+          "text": "Great job!"
+        },
+        {
+          "lang": "pt-BR",
+          "text": "Você terminou o galho dois!"
+        }
+      ],
+      "sticker": {
+        "id": "sticker-letras-sun",
+        "art": "sun",
+        "name": [
+          {
+            "lang": "en-US",
+            "text": "A sun sticker!"
+          }
+        ]
+      }
+    }
+  ]
+}

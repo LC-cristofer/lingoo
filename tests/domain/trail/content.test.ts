@@ -40,11 +40,17 @@ describe("trail content", () => {
     expect(found.unit.id).toBe("forest-animals");
   });
 
-  it("path has 7 units, only forest-animals with content", () => {
+  it("path has the 7 farol units and the 4 letras units, only forest-animals with content", () => {
     const path = getPath();
-    expect(path.map((p) => p.unitId)).toEqual(["forest-animals", "colors", "numbers", "hello", "family", "home", "food"]);
+    const farol = path.filter((p) => p.area === "farol");
+    expect(farol.map((p) => p.unitId)).toEqual(["forest-animals", "colors", "numbers", "hello", "family", "home", "food"]);
+    expect(path.filter((p) => p.area === "letras").map((p) => p.unitId)).toEqual(["letras-1", "letras-2", "letras-3", "letras-4"]);
     expect(path.filter((p) => p.hasContent).map((p) => p.unitId)).toEqual(["forest-animals"]);
-    expect(path.map((p) => p.world)).toEqual(["floresta", "floresta", "floresta", "vilarejo", "vilarejo", "vilarejo", "vilarejo"]);
+    expect(farol.map((p) => p.world)).toEqual(["floresta", "floresta", "floresta", "vilarejo", "vilarejo", "vilarejo", "vilarejo"]);
+  });
+
+  it("path entries default to the farol of the descoberta island", () => {
+    expect(parsePath([{ unitId: "x", world: "floresta", title: "X", icon: "i", hasContent: false }])[0]).toMatchObject({ island: "descoberta", area: "farol" });
   });
 
   it("lines parse", () => {

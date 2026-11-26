@@ -4,8 +4,9 @@ import { Cat, type CatExpression } from "../Cat";
 import type { ArtId, SceneId } from "@/domain/trail/schema";
 import { ForestBackdrop } from "./ForestBackdrop";
 import { Branch, Cheese, Pond, WEB_VIEW, Web } from "./props";
+import { TreeRoomBackdrop } from "./TreeRoomBackdrop";
 
-// A story page: the soft forest, the gatinho, the scene's props and one tappable animal per
+// A story page: the soft forest (or the inside of the letters tree), the gatinho, the scene's props and one tappable animal per
 // hotspot. Positions are fractions of the scene box (0–1), measured to the centre of each figure.
 // The scene fills its container; give the container a size (the sheet uses 16:10).
 
@@ -21,6 +22,8 @@ const CAT_PLACES: Record<SceneId, CatPlacement> = {
   "forest-pond": { x: 0.13, y: 0.62, expression: "pointing" },
   "forest-web": { x: 0.13, y: 0.64, expression: "pointing" },
   "forest-goodbye": { x: 0.51, y: 0.5, expression: "happy" },
+  // Inside the Árvore das Letras: the gatinho on the left, the figures at their hotspots.
+  "tree-room": { x: 0.24, y: 0.64, expression: "pointing" },
 };
 
 const CAT_WIDTH = "max(88px, 19%)";
@@ -111,7 +114,7 @@ export function StoryScene({
   const cat = CAT_PLACES[scene];
   return (
     <div data-scene={scene} className="art-scene" style={{ position: "relative", width: "100%", height: "100%", overflow: "hidden" }}>
-      <ForestBackdrop variant="story" />
+      {scene === "tree-room" ? <TreeRoomBackdrop /> : <ForestBackdrop variant="story" />}
       <Props scene={scene} hotspots={hotspots} />
       <div aria-hidden="true" className={cat.walking ? "art-scene-cat art-walk" : "art-scene-cat"} style={placed(cat, CAT_WIDTH, depth(cat.y))}>
         <Cat expression={cat.expression} />

@@ -75,6 +75,7 @@ export function StopPlayer({ unit, stop, onExit, record = true }: StopPlayerProp
       exercises={stop.exercises}
       sessionId={stop.id}
       words={unit.words}
+      adaptive={{ unitId: unit.id, record }}
       onExit={() => onExit("quit")}
       onFinished={() => {
         // A lesson ends with the memory round: its new words become cards, plus a few old ones that are due.

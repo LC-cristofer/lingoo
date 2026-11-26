@@ -53,16 +53,19 @@ export function NinhoScreen() {
 
   const slots = useMemo<Slot[]>(
     () =>
-      getPath().map((entry, index) => {
-        const unit = entry.hasContent ? getUnit(entry.unitId) : null;
-        const challenge = unit?.stops.find((s) => s.kind === "challenge");
-        return {
-          unitId: entry.unitId,
-          number: index + 1,
-          title: entry.title,
-          sticker: challenge && challenge.kind === "challenge" && challenge.sticker ? challenge.sticker : null,
-        };
-      }),
+      // The farol's units; the Árvore das Letras gets its own section when it opens.
+      getPath()
+        .filter((entry) => entry.area === "farol")
+        .map((entry, index) => {
+          const unit = entry.hasContent ? getUnit(entry.unitId) : null;
+          const challenge = unit?.stops.find((s) => s.kind === "challenge");
+          return {
+            unitId: entry.unitId,
+            number: index + 1,
+            title: entry.title,
+            sticker: challenge && challenge.kind === "challenge" && challenge.sticker ? challenge.sticker : null,
+          };
+        }),
     [],
   );
   const unit = useMemo(() => {

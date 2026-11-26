@@ -1,0 +1,1254 @@
+{
+  "area": "letras",
+  "items": [
+    {
+      "kind": "letter",
+      "id": "a",
+      "unit": 1,
+      "difficulty": 1,
+      "name": "ay",
+      "words": [
+        "apple"
+      ]
+    },
+    {
+      "kind": "letter",
+      "id": "b",
+      "unit": 1,
+      "difficulty": 3,
+      "name": "bee",
+      "words": [
+        "ball",
+        "bed",
+        "bus",
+        "box"
+      ]
+    },
+    {
+      "kind": "letter",
+      "id": "c",
+      "unit": 1,
+      "difficulty": 2,
+      "name": "see",
+      "words": [
+        "cat",
+        "cup"
+      ]
+    },
+    {
+      "kind": "letter",
+      "id": "d",
+      "unit": 1,
+      "difficulty": 3,
+      "name": "dee",
+      "words": [
+        "dog"
+      ]
+    },
+    {
+      "kind": "letter",
+      "id": "e",
+      "unit": 1,
+      "difficulty": 2,
+      "name": "ee",
+      "words": [
+        "egg"
+      ]
+    },
+    {
+      "kind": "letter",
+      "id": "f",
+      "unit": 1,
+      "difficulty": 2,
+      "name": "ef",
+      "words": [
+        "fish",
+        "fox"
+      ]
+    },
+    {
+      "kind": "letter",
+      "id": "g",
+      "unit": 1,
+      "difficulty": 3,
+      "name": "gee",
+      "words": [
+        "goat"
+      ]
+    },
+    {
+      "kind": "letter",
+      "id": "h",
+      "unit": 1,
+      "difficulty": 2,
+      "name": "aitch",
+      "words": [
+        "hat",
+        "hen"
+      ]
+    },
+    {
+      "kind": "letter",
+      "id": "i",
+      "unit": 1,
+      "difficulty": 2,
+      "name": "eye",
+      "words": [
+        "igloo"
+      ]
+    },
+    {
+      "kind": "letter",
+      "id": "j",
+      "unit": 1,
+      "difficulty": 3,
+      "name": "jay",
+      "words": [
+        "jam"
+      ]
+    },
+    {
+      "kind": "letter",
+      "id": "k",
+      "unit": 1,
+      "difficulty": 2,
+      "name": "kay",
+      "words": [
+        "kite"
+      ]
+    },
+    {
+      "kind": "letter",
+      "id": "l",
+      "unit": 1,
+      "difficulty": 2,
+      "name": "el",
+      "words": [
+        "lion"
+      ]
+    },
+    {
+      "kind": "letter",
+      "id": "m",
+      "unit": 1,
+      "difficulty": 3,
+      "name": "em",
+      "words": [
+        "moon",
+        "map"
+      ]
+    },
+    {
+      "kind": "letter",
+      "id": "n",
+      "unit": 2,
+      "difficulty": 3,
+      "name": "en",
+      "words": [
+        "nest",
+        "net"
+      ]
+    },
+    {
+      "kind": "letter",
+      "id": "o",
+      "unit": 2,
+      "difficulty": 1,
+      "name": "oh",
+      "words": [
+        "orange"
+      ]
+    },
+    {
+      "kind": "letter",
+      "id": "p",
+      "unit": 2,
+      "difficulty": 3,
+      "name": "pee",
+      "words": [
+        "pig"
+      ]
+    },
+    {
+      "kind": "letter",
+      "id": "q",
+      "unit": 2,
+      "difficulty": 3,
+      "name": "cue",
+      "words": [
+        "queen"
+      ]
+    },
+    {
+      "kind": "letter",
+      "id": "r",
+      "unit": 2,
+      "difficulty": 2,
+      "name": "ar",
+      "words": [
+        "rain"
+      ]
+    },
+    {
+      "kind": "letter",
+      "id": "s",
+      "unit": 2,
+      "difficulty": 1,
+      "name": "ess",
+      "words": [
+        "sun"
+      ]
+    },
+    {
+      "kind": "letter",
+      "id": "t",
+      "unit": 2,
+      "difficulty": 1,
+      "name": "tee",
+      "words": [
+        "tree"
+      ]
+    },
+    {
+      "kind": "letter",
+      "id": "u",
+      "unit": 2,
+      "difficulty": 2,
+      "name": "you",
+      "words": [
+        "umbrella"
+      ]
+    },
+    {
+      "kind": "letter",
+      "id": "v",
+      "unit": 2,
+      "difficulty": 2,
+      "name": "vee",
+      "words": [
+        "van"
+      ]
+    },
+    {
+      "kind": "letter",
+      "id": "w",
+      "unit": 2,
+      "difficulty": 3,
+      "name": "double-u",
+      "words": [
+        "web"
+      ]
+    },
+    {
+      "kind": "letter",
+      "id": "x",
+      "unit": 2,
+      "difficulty": 1,
+      "name": "ex",
+      "words": [
+        "box"
+      ]
+    },
+    {
+      "kind": "letter",
+      "id": "y",
+      "unit": 2,
+      "difficulty": 2,
+      "name": "why",
+      "words": [
+        "yoyo"
+      ]
+    },
+    {
+      "kind": "letter",
+      "id": "z",
+      "unit": 2,
+      "difficulty": 1,
+      "name": "zee",
+      "words": [
+        "zebra"
+      ]
+    },
+    {
+      "kind": "word",
+      "id": "apple",
+      "en": "apple",
+      "pt": "maçã",
+      "gender": "f",
+      "art": "apple",
+      "initial": "a",
+      "unit": 1,
+      "difficulty": 2
+    },
+    {
+      "kind": "word",
+      "id": "ball",
+      "en": "ball",
+      "pt": "bola",
+      "gender": "f",
+      "art": "ball",
+      "initial": "b",
+      "unit": 1,
+      "difficulty": 1
+    },
+    {
+      "kind": "word",
+      "id": "cat",
+      "en": "cat",
+      "pt": "gato",
+      "gender": "m",
+      "art": "cat",
+      "initial": "c",
+      "unit": 1,
+      "difficulty": 1
+    },
+    {
+      "kind": "word",
+      "id": "dog",
+      "en": "dog",
+      "pt": "cachorro",
+      "gender": "m",
+      "art": "dog",
+      "initial": "d",
+      "unit": 1,
+      "difficulty": 1
+    },
+    {
+      "kind": "word",
+      "id": "egg",
+      "en": "egg",
+      "pt": "ovo",
+      "gender": "m",
+      "art": "egg",
+      "initial": "e",
+      "unit": 1,
+      "difficulty": 1
+    },
+    {
+      "kind": "word",
+      "id": "fish",
+      "en": "fish",
+      "pt": "peixe",
+      "gender": "m",
+      "art": "fish",
+      "initial": "f",
+      "unit": 1,
+      "difficulty": 1
+    },
+    {
+      "kind": "word",
+      "id": "goat",
+      "en": "goat",
+      "pt": "cabra",
+      "gender": "f",
+      "art": "goat",
+      "initial": "g",
+      "unit": 1,
+      "difficulty": 2
+    },
+    {
+      "kind": "word",
+      "id": "hat",
+      "en": "hat",
+      "pt": "chapéu",
+      "gender": "m",
+      "art": "hat",
+      "initial": "h",
+      "unit": 1,
+      "difficulty": 1
+    },
+    {
+      "kind": "word",
+      "id": "igloo",
+      "en": "igloo",
+      "pt": "iglu",
+      "gender": "m",
+      "art": "igloo",
+      "initial": "i",
+      "unit": 1,
+      "difficulty": 3
+    },
+    {
+      "kind": "word",
+      "id": "jam",
+      "en": "jam",
+      "pt": "geleia",
+      "gender": "f",
+      "art": "jam",
+      "initial": "j",
+      "unit": 1,
+      "difficulty": 2
+    },
+    {
+      "kind": "word",
+      "id": "kite",
+      "en": "kite",
+      "pt": "pipa",
+      "gender": "f",
+      "art": "kite",
+      "initial": "k",
+      "unit": 1,
+      "difficulty": 2
+    },
+    {
+      "kind": "word",
+      "id": "lion",
+      "en": "lion",
+      "pt": "leão",
+      "gender": "m",
+      "art": "lion",
+      "initial": "l",
+      "unit": 1,
+      "difficulty": 2
+    },
+    {
+      "kind": "word",
+      "id": "moon",
+      "en": "moon",
+      "pt": "lua",
+      "gender": "f",
+      "art": "moon",
+      "initial": "m",
+      "unit": 1,
+      "difficulty": 1
+    },
+    {
+      "kind": "word",
+      "id": "nest",
+      "en": "nest",
+      "pt": "ninho",
+      "gender": "m",
+      "art": "nest",
+      "initial": "n",
+      "unit": 2,
+      "difficulty": 2
+    },
+    {
+      "kind": "word",
+      "id": "orange",
+      "en": "orange",
+      "pt": "laranja",
+      "gender": "f",
+      "art": "orange",
+      "initial": "o",
+      "unit": 2,
+      "difficulty": 2
+    },
+    {
+      "kind": "word",
+      "id": "pig",
+      "en": "pig",
+      "pt": "porco",
+      "gender": "m",
+      "art": "pig",
+      "initial": "p",
+      "unit": 2,
+      "difficulty": 1
+    },
+    {
+      "kind": "word",
+      "id": "queen",
+      "en": "queen",
+      "pt": "rainha",
+      "gender": "f",
+      "art": "queen",
+      "initial": "q",
+      "unit": 2,
+      "difficulty": 3
+    },
+    {
+      "kind": "word",
+      "id": "rain",
+      "en": "rain",
+      "pt": "chuva",
+      "gender": "f",
+      "art": "rain",
+      "initial": "r",
+      "unit": 2,
+      "difficulty": 2
+    },
+    {
+      "kind": "word",
+      "id": "sun",
+      "en": "sun",
+      "pt": "sol",
+      "gender": "m",
+      "art": "sun",
+      "initial": "s",
+      "unit": 2,
+      "difficulty": 1
+    },
+    {
+      "kind": "word",
+      "id": "tree",
+      "en": "tree",
+      "pt": "árvore",
+      "gender": "f",
+      "art": "tree",
+      "initial": "t",
+      "unit": 2,
+      "difficulty": 1
+    },
+    {
+      "kind": "word",
+      "id": "umbrella",
+      "en": "umbrella",
+      "pt": "guarda-chuva",
+      "gender": "m",
+      "art": "umbrella",
+      "initial": "u",
+      "unit": 2,
+      "difficulty": 3
+    },
+    {
+      "kind": "word",
+      "id": "van",
+      "en": "van",
+      "pt": "van",
+      "gender": "f",
+      "art": "van",
+      "initial": "v",
+      "unit": 2,
+      "difficulty": 2
+    },
+    {
+      "kind": "word",
+      "id": "web",
+      "en": "web",
+      "pt": "teia",
+      "gender": "f",
+      "art": "web",
+      "initial": "w",
+      "unit": 2,
+      "difficulty": 2
+    },
+    {
+      "kind": "word",
+      "id": "box",
+      "en": "box",
+      "pt": "caixa",
+      "gender": "f",
+      "art": "box",
+      "initial": "b",
+      "unit": 2,
+      "difficulty": 1
+    },
+    {
+      "kind": "word",
+      "id": "yoyo",
+      "en": "yoyo",
+      "pt": "ioiô",
+      "gender": "m",
+      "art": "yoyo",
+      "initial": "y",
+      "unit": 2,
+      "difficulty": 3
+    },
+    {
+      "kind": "word",
+      "id": "zebra",
+      "en": "zebra",
+      "pt": "zebra",
+      "gender": "f",
+      "art": "zebra",
+      "initial": "z",
+      "unit": 2,
+      "difficulty": 2
+    },
+    {
+      "kind": "word",
+      "id": "bed",
+      "en": "bed",
+      "pt": "cama",
+      "gender": "f",
+      "art": "bed",
+      "initial": "b",
+      "unit": 4,
+      "difficulty": 1
+    },
+    {
+      "kind": "word",
+      "id": "bus",
+      "en": "bus",
+      "pt": "ônibus",
+      "gender": "m",
+      "art": "bus",
+      "initial": "b",
+      "unit": 4,
+      "difficulty": 1
+    },
+    {
+      "kind": "word",
+      "id": "cup",
+      "en": "cup",
+      "pt": "xícara",
+      "gender": "f",
+      "art": "cup",
+      "initial": "c",
+      "unit": 4,
+      "difficulty": 2
+    },
+    {
+      "kind": "word",
+      "id": "fox",
+      "en": "fox",
+      "pt": "raposa",
+      "gender": "f",
+      "art": "fox",
+      "initial": "f",
+      "unit": 4,
+      "difficulty": 2
+    },
+    {
+      "kind": "word",
+      "id": "hen",
+      "en": "hen",
+      "pt": "galinha",
+      "gender": "f",
+      "art": "hen",
+      "initial": "h",
+      "unit": 4,
+      "difficulty": 2
+    },
+    {
+      "kind": "word",
+      "id": "map",
+      "en": "map",
+      "pt": "mapa",
+      "gender": "m",
+      "art": "map",
+      "initial": "m",
+      "unit": 4,
+      "difficulty": 2
+    },
+    {
+      "kind": "word",
+      "id": "net",
+      "en": "net",
+      "pt": "rede",
+      "gender": "f",
+      "art": "net",
+      "initial": "n",
+      "unit": 4,
+      "difficulty": 3
+    }
+  ],
+  "units": [
+    {
+      "unit": 1,
+      "mode": "letters",
+      "title": "ABC: A a M",
+      "icon": "🔤",
+      "banner": [
+        {
+          "lang": "pt-BR",
+          "text": "Galho um:"
+        },
+        {
+          "lang": "en-US",
+          "text": "A to M!"
+        }
+      ],
+      "lessons": [
+        {
+          "items": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "opening": "Oi! Hoje nós vamos aprender quatro letras em inglês!",
+          "praise": "Great job!"
+        },
+        {
+          "items": [
+            "e",
+            "f",
+            "g",
+            "h"
+          ],
+          "opening": "Oi! Hoje tem mais quatro letras em inglês!",
+          "praise": "Awesome!"
+        },
+        {
+          "items": [
+            "i",
+            "j",
+            "k",
+            "l",
+            "m"
+          ],
+          "opening": "Oi! Hoje vamos aprender as últimas letras do galho!",
+          "praise": "Well done!"
+        }
+      ],
+      "song": {
+        "opening": "Vamos cantar o alfabeto em inglês! Escute e cante comigo!",
+        "closing": "Você cantou o alfabeto!",
+        "bpm": 100,
+        "introBars": 1,
+        "lyrics": [
+          {
+            "bar": 1,
+            "en": "A, B, C, D, E, F, G!"
+          },
+          {
+            "bar": 3,
+            "en": "H, I, J, K, L, M!"
+          },
+          {
+            "bar": 5,
+            "en": "A is for apple!",
+            "wordId": "apple"
+          },
+          {
+            "bar": 7,
+            "en": "B is for ball!",
+            "wordId": "ball"
+          },
+          {
+            "bar": 9,
+            "en": "C is for cat!",
+            "wordId": "cat"
+          },
+          {
+            "bar": 11,
+            "en": "D is for dog!",
+            "wordId": "dog"
+          },
+          {
+            "bar": 13,
+            "en": "Now I know my A to M!"
+          }
+        ]
+      },
+      "story": {
+        "title": "A bola do gatinho",
+        "pages": [
+          {
+            "pt": "Dentro da árvore, o gatinho achou uma bola.",
+            "en": "A ball! B is for ball!",
+            "hotspots": [
+              {
+                "wordId": "ball",
+                "x": 0.68,
+                "y": 0.66
+              }
+            ]
+          },
+          {
+            "pt": "A bola rolou até um cachorro, que abanou o rabo.",
+            "en": "A dog! D is for dog!",
+            "hotspots": [
+              {
+                "wordId": "ball",
+                "x": 0.5,
+                "y": 0.76
+              },
+              {
+                "wordId": "dog",
+                "x": 0.74,
+                "y": 0.6
+              }
+            ]
+          },
+          {
+            "pt": "Depois de brincar, os dois dividiram uma maçã.",
+            "en": "An apple! A is for apple!",
+            "hotspots": [
+              {
+                "wordId": "dog",
+                "x": 0.74,
+                "y": 0.6
+              },
+              {
+                "wordId": "apple",
+                "x": 0.5,
+                "y": 0.72
+              }
+            ]
+          }
+        ],
+        "question": {
+          "pt": "O que o gatinho achou na árvore? Toque!",
+          "optionIds": [
+            "kite",
+            "ball"
+          ],
+          "answerId": "ball"
+        }
+      },
+      "challengeClosing": "Você terminou o galho um!",
+      "sticker": {
+        "art": "apple",
+        "en": "An apple sticker!"
+      }
+    },
+    {
+      "unit": 2,
+      "mode": "letters",
+      "title": "ABC: N a Z",
+      "icon": "🔡",
+      "banner": [
+        {
+          "lang": "pt-BR",
+          "text": "Galho dois:"
+        },
+        {
+          "lang": "en-US",
+          "text": "N to Z!"
+        }
+      ],
+      "lessons": [
+        {
+          "items": [
+            "n",
+            "o",
+            "p",
+            "q"
+          ],
+          "opening": "Oi! Hoje nós vamos aprender quatro letras novas em inglês!",
+          "praise": "Great job!"
+        },
+        {
+          "items": [
+            "r",
+            "s",
+            "t",
+            "u"
+          ],
+          "opening": "Oi! Hoje tem mais quatro letras em inglês!",
+          "praise": "Awesome!"
+        },
+        {
+          "items": [
+            "v",
+            "w",
+            "x",
+            "y",
+            "z"
+          ],
+          "opening": "Oi! Hoje vamos chegar ao fim do alfabeto!",
+          "praise": "Well done!"
+        }
+      ],
+      "song": {
+        "opening": "Vamos cantar o fim do alfabeto em inglês! Escute e cante comigo!",
+        "closing": "Você cantou o alfabeto até o fim!",
+        "bpm": 100,
+        "introBars": 1,
+        "lyrics": [
+          {
+            "bar": 1,
+            "en": "N, O, P, Q, R, S, T!"
+          },
+          {
+            "bar": 3,
+            "en": "U, V, W, X, Y, Z!"
+          },
+          {
+            "bar": 5,
+            "en": "S is for sun!",
+            "wordId": "sun"
+          },
+          {
+            "bar": 7,
+            "en": "T is for tree!",
+            "wordId": "tree"
+          },
+          {
+            "bar": 9,
+            "en": "V is for van!",
+            "wordId": "van"
+          },
+          {
+            "bar": 11,
+            "en": "Z is for zebra!",
+            "wordId": "zebra"
+          },
+          {
+            "bar": 13,
+            "en": "Now I know my N to Z!"
+          }
+        ]
+      },
+      "story": {
+        "title": "Sol e chuva",
+        "pages": [
+          {
+            "pt": "De manhã, o sol brilhava lá fora.",
+            "en": "The sun! S is for sun!",
+            "hotspots": [
+              {
+                "wordId": "sun",
+                "x": 0.7,
+                "y": 0.3
+              }
+            ]
+          },
+          {
+            "pt": "De repente, começou a chover!",
+            "en": "Rain! R is for rain!",
+            "hotspots": [
+              {
+                "wordId": "rain",
+                "x": 0.68,
+                "y": 0.32
+              }
+            ]
+          },
+          {
+            "pt": "O gatinho abriu o guarda-chuva e ficou sequinho.",
+            "en": "An umbrella! U is for umbrella!",
+            "hotspots": [
+              {
+                "wordId": "rain",
+                "x": 0.8,
+                "y": 0.24
+              },
+              {
+                "wordId": "umbrella",
+                "x": 0.6,
+                "y": 0.58
+              }
+            ]
+          }
+        ],
+        "question": {
+          "pt": "O que o gatinho abriu? Toque!",
+          "optionIds": [
+            "umbrella",
+            "sun"
+          ],
+          "answerId": "umbrella"
+        }
+      },
+      "challengeClosing": "Você terminou o galho dois!",
+      "sticker": {
+        "art": "sun",
+        "en": "A sun sticker!"
+      }
+    },
+    {
+      "unit": 3,
+      "mode": "sounds",
+      "title": "Com que letra começa?",
+      "icon": "🍎",
+      "banner": [
+        {
+          "lang": "pt-BR",
+          "text": "Galho três: com que letra começa?"
+        }
+      ],
+      "lessons": [
+        {
+          "items": [
+            "a",
+            "b",
+            "c",
+            "d",
+            "e",
+            "f",
+            "g",
+            "h",
+            "i"
+          ],
+          "opening": "Oi! Hoje vamos descobrir com que letra cada palavra começa!",
+          "praise": "Great job!"
+        },
+        {
+          "items": [
+            "j",
+            "k",
+            "l",
+            "m",
+            "n",
+            "o",
+            "p",
+            "q",
+            "r"
+          ],
+          "opening": "Oi! Vamos descobrir mais letras do começo das palavras!",
+          "praise": "Awesome!"
+        },
+        {
+          "items": [
+            "s",
+            "t",
+            "u",
+            "v",
+            "w",
+            "x",
+            "y",
+            "z"
+          ],
+          "opening": "Oi! Hoje vamos até o fim do alfabeto!",
+          "praise": "Well done!"
+        }
+      ],
+      "song": {
+        "opening": "Vamos cantar as letras e as palavras! Escute e cante comigo!",
+        "closing": "Você cantou as letras e as palavras!",
+        "bpm": 100,
+        "introBars": 1,
+        "lyrics": [
+          {
+            "bar": 1,
+            "en": "B is for ball!",
+            "wordId": "ball"
+          },
+          {
+            "bar": 3,
+            "en": "F is for fish!",
+            "wordId": "fish"
+          },
+          {
+            "bar": 5,
+            "en": "K is for kite!",
+            "wordId": "kite"
+          },
+          {
+            "bar": 7,
+            "en": "L is for lion!",
+            "wordId": "lion"
+          },
+          {
+            "bar": 9,
+            "en": "P is for pig!",
+            "wordId": "pig"
+          },
+          {
+            "bar": 11,
+            "en": "Q is for queen!",
+            "wordId": "queen"
+          },
+          {
+            "bar": 13,
+            "en": "W is for web!",
+            "wordId": "web"
+          },
+          {
+            "bar": 15,
+            "en": "Z is for zebra!",
+            "wordId": "zebra"
+          },
+          {
+            "bar": 17,
+            "en": "From A to Z!"
+          }
+        ]
+      },
+      "story": {
+        "title": "O piquenique",
+        "pages": [
+          {
+            "pt": "O gatinho fez um piquenique com geleia.",
+            "en": "Jam! Jam starts with J!",
+            "hotspots": [
+              {
+                "wordId": "jam",
+                "x": 0.62,
+                "y": 0.7
+              }
+            ]
+          },
+          {
+            "pt": "Uma cabrinha chegou com fome.",
+            "en": "A goat! Goat starts with G!",
+            "hotspots": [
+              {
+                "wordId": "jam",
+                "x": 0.5,
+                "y": 0.76
+              },
+              {
+                "wordId": "goat",
+                "x": 0.76,
+                "y": 0.58
+              }
+            ]
+          },
+          {
+            "pt": "Ela trouxe uma laranja, e os dois comeram juntos.",
+            "en": "An orange! Orange starts with O!",
+            "hotspots": [
+              {
+                "wordId": "goat",
+                "x": 0.76,
+                "y": 0.58
+              },
+              {
+                "wordId": "orange",
+                "x": 0.5,
+                "y": 0.72
+              }
+            ]
+          }
+        ],
+        "question": {
+          "pt": "Quem chegou com fome? Toque!",
+          "optionIds": [
+            "goat",
+            "lion"
+          ],
+          "answerId": "goat"
+        }
+      },
+      "challengeClosing": "Você terminou o galho três!",
+      "sticker": {
+        "art": "kite",
+        "en": "A kite sticker!"
+      }
+    },
+    {
+      "unit": 4,
+      "mode": "words",
+      "title": "Primeiras palavras",
+      "icon": "📖",
+      "banner": [
+        {
+          "lang": "pt-BR",
+          "text": "Galho quatro: primeiras palavras em inglês!"
+        }
+      ],
+      "lessons": [
+        {
+          "items": [
+            "cat",
+            "dog",
+            "sun",
+            "hat",
+            "bed"
+          ],
+          "opening": "Oi! Hoje vamos ler palavras em inglês!",
+          "praise": "Great job!"
+        },
+        {
+          "items": [
+            "pig",
+            "box",
+            "bus",
+            "cup",
+            "fox"
+          ],
+          "opening": "Oi! Hoje tem mais palavras para ler!",
+          "praise": "Awesome!"
+        },
+        {
+          "items": [
+            "hen",
+            "jam",
+            "map",
+            "net",
+            "van"
+          ],
+          "opening": "Oi! Vamos ler as últimas palavras do galho!",
+          "praise": "Well done!"
+        }
+      ],
+      "song": {
+        "opening": "Vamos soletrar palavras em inglês! Escute e cante comigo!",
+        "closing": "Você soletrou as palavras!",
+        "bpm": 100,
+        "introBars": 1,
+        "lyrics": [
+          {
+            "bar": 1,
+            "en": "C-A-T, cat!",
+            "wordId": "cat"
+          },
+          {
+            "bar": 3,
+            "en": "D-O-G, dog!",
+            "wordId": "dog"
+          },
+          {
+            "bar": 5,
+            "en": "S-U-N, sun!",
+            "wordId": "sun"
+          },
+          {
+            "bar": 7,
+            "en": "H-A-T, hat!",
+            "wordId": "hat"
+          },
+          {
+            "bar": 9,
+            "en": "B-U-S, bus!",
+            "wordId": "bus"
+          },
+          {
+            "bar": 11,
+            "en": "F-O-X, fox!",
+            "wordId": "fox"
+          },
+          {
+            "bar": 13,
+            "en": "I can read! I can read!"
+          }
+        ]
+      },
+      "story": {
+        "title": "O ônibus",
+        "pages": [
+          {
+            "pt": "O gatinho subiu no ônibus.",
+            "en": "The bus! B-U-S, bus!",
+            "hotspots": [
+              {
+                "wordId": "bus",
+                "x": 0.66,
+                "y": 0.6
+              }
+            ]
+          },
+          {
+            "pt": "No ônibus estavam um cachorro e uma raposa.",
+            "en": "A dog and a fox!",
+            "hotspots": [
+              {
+                "wordId": "dog",
+                "x": 0.56,
+                "y": 0.64
+              },
+              {
+                "wordId": "fox",
+                "x": 0.8,
+                "y": 0.62
+              }
+            ]
+          },
+          {
+            "pt": "Eles desceram, e o cachorro ganhou um chapéu.",
+            "en": "A hat! H-A-T, hat!",
+            "hotspots": [
+              {
+                "wordId": "dog",
+                "x": 0.62,
+                "y": 0.64
+              },
+              {
+                "wordId": "hat",
+                "x": 0.62,
+                "y": 0.34
+              }
+            ]
+          }
+        ],
+        "question": {
+          "pt": "Quem estava no ônibus com o cachorro? Toque!",
+          "optionIds": [
+            "pig",
+            "fox"
+          ],
+          "answerId": "fox"
+        }
+      },
+      "challengeClosing": "Você terminou o galho quatro!",
+      "sticker": {
+        "art": "fox",
+        "en": "A fox sticker!"
+      }
+    }
+  ]
+}

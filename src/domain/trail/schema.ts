@@ -32,6 +32,7 @@ export const sceneIdSchema = z.enum([
   "forest-pond",
   "forest-web",
   "forest-goodbye",
+  "tree-room",
 ]);
 
 const wordSchema = z.object({
@@ -67,6 +68,13 @@ const exerciseSchema = z.discriminatedUnion("kind", [
   }),
 ]);
 
+/** One slot, three variants: level n has n + 1 options and closer distractors. Only in lessons and challenges. */
+const adaptiveSchema = z.object({
+  kind: z.literal("adaptive"),
+  levels: z.tuple([exerciseSchema, exerciseSchema, exerciseSchema]),
+});
+const stopExerciseSchema = z.union([exerciseSchema, adaptiveSchema]);
+
 const stickerSchema = z.object({ id: z.string().min(1), art: artIdSchema, name: narrationSchema });
 
 const lessonStopSchema = z.object({
@@ -75,7 +83,7 @@ const lessonStopSchema = z.object({
   title: z.string().min(1),
   opening: narrationSchema,
   wordIds: z.array(artIdSchema).min(1),
-  exercises: z.array(exerciseSchema).min(1),
+  exercises: z.array(stopExerciseSchema).min(1),
   closing: narrationSchema,
   sticker: stickerSchema.optional(),
 });
@@ -133,8 +141,12 @@ export const unitSchema = z
       if (!wordIds.has(id)) issue(`unknown word id "${id}"`);
     };
 
-    const checkExercise = (ex: z.infer<typeof exerciseSchema>) => {
+    const checkExercise = (ex: z.infer<typeof stopExerciseSchema>) => {
       switch (ex.kind) {
+        case "adaptive":
+          ex.levels.forEach(checkExercise);
+          if (new Set(ex.levels.map((l) => l.kind)).size !== 1) issue("adaptive levels must be the same kind of exercise");
+          break;
         case "intro":
         case "trueFalse":
           known(ex.wordId);
@@ -191,6 +203,9 @@ export const pathSchema = z.array(
     title: z.string().min(1),
     icon: z.string().min(1),
     hasContent: z.boolean(),
+    /** The island and the area (place on it) the unit belongs to; the stop ids do not carry them. */
+    island: z.enum(["descoberta"]).default("descoberta"),
+    area: z.enum(["farol", "letras"]).default("farol"),
   }),
 );
 
@@ -241,6 +256,9 @@ export type ArtId = z.infer<typeof artIdSchema>;
 export type SceneId = z.infer<typeof sceneIdSchema>;
 export type Word = z.infer<typeof wordSchema>;
 export type Exercise = z.infer<typeof exerciseSchema>;
+export type AdaptiveExercise = z.infer<typeof adaptiveSchema>;
+/** What a lesson or challenge holds: an exercise, or an adaptive slot resolved with the child's level. */
+export type StopExercise = z.infer<typeof stopExerciseSchema>;
 export type LessonStop = z.infer<typeof lessonStopSchema>;
 export type SongStop = z.infer<typeof songStopSchema>;
 export type StoryStop = z.infer<typeof storyStopSchema>;

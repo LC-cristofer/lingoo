@@ -36,7 +36,7 @@ describe("unitStatus", () => {
     const p = emptyProgress();
     expect(unitStatus(path, units, p, "forest-animals")).toBe("current");
     const others = path.filter((u) => u.unitId !== "forest-animals");
-    expect(others).toHaveLength(6);
+    expect(others.filter((u) => u.area === "farol")).toHaveLength(6);
     for (const u of others) expect(unitStatus(path, units, p, u.unitId)).toBe("soon");
   });
   it("done when all stops are done", () => {

@@ -74,6 +74,11 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
   return <ProfileContext.Provider value={value}>{children}</ProfileContext.Provider>;
 }
 
+/** The profile when a provider is mounted, null otherwise (screens that also run without one, like the exercise loop in tests). */
+export function useOptionalProfile(): ProfileContextValue | null {
+  return useContext(ProfileContext);
+}
+
 export function useProfile(): ProfileContextValue {
   const ctx = useContext(ProfileContext);
   if (!ctx) throw new Error("useProfile must be used inside <ProfileProvider>");

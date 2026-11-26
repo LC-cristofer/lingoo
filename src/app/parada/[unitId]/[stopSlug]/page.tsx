@@ -3,8 +3,9 @@ import { getPath, getUnit } from "@/domain/trail/content";
 import { StopScreen } from "./StopScreen";
 
 export function generateStaticParams() {
+  // Every unit with stops, also one not open on its island yet (the Árvore das Letras before it opens).
   return getPath()
-    .filter((u) => u.hasContent)
+    .filter((u) => getUnit(u.unitId) !== null)
     .flatMap((u) => {
       const unit = getUnit(u.unitId);
       return (unit?.stops ?? []).filter((s) => s.id.startsWith(`${unit!.id}/`)).map((s) => ({ unitId: unit!.id, stopSlug: s.id.slice(unit!.id.length + 1) }));

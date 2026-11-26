@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { getUnit } from "@/domain/trail/content";
-import { answer, next, progressRatio, resume, startSession } from "@/domain/trail/session";
+import { answer, exerciseAt, next, progressRatio, resume, startSession } from "@/domain/trail/session";
+import type { ArtId, Exercise, StopExercise } from "@/domain/trail/schema";
 
 const unit = getUnit("forest-animals")!;
 const stop = unit.stops[1];
@@ -100,5 +101,33 @@ describe("session", () => {
     s = answer(resume(answer(s, false)), false);
     s = next(answer(s, true));
     expect(progressRatio(s)).toBeCloseTo(1 / 3);
+  });
+
+  it("an adaptive item resolves to the level given", () => {
+    const tap = (optionIds: ArtId[]): Exercise => ({ kind: "listenTap", prompt: [{ lang: "en-US", text: "B" }], optionIds, answerId: "letter-b" });
+    const adaptive: StopExercise = { kind: "adaptive", levels: [tap(["letter-b", "letter-s"]), tap(["letter-b", "letter-d", "letter-s"]), tap(["letter-b", "letter-d", "letter-p", "letter-s"])] };
+    const s = startSession([adaptive, exercises[0]], "letras-1/lesson-1");
+    expect(s.items[0].exercise).toBe(adaptive);
+    for (const level of [1, 2, 3] as const) {
+      const ex = exerciseAt(s, level);
+      expect(ex.kind).toBe("listenTap");
+      expect(ex.kind === "listenTap" && ex.optionIds).toHaveLength(level + 1);
+    }
+    const s2 = next(answer(s, true));
+    expect(exerciseAt(s2, 3)).toBe(exercises[0]);
+  });
+
+  it("the farol unit's sessions are unchanged: every item is its exercise at any level", () => {
+    for (const st of unit.stops) {
+      if (st.kind !== "lesson" && st.kind !== "challenge") continue;
+      let s = startSession(st.exercises, st.id);
+      expect(s.items.map((i) => i.exercise)).toEqual(st.exercises);
+      expect(st.exercises.every((e) => e.kind !== "adaptive")).toBe(true);
+      while (!s.finished) {
+        expect(exerciseAt(s, 1)).toBe(st.exercises[s.index]);
+        expect(exerciseAt(s, 3)).toBe(st.exercises[s.index]);
+        s = next(answer(s, true));
+      }
+    }
   });
 });

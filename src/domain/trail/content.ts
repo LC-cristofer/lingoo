@@ -1,6 +1,10 @@
 import pathJson from "../../../content/path.json";
 import linesJson from "../../../content/lines.json";
 import forestAnimalsJson from "../../../content/units/forest-animals.json";
+import letras1Json from "../../../content/units/letras-1.json";
+import letras2Json from "../../../content/units/letras-2.json";
+import letras3Json from "../../../content/units/letras-3.json";
+import letras4Json from "../../../content/units/letras-4.json";
 import {
   parseLines,
   parsePath,
@@ -10,11 +14,17 @@ import {
   type Narration,
   type PathUnit,
   type Stop,
+  type StopExercise,
   type Unit,
 } from "./schema";
 
 const unitFiles: Record<string, unknown> = {
   "forest-animals": forestAnimalsJson,
+  // Generated from content/areas/letras/bank.json (npm run content:letras).
+  "letras-1": letras1Json,
+  "letras-2": letras2Json,
+  "letras-3": letras3Json,
+  "letras-4": letras4Json,
 };
 
 // The content files are static: each is validated once, on first use, and the same object is handed out after that.
@@ -47,8 +57,10 @@ export function getLines(): Lines {
   return (linesCache ??= parseLines(linesJson));
 }
 
-function exerciseNarrations(ex: Exercise): Narration[] {
+function exerciseNarrations(ex: StopExercise): Narration[] {
   switch (ex.kind) {
+    case "adaptive":
+      return ex.levels.flatMap((l: Exercise) => exerciseNarrations(l));
     case "intro":
     case "trueFalse":
       return [ex.say];
@@ -61,10 +73,10 @@ function exerciseNarrations(ex: Exercise): Narration[] {
   }
 }
 
-/** Every narration in every unit plus lines.json, in a deterministic order. */
-export function allNarrations(): Narration[] {
+/** Every narration in every unit (or in the units `include` keeps) plus lines.json, in a deterministic order. */
+export function allNarrations(include: (unitId: string) => boolean = () => true): Narration[] {
   const out: Narration[] = [];
-  for (const id of Object.keys(unitFiles)) {
+  for (const id of Object.keys(unitFiles).filter(include)) {
     const unit = getUnit(id)!;
     out.push(unit.banner, ...unit.words.map((w) => w.say), ...unit.words.map((w) => w.ask));
     for (const stop of unit.stops) {

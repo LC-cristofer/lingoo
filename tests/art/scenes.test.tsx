@@ -73,6 +73,19 @@ describe("StoryScene", () => {
     expect(container.querySelector(".art-cat")).not.toBeNull();
   });
 
+  it("tree-room draws the blurred trunk wall instead of the forest, with the figures at their hotspots", () => {
+    const { container } = render(<StoryScene scene="tree-room" hotspots={[{ wordId: "ball", x: 0.68, y: 0.66 }]} onHotspot={() => {}} />);
+    expect(container.querySelector('[data-variant="tree-room"]')).not.toBeNull();
+    expect(container.querySelector('[data-variant="story"]')).toBeNull();
+    expect(container.querySelector("feGaussianBlur")).not.toBeNull();
+    const fills = [...container.querySelectorAll('[data-variant="tree-room"] [fill]')].map((e) => e.getAttribute("fill"));
+    expect(fills).toContain("#9A6A43");
+    expect(fills).toContain("#7A5232");
+    expect(fills).not.toContain("#FF9F43");
+    const ball = container.querySelector('[data-hotspot="ball"]') as HTMLElement;
+    expect(ball.style.left).toBe("68%");
+  });
+
   it("shows a pond on forest-pond and a web and a cheese on forest-web", () => {
     const pond = render(<StoryScene scene="forest-pond" hotspots={[]} onHotspot={() => {}} />);
     expect(pond.container.querySelector('[data-prop="pond"]')).not.toBeNull();

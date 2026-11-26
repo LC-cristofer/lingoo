@@ -1,0 +1,2775 @@
+{
+  "id": "letras-4",
+  "title": "Primeiras palavras",
+  "banner": [
+    {
+      "lang": "pt-BR",
+      "text": "Galho quatro: primeiras palavras em inglês!"
+    }
+  ],
+  "words": [
+    {
+      "id": "cat",
+      "en": "cat",
+      "pt": "o gato",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "cat!"
+        }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Qual é o"
+        },
+        {
+          "lang": "en-US",
+          "text": "cat?"
+        },
+        {
+          "lang": "pt-BR",
+          "text": "Toque nele!"
+        }
+      ]
+    },
+    {
+      "id": "dog",
+      "en": "dog",
+      "pt": "o cachorro",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "dog!"
+        }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Qual é o"
+        },
+        {
+          "lang": "en-US",
+          "text": "dog?"
+        },
+        {
+          "lang": "pt-BR",
+          "text": "Toque nele!"
+        }
+      ]
+    },
+    {
+      "id": "hat",
+      "en": "hat",
+      "pt": "o chapéu",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "hat!"
+        }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Qual é o"
+        },
+        {
+          "lang": "en-US",
+          "text": "hat?"
+        },
+        {
+          "lang": "pt-BR",
+          "text": "Toque nele!"
+        }
+      ]
+    },
+    {
+      "id": "jam",
+      "en": "jam",
+      "pt": "a geleia",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "jam!"
+        }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Qual é a"
+        },
+        {
+          "lang": "en-US",
+          "text": "jam?"
+        },
+        {
+          "lang": "pt-BR",
+          "text": "Toque nela!"
+        }
+      ]
+    },
+    {
+      "id": "pig",
+      "en": "pig",
+      "pt": "o porco",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "pig!"
+        }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Qual é o"
+        },
+        {
+          "lang": "en-US",
+          "text": "pig?"
+        },
+        {
+          "lang": "pt-BR",
+          "text": "Toque nele!"
+        }
+      ]
+    },
+    {
+      "id": "sun",
+      "en": "sun",
+      "pt": "o sol",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "sun!"
+        }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Qual é o"
+        },
+        {
+          "lang": "en-US",
+          "text": "sun?"
+        },
+        {
+          "lang": "pt-BR",
+          "text": "Toque nele!"
+        }
+      ]
+    },
+    {
+      "id": "box",
+      "en": "box",
+      "pt": "a caixa",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "box!"
+        }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Qual é a"
+        },
+        {
+          "lang": "en-US",
+          "text": "box?"
+        },
+        {
+          "lang": "pt-BR",
+          "text": "Toque nela!"
+        }
+      ]
+    },
+    {
+      "id": "bus",
+      "en": "bus",
+      "pt": "o ônibus",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "bus!"
+        }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Qual é o"
+        },
+        {
+          "lang": "en-US",
+          "text": "bus?"
+        },
+        {
+          "lang": "pt-BR",
+          "text": "Toque nele!"
+        }
+      ]
+    },
+    {
+      "id": "cup",
+      "en": "cup",
+      "pt": "a xícara",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "cup!"
+        }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Qual é a"
+        },
+        {
+          "lang": "en-US",
+          "text": "cup?"
+        },
+        {
+          "lang": "pt-BR",
+          "text": "Toque nela!"
+        }
+      ]
+    },
+    {
+      "id": "fox",
+      "en": "fox",
+      "pt": "a raposa",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "fox!"
+        }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Qual é a"
+        },
+        {
+          "lang": "en-US",
+          "text": "fox?"
+        },
+        {
+          "lang": "pt-BR",
+          "text": "Toque nela!"
+        }
+      ]
+    },
+    {
+      "id": "hen",
+      "en": "hen",
+      "pt": "a galinha",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "hen!"
+        }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Qual é a"
+        },
+        {
+          "lang": "en-US",
+          "text": "hen?"
+        },
+        {
+          "lang": "pt-BR",
+          "text": "Toque nela!"
+        }
+      ]
+    },
+    {
+      "id": "map",
+      "en": "map",
+      "pt": "o mapa",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "map!"
+        }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Qual é o"
+        },
+        {
+          "lang": "en-US",
+          "text": "map?"
+        },
+        {
+          "lang": "pt-BR",
+          "text": "Toque nele!"
+        }
+      ]
+    },
+    {
+      "id": "net",
+      "en": "net",
+      "pt": "a rede",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "net!"
+        }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Qual é a"
+        },
+        {
+          "lang": "en-US",
+          "text": "net?"
+        },
+        {
+          "lang": "pt-BR",
+          "text": "Toque nela!"
+        }
+      ]
+    },
+    {
+      "id": "word-cat",
+      "en": "cat",
+      "pt": "a palavra cat",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "cat!"
+        }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Toque na palavra"
+        },
+        {
+          "lang": "en-US",
+          "text": "cat!"
+        }
+      ]
+    },
+    {
+      "id": "word-dog",
+      "en": "dog",
+      "pt": "a palavra dog",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "dog!"
+        }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Toque na palavra"
+        },
+        {
+          "lang": "en-US",
+          "text": "dog!"
+        }
+      ]
+    },
+    {
+      "id": "word-hat",
+      "en": "hat",
+      "pt": "a palavra hat",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "hat!"
+        }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Toque na palavra"
+        },
+        {
+          "lang": "en-US",
+          "text": "hat!"
+        }
+      ]
+    },
+    {
+      "id": "word-jam",
+      "en": "jam",
+      "pt": "a palavra jam",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "jam!"
+        }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Toque na palavra"
+        },
+        {
+          "lang": "en-US",
+          "text": "jam!"
+        }
+      ]
+    },
+    {
+      "id": "word-pig",
+      "en": "pig",
+      "pt": "a palavra pig",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "pig!"
+        }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Toque na palavra"
+        },
+        {
+          "lang": "en-US",
+          "text": "pig!"
+        }
+      ]
+    },
+    {
+      "id": "word-sun",
+      "en": "sun",
+      "pt": "a palavra sun",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "sun!"
+        }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Toque na palavra"
+        },
+        {
+          "lang": "en-US",
+          "text": "sun!"
+        }
+      ]
+    },
+    {
+      "id": "word-van",
+      "en": "van",
+      "pt": "a palavra van",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "van!"
+        }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Toque na palavra"
+        },
+        {
+          "lang": "en-US",
+          "text": "van!"
+        }
+      ]
+    },
+    {
+      "id": "word-box",
+      "en": "box",
+      "pt": "a palavra box",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "box!"
+        }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Toque na palavra"
+        },
+        {
+          "lang": "en-US",
+          "text": "box!"
+        }
+      ]
+    },
+    {
+      "id": "word-bed",
+      "en": "bed",
+      "pt": "a palavra bed",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "bed!"
+        }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Toque na palavra"
+        },
+        {
+          "lang": "en-US",
+          "text": "bed!"
+        }
+      ]
+    },
+    {
+      "id": "word-bus",
+      "en": "bus",
+      "pt": "a palavra bus",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "bus!"
+        }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Toque na palavra"
+        },
+        {
+          "lang": "en-US",
+          "text": "bus!"
+        }
+      ]
+    },
+    {
+      "id": "word-cup",
+      "en": "cup",
+      "pt": "a palavra cup",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "cup!"
+        }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Toque na palavra"
+        },
+        {
+          "lang": "en-US",
+          "text": "cup!"
+        }
+      ]
+    },
+    {
+      "id": "word-fox",
+      "en": "fox",
+      "pt": "a palavra fox",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "fox!"
+        }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Toque na palavra"
+        },
+        {
+          "lang": "en-US",
+          "text": "fox!"
+        }
+      ]
+    },
+    {
+      "id": "word-hen",
+      "en": "hen",
+      "pt": "a palavra hen",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "hen!"
+        }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Toque na palavra"
+        },
+        {
+          "lang": "en-US",
+          "text": "hen!"
+        }
+      ]
+    },
+    {
+      "id": "word-map",
+      "en": "map",
+      "pt": "a palavra map",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "map!"
+        }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Toque na palavra"
+        },
+        {
+          "lang": "en-US",
+          "text": "map!"
+        }
+      ]
+    },
+    {
+      "id": "word-net",
+      "en": "net",
+      "pt": "a palavra net",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "net!"
+        }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Toque na palavra"
+        },
+        {
+          "lang": "en-US",
+          "text": "net!"
+        }
+      ]
+    }
+  ],
+  "stops": [
+    {
+      "kind": "song",
+      "id": "letras-4/song",
+      "title": "Música",
+      "opening": [
+        {
+          "lang": "pt-BR",
+          "text": "Vamos soletrar palavras em inglês! Escute e cante comigo!"
+        }
+      ],
+      "bpm": 100,
+      "introBars": 1,
+      "lyrics": [
+        {
+          "bar": 1,
+          "say": [
+            {
+              "lang": "en-US",
+              "text": "C-A-T, cat!"
+            }
+          ],
+          "wordId": "cat"
+        },
+        {
+          "bar": 3,
+          "say": [
+            {
+              "lang": "en-US",
+              "text": "D-O-G, dog!"
+            }
+          ],
+          "wordId": "dog"
+        },
+        {
+          "bar": 5,
+          "say": [
+            {
+              "lang": "en-US",
+              "text": "S-U-N, sun!"
+            }
+          ],
+          "wordId": "sun"
+        },
+        {
+          "bar": 7,
+          "say": [
+            {
+              "lang": "en-US",
+              "text": "H-A-T, hat!"
+            }
+          ],
+          "wordId": "hat"
+        },
+        {
+          "bar": 9,
+          "say": [
+            {
+              "lang": "en-US",
+              "text": "B-U-S, bus!"
+            }
+          ],
+          "wordId": "bus"
+        },
+        {
+          "bar": 11,
+          "say": [
+            {
+              "lang": "en-US",
+              "text": "F-O-X, fox!"
+            }
+          ],
+          "wordId": "fox"
+        },
+        {
+          "bar": 13,
+          "say": [
+            {
+              "lang": "en-US",
+              "text": "I can read! I can read!"
+            }
+          ]
+        }
+      ],
+      "exercises": [
+        {
+          "kind": "listenTap",
+          "prompt": [
+            {
+              "lang": "pt-BR",
+              "text": "Qual é o"
+            },
+            {
+              "lang": "en-US",
+              "text": "cat?"
+            },
+            {
+              "lang": "pt-BR",
+              "text": "Toque nele!"
+            }
+          ],
+          "optionIds": [
+            "hen",
+            "cat"
+          ],
+          "answerId": "cat"
+        },
+        {
+          "kind": "listenTap",
+          "prompt": [
+            {
+              "lang": "pt-BR",
+              "text": "Qual é o"
+            },
+            {
+              "lang": "en-US",
+              "text": "dog?"
+            },
+            {
+              "lang": "pt-BR",
+              "text": "Toque nele!"
+            }
+          ],
+          "optionIds": [
+            "dog",
+            "hat"
+          ],
+          "answerId": "dog"
+        },
+        {
+          "kind": "listenTap",
+          "prompt": [
+            {
+              "lang": "pt-BR",
+              "text": "Qual é o"
+            },
+            {
+              "lang": "en-US",
+              "text": "sun?"
+            },
+            {
+              "lang": "pt-BR",
+              "text": "Toque nele!"
+            }
+          ],
+          "optionIds": [
+            "jam",
+            "sun"
+          ],
+          "answerId": "sun"
+        }
+      ],
+      "closing": [
+        {
+          "lang": "en-US",
+          "text": "Great job!"
+        },
+        {
+          "lang": "pt-BR",
+          "text": "Você soletrou as palavras!"
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "letras-4/lesson-1",
+      "title": "Lição 1",
+      "opening": [
+        {
+          "lang": "pt-BR",
+          "text": "Oi! Hoje vamos ler palavras em inglês!"
+        }
+      ],
+      "wordIds": [
+        "word-cat",
+        "word-dog",
+        "word-sun",
+        "word-hat",
+        "word-bed"
+      ],
+      "exercises": [
+        {
+          "kind": "intro",
+          "wordId": "word-cat",
+          "say": [
+            {
+              "lang": "pt-BR",
+              "text": "Esta palavra é"
+            },
+            {
+              "lang": "en-US",
+              "text": "cat!"
+            }
+          ]
+        },
+        {
+          "kind": "adaptive",
+          "levels": [
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque na palavra"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "cat!"
+                }
+              ],
+              "optionIds": [
+                "word-bus",
+                "word-cat"
+              ],
+              "answerId": "word-cat"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque na palavra"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "cat!"
+                }
+              ],
+              "optionIds": [
+                "word-bus",
+                "word-hat",
+                "word-cat"
+              ],
+              "answerId": "word-cat"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque na palavra"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "cat!"
+                }
+              ],
+              "optionIds": [
+                "word-net",
+                "word-hat",
+                "word-cat",
+                "word-bus"
+              ],
+              "answerId": "word-cat"
+            }
+          ]
+        },
+        {
+          "kind": "intro",
+          "wordId": "word-dog",
+          "say": [
+            {
+              "lang": "pt-BR",
+              "text": "Esta palavra é"
+            },
+            {
+              "lang": "en-US",
+              "text": "dog!"
+            }
+          ]
+        },
+        {
+          "kind": "adaptive",
+          "levels": [
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque na palavra"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "dog!"
+                }
+              ],
+              "optionIds": [
+                "word-net",
+                "word-dog"
+              ],
+              "answerId": "word-dog"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque na palavra"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "dog!"
+                }
+              ],
+              "optionIds": [
+                "word-net",
+                "word-dog",
+                "word-pig"
+              ],
+              "answerId": "word-dog"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque na palavra"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "dog!"
+                }
+              ],
+              "optionIds": [
+                "word-net",
+                "word-pig",
+                "word-box",
+                "word-dog"
+              ],
+              "answerId": "word-dog"
+            }
+          ]
+        },
+        {
+          "kind": "intro",
+          "wordId": "word-sun",
+          "say": [
+            {
+              "lang": "pt-BR",
+              "text": "Esta palavra é"
+            },
+            {
+              "lang": "en-US",
+              "text": "sun!"
+            }
+          ]
+        },
+        {
+          "kind": "adaptive",
+          "levels": [
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque na palavra"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "sun!"
+                }
+              ],
+              "optionIds": [
+                "word-cat",
+                "word-sun"
+              ],
+              "answerId": "word-sun"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque na palavra"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "sun!"
+                }
+              ],
+              "optionIds": [
+                "word-bus",
+                "word-sun",
+                "word-cat"
+              ],
+              "answerId": "word-sun"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque na palavra"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "sun!"
+                }
+              ],
+              "optionIds": [
+                "word-van",
+                "word-cat",
+                "word-sun",
+                "word-bus"
+              ],
+              "answerId": "word-sun"
+            }
+          ]
+        },
+        {
+          "kind": "intro",
+          "wordId": "word-hat",
+          "say": [
+            {
+              "lang": "pt-BR",
+              "text": "Esta palavra é"
+            },
+            {
+              "lang": "en-US",
+              "text": "hat!"
+            }
+          ]
+        },
+        {
+          "kind": "adaptive",
+          "levels": [
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque na palavra"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "hat!"
+                }
+              ],
+              "optionIds": [
+                "word-bed",
+                "word-hat"
+              ],
+              "answerId": "word-hat"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque na palavra"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "hat!"
+                }
+              ],
+              "optionIds": [
+                "word-hat",
+                "word-bed",
+                "word-cat"
+              ],
+              "answerId": "word-hat"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque na palavra"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "hat!"
+                }
+              ],
+              "optionIds": [
+                "word-net",
+                "word-hat",
+                "word-bed",
+                "word-cat"
+              ],
+              "answerId": "word-hat"
+            }
+          ]
+        },
+        {
+          "kind": "intro",
+          "wordId": "word-bed",
+          "say": [
+            {
+              "lang": "pt-BR",
+              "text": "Esta palavra é"
+            },
+            {
+              "lang": "en-US",
+              "text": "bed!"
+            }
+          ]
+        },
+        {
+          "kind": "adaptive",
+          "levels": [
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque na palavra"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "bed!"
+                }
+              ],
+              "optionIds": [
+                "word-sun",
+                "word-bed"
+              ],
+              "answerId": "word-bed"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque na palavra"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "bed!"
+                }
+              ],
+              "optionIds": [
+                "word-sun",
+                "word-hen",
+                "word-bed"
+              ],
+              "answerId": "word-bed"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque na palavra"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "bed!"
+                }
+              ],
+              "optionIds": [
+                "word-bus",
+                "word-bed",
+                "word-hen",
+                "word-sun"
+              ],
+              "answerId": "word-bed"
+            }
+          ]
+        },
+        {
+          "kind": "matchPairs",
+          "prompt": [
+            {
+              "lang": "pt-BR",
+              "text": "Ligue cada figura à palavra!"
+            }
+          ],
+          "wordIds": [
+            "cat",
+            "dog",
+            "sun",
+            "hat"
+          ]
+        },
+        {
+          "kind": "trueFalse",
+          "wordId": "word-bed",
+          "say": [
+            {
+              "lang": "pt-BR",
+              "text": "Aqui está escrito"
+            },
+            {
+              "lang": "en-US",
+              "text": "box?"
+            },
+            {
+              "lang": "pt-BR",
+              "text": "Certo ou errado?"
+            }
+          ],
+          "isTrue": false
+        }
+      ],
+      "closing": [
+        {
+          "lang": "en-US",
+          "text": "Great job!"
+        },
+        {
+          "lang": "pt-BR",
+          "text": "Hoje você leu:"
+        },
+        {
+          "lang": "en-US",
+          "text": "cat, dog, sun, hat, bed!"
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "letras-4/lesson-2",
+      "title": "Lição 2",
+      "opening": [
+        {
+          "lang": "pt-BR",
+          "text": "Oi! Hoje tem mais palavras para ler!"
+        }
+      ],
+      "wordIds": [
+        "word-pig",
+        "word-box",
+        "word-bus",
+        "word-cup",
+        "word-fox"
+      ],
+      "exercises": [
+        {
+          "kind": "intro",
+          "wordId": "word-pig",
+          "say": [
+            {
+              "lang": "pt-BR",
+              "text": "Esta palavra é"
+            },
+            {
+              "lang": "en-US",
+              "text": "pig!"
+            }
+          ]
+        },
+        {
+          "kind": "adaptive",
+          "levels": [
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque na palavra"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "pig!"
+                }
+              ],
+              "optionIds": [
+                "word-pig",
+                "word-hen"
+              ],
+              "answerId": "word-pig"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque na palavra"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "pig!"
+                }
+              ],
+              "optionIds": [
+                "word-dog",
+                "word-pig",
+                "word-hen"
+              ],
+              "answerId": "word-pig"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque na palavra"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "pig!"
+                }
+              ],
+              "optionIds": [
+                "word-hen",
+                "word-pig",
+                "word-dog",
+                "word-map"
+              ],
+              "answerId": "word-pig"
+            }
+          ]
+        },
+        {
+          "kind": "intro",
+          "wordId": "word-box",
+          "say": [
+            {
+              "lang": "pt-BR",
+              "text": "Esta palavra é"
+            },
+            {
+              "lang": "en-US",
+              "text": "box!"
+            }
+          ]
+        },
+        {
+          "kind": "adaptive",
+          "levels": [
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque na palavra"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "box!"
+                }
+              ],
+              "optionIds": [
+                "word-box",
+                "word-van"
+              ],
+              "answerId": "word-box"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque na palavra"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "box!"
+                }
+              ],
+              "optionIds": [
+                "word-van",
+                "word-box",
+                "word-fox"
+              ],
+              "answerId": "word-box"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque na palavra"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "box!"
+                }
+              ],
+              "optionIds": [
+                "word-bed",
+                "word-fox",
+                "word-box",
+                "word-van"
+              ],
+              "answerId": "word-box"
+            }
+          ]
+        },
+        {
+          "kind": "intro",
+          "wordId": "word-bus",
+          "say": [
+            {
+              "lang": "pt-BR",
+              "text": "Esta palavra é"
+            },
+            {
+              "lang": "en-US",
+              "text": "bus!"
+            }
+          ]
+        },
+        {
+          "kind": "adaptive",
+          "levels": [
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque na palavra"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "bus!"
+                }
+              ],
+              "optionIds": [
+                "word-van",
+                "word-bus"
+              ],
+              "answerId": "word-bus"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque na palavra"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "bus!"
+                }
+              ],
+              "optionIds": [
+                "word-van",
+                "word-bus",
+                "word-sun"
+              ],
+              "answerId": "word-bus"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque na palavra"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "bus!"
+                }
+              ],
+              "optionIds": [
+                "word-bus",
+                "word-van",
+                "word-cup",
+                "word-sun"
+              ],
+              "answerId": "word-bus"
+            }
+          ]
+        },
+        {
+          "kind": "intro",
+          "wordId": "word-cup",
+          "say": [
+            {
+              "lang": "pt-BR",
+              "text": "Esta palavra é"
+            },
+            {
+              "lang": "en-US",
+              "text": "cup!"
+            }
+          ]
+        },
+        {
+          "kind": "adaptive",
+          "levels": [
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque na palavra"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "cup!"
+                }
+              ],
+              "optionIds": [
+                "word-cup",
+                "word-fox"
+              ],
+              "answerId": "word-cup"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque na palavra"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "cup!"
+                }
+              ],
+              "optionIds": [
+                "word-cup",
+                "word-bus",
+                "word-fox"
+              ],
+              "answerId": "word-cup"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque na palavra"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "cup!"
+                }
+              ],
+              "optionIds": [
+                "word-sun",
+                "word-bus",
+                "word-cup",
+                "word-fox"
+              ],
+              "answerId": "word-cup"
+            }
+          ]
+        },
+        {
+          "kind": "intro",
+          "wordId": "word-fox",
+          "say": [
+            {
+              "lang": "pt-BR",
+              "text": "Esta palavra é"
+            },
+            {
+              "lang": "en-US",
+              "text": "fox!"
+            }
+          ]
+        },
+        {
+          "kind": "adaptive",
+          "levels": [
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque na palavra"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "fox!"
+                }
+              ],
+              "optionIds": [
+                "word-cat",
+                "word-fox"
+              ],
+              "answerId": "word-fox"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque na palavra"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "fox!"
+                }
+              ],
+              "optionIds": [
+                "word-cat",
+                "word-box",
+                "word-fox"
+              ],
+              "answerId": "word-fox"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque na palavra"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "fox!"
+                }
+              ],
+              "optionIds": [
+                "word-cat",
+                "word-box",
+                "word-dog",
+                "word-fox"
+              ],
+              "answerId": "word-fox"
+            }
+          ]
+        },
+        {
+          "kind": "matchPairs",
+          "prompt": [
+            {
+              "lang": "pt-BR",
+              "text": "Ligue cada figura à palavra!"
+            }
+          ],
+          "wordIds": [
+            "pig",
+            "box",
+            "bus",
+            "cup"
+          ]
+        },
+        {
+          "kind": "trueFalse",
+          "wordId": "word-fox",
+          "say": [
+            {
+              "lang": "pt-BR",
+              "text": "Aqui está escrito"
+            },
+            {
+              "lang": "en-US",
+              "text": "box?"
+            },
+            {
+              "lang": "pt-BR",
+              "text": "Certo ou errado?"
+            }
+          ],
+          "isTrue": false
+        }
+      ],
+      "closing": [
+        {
+          "lang": "en-US",
+          "text": "Awesome!"
+        },
+        {
+          "lang": "pt-BR",
+          "text": "Hoje você leu:"
+        },
+        {
+          "lang": "en-US",
+          "text": "pig, box, bus, cup, fox!"
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "letras-4/lesson-3",
+      "title": "Lição 3",
+      "opening": [
+        {
+          "lang": "pt-BR",
+          "text": "Oi! Vamos ler as últimas palavras do galho!"
+        }
+      ],
+      "wordIds": [
+        "word-hen",
+        "word-jam",
+        "word-map",
+        "word-net",
+        "word-van"
+      ],
+      "exercises": [
+        {
+          "kind": "intro",
+          "wordId": "word-hen",
+          "say": [
+            {
+              "lang": "pt-BR",
+              "text": "Esta palavra é"
+            },
+            {
+              "lang": "en-US",
+              "text": "hen!"
+            }
+          ]
+        },
+        {
+          "kind": "adaptive",
+          "levels": [
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque na palavra"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "hen!"
+                }
+              ],
+              "optionIds": [
+                "word-hen",
+                "word-box"
+              ],
+              "answerId": "word-hen"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque na palavra"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "hen!"
+                }
+              ],
+              "optionIds": [
+                "word-box",
+                "word-hen",
+                "word-net"
+              ],
+              "answerId": "word-hen"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque na palavra"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "hen!"
+                }
+              ],
+              "optionIds": [
+                "word-hen",
+                "word-sun",
+                "word-box",
+                "word-net"
+              ],
+              "answerId": "word-hen"
+            }
+          ]
+        },
+        {
+          "kind": "intro",
+          "wordId": "word-jam",
+          "say": [
+            {
+              "lang": "pt-BR",
+              "text": "Esta palavra é"
+            },
+            {
+              "lang": "en-US",
+              "text": "jam!"
+            }
+          ]
+        },
+        {
+          "kind": "adaptive",
+          "levels": [
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque na palavra"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "jam!"
+                }
+              ],
+              "optionIds": [
+                "word-bus",
+                "word-jam"
+              ],
+              "answerId": "word-jam"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque na palavra"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "jam!"
+                }
+              ],
+              "optionIds": [
+                "word-bus",
+                "word-map",
+                "word-jam"
+              ],
+              "answerId": "word-jam"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque na palavra"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "jam!"
+                }
+              ],
+              "optionIds": [
+                "word-bus",
+                "word-jam",
+                "word-cat",
+                "word-map"
+              ],
+              "answerId": "word-jam"
+            }
+          ]
+        },
+        {
+          "kind": "intro",
+          "wordId": "word-map",
+          "say": [
+            {
+              "lang": "pt-BR",
+              "text": "Esta palavra é"
+            },
+            {
+              "lang": "en-US",
+              "text": "map!"
+            }
+          ]
+        },
+        {
+          "kind": "adaptive",
+          "levels": [
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque na palavra"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "map!"
+                }
+              ],
+              "optionIds": [
+                "word-map",
+                "word-bus"
+              ],
+              "answerId": "word-map"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque na palavra"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "map!"
+                }
+              ],
+              "optionIds": [
+                "word-map",
+                "word-bus",
+                "word-jam"
+              ],
+              "answerId": "word-map"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque na palavra"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "map!"
+                }
+              ],
+              "optionIds": [
+                "word-van",
+                "word-map",
+                "word-jam",
+                "word-bus"
+              ],
+              "answerId": "word-map"
+            }
+          ]
+        },
+        {
+          "kind": "intro",
+          "wordId": "word-net",
+          "say": [
+            {
+              "lang": "pt-BR",
+              "text": "Esta palavra é"
+            },
+            {
+              "lang": "en-US",
+              "text": "net!"
+            }
+          ]
+        },
+        {
+          "kind": "adaptive",
+          "levels": [
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque na palavra"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "net!"
+                }
+              ],
+              "optionIds": [
+                "word-net",
+                "word-box"
+              ],
+              "answerId": "word-net"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque na palavra"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "net!"
+                }
+              ],
+              "optionIds": [
+                "word-box",
+                "word-hen",
+                "word-net"
+              ],
+              "answerId": "word-net"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque na palavra"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "net!"
+                }
+              ],
+              "optionIds": [
+                "word-box",
+                "word-hen",
+                "word-hat",
+                "word-net"
+              ],
+              "answerId": "word-net"
+            }
+          ]
+        },
+        {
+          "kind": "intro",
+          "wordId": "word-van",
+          "say": [
+            {
+              "lang": "pt-BR",
+              "text": "Esta palavra é"
+            },
+            {
+              "lang": "en-US",
+              "text": "van!"
+            }
+          ]
+        },
+        {
+          "kind": "adaptive",
+          "levels": [
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque na palavra"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "van!"
+                }
+              ],
+              "optionIds": [
+                "word-fox",
+                "word-van"
+              ],
+              "answerId": "word-van"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque na palavra"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "van!"
+                }
+              ],
+              "optionIds": [
+                "word-van",
+                "word-fox",
+                "word-hat"
+              ],
+              "answerId": "word-van"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque na palavra"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "van!"
+                }
+              ],
+              "optionIds": [
+                "word-van",
+                "word-cat",
+                "word-fox",
+                "word-hat"
+              ],
+              "answerId": "word-van"
+            }
+          ]
+        },
+        {
+          "kind": "matchPairs",
+          "prompt": [
+            {
+              "lang": "pt-BR",
+              "text": "Ligue cada figura à palavra!"
+            }
+          ],
+          "wordIds": [
+            "hen",
+            "jam",
+            "map",
+            "net"
+          ]
+        },
+        {
+          "kind": "trueFalse",
+          "wordId": "word-van",
+          "say": [
+            {
+              "lang": "pt-BR",
+              "text": "Aqui está escrito"
+            },
+            {
+              "lang": "en-US",
+              "text": "cat?"
+            },
+            {
+              "lang": "pt-BR",
+              "text": "Certo ou errado?"
+            }
+          ],
+          "isTrue": false
+        }
+      ],
+      "closing": [
+        {
+          "lang": "en-US",
+          "text": "Well done!"
+        },
+        {
+          "lang": "pt-BR",
+          "text": "Hoje você leu:"
+        },
+        {
+          "lang": "en-US",
+          "text": "hen, jam, map, net, van!"
+        }
+      ]
+    },
+    {
+      "kind": "story",
+      "id": "letras-4/story",
+      "title": "O ônibus",
+      "opening": [
+        {
+          "lang": "pt-BR",
+          "text": "Hora da história! Primeiro, vamos lembrar as figuras."
+        }
+      ],
+      "warmup": {
+        "kind": "matchPairs",
+        "prompt": [
+          {
+            "lang": "pt-BR",
+            "text": "Ligue cada figura à palavra!"
+          }
+        ],
+        "wordIds": [
+          "bus",
+          "dog",
+          "fox",
+          "hat"
+        ]
+      },
+      "pages": [
+        {
+          "scene": "tree-room",
+          "say": [
+            {
+              "lang": "pt-BR",
+              "text": "O gatinho subiu no ônibus."
+            },
+            {
+              "lang": "en-US",
+              "text": "The bus! B-U-S, bus!"
+            }
+          ],
+          "hotspots": [
+            {
+              "wordId": "bus",
+              "x": 0.66,
+              "y": 0.6
+            }
+          ]
+        },
+        {
+          "scene": "tree-room",
+          "say": [
+            {
+              "lang": "pt-BR",
+              "text": "No ônibus estavam um cachorro e uma raposa."
+            },
+            {
+              "lang": "en-US",
+              "text": "A dog and a fox!"
+            }
+          ],
+          "hotspots": [
+            {
+              "wordId": "dog",
+              "x": 0.56,
+              "y": 0.64
+            },
+            {
+              "wordId": "fox",
+              "x": 0.8,
+              "y": 0.62
+            }
+          ]
+        },
+        {
+          "scene": "tree-room",
+          "say": [
+            {
+              "lang": "pt-BR",
+              "text": "Eles desceram, e o cachorro ganhou um chapéu."
+            },
+            {
+              "lang": "en-US",
+              "text": "A hat! H-A-T, hat!"
+            }
+          ],
+          "hotspots": [
+            {
+              "wordId": "dog",
+              "x": 0.62,
+              "y": 0.64
+            },
+            {
+              "wordId": "hat",
+              "x": 0.62,
+              "y": 0.34
+            }
+          ]
+        }
+      ],
+      "question": {
+        "kind": "listenTap",
+        "prompt": [
+          {
+            "lang": "pt-BR",
+            "text": "Quem estava no ônibus com o cachorro? Toque!"
+          }
+        ],
+        "optionIds": [
+          "pig",
+          "fox"
+        ],
+        "answerId": "fox"
+      },
+      "closing": [
+        {
+          "lang": "en-US",
+          "text": "Well done!"
+        },
+        {
+          "lang": "pt-BR",
+          "text": "Você ouviu uma história em inglês!"
+        }
+      ]
+    },
+    {
+      "kind": "challenge",
+      "id": "letras-4/challenge",
+      "title": "Desafio",
+      "opening": [
+        {
+          "lang": "pt-BR",
+          "text": "É hora do desafio! Mostre tudo o que você aprendeu!"
+        }
+      ],
+      "wordIds": [
+        "word-hat",
+        "word-pig",
+        "word-bed",
+        "word-van",
+        "word-cat",
+        "word-fox"
+      ],
+      "exercises": [
+        {
+          "kind": "adaptive",
+          "levels": [
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque na palavra"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "hat!"
+                }
+              ],
+              "optionIds": [
+                "word-hat",
+                "word-dog"
+              ],
+              "answerId": "word-hat"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque na palavra"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "hat!"
+                }
+              ],
+              "optionIds": [
+                "word-hat",
+                "word-dog",
+                "word-cat"
+              ],
+              "answerId": "word-hat"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque na palavra"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "hat!"
+                }
+              ],
+              "optionIds": [
+                "word-hat",
+                "word-hen",
+                "word-dog",
+                "word-cat"
+              ],
+              "answerId": "word-hat"
+            }
+          ]
+        },
+        {
+          "kind": "adaptive",
+          "levels": [
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Qual é o"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "pig?"
+                },
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque nele!"
+                }
+              ],
+              "optionIds": [
+                "pig",
+                "bus"
+              ],
+              "answerId": "pig"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Qual é o"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "pig?"
+                },
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque nele!"
+                }
+              ],
+              "optionIds": [
+                "pig",
+                "bus",
+                "dog"
+              ],
+              "answerId": "pig"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Qual é o"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "pig?"
+                },
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque nele!"
+                }
+              ],
+              "optionIds": [
+                "bus",
+                "dog",
+                "pig",
+                "cup"
+              ],
+              "answerId": "pig"
+            }
+          ]
+        },
+        {
+          "kind": "trueFalse",
+          "wordId": "word-bed",
+          "say": [
+            {
+              "lang": "pt-BR",
+              "text": "Aqui está escrito"
+            },
+            {
+              "lang": "en-US",
+              "text": "bed?"
+            },
+            {
+              "lang": "pt-BR",
+              "text": "Certo ou errado?"
+            }
+          ],
+          "isTrue": true
+        },
+        {
+          "kind": "adaptive",
+          "levels": [
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque na palavra"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "van!"
+                }
+              ],
+              "optionIds": [
+                "word-bus",
+                "word-van"
+              ],
+              "answerId": "word-van"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque na palavra"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "van!"
+                }
+              ],
+              "optionIds": [
+                "word-van",
+                "word-jam",
+                "word-bus"
+              ],
+              "answerId": "word-van"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque na palavra"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "van!"
+                }
+              ],
+              "optionIds": [
+                "word-bus",
+                "word-jam",
+                "word-cat",
+                "word-van"
+              ],
+              "answerId": "word-van"
+            }
+          ]
+        },
+        {
+          "kind": "adaptive",
+          "levels": [
+            {
+              "kind": "whatsMissing",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Uma palavra se escondeu! Qual sumiu?"
+                }
+              ],
+              "shownIds": [
+                "word-cat",
+                "word-fox",
+                "word-sun"
+              ],
+              "missingId": "word-hen",
+              "optionIds": [
+                "word-hen",
+                "word-box"
+              ]
+            },
+            {
+              "kind": "whatsMissing",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Uma palavra se escondeu! Qual sumiu?"
+                }
+              ],
+              "shownIds": [
+                "word-cat",
+                "word-fox",
+                "word-sun"
+              ],
+              "missingId": "word-hen",
+              "optionIds": [
+                "word-net",
+                "word-box",
+                "word-hen"
+              ]
+            },
+            {
+              "kind": "whatsMissing",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Uma palavra se escondeu! Qual sumiu?"
+                }
+              ],
+              "shownIds": [
+                "word-cat",
+                "word-fox",
+                "word-sun"
+              ],
+              "missingId": "word-hen",
+              "optionIds": [
+                "word-hen",
+                "word-van",
+                "word-net",
+                "word-box"
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "matchPairs",
+          "prompt": [
+            {
+              "lang": "pt-BR",
+              "text": "Ligue cada figura à palavra!"
+            }
+          ],
+          "wordIds": [
+            "box",
+            "dog",
+            "cup",
+            "jam"
+          ]
+        },
+        {
+          "kind": "trueFalse",
+          "wordId": "word-dog",
+          "say": [
+            {
+              "lang": "pt-BR",
+              "text": "Aqui está escrito"
+            },
+            {
+              "lang": "en-US",
+              "text": "pig?"
+            },
+            {
+              "lang": "pt-BR",
+              "text": "Certo ou errado?"
+            }
+          ],
+          "isTrue": false
+        },
+        {
+          "kind": "adaptive",
+          "levels": [
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Qual é a"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "cup?"
+                },
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque nela!"
+                }
+              ],
+              "optionIds": [
+                "dog",
+                "cup"
+              ],
+              "answerId": "cup"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Qual é a"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "cup?"
+                },
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque nela!"
+                }
+              ],
+              "optionIds": [
+                "bus",
+                "dog",
+                "cup"
+              ],
+              "answerId": "cup"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Qual é a"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "cup?"
+                },
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque nela!"
+                }
+              ],
+              "optionIds": [
+                "sun",
+                "cup",
+                "bus",
+                "dog"
+              ],
+              "answerId": "cup"
+            }
+          ]
+        },
+        {
+          "kind": "adaptive",
+          "levels": [
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque na palavra"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "jam!"
+                }
+              ],
+              "optionIds": [
+                "word-sun",
+                "word-jam"
+              ],
+              "answerId": "word-jam"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque na palavra"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "jam!"
+                }
+              ],
+              "optionIds": [
+                "word-sun",
+                "word-map",
+                "word-jam"
+              ],
+              "answerId": "word-jam"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque na palavra"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "jam!"
+                }
+              ],
+              "optionIds": [
+                "word-cat",
+                "word-map",
+                "word-jam",
+                "word-sun"
+              ],
+              "answerId": "word-jam"
+            }
+          ]
+        }
+      ],
+      "closing": [
+        {
+          "lang": "en-US",
+          "text": "Great job!"
+        },
+        {
+          "lang": "pt-BR",
+          "text": "Você terminou o galho quatro!"
+        }
+      ],
+      "sticker": {
+        "id": "sticker-letras-fox",
+        "art": "fox",
+        "name": [
+          {
+            "lang": "en-US",
+            "text": "A fox sticker!"
+          }
+        ]
+      }
+    }
+  ]
+}

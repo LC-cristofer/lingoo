@@ -2,7 +2,7 @@ import { existsSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { segmentId } from "@/domain/trail/audio-id";
-import { allNarrations } from "@/domain/trail/content";
+import { allNarrations, getPath } from "@/domain/trail/content";
 
 const AUDIO = join(__dirname, "../../public/audio");
 const MIN_BYTES = 2048;
@@ -12,8 +12,10 @@ function sizeOf(file: string): number {
 }
 
 describe("audio completeness", () => {
-  it("every narrated segment has a voice file larger than 2 KB", () => {
-    const segments = allNarrations().flat();
+  it("every narrated segment of the open units has a voice file larger than 2 KB", () => {
+    // A unit still closed on the path (hasContent false) is voiced before it opens (Árvore das Letras: Task 5).
+    const open = new Set(getPath().filter((u) => u.hasContent).map((u) => u.unitId));
+    const segments = allNarrations((id) => open.has(id)).flat();
     expect(segments.length).toBeGreaterThan(100);
     const missing = [...new Map(segments.map((s) => [segmentId(s), s])).entries()]
       .filter(([id]) => sizeOf(join(AUDIO, `${id}.mp3`)) <= MIN_BYTES)

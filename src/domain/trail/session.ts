@@ -1,7 +1,9 @@
-import type { Exercise } from "./schema";
+import { resolve } from "@/domain/nestoy/level";
+import type { Level } from "@/domain/nestoy/profile";
+import type { Exercise, StopExercise } from "./schema";
 
 export type Phase = "answering" | "correct" | "retry" | "hint";
-export type SessionItem = { exercise: Exercise; key: string; isReview: boolean };
+export type SessionItem = { exercise: StopExercise; key: string; isReview: boolean };
 export type Session = {
   items: SessionItem[];
   index: number;
@@ -11,7 +13,7 @@ export type Session = {
   finished: boolean;
 };
 
-export function startSession(exercises: Exercise[], stopId: string): Session {
+export function startSession(exercises: StopExercise[], stopId: string): Session {
   return {
     items: exercises.map((exercise, i) => ({ exercise, key: `${stopId}#${i}`, isReview: false })),
     index: 0,
@@ -56,4 +58,9 @@ export function next(s: Session): Session {
 export function progressRatio(s: Session): number {
   if (s.items.length === 0) return 1;
   return Math.min(1, s.index / s.items.length);
+}
+
+/** The current item as the child sees it at this level (adaptive slots resolved; the others as they are). */
+export function exerciseAt(s: Session, level: Level): Exercise {
+  return resolve(s.items[Math.min(s.index, s.items.length - 1)].exercise, level);
 }

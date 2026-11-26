@@ -1,13 +1,16 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ART_WORDS } from "@/art/Animal";
 import { Nino } from "@/art/nino/Nino";
 import type { NinoPose } from "@/art/nino/poses";
 import { narrator } from "@/audio/narrator";
+import { useOptionalProfile } from "@/components/nestoy/ProfileProvider";
+import { nextLevel, startRun, type LevelRun } from "@/domain/nestoy/level";
+import { startLevel, type Level } from "@/domain/nestoy/profile";
 import { getLines } from "@/domain/trail/content";
-import type { ArtId, Exercise, Narration, Word } from "@/domain/trail/schema";
-import { answer, next, progressRatio, resume, startSession, type Phase } from "@/domain/trail/session";
+import type { ArtId, Exercise, Narration, StopExercise, Word } from "@/domain/trail/schema";
+import { answer, exerciseAt, next, progressRatio, resume, startSession, type Phase } from "@/domain/trail/session";
 import { ExerciseShell } from "./ExerciseShell";
 import { ExerciseView } from "./exercises/ExerciseView";
 import { AnswerTile, TileGrid } from "./kit/AnswerTile";
@@ -164,7 +167,8 @@ export function StopClosing({ closing, words, wordIds, isChallenge = false, reco
 }
 
 type ExerciseLoopProps = {
-  exercises: Exercise[];
+  /** Adaptive slots are shown at the child's current level (see `adaptive`; level 1 without it). */
+  exercises: StopExercise[];
   /** Seeds the session (a stable id for the stop). */
   sessionId: string;
   words: Word[];
@@ -179,12 +183,26 @@ type ExerciseLoopProps = {
   noReview?: boolean;
   /** Every attempt (right or wrong), as it happens. */
   onAttempt?: (correct: boolean) => void;
+  /**
+   * The unit whose saved level (profile, Árvore das Letras) the adaptive slots start from; the level
+   * moves with the first tries and, when `record`, is saved back when the last exercise is done.
+   */
+  adaptive?: { unitId: string; record: boolean };
 };
 
 /** Exercises with retry, hint and review, the feedback sheet and the gatinho's reactions. */
-export function ExerciseLoop({ exercises, sessionId, words, onExit, onFinished, praise, topBar, noReview = false, onAttempt }: ExerciseLoopProps) {
+export function ExerciseLoop({ exercises, sessionId, words, onExit, onFinished, praise, topBar, noReview = false, onAttempt, adaptive }: ExerciseLoopProps) {
   const lines = useMemo(() => getLines(), []);
+  const profileCtx = useOptionalProfile();
   const [session, setSession] = useState(() => startSession(exercises, sessionId));
+  // The level moves on every adaptive item's first try; an item keeps the level it was shown at.
+  const [firstRun] = useState<LevelRun>(() => {
+    const p = profileCtx?.profile;
+    if (!p || !adaptive) return startRun(1);
+    return startRun(p.islands.descoberta.letras.levels[adaptive.unitId] ?? startLevel(p));
+  });
+  const runRef = useRef(firstRun);
+  const [itemLevel, setItemLevel] = useState<Level>(firstRun.level);
   const [shown, setShown] = useState(0);
   const [correctCount, setCorrectCount] = useState(0);
   const [override, setOverride] = useState<{ key: string; pose: NinoPose } | null>(null);
@@ -194,7 +212,8 @@ export function ExerciseLoop({ exercises, sessionId, words, onExit, onFinished, 
   if (rawRatio > shown) setShown(rawRatio);
   const ratio = Math.max(shown, rawRatio);
 
-  const item = session.items[Math.min(session.index, session.items.length - 1)];
+  const current = session.items[Math.min(session.index, session.items.length - 1)];
+  const item = useMemo(() => ({ ...current, exercise: exerciseAt(session, itemLevel) }), [current, session, itemLevel]);
   const { phase, index } = session;
   const praiseLine = praise ?? lines.praise[Math.max(0, correctCount - 1) % lines.praise.length];
 
@@ -234,13 +253,20 @@ export function ExerciseLoop({ exercises, sessionId, words, onExit, onFinished, 
     if (noReview && after.items.length > session.items.length) after = { ...after, items: session.items };
     onAttempt?.(correct);
     if (after.phase === "correct") setCorrectCount((n) => n + 1);
+    if (current.exercise.kind === "adaptive" && session.phase === "answering" && session.wrongCount === 0) {
+      runRef.current = nextLevel(runRef.current, correct);
+    }
     setSession(after);
   };
 
   const onContinue = () => {
     const after = next(session);
     setSession(after);
-    if (after.finished) onFinished();
+    setItemLevel(runRef.current.level);
+    if (after.finished) {
+      if (adaptive?.record && profileCtx && exercises.some((e) => e.kind === "adaptive")) profileCtx.setLevel(adaptive.unitId, runRef.current.level);
+      onFinished();
+    }
   };
 
   const overrideKey = `${index}:${phase}`;
