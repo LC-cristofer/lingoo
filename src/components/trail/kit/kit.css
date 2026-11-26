@@ -297,7 +297,7 @@
 
 
 /* ---------- the farol interior behind the stops: still, blurred, veiled in cream (spec §6; proto #veil) ---------- */
-.k-backdrop.is-farol { background: var(--stone); }
+.k-backdrop.is-farol, .k-backdrop.is-arvore { background: var(--stone); }
 .k-farol-pic { position: absolute; left: -24px; top: -24px; width: calc(100% + 48px); height: calc(100% + 48px); display: block; filter: blur(6px); }
 .k-veil { position: absolute; inset: 0; background: linear-gradient(rgba(255, 246, 230, .35), rgba(255, 246, 230, .72) 30%, rgba(255, 246, 230, .86)); }
 

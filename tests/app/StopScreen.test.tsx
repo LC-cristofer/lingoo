@@ -141,4 +141,27 @@ describe("StopScreen", () => {
     act(() => seenExit.current!("done"));
     expect(push).toHaveBeenCalledWith("/revisao");
   });
+  it("a stop in a closed branch of the tree goes back to /arvore, not to the farol", () => {
+    render(<StopScreen stopId="letras-2/song" />);
+    expect(replace).toHaveBeenCalledWith("/arvore");
+  });
+
+  it("a locked stop inside an open branch goes to /arvore too", () => {
+    render(<StopScreen stopId="letras-1/lesson-1" />);
+    expect(replace).toHaveBeenCalledWith("/arvore");
+  });
+
+  it("an open letras stop renders, and quitting goes back up the tree", () => {
+    progress = { ...DONE, completedStops: { "letras-1/song": "2026-01-01T00:00:00.000Z" } };
+    render(<StopScreen stopId="letras-1/lesson-1" />);
+    expect(replace).not.toHaveBeenCalled();
+    act(() => seenExit.current!("quit"));
+    expect(push).toHaveBeenCalledWith("/arvore");
+  });
+
+  it("the next branch opens once the challenge of the one before is done", () => {
+    progress = { ...DONE, completedStops: { "letras-1/challenge": "2026-01-01T00:00:00.000Z" } };
+    render(<StopScreen stopId="letras-2/song" />);
+    expect(replace).not.toHaveBeenCalled();
+  });
 });

@@ -2,12 +2,12 @@
    drives all motion (camera, day/night, ambient loops, Nino). React never re-renders per frame:
    only viewBox, SVG attributes, transform and opacity change. Ported from tools/visual/ilha/src/app.js. */
 import { createNinoRig, type NinoRig } from "@/art/nino/rig";
+import { ARVORE_DOOR, buildArvoreInterior } from "./arvore-interior";
 import { FAROL_INTERIOR_DOOR, buildFarolInterior } from "./farol-interior";
 import { NEST, ROUTES, buildIsland, type IslandStates, type PlaceId } from "./island";
 import { LAYER_K, layerViewBox, toScreen, overviewCam, type Cam, type Viewport } from "./camera";
 import { createTimeline, type Timeline } from "./timeline";
 
-const FAROL_IN = FAROL_INTERIOR_DOOR;
 const SVGNS = "http://www.w3.org/2000/svg";
 const SKY_D = ["#7CC4EE", "#CDEBF8", "#FFEFD9"], SKY_N = ["#0E1640", "#1E2A6B", "#3A3270"];
 const mixHex = (a: string, b: string, t: number) => {
@@ -40,7 +40,7 @@ export type Stage = {
 };
 
 export type StageOptions = {
-  scene: "island" | "farol"; states: IslandStates; threads: number; farolLevel: 1 | 2 | 3 | 4; reduced: boolean; clock?: "raf" | "manual";
+  scene: "island" | "farol" | "arvore"; states: IslandStates; threads: number; farolLevel: 1 | 2 | 3 | 4; reduced: boolean; clock?: "raf" | "manual";
 };
 
 function svgEl(html: string, id: string, cls = "stage-layer"): SVGSVGElement {
@@ -72,8 +72,9 @@ export function createStage(host: HTMLElement, o: StageOptions): Stage {
     pins: { ninho: 1, letras: 1, numeros: 1, cores: 1, lago: 1, farol: 1 }, intro: { logo: 0, skip: 0, fade: 0 },
   };
   let vp: Viewport = { w: host.clientWidth || 390, h: host.clientHeight || 844, top: 108, bottom: 150 };
-  // farol: starts at the door at D 0.5 (the plan for Task 6; the prototype's icam was 500,2280,0.45)
-  const cam: Cam = isIsland ? overviewCam(vp) : { X: 500, Y: 2250, D: 0.5 };
+  // the interiors start at their door at D 0.5 (the prototype's icam was 500,2280,0.45)
+  const door = o.scene === "arvore" ? ARVORE_DOOR : FAROL_INTERIOR_DOOR;
+  const cam: Cam = isIsland ? overviewCam(vp) : { X: 500, Y: door.y - 140, D: 0.5 };
 
   // ---- DOM ----
   const wrap = document.createElement("div");
@@ -96,7 +97,7 @@ export function createStage(host: HTMLElement, o: StageOptions): Stage {
     layers = [[far, LAYER_K.far], [mid, LAYER_K.mid], [isl, LAYER_K.island], [near, LAYER_K.near]].map(([el, k]) => ({ el: el as SVGSVGElement, k: k as number }));
     layers.forEach(l => wrap.appendChild(l.el));
   } else {
-    inter = svgEl(buildFarolInterior(), "Lint");
+    inter = svgEl(o.scene === "arvore" ? buildArvoreInterior() : buildFarolInterior(), "Lint");
     layers = [{ el: inter, k: 0 }];
     wrap.appendChild(inter);
   }
@@ -131,7 +132,7 @@ export function createStage(host: HTMLElement, o: StageOptions): Stage {
   // ---- Nino ----
   let slot: "nest" | "actors" | "interior" = isIsland ? "nest" : "interior";
   const slotEl = (s: typeof slot) => (s === "nest" ? q("#slotNest") : s === "actors" ? q("#slotActors") : inter?.querySelector("#slotInterior")) as SVGElement | null;
-  const nino = createNinoRig(slotEl(slot) as SVGElement, isIsland ? { x: 500, y: 1070, s: 0.56 } : { x: FAROL_IN.x, y: FAROL_IN.y, s: 0.62 });
+  const nino = createNinoRig(slotEl(slot) as SVGElement, isIsland ? { x: 500, y: 1070, s: 0.56 } : { x: door.x, y: door.y, s: 0.62 });
 
   function moveNino(to: "nest" | "actors" | "interior") {
     const target = slotEl(to);

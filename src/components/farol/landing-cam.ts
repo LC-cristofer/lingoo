@@ -23,7 +23,11 @@ export function ninoSpot(index: number): { x: number; y: number } {
  * landings stay in view.
  */
 export function landingCam(vp: Viewport, index: number, leftReserved = 0): Cam {
-  const L = FAROL_LANDINGS[Math.max(0, Math.min(FAROL_LANDINGS.length - 1, index))];
+  return framingCam(FAROL_LANDINGS[Math.max(0, Math.min(FAROL_LANDINGS.length - 1, index))], vp, leftReserved);
+}
+
+/** The framing of one landing (any interior with the same 1000-wide room): see `landingCam`. */
+export function framingCam(L: { x: number; y: number }, vp: Viewport, leftReserved = 0): Cam {
   const base = ppu({ X: 0, Y: 0, D: 1 }, vp);
   const band = Math.max(1, vp.h - vp.top - vp.bottom);
   const shown = Math.min(ROOM_MAX, Math.max(ROOM_SHOWN, (STAIR_SPAN * vp.w) / band));

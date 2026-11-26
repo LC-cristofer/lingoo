@@ -1,0 +1,5 @@
+/* The inside of the Árvore das Letras. The world screens' base (stage, card, hits) is nestoy.css; this only adds what is
+   specific to the tree. */
+
+/* The camera is set at the platform before the first picture shows, so the child never sees the door and then a jump. */
+.av-screen:not([data-camera="set"]) .nz-stage { visibility: hidden; }

@@ -2,12 +2,15 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { Fragment, useEffect, useMemo, useRef } from "react";
-import { stopExitHref } from "@/components/trail/exit-target";
-import { LandingContext } from "@/components/trail/kit/Backdrop";
+import { useOptionalProfile } from "@/components/nestoy/ProfileProvider";
+import { stopExitHref, stopHomeHref } from "@/components/trail/exit-target";
+import { InteriorContext, LandingContext } from "@/components/trail/kit/Backdrop";
 import { SongStop } from "@/components/trail/SongStop";
 import { StopPlayer, type StopExit } from "@/components/trail/StopPlayer";
 import { StoryStop } from "@/components/trail/StoryStop";
 import { useTrailProgress } from "@/components/trail/TrailProgressProvider";
+import { unitOpen, type Branch } from "@/domain/letras/access";
+import { defaultProfile } from "@/domain/nestoy/profile";
 import { getStop } from "@/domain/trail/content";
 import { stopStatus } from "@/domain/trail/progress";
 
@@ -26,8 +29,15 @@ function StopScreenBody({ stopId }: { stopId: string }) {
   const review = useSearchParams().get("revisao") === "1";
   const { progress, hydrated, markToday } = useTrailProgress();
   const found = useMemo(() => getStop(stopId), [stopId]);
-  const locked = found !== null && stopStatus(found.unit, progress, stopId) === "locked";
+  const profileCtx = useOptionalProfile();
+  // The Árvore das Letras' branches have their own rule (`unitOpen`); inside a branch the stops stay in sequence.
+  const letras = /^letras-([1-4])$/.exec(found?.unit.id ?? "");
+  const branch = letras ? (Number(letras[1]) as Branch) : null;
+  const profileReady = branch === null || (profileCtx?.hydrated ?? true);
+  const closed = found !== null && branch !== null && !unitOpen(progress, profileCtx?.profile ?? defaultProfile(), branch);
+  const locked = found !== null && (closed || stopStatus(found.unit, progress, stopId) === "locked");
   const allowed = found !== null && (review || !locked);
+  const home = stopHomeHref(stopId);
   const marked = useRef(false);
   // Whether the stop was already finished when the child came in: replaying it must not replay the reward.
   const wasDone = useRef<boolean | null>(null);
@@ -36,8 +46,8 @@ function StopScreenBody({ stopId }: { stopId: string }) {
   }, [hydrated, progress, stopId]);
 
   useEffect(() => {
-    if (hydrated && !allowed) router.replace("/farol");
-  }, [hydrated, allowed, router]);
+    if (hydrated && profileReady && !allowed) router.replace(home);
+  }, [hydrated, profileReady, allowed, router, home]);
 
   useEffect(() => {
     if (hydrated && allowed && !review && !marked.current) {
@@ -46,24 +56,27 @@ function StopScreenBody({ stopId }: { stopId: string }) {
     }
   }, [hydrated, allowed, review, markToday]);
 
-  if (!hydrated || !found || !allowed) return null;
+  if (!hydrated || !profileReady || !found || !allowed) return null;
   const { unit, stop } = found;
 
   // Quit goes back up the staircase; finishing goes to the start page, which will show the reward (?volta).
   const exit = (reason: StopExit) => {
     router.push(stopExitHref(stopId, reason, wasDone.current === true, review));
   };
-  // The farol's interior behind the screen is centred on this stop's landing.
-  const landing = Math.max(0, unit.stops.findIndex((s) => s.id === stop.id));
+  // The interior behind the screen (the farol's, or the tree's for a letras unit) is centred on this stop's landing.
+  const inUnit = Math.max(0, unit.stops.findIndex((s) => s.id === stop.id));
+  const landing = branch === null ? inUnit : (branch - 1) * 6 + inUnit;
   return (
-    <LandingContext.Provider value={landing}>
-      {stop.kind === "song" ? (
-        <SongStop unit={unit} stop={stop} record={!review} onExit={exit} />
-      ) : stop.kind === "story" ? (
-        <StoryStop unit={unit} stop={stop} record={!review} onExit={exit} />
-      ) : (
-        <StopPlayer unit={unit} stop={stop} record={!review} onExit={exit} />
-      )}
-    </LandingContext.Provider>
+    <InteriorContext.Provider value={branch === null ? "farol" : "arvore"}>
+      <LandingContext.Provider value={landing}>
+        {stop.kind === "song" ? (
+          <SongStop unit={unit} stop={stop} record={!review} onExit={exit} />
+        ) : stop.kind === "story" ? (
+          <StoryStop unit={unit} stop={stop} record={!review} onExit={exit} />
+        ) : (
+          <StopPlayer unit={unit} stop={stop} record={!review} onExit={exit} />
+        )}
+      </LandingContext.Provider>
+    </InteriorContext.Provider>
   );
 }

@@ -9,7 +9,7 @@ import { createStage, type Stage } from "@/world/stage";
 export type StageInsets = { top: number; bottom: number; left?: number; right?: number };
 
 type StageViewProps = {
-  scene: "island" | "farol";
+  scene: "island" | "farol" | "arvore";
   /** Island places' states and nest threads (read when the stage is built). */
   states?: IslandStates;
   threads?: number;
