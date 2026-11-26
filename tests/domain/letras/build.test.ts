@@ -82,6 +82,23 @@ describe("buildLetrasUnits", () => {
     }
   });
 
+  it('every "Começa com X?" question is true exactly when the word starts with X', () => {
+    let seen = 0;
+    for (const u of units) {
+      for (const s of u.stops) {
+        if (s.kind !== "lesson" && s.kind !== "challenge") continue;
+        for (const e of s.exercises) {
+          if (e.kind !== "trueFalse" || e.say[1]?.text !== "Começa com") continue;
+          const word = e.say[0].text.replace(/[^a-z]/gi, "").toLowerCase();
+          const letter = e.say[2].text.replace(/[^a-z]/gi, "").toLowerCase();
+          expect(word.startsWith(letter), `${s.id}: ${word} / ${letter}`).toBe(e.isTrue);
+          seen++;
+        }
+      }
+    }
+    expect(seen).toBeGreaterThan(0);
+  });
+
   it("lessons and challenges have 8 to 12 exercises", () => {
     for (const u of units) {
       for (const s of u.stops) {

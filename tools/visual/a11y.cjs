@@ -16,6 +16,8 @@ const FORMS = [
 ];
 const today = new Date().toISOString().slice(0, 10);
 const SETTINGS = { version: 1, ambient: "dia", bedtime: "19:30", pauseMinutes: 0, opening: "auto", motion: "reduzir", openingSeen: true, lastVisit: today };
+const PROFILE = { version: 1, name: "Ana", age: 5, english: "none", onboarding: "done", createdAt: "2026-11-26T10:00:00.000Z", islands: { descoberta: { letras: { levels: {} } } } };
+const doneLetras = (...slugs) => ({ version: 3, completedStops: Object.fromEntries(slugs.map((s) => [`letras-1/${s}`, today])), stickers: {}, daysPlayed: [today], memory: {}, legacy: null });
 const done = (...slugs) => ({ completedStops: Object.fromEntries(slugs.map((s) => [`forest-animals/${s}`, today])), stickers: { "sticker-forest-bear": today }, daysPlayed: [today], memory: { "forest-animals:bear": { box: 1, due: "2020-01-01" } } });
 const holdGate = async (page) => {
   const box = await page.locator(".np-hold").boundingBox();
@@ -26,10 +28,25 @@ const holdGate = async (page) => {
   await page.locator(".np-sheet").waitFor();
   await page.waitForTimeout(300);
 };
+const holdCadastro = async (page) => {
+  const box = await page.getByRole("button", { name: "Segure para entrar" }).boundingBox();
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  await page.mouse.down();
+  await page.waitForTimeout(2400);
+  await page.mouse.up();
+  await page.waitForTimeout(300);
+};
 // Each scenario is a screen state, not only a route: the opened parents' sheet, the island with a card action, the night...
 const SCENARIOS = [
   { name: "/ (island)", url: "/" },
   { name: "/ (farol focused, with the Entrar button)", url: "/", act: async (p) => { await p.getByRole("button", { name: "Farol das Línguas" }).click(); await p.getByRole("button", { name: "Entrar no farol" }).waitFor(); } },
+  { name: "/ (tree focused, with the Entrar button)", url: "/", act: async (p) => { await p.getByRole("button", { name: "Árvore das Letras" }).click(); await p.getByRole("button", { name: "Entrar na árvore" }).waitFor(); } },
+  { name: "cadastro (gate)", url: "/", profile: null },
+  { name: "cadastro (English contact)", url: "/", profile: null, act: async (p) => { await holdCadastro(p); await p.getByRole("button", { name: "Pular" }).click(); await p.getByRole("button", { name: "5", exact: true }).click(); await p.getByRole("button", { name: "Lê palavras simples em inglês" }).waitFor(); } },
+  { name: "/arvore (start)", url: "/arvore", progress: { version: 3, completedStops: {}, stickers: {}, daysPlayed: [], memory: {}, legacy: null } },
+  { name: "/arvore (branch 1 done, tree grown)", url: "/arvore", progress: doneLetras("song", "lesson-1", "lesson-2", "lesson-3", "story", "challenge") },
+  { name: "/parada/letras-1/lesson-1 (opening)", url: "/parada/letras-1/lesson-1?revisao=1" },
+  { name: "/parada/letras-1/lesson-1 (first exercise)", url: "/parada/letras-1/lesson-1?revisao=1", act: async (p) => { await p.getByRole("button", { name: "Começar" }).click(); await p.locator("button[data-card]:visible").first().waitFor(); } },
   { name: "/ (night)", url: "/", settings: { ambient: "noite" } },
   { name: "/farol (half way)", url: "/farol", progress: done("song", "lesson-1", "lesson-2") },
   { name: "/ninho (sticker, memory due)", url: "/ninho", progress: done("song", "lesson-1", "lesson-2", "lesson-3", "story", "challenge") },
@@ -99,12 +116,13 @@ async function focusRings(page) {
   for (const form of FORMS) {
     for (const sc of SCENARIOS.filter((x) => !process.env.ONLY_SC || x.name.includes(process.env.ONLY_SC))) {
       const ctx = await browser.newContext({ viewport: { width: form.width, height: form.height }, reducedMotion: "reduce" });
-      await ctx.addInitScript(([k, v, pk, pv]) => {
+      await ctx.addInitScript(([k, v, pk, pv, fk, fv]) => {
         try {
           localStorage.setItem(k, v);
           if (pv) localStorage.setItem(pk, pv);
+          if (fv) localStorage.setItem(fk, fv);
         } catch {}
-      }, ["lingoo:settings:v1", JSON.stringify({ ...SETTINGS, ...(sc.settings ?? {}) }), "lingoo:progress:v2", sc.progress ? JSON.stringify(sc.progress) : ""]);
+      }, ["lingoo:settings:v1", JSON.stringify({ ...SETTINGS, ...(sc.settings ?? {}) }), sc.progress?.version === 3 ? "lingoo:progress:v3" : "lingoo:progress:v2", sc.progress ? JSON.stringify(sc.progress) : "", "lingoo:profile:v1", sc.profile === null ? "" : JSON.stringify(PROFILE)]);
       const page = await ctx.newPage();
       await page.goto(`${BASE}${sc.url}`, { waitUntil: "networkidle" });
       await page.waitForTimeout(1500);

@@ -39,11 +39,11 @@ function poseFor(phase: Phase): NinoPose {
   return "help";
 }
 
-/** The stop's words as tiles with the English word under each (tap to hear it). */
+/** The stop's words as tiles with the English word under each (tap to hear it): 4 small in a block, 5 in two rows of three, so the start button stays on screen. */
 export function WordCards({ words, ids }: { words: Word[]; ids: ArtId[] }) {
   return (
     <div className="k-words">
-      <TileGrid dense={ids.length % 3 === 0} six={ids.length === 6}>
+      <TileGrid dense={ids.length % 3 === 0 || ids.length === 5} small={ids.length === 4} six={ids.length === 6}>
         {ids.map((id) => {
           const word = words.find((w) => w.id === id);
           return (

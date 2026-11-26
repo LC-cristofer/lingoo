@@ -318,7 +318,7 @@
 .k-star-big > g { transform-box: fill-box; transform-origin: center; animation: k-spring 640ms var(--ease-spring) both; }
 .k-reward-hero .k-cat { position: absolute; left: calc(50% + 96px); top: 36px; animation: k-fade-up 420ms var(--ease-out) 380ms both; }
 .k-reward-title { margin: var(--sp-2) 0 0; font-family: var(--font-display); font-weight: 700; font-size: 34px; line-height: 1.05; text-align: center; color: var(--cocoa); animation: k-fade-up 420ms var(--ease-out) 260ms both; }
-.k-reward-sub { margin: 0; max-width: 420px; font-family: var(--font-body); font-weight: 800; font-size: 19px; line-height: 1.25; text-align: center; color: var(--cocoa-2); animation: k-fade-up 420ms var(--ease-out) 340ms both; }
+.k-reward-sub { text-wrap: balance; margin: 0; max-width: 420px; font-family: var(--font-body); font-weight: 800; font-size: 19px; line-height: 1.25; text-align: center; color: var(--cocoa-2); animation: k-fade-up 420ms var(--ease-out) 340ms both; }
 .k-reward-sub b { color: var(--area-linguas-dark); }
 .k-reward-stage .k-words { animation: k-fade-up 420ms var(--ease-out) 420ms both; }
 .k-reward-stage .k-prize { flex: 1; flex-wrap: wrap; }

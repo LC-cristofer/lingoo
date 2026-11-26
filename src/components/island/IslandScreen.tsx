@@ -415,7 +415,7 @@ export function IslandScreen({ mode = "auto", volta = null, held = false, onStag
       await speak(token, lines.placeFarol);
       if (token === flowRef.current) Object.assign(s.nino.st, poseState("idle"));
     } else if (id === "letras") {
-      setView({ title: PLACE_NAMES.letras, text: `Inglês · Galho ${branch}: ${branchTitle}`, chip: "Pronto", tone: "ok" });
+      setView({ title: PLACE_NAMES.letras, text: `Inglês · Galho\u00a0${branch}: ${branchTitle}`, chip: "Pronto", tone: "ok" });
       await goToArvore(s, vp);
       if (token !== flowRef.current) return;
       setPose("point");

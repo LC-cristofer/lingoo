@@ -78,7 +78,7 @@ export function ArvoreScreen() {
   const focusBranch = ARVORE_LANDINGS[focusIndex].unit;
   const branchTitle = path.find((u) => u.unitId === branchUnitId(focusBranch))?.title ?? "";
 
-  const intro: Message = { title: "Árvore das Letras", text: `Galho ${focusBranch}: ${branchTitle}` };
+  const intro: Message = { title: "Árvore das Letras", text: `Galho\u00a0${focusBranch}: ${branchTitle}` };
   const chip = `${doneIn(focusBranch)} de 6`;
   const [message, setMessage] = useState<Message | null>(null);
   const [pose, setPose] = useState<NinoPose>("idle");
