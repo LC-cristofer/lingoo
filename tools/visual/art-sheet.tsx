@@ -18,7 +18,7 @@ import { ForestBackdrop } from "@/art/scenes/ForestBackdrop";
 import { Sticker } from "@/art/scenes/Sticker";
 import { StoryScene } from "@/art/scenes/StoryScene";
 import { getUnit } from "@/domain/trail/content";
-import { artIdSchema, type ArtId, type Stop } from "@/domain/trail/schema";
+import { ANIMAL_IDS, type Stop } from "@/domain/trail/schema";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const root = resolve(here, "../..");
@@ -33,7 +33,7 @@ const expressions: { id: CatExpression; name: string; use: string }[] = [
   { id: "listening", name: "Ouvindo", use: "“Sua vez!”" },
 ];
 
-const animalNames: Record<ArtId, string> = {
+const animalNames: Record<(typeof ANIMAL_IDS)[number], string> = {
   bear: "urso",
   bird: "passarinho",
   frog: "sapo",
@@ -42,7 +42,7 @@ const animalNames: Record<ArtId, string> = {
   mouse: "ratinho",
 };
 
-const ids = artIdSchema.options;
+const ids = ANIMAL_IDS;
 
 function Cell({ children, title, note }: { children: ReactNode; title: string; note: string }) {
   return (

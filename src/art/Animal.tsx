@@ -1,18 +1,19 @@
 import type { ComponentType } from "react";
-import type { ArtId } from "@/domain/trail/schema";
+import { artIdSchema, type ArtId } from "@/domain/trail/schema";
 import { Bear } from "./animals/Bear";
 import { Bird } from "./animals/Bird";
 import { Frog } from "./animals/Frog";
 import { Mouse } from "./animals/Mouse";
 import { Snake } from "./animals/Snake";
 import { Spider } from "./animals/Spider";
+import { Glyph, glyphText } from "./glyphs/Glyph";
 import { SUN, Sparkle } from "./shared";
 
 // Every animal is drawn in the same 200 × 210 space (ground shadow at y = 200, as the approved
 // bear). The frame adds a margin around it so the glow halo fits inside the square viewBox.
 const VIEW_BOX = "-20 -12 240 240";
 
-const DRAWINGS: Record<ArtId, ComponentType> = {
+const DRAWINGS: Partial<Record<ArtId, ComponentType>> = {
   bear: Bear,
   bird: Bird,
   frog: Frog,
@@ -22,14 +23,9 @@ const DRAWINGS: Record<ArtId, ComponentType> = {
 };
 
 /** The English word each drawing stands for: its accessible name. */
-export const ART_WORDS: Record<ArtId, string> = {
-  bear: "bear",
-  bird: "bird",
-  frog: "frog",
-  snake: "snake",
-  spider: "spider",
-  mouse: "mouse",
-};
+export const ART_WORDS = Object.fromEntries(
+  artIdSchema.options.map((id) => [id, DRAWINGS[id] ? id : glyphText(id)]),
+) as Record<ArtId, string>;
 
 function Glow() {
   return (
@@ -48,6 +44,7 @@ function Glow() {
 }
 
 export function Animal({ id, size = 200, glow = false }: { id: ArtId; size?: number; glow?: boolean }) {
+  // Letter and word cards, and pictures not drawn yet, are glyph cards.
   const Drawing = DRAWINGS[id];
   return (
     <svg
@@ -62,7 +59,7 @@ export function Animal({ id, size = 200, glow = false }: { id: ArtId; size?: num
       className="art-animal"
     >
       {glow ? <Glow /> : null}
-      <Drawing />
+      {Drawing ? <Drawing /> : <Glyph id={id} />}
     </svg>
   );
 }

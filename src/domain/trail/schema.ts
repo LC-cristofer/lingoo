@@ -7,7 +7,24 @@ const segmentSchema = z.object({
 });
 const narrationSchema = z.array(segmentSchema).min(1);
 
-export const artIdSchema = z.enum(["bear", "bird", "frog", "snake", "spider", "mouse"]);
+export const ANIMAL_IDS = ["bear", "bird", "frog", "snake", "spider", "mouse"] as const;
+export const LETTER_IDS = [
+  "letter-a", "letter-b", "letter-c", "letter-d", "letter-e", "letter-f", "letter-g", "letter-h", "letter-i",
+  "letter-j", "letter-k", "letter-l", "letter-m", "letter-n", "letter-o", "letter-p", "letter-q", "letter-r",
+  "letter-s", "letter-t", "letter-u", "letter-v", "letter-w", "letter-x", "letter-y", "letter-z",
+] as const;
+/** Written-word cards: the word alone, no picture. */
+export const WORD_IDS = [
+  "word-cat", "word-dog", "word-sun", "word-hat", "word-bed", "word-pig", "word-box", "word-bus",
+  "word-cup", "word-fox", "word-hen", "word-jam", "word-map", "word-net", "word-van",
+] as const;
+/** Illustrated words (drawn in Task 2; stubs render the word until then). */
+export const PICTURE_IDS = [
+  "apple", "ball", "cat", "dog", "egg", "fish", "goat", "hat", "igloo", "jam", "kite", "lion", "moon", "nest",
+  "orange", "pig", "queen", "rain", "sun", "tree", "umbrella", "van", "web", "box", "yoyo", "zebra", "bed",
+  "bus", "cup", "fox", "hen", "map", "net",
+] as const;
+export const artIdSchema = z.enum([...ANIMAL_IDS, ...LETTER_IDS, ...WORD_IDS, ...PICTURE_IDS]);
 export const sceneIdSchema = z.enum([
   "forest-walk",
   "forest-bear",

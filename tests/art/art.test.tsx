@@ -3,11 +3,11 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import { Animal } from "@/art/Animal";
 import { Cat, type CatExpression } from "@/art/Cat";
-import { artIdSchema, type ArtId } from "@/domain/trail/schema";
+import { ANIMAL_IDS, artIdSchema } from "@/domain/trail/schema";
 
 const expressions: CatExpression[] = ["idle", "talking", "happy", "pointing", "helping", "listening"];
 
-const englishWord: Record<ArtId, string> = {
+const englishWord: Record<(typeof ANIMAL_IDS)[number], string> = {
   bear: "bear",
   bird: "bird",
   frog: "frog",
@@ -16,7 +16,7 @@ const englishWord: Record<ArtId, string> = {
   mouse: "mouse",
 };
 
-const ids = artIdSchema.options;
+const ids = ANIMAL_IDS;
 
 describe("Cat", () => {
   it.each(expressions)("renders the %s expression as the Gatinho image", (expression) => {
@@ -33,8 +33,9 @@ describe("Cat", () => {
 });
 
 describe("Animal", () => {
-  it("covers every ArtId", () => {
+  it("covers every animal ArtId (cards and pictures are tested elsewhere)", () => {
     expect([...ids].sort()).toEqual(Object.keys(englishWord).sort());
+    for (const id of ids) expect(artIdSchema.options).toContain(id);
   });
 
   it.each(ids)("labels %s with its English word, in English", (id) => {
