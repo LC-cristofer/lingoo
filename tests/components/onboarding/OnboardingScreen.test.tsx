@@ -39,6 +39,14 @@ describe("OnboardingScreen", () => {
     expect(screen.queryByLabelText("Nome da criança")).not.toBeInTheDocument();
   });
 
+  it("Nino can be touched to hear \"Chame um adulto!\" again (audio locked on mount)", () => {
+    vi.mocked(narrator.playNarration).mockClear();
+    render(<OnboardingScreen existing={false} />);
+    vi.mocked(narrator.playNarration).mockClear();
+    fireEvent.click(screen.getByRole("button", { name: "Ouvir de novo" }));
+    expect(narrator.playNarration).toHaveBeenCalledWith(getLines().callAdult);
+  });
+
   it("walks name, age, English contact and Pronto!, saving done", async () => {
     render(<OnboardingScreen existing={false} />);
     await pass();

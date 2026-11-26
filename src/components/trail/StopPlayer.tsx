@@ -83,7 +83,7 @@ export function StopPlayer({ unit, stop, onExit, record = true }: StopPlayerProp
         if (stop.kind === "lesson") {
           const today = todayKey();
           const newIds = stop.wordIds.map((id) => cardId(unit.id, id)).filter((id) => !Object.hasOwn(progress.memory, id));
-          const cards = lessonRound(addCards(progress.memory, newIds, today), newIds, today);
+          const cards = lessonRound(addCards(progress.memory, newIds, today), newIds, today, unit.id);
           if (cards.length > 0) {
             if (record && newIds.length > 0) addMemoryCards(newIds);
             setRound(cards);

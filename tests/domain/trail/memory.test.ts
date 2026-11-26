@@ -141,6 +141,20 @@ describe("lessonRound", () => {
     expect(lessonRound(old(2), [], T)).toHaveLength(2);
   });
 
+  it("scoped to a unit: due cards and lowest-box cards of other units are left out", () => {
+    const other: MemoryState = {
+      "letras-1:a": { box: 0, due: "2026-11-01" },
+      "letras-1:b": { box: 0, due: "2026-11-01" },
+      "letras-1:c": { box: 1, due: "2026-12-30" },
+    };
+    expect(lessonRound(other, [], T, "forest-animals")).toEqual([]);
+    expect(lessonRound(other, [], T, "letras-1")).toEqual(["letras-1:a", "letras-1:b"]);
+    const mixed: MemoryState = { ...other, "forest-animals:bear": { box: 2, due: "2026-11-01" } };
+    expect(lessonRound(mixed, [], T, "forest-animals")).toEqual(["forest-animals:bear"]);
+    const withNew = addCards(mixed, ["forest-animals:fox"], T);
+    expect(lessonRound(withNew, ["forest-animals:fox"], T, "forest-animals")).toEqual(["forest-animals:fox", "forest-animals:bear"]);
+  });
+
   it("with none due: the 3 lowest-box cards", () => {
     const m: MemoryState = {
       [a]: { box: 4, due: "2026-12-20" },

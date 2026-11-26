@@ -78,9 +78,14 @@ export function daysBetween(from: string, to: string): number {
 
 /**
  * The cards of a lesson's round: the new ones plus up to 3 due older ones; with no new cards up to 6 due;
- * with none due, the 3 lowest-box cards. Never more than ROUND_LIMIT.
+ * with none due, the 3 lowest-box cards. With `unitId`, only that unit's cards count. Never more than ROUND_LIMIT.
  */
-export function lessonRound(m: MemoryState, newIds: CardId[], today: string): CardId[] {
+export function lessonRound(m: MemoryState, newIds: CardId[], today: string, unitId?: string): CardId[] {
+  // Only the lesson's own unit is reviewed: the round screen can show no other unit's cards.
+  if (unitId !== undefined) {
+    m = Object.fromEntries(Object.entries(m).filter(([id]) => unitOfCard(id) === unitId));
+    newIds = newIds.filter((id) => unitOfCard(id) === unitId);
+  }
   const fresh = [...new Set(newIds)];
   if (fresh.length > 0) {
     const old = dueCards(m, today).filter((id) => !fresh.includes(id)).slice(0, OLD_WITH_NEW);

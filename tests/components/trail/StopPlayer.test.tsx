@@ -331,6 +331,17 @@ describe("StopPlayer memory round", () => {
     expect(gradeCards).not.toHaveBeenCalled();
   });
 
+  it("replaying a lesson reviews only its own unit: another unit's due cards never fill the round", async () => {
+    storedMemory = {
+      ...Object.fromEntries(lesson.wordIds.map((id) => [`forest-animals:${id}`, { box: 3, due: "2999-12-31" }])),
+      ...Object.fromEntries(["a", "b", "c", "d", "e", "f"].map((l) => [`letras-1:${l}`, { box: 0, due: "2000-01-01" }])),
+    };
+    await finishLessonExercises();
+    expect(addMemoryCards).not.toHaveBeenCalled();
+    // the 3 lowest-box cards of the farol, not a blank screen made of tree cards
+    expect(screen.getByText(`1 de ${Math.min(3, lesson.wordIds.length)}`)).toBeInTheDocument();
+  });
+
   it("with record=false nothing is added", async () => {
     await finishLessonExercises({ record: false });
     expect(addMemoryCards).not.toHaveBeenCalled();

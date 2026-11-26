@@ -72,9 +72,16 @@ export function OnboardingScreen({ existing }: { existing: boolean }) {
     <div className="ob-screen" data-testid="onboarding" data-step={step}>
       <Backdrop variant="sky" />
       <section className="ob-sheet" aria-label="Cadastro da criança">
-        <div className="ob-nino" aria-hidden="true">
-          <Nino pose={POSE[step]} size={132} speaks={step === "gate"} />
-        </div>
+        {step === "gate" ? (
+          // A child who cannot read hears "Chame um adulto!" again by touching Nino (the first touch also unlocks audio).
+          <button type="button" className="ob-nino ob-nino-btn" aria-label="Ouvir de novo" onClick={() => void narrator.playNarration(lines.callAdult)}>
+            <Nino pose={POSE[step]} size={132} speaks />
+          </button>
+        ) : (
+          <div className="ob-nino" aria-hidden="true">
+            <Nino pose={POSE[step]} size={132} speaks={false} />
+          </div>
+        )}
 
         {step === "gate" ? (
           <>
