@@ -111,8 +111,9 @@ export function IslandScreen({ mode = "auto", volta = null, held = false, onStag
   const suggestion = areas && today ? suggestedPlace(p, areas, today, lastPlayedByArea(p, areas)) : "farol";
   const suggested: PlaceId = suggestion === "arvore" ? "letras" : suggestion;
   // The card for the tree names the branch it suggests (as inside the tree).
-  const branch = suggestedStop(p, profile)?.unit ?? 1;
-  const branchTitle = getPath().find((u) => u.unitId === `letras-${branch}`)?.title ?? "";
+  const suggestedBranch = suggestedStop(p, profile)?.unit ?? null; // null: the whole tree is done
+  const branchTitle = getPath().find((u) => u.unitId === `letras-${suggestedBranch}`)?.title ?? "";
+  const treeText = suggestedBranch === null ? "Inglês · Todos os galhos" : `Inglês · Galho\u00a0${suggestedBranch}: ${branchTitle}`;
 
   const [view, setView] = useState<View>(EXPLORE);
   const [focus, setFocus] = useState<PlaceId | null>(null);
@@ -415,7 +416,7 @@ export function IslandScreen({ mode = "auto", volta = null, held = false, onStag
       await speak(token, lines.placeFarol);
       if (token === flowRef.current) Object.assign(s.nino.st, poseState("idle"));
     } else if (id === "letras") {
-      setView({ title: PLACE_NAMES.letras, text: `Inglês · Galho\u00a0${branch}: ${branchTitle}`, chip: "Pronto", tone: "ok" });
+      setView({ title: PLACE_NAMES.letras, text: treeText, chip: "Pronto", tone: "ok" });
       await goToArvore(s, vp);
       if (token !== flowRef.current) return;
       setPose("point");
@@ -431,7 +432,7 @@ export function IslandScreen({ mode = "auto", volta = null, held = false, onStag
       await focusPlace(s, id, vp);
       await done();
     }
-  }, [interrupt, lines, rest, restartSession, router, speak, unitTitle, branch, branchTitle]);
+  }, [interrupt, lines, rest, restartSession, router, speak, unitTitle, treeText]);
 
   const enterPlace = useCallback(async (place: "farol" | "arvore") => {
     const s = stageRef.current, vp = vpRef.current;

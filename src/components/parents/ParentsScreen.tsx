@@ -138,7 +138,7 @@ export function ParentsScreen() {
                 { value: "reads", label: "Lê palavras simples em inglês" },
               ]}
               onChange={(v) => updateProfile({ english: v })}
-              hint="Muda só por onde a árvore sugere começar. O que a criança já fez continua."
+              hint="Muda por onde a árvore começa. O que a criança já fez continua aberto."
             />
           </section>
 

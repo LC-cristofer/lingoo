@@ -243,7 +243,6 @@ export const linesSchema = z.object({
   farolClimb: narrationSchema,
   placeArvore: narrationSchema,
   arvoreClimb: narrationSchema,
-  placeBuilding: narrationSchema,
   /** The cadastro's gate: the child asks a grown-up to hold the button. */
   callAdult: narrationSchema,
   farolGrew: narrationSchema,

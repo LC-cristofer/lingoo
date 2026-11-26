@@ -256,7 +256,7 @@ export function ExerciseLoop({ exercises, sessionId, words, onExit, onFinished, 
     if (noReview && after.items.length > session.items.length) after = { ...after, items: session.items };
     onAttempt?.(correct);
     if (after.phase === "correct") setCorrectCount((n) => n + 1);
-    if (current.exercise.kind === "adaptive" && session.phase === "answering" && session.wrongCount === 0) {
+    if (current.exercise.kind === "adaptive" && session.phase === "answering" && session.wrongCount === 0 && !current.isReview) {
       runRef.current = nextLevel(runRef.current, correct);
     }
     setSession(after);

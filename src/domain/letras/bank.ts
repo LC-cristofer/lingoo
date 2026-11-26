@@ -8,6 +8,7 @@ import { artIdSchema, langSchema } from "@/domain/trail/schema";
 
 const text = z.string().refine((t) => t.trim().length > 0, "text must not be empty");
 const unitNo = z.union([z.literal(1), z.literal(2), z.literal(3), z.literal(4)]);
+/** Reserved: the 1-3 mark of an item. The adaptive level does not read it yet (it picks options and look-alikes instead). */
 const difficulty = z.union([z.literal(1), z.literal(2), z.literal(3)]);
 const letterId = z.string().regex(/^[a-z]$/);
 

@@ -71,12 +71,11 @@ describe("IslandScreen", () => {
     expect(pin("Ninho do Nino")).toHaveAttribute("data-state", "pronto");
   });
 
-  it("the tree: chip Pronto, its branch on the card, no building line, and entering pushes /arvore", async () => {
+  it("the tree: chip Pronto, its branch on the card, and entering pushes /arvore", async () => {
     render(<IslandScreen mode="explore" />);
     fireEvent.click(pin("Árvore das Letras"));
     expect(card()).toHaveTextContent("Pronto");
     expect(card()).toHaveTextContent("Inglês · Galho 1: ABC: A a M");
-    expect(narrator.playNarration).not.toHaveBeenCalledWith(getLines().placeBuilding);
     const enter = await screen.findByRole("button", { name: "Entrar na árvore" });
     expect(screen.queryByRole("button", { name: "Entrar no farol" })).not.toBeInTheDocument();
     fireEvent.click(enter);
@@ -170,6 +169,19 @@ describe("IslandScreen", () => {
     await new Promise((r) => setTimeout(r, 300));
     expect(screen.queryByRole("button", { name: "Entrar no farol" })).not.toBeInTheDocument();
     expect(card()).toHaveTextContent("Em breve");
+  });
+
+  it("tapping another place while Nino walks to the tree cancels the flow: no enter button, no /arvore, no placeArvore line", async () => {
+    settings = { ...defaultSettings(), motion: "auto" };
+    render(<IslandScreen mode="explore" />);
+    fireEvent.click(pin("Árvore das Letras"));
+    fireEvent.click(pin("Torre dos Números"));
+    expect(card()).toHaveTextContent("Em breve");
+    await new Promise((r) => setTimeout(r, 300));
+    expect(screen.queryByRole("button", { name: "Entrar na árvore" })).not.toBeInTheDocument();
+    expect(card()).toHaveTextContent("Em breve");
+    expect(push).not.toHaveBeenCalledWith("/arvore");
+    expect(narrator.playNarration).not.toHaveBeenCalledWith(getLines().placeArvore);
   });
 
   it("taps during the dive are ignored: the dive finishes and /farol is pushed once", async () => {
