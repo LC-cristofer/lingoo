@@ -1,8 +1,36 @@
 [
   {
+    "id": "013d40e720f497b8",
+    "lang": "pt-BR",
+    "text": "Oi! Vamos descobrir mais letras do começo das palavras!"
+  },
+  {
+    "id": "01933f40cbb9b393",
+    "lang": "en-US",
+    "text": "N, O, P, Q, R, S, T!",
+    "say_as": "En, Oh, Pee, Cue, Ar, Ess, Tee!"
+  },
+  {
+    "id": "0241dd0f28254648",
+    "lang": "pt-BR",
+    "text": "Uma palavra se escondeu! Qual sumiu?"
+  },
+  {
+    "id": "04753820574b7a74",
+    "lang": "en-US",
+    "text": "A is for apple!",
+    "say_as": "Ey is for apple!"
+  },
+  {
     "id": "04c23a8096fbe785",
     "lang": "en-US",
     "text": "Awesome!"
+  },
+  {
+    "id": "0547ca84e7aa760c",
+    "lang": "en-US",
+    "text": "N. N is for nest.",
+    "say_as": "En. En is for nest."
   },
   {
     "id": "0562d471d79c8187",
@@ -15,6 +43,12 @@
     "text": "Toque para virar"
   },
   {
+    "id": "06a79f8c3b2daaae",
+    "lang": "en-US",
+    "text": "O is for orange!",
+    "say_as": "Oh is for orange!"
+  },
+  {
     "id": "07aa50d68684a4af",
     "lang": "pt-BR",
     "text": "Você terminou a unidade dos animais da floresta!"
@@ -23,6 +57,31 @@
     "id": "086e44cc7bd22758",
     "lang": "pt-BR",
     "text": "Onde está? Toque!"
+  },
+  {
+    "id": "08a1722545c83a47",
+    "lang": "pt-BR",
+    "text": "Depois de brincar, os dois dividiram uma maçã."
+  },
+  {
+    "id": "0a65073b983daea5",
+    "lang": "pt-BR",
+    "text": "Toque no"
+  },
+  {
+    "id": "0c01d74c5952488f",
+    "lang": "pt-BR",
+    "text": "Você soletrou as palavras!"
+  },
+  {
+    "id": "0c90bf8b2da1cbe7",
+    "lang": "pt-BR",
+    "text": "Você terminou o galho um!"
+  },
+  {
+    "id": "0cab5da28dc6f086",
+    "lang": "pt-BR",
+    "text": "O gatinho fez um piquenique com geleia."
   },
   {
     "id": "0cafb54db6f2104a",
@@ -35,9 +94,62 @@
     "text": "Olha aqui! É esse que está brilhando."
   },
   {
+    "id": "0cce2ac93ba0e50c",
+    "lang": "en-US",
+    "text": "F. F is for fish.",
+    "say_as": "Ef. Ef is for fish."
+  },
+  {
+    "id": "0d18ae33998d9e44",
+    "lang": "pt-BR",
+    "text": "Toque em cada letra e repita comigo!"
+  },
+  {
+    "id": "0d5a509bb095c23b",
+    "lang": "en-US",
+    "text": "hen, jam, map, net, van!"
+  },
+  {
     "id": "0e3846549ab30a1c",
     "lang": "pt-BR",
     "text": "Boa noite! Amanhã a gente brinca mais."
+  },
+  {
+    "id": "115155d6d94f7777",
+    "lang": "pt-BR",
+    "text": "Qual começa com"
+  },
+  {
+    "id": "11571a1ab54e0f7d",
+    "lang": "en-US",
+    "text": "Now I know my N to Z!",
+    "say_as": "Now I know my En to Zee!"
+  },
+  {
+    "id": "11b83309ee508c58",
+    "lang": "en-US",
+    "text": "C. C is for cat.",
+    "say_as": "See. See is for cat."
+  },
+  {
+    "id": "11cbc8f703ca214a",
+    "lang": "pt-BR",
+    "text": "Ela trouxe uma laranja, e os dois comeram juntos."
+  },
+  {
+    "id": "16c409dcdc962e24",
+    "lang": "en-US",
+    "text": "rain!"
+  },
+  {
+    "id": "16c40fdcdc963856",
+    "lang": "en-US",
+    "text": "rain?"
+  },
+  {
+    "id": "1756db8b7b35b4e7",
+    "lang": "pt-BR",
+    "text": "Oi! Hoje vamos ler palavras em inglês!"
   },
   {
     "id": "1831ea6d9c1ce736",
@@ -50,6 +162,26 @@
     "text": "Você ouviu uma história em inglês!"
   },
   {
+    "id": "1b41911365aa6c5e",
+    "lang": "en-US",
+    "text": "apple?"
+  },
+  {
+    "id": "1b419b1365aa7d5c",
+    "lang": "en-US",
+    "text": "apple!"
+  },
+  {
+    "id": "1c06970c9da7e778",
+    "lang": "en-US",
+    "text": "umbrella?"
+  },
+  {
+    "id": "1c06a50c9da7ff42",
+    "lang": "en-US",
+    "text": "umbrella!"
+  },
+  {
     "id": "1d8e38560269f1aa",
     "lang": "pt-BR",
     "text": "Essa é a cobra. Em inglês:"
@@ -60,9 +192,31 @@
     "text": "What's this? It's a bear!"
   },
   {
+    "id": "202f495196fd8571",
+    "lang": "en-US",
+    "text": "D is for dog!",
+    "say_as": "Dee is for dog!"
+  },
+  {
     "id": "22297543ee057262",
     "lang": "en-US",
     "text": "It's a frog!"
+  },
+  {
+    "id": "225cd5206a4399a0",
+    "lang": "en-US",
+    "text": "bus?"
+  },
+  {
+    "id": "225cf3206a43cc9a",
+    "lang": "en-US",
+    "text": "bus!"
+  },
+  {
+    "id": "23111f82391b48c8",
+    "lang": "en-US",
+    "text": "W is for web!",
+    "say_as": "Double-u is for web!"
   },
   {
     "id": "2336481df17b6ea9",
@@ -80,6 +234,11 @@
     "text": "snake, spider, mouse!"
   },
   {
+    "id": "24f13fa102ff4d62",
+    "lang": "pt-BR",
+    "text": "Uma cabrinha chegou com fome."
+  },
+  {
     "id": "2614611f7948323e",
     "lang": "pt-BR",
     "text": "Chame um adulto!"
@@ -95,9 +254,51 @@
     "text": "Yes! You remembered!"
   },
   {
+    "id": "2aa531150d9a7152",
+    "lang": "en-US",
+    "text": "cup?"
+  },
+  {
+    "id": "2aa543150d9a8fe8",
+    "lang": "en-US",
+    "text": "cup!"
+  },
+  {
     "id": "2c5b47baca1fce7e",
     "lang": "en-US",
     "text": "It's a snake!"
+  },
+  {
+    "id": "2dd1f1f90293401e",
+    "lang": "en-US",
+    "text": "P. P is for pig.",
+    "say_as": "Pee. Pee is for pig."
+  },
+  {
+    "id": "2f140400894d3210",
+    "lang": "pt-BR",
+    "text": "A bola rolou até um cachorro, que abanou o rabo."
+  },
+  {
+    "id": "2f50ab1e017e4808",
+    "lang": "pt-BR",
+    "text": "Quem estava no ônibus com o cachorro? Toque!"
+  },
+  {
+    "id": "30015f3a212462d8",
+    "lang": "pt-BR",
+    "text": "O gatinho abriu o guarda-chuva e ficou sequinho."
+  },
+  {
+    "id": "3067e1ef99950551",
+    "lang": "en-US",
+    "text": "L is for lion!",
+    "say_as": "Ell is for lion!"
+  },
+  {
+    "id": "30fa1bc77b4b7862",
+    "lang": "en-US",
+    "text": "A dog and a fox!"
   },
   {
     "id": "31e1bd6d73282709",
@@ -105,14 +306,59 @@
     "text": "Hello, spider! Hello, mouse!"
   },
   {
+    "id": "31f0b61814387b8f",
+    "lang": "en-US",
+    "text": "F is for fish!",
+    "say_as": "Ef is for fish!"
+  },
+  {
     "id": "32139a997787e482",
     "lang": "pt-BR",
     "text": "Você lembrou de duas palavras!"
   },
   {
+    "id": "33383d9a0d7bc165",
+    "lang": "en-US",
+    "text": "I, J, K, L, M!",
+    "say_as": "Eye, Jay, Kay, Ell, M!"
+  },
+  {
+    "id": "33ca77a442b13242",
+    "lang": "en-US",
+    "text": "I is for igloo!",
+    "say_as": "Eye is for igloo!"
+  },
+  {
+    "id": "33d995c43a6d3e96",
+    "lang": "en-US",
+    "text": "W. W is for web.",
+    "say_as": "Double-u. Double-u is for web."
+  },
+  {
+    "id": "33fefb408b8596ec",
+    "lang": "pt-BR",
+    "text": "Esta palavra é"
+  },
+  {
+    "id": "34b644baffff5337",
+    "lang": "en-US",
+    "text": "net?"
+  },
+  {
+    "id": "34b64abaffff5d69",
+    "lang": "en-US",
+    "text": "net!"
+  },
+  {
     "id": "34c19f856995a46b",
     "lang": "pt-BR",
     "text": "É hora do desafio! Mostre tudo o que você aprendeu!"
+  },
+  {
+    "id": "35079380f19175ac",
+    "lang": "en-US",
+    "text": "A goat! Goat starts with G!",
+    "say_as": "A goat! Goat starts with Gee!"
   },
   {
     "id": "36b84f6430ae5029",
@@ -135,14 +381,29 @@
     "text": "spider?"
   },
   {
+    "id": "37b730bf5a9449b1",
+    "lang": "pt-BR",
+    "text": "Oi! Hoje tem mais palavras para ler!"
+  },
+  {
     "id": "37bdbebac70be62e",
     "lang": "pt-BR",
     "text": "No fim do dia, todos os amigos se despediram do gatinho."
   },
   {
+    "id": "394050a7c9ebfdef",
+    "lang": "pt-BR",
+    "text": "Oi! Hoje vamos chegar ao fim do alfabeto!"
+  },
+  {
     "id": "3994987ee213e71a",
     "lang": "pt-BR",
     "text": "Você cantou com os animais da floresta!"
+  },
+  {
+    "id": "39c15c0b7e1b9909",
+    "lang": "pt-BR",
+    "text": "Aqui está escrito"
   },
   {
     "id": "3a25e3197e6943ea",
@@ -160,6 +421,23 @@
     "text": "Termine uma lição para ganhar cartões!"
   },
   {
+    "id": "3bb9307973f2283d",
+    "lang": "en-US",
+    "text": "van?"
+  },
+  {
+    "id": "3bb9327973f22ba3",
+    "lang": "en-US",
+    "text": "van!",
+    "say_as": "van?"
+  },
+  {
+    "id": "3d6c668e25c6689e",
+    "lang": "en-US",
+    "text": "S. S is for sun.",
+    "say_as": "Ess. Ess is for sun."
+  },
+  {
     "id": "3e3b6df188ee27c0",
     "lang": "pt-BR",
     "text": "Tudo em dia! Amanhã tem mais cartões."
@@ -170,9 +448,24 @@
     "text": "Você lembrou de sete palavras!"
   },
   {
+    "id": "40603c6c9a20a5cd",
+    "lang": "pt-BR",
+    "text": "Uma letra se escondeu! Qual sumiu?"
+  },
+  {
+    "id": "41782f779032edab",
+    "lang": "pt-BR",
+    "text": "Você cantou o alfabeto!"
+  },
+  {
     "id": "42dc1dd9c456f5ff",
     "lang": "pt-BR",
     "text": "Essa parada ainda está trancada. Termine a anterior primeiro!"
+  },
+  {
+    "id": "42f23cd73530cbe9",
+    "lang": "en-US",
+    "text": "A kite sticker!"
   },
   {
     "id": "4362bcff261cf65a",
@@ -180,9 +473,31 @@
     "text": "Unidade um: animais da floresta!"
   },
   {
+    "id": "445b5f4221097f9b",
+    "lang": "en-US",
+    "text": "A dog! D is for dog!",
+    "say_as": "A dog! Dee is for dog!"
+  },
+  {
     "id": "44b0a946517beb86",
     "lang": "en-US",
     "text": "A bear sticker!"
+  },
+  {
+    "id": "454033bfb710396a",
+    "lang": "pt-BR",
+    "text": "O que o gatinho achou na árvore? Toque!"
+  },
+  {
+    "id": "45aa1fd941f10787",
+    "lang": "en-US",
+    "text": "U, V, W, X, Y, Z!",
+    "say_as": "You, Vee, Double-u, Ex, Why, Zee!"
+  },
+  {
+    "id": "463a977f34c96525",
+    "lang": "pt-BR",
+    "text": "De manhã, o sol brilhava lá fora."
   },
   {
     "id": "47564871bcbfc94d",
@@ -195,9 +510,35 @@
     "text": "Hoje você aprendeu:"
   },
   {
+    "id": "48240aed8f3ed6d7",
+    "lang": "en-US",
+    "text": "kite!"
+  },
+  {
+    "id": "482410ed8f3ee109",
+    "lang": "en-US",
+    "text": "kite?"
+  },
+  {
+    "id": "48d36a0b0fc6b699",
+    "lang": "en-US",
+    "text": "H. H is for hat.",
+    "say_as": "Aitch. Aitch is for hat."
+  },
+  {
     "id": "49472d418afefab9",
     "lang": "pt-BR",
     "text": "Repita comigo:"
+  },
+  {
+    "id": "497d1dd257c3c1ab",
+    "lang": "en-US",
+    "text": "moon?"
+  },
+  {
+    "id": "497d2bd257c3d975",
+    "lang": "en-US",
+    "text": "moon!"
   },
   {
     "id": "49b49d3d6a4c9758",
@@ -210,9 +551,25 @@
     "text": "Hora da história! Primeiro, vamos lembrar os animais."
   },
   {
+    "id": "4abe5af2b62afbc6",
+    "lang": "en-US",
+    "text": "N, O, P, Q!",
+    "say_as": "En, Oh, Pee, Cue!"
+  },
+  {
     "id": "4bf0011e02baae9f",
     "lang": "pt-BR",
     "text": "Oi! Hoje nós vamos aprender mais três animais da floresta!"
+  },
+  {
+    "id": "4dd63227cdf92e15",
+    "lang": "pt-BR",
+    "text": "Oi! Hoje tem mais quatro letras em inglês!"
+  },
+  {
+    "id": "4e97aaec6244a8fd",
+    "lang": "pt-BR",
+    "text": "Galho um:"
   },
   {
     "id": "522fba53b560f569",
@@ -233,6 +590,18 @@
     "id": "56073ff19b79ce4b",
     "lang": "pt-BR",
     "text": "Quem o gatinho encontrou primeiro? Toque!"
+  },
+  {
+    "id": "568cc0c54026249a",
+    "lang": "en-US",
+    "text": "B is for ball!",
+    "say_as": "Bee is for ball!"
+  },
+  {
+    "id": "57484131e91ddaab",
+    "lang": "en-US",
+    "text": "E. E is for egg.",
+    "say_as": "Ee. Ee is for egg."
   },
   {
     "id": "5766161c4ce17d13",
@@ -260,6 +629,137 @@
     "text": "Qual é a"
   },
   {
+    "id": "5e617bfd323a9f95",
+    "lang": "en-US",
+    "text": "G is for goat!",
+    "say_as": "Gee is for goat!"
+  },
+  {
+    "id": "5ea3f9578a864aca",
+    "lang": "pt-BR",
+    "text": "Você cantou as letras e as palavras!"
+  },
+  {
+    "id": "5ffaba524183a640",
+    "lang": "en-US",
+    "text": "Z?",
+    "say_as": "Zee?"
+  },
+  {
+    "id": "5ffe3a524186b597",
+    "lang": "en-US",
+    "text": "Y?",
+    "say_as": "Why?"
+  },
+  {
+    "id": "6008ba52418fe39c",
+    "lang": "en-US",
+    "text": "V?",
+    "say_as": "Vee?"
+  },
+  {
+    "id": "600bba5241921973",
+    "lang": "en-US",
+    "text": "U?",
+    "say_as": "You?"
+  },
+  {
+    "id": "6012ba5241983821",
+    "lang": "en-US",
+    "text": "S?",
+    "say_as": "Ess?"
+  },
+  {
+    "id": "60163a52419b4778",
+    "lang": "en-US",
+    "text": "R?",
+    "say_as": "Ar?"
+  },
+  {
+    "id": "6019ba52419e56cf",
+    "lang": "en-US",
+    "text": "Q?",
+    "say_as": "Cue?"
+  },
+  {
+    "id": "601cba5241a08ca6",
+    "lang": "en-US",
+    "text": "P?",
+    "say_as": "Pee?"
+  },
+  {
+    "id": "60203a5241a39bfd",
+    "lang": "en-US",
+    "text": "O?",
+    "say_as": "Oh?"
+  },
+  {
+    "id": "6023ba5241a6ab54",
+    "lang": "en-US",
+    "text": "N?",
+    "say_as": "En?"
+  },
+  {
+    "id": "60273a5241a9baab",
+    "lang": "en-US",
+    "text": "M?",
+    "say_as": "M?"
+  },
+  {
+    "id": "602aba5241acca02",
+    "lang": "en-US",
+    "text": "L?",
+    "say_as": "Ell?"
+  },
+  {
+    "id": "60313a5241b20f30",
+    "lang": "en-US",
+    "text": "J?",
+    "say_as": "Jay?"
+  },
+  {
+    "id": "60383a5241b82dde",
+    "lang": "en-US",
+    "text": "H?",
+    "say_as": "Aitch?"
+  },
+  {
+    "id": "603bba5241bb3d35",
+    "lang": "en-US",
+    "text": "G?",
+    "say_as": "Gee?"
+  },
+  {
+    "id": "60423a5241c08263",
+    "lang": "en-US",
+    "text": "E?",
+    "say_as": "EE?"
+  },
+  {
+    "id": "6045ba5241c391ba",
+    "lang": "en-US",
+    "text": "D?",
+    "say_as": "Dee?"
+  },
+  {
+    "id": "60493a5241c6a111",
+    "lang": "en-US",
+    "text": "C?",
+    "say_as": "See?"
+  },
+  {
+    "id": "604cba5241c9b068",
+    "lang": "en-US",
+    "text": "B?",
+    "say_as": "Bee?"
+  },
+  {
+    "id": "604fba5241cbe63f",
+    "lang": "en-US",
+    "text": "A?",
+    "say_as": "ey?"
+  },
+  {
     "id": "609706b4550f32be",
     "lang": "en-US",
     "text": "snake?"
@@ -273,6 +773,28 @@
     "id": "609717b4550f4fa1",
     "lang": "en-US",
     "text": "snake."
+  },
+  {
+    "id": "61c55287371c9ce6",
+    "lang": "en-US",
+    "text": "I. I is for igloo.",
+    "say_as": "Eye. Eye is for igloo."
+  },
+  {
+    "id": "646fca0b2aec02c4",
+    "lang": "en-US",
+    "text": "S is for sun!",
+    "say_as": "Ess is for sun!"
+  },
+  {
+    "id": "64c96ec0e585a16c",
+    "lang": "en-US",
+    "text": "nest!"
+  },
+  {
+    "id": "64c984c0e585c6ce",
+    "lang": "en-US",
+    "text": "nest?"
   },
   {
     "id": "64cc0ba7a714d518",
@@ -300,6 +822,22 @@
     "text": "Opa! Vamos tentar de novo."
   },
   {
+    "id": "69573ca6f4ebb2c2",
+    "lang": "en-US",
+    "text": "J. J is for jam.",
+    "say_as": "Jay. Jay is for jam."
+  },
+  {
+    "id": "6a07309180d00a58",
+    "lang": "en-US",
+    "text": "sun?"
+  },
+  {
+    "id": "6a073e9180d02222",
+    "lang": "en-US",
+    "text": "sun!"
+  },
+  {
     "id": "6e9d0690c05f731e",
     "lang": "en-US",
     "text": "bear?"
@@ -315,9 +853,25 @@
     "text": "bear."
   },
   {
+    "id": "6f702eda631f6c59",
+    "lang": "pt-BR",
+    "text": "No ônibus estavam um cachorro e uma raposa."
+  },
+  {
+    "id": "70aa9f3b989318de",
+    "lang": "en-US",
+    "text": "E, F, G, H!",
+    "say_as": "Ee, Ef, Gee, Aitch!"
+  },
+  {
     "id": "7171281d82600d86",
     "lang": "pt-BR",
     "text": "Toque em cada animal e repita comigo!"
+  },
+  {
+    "id": "72d4d8caa1aae9fd",
+    "lang": "pt-BR",
+    "text": "De repente, começou a chover!"
   },
   {
     "id": "73bfbe8acd98b6b1",
@@ -330,14 +884,35 @@
     "text": "Esse é o seu álbum de figurinhas!"
   },
   {
+    "id": "7846e471aeef9c23",
+    "lang": "pt-BR",
+    "text": "Você cantou o alfabeto até o fim!"
+  },
+  {
     "id": "79f8b0fc25aa6c0a",
     "lang": "en-US",
     "text": "Goodbye, friends!"
   },
   {
+    "id": "7a49506ec69723a0",
+    "lang": "en-US",
+    "text": "web?"
+  },
+  {
+    "id": "7a496e6ec697569a",
+    "lang": "en-US",
+    "text": "web!"
+  },
+  {
     "id": "7a7bbc7adc387e09",
     "lang": "pt-BR",
     "text": "Você ganhou uma estrela!"
+  },
+  {
+    "id": "7c6ca0f401dbc23a",
+    "lang": "en-US",
+    "text": "T. T is for tree.",
+    "say_as": "Tee. Tee is for tree."
   },
   {
     "id": "7d2bff91ecfd0e61",
@@ -355,6 +930,11 @@
     "text": "Great job!"
   },
   {
+    "id": "7e435aebf3910b19",
+    "lang": "pt-BR",
+    "text": "Oi! Hoje vamos até o fim do alfabeto!"
+  },
+  {
     "id": "7f22210b1c3d3e6b",
     "lang": "pt-BR",
     "text": "Atrás de uma árvore, ele viu um urso."
@@ -365,9 +945,30 @@
     "text": "Como se fala em inglês?"
   },
   {
+    "id": "7fd3e88002cb72e9",
+    "lang": "en-US",
+    "text": "G. G is for goat.",
+    "say_as": "Gee. Gee is for goat."
+  },
+  {
     "id": "83dcf8b19fc4a335",
     "lang": "pt-BR",
     "text": "Música. Vamos!"
+  },
+  {
+    "id": "846a40eba393de7f",
+    "lang": "en-US",
+    "text": "hen?"
+  },
+  {
+    "id": "846a56eba39403e1",
+    "lang": "en-US",
+    "text": "hen!"
+  },
+  {
+    "id": "847c6eeb71dc9c8d",
+    "lang": "pt-BR",
+    "text": "Você terminou o galho quatro!"
   },
   {
     "id": "855ce6604ef18d1f",
@@ -410,6 +1011,28 @@
     "text": "bird?"
   },
   {
+    "id": "88b2d3a27c49b892",
+    "lang": "en-US",
+    "text": "V, W, X, Y, Z!",
+    "say_as": "Vee, Double-u, Ex, Why, Zee!"
+  },
+  {
+    "id": "8962aebed51f662e",
+    "lang": "pt-BR",
+    "text": "Oi! Hoje vamos descobrir com que letra cada palavra começa!"
+  },
+  {
+    "id": "8991b11edede4386",
+    "lang": "en-US",
+    "text": "Q is for queen!",
+    "say_as": "Cue is for queen!"
+  },
+  {
+    "id": "89a05c0de825c314",
+    "lang": "en-US",
+    "text": "cat, dog, sun, hat, bed!"
+  },
+  {
     "id": "8a7fab2ccfc72e13",
     "lang": "pt-BR",
     "text": "Figurinhas especiais!"
@@ -420,9 +1043,31 @@
     "text": "Hoje vamos aprender uma frase:"
   },
   {
+    "id": "8b10fec24de4e9c9",
+    "lang": "en-US",
+    "text": "B. B is for ball.",
+    "say_as": "Bee. Bee is for ball."
+  },
+  {
+    "id": "8b418eaa17621f20",
+    "lang": "en-US",
+    "text": "pig!"
+  },
+  {
+    "id": "8b41acaa1762521a",
+    "lang": "en-US",
+    "text": "pig?"
+  },
+  {
     "id": "8d62b3bdbec7e8e1",
     "lang": "pt-BR",
     "text": "Você lembrou de cinco palavras!"
+  },
+  {
+    "id": "8dbe0390b534dc64",
+    "lang": "en-US",
+    "text": "D. D is for dog.",
+    "say_as": "Dee. Dee is for dog."
   },
   {
     "id": "8ede4eaa1e48d67b",
@@ -433,6 +1078,94 @@
     "id": "9223c4a674db5240",
     "lang": "pt-BR",
     "text": "Desafio. Vamos!"
+  },
+  {
+    "id": "9282b279f79d6cb0",
+    "lang": "en-US",
+    "text": "D-O-G, dog!",
+    "say_as": "Dee, Oh, Gee, dog!"
+  },
+  {
+    "id": "92e30ebf5c8e248e",
+    "lang": "en-US",
+    "text": "C is for cat!",
+    "say_as": "See is for cat!"
+  },
+  {
+    "id": "931e3014b658f2db",
+    "lang": "en-US",
+    "text": "A ball! B is for ball!",
+    "say_as": "A ball! Bee is for ball!"
+  },
+  {
+    "id": "934cf107800c9e81",
+    "lang": "en-US",
+    "text": "Box ends with X!",
+    "say_as": "Box ends with Ex!"
+  },
+  {
+    "id": "93bcea7f2296bd45",
+    "lang": "en-US",
+    "text": "N to Z!",
+    "say_as": "En to Zee!"
+  },
+  {
+    "id": "9481e19056dcb258",
+    "lang": "pt-BR",
+    "text": "Vamos cantar as letras e as palavras! Escute e cante comigo!"
+  },
+  {
+    "id": "95360a15f8af1607",
+    "lang": "pt-BR",
+    "text": "Hoje você leu:"
+  },
+  {
+    "id": "980c9f0f1e8f3f31",
+    "lang": "en-US",
+    "text": "M is for moon!"
+  },
+  {
+    "id": "9830a391e096c37e",
+    "lang": "en-US",
+    "text": "U is for umbrella!",
+    "say_as": "You is for umbrella!"
+  },
+  {
+    "id": "98992539b776c2e8",
+    "lang": "pt-BR",
+    "text": "Toque na palavra"
+  },
+  {
+    "id": "98aa3ffcbfdf5088",
+    "lang": "en-US",
+    "text": "X. Box ends with X.",
+    "say_as": "Ex. Box ends with Ex."
+  },
+  {
+    "id": "98cab3201ca1cbe5",
+    "lang": "en-US",
+    "text": "bed!"
+  },
+  {
+    "id": "98cac5201ca1ea7b",
+    "lang": "en-US",
+    "text": "bed?"
+  },
+  {
+    "id": "98f188c21259aee0",
+    "lang": "en-US",
+    "text": "map?"
+  },
+  {
+    "id": "98f1a6c21259e1da",
+    "lang": "en-US",
+    "text": "map!"
+  },
+  {
+    "id": "9a00eed37262c79f",
+    "lang": "en-US",
+    "text": "Now I know my A to M!",
+    "say_as": "Now I know my Ey to M!"
   },
   {
     "id": "9b7831478dbfa5e5",
@@ -450,14 +1183,208 @@
     "text": "Lição três. Vamos!"
   },
   {
+    "id": "9e31ab6027e8c8de",
+    "lang": "en-US",
+    "text": "From A to Z!",
+    "say_as": "From Ey to Zee!"
+  },
+  {
+    "id": "9e8f38dd9d80730b",
+    "lang": "en-US",
+    "text": "goat!"
+  },
+  {
+    "id": "9e8f46dd9d808ad5",
+    "lang": "en-US",
+    "text": "goat?"
+  },
+  {
+    "id": "9f333aae8939a9db",
+    "lang": "pt-BR",
+    "text": "Oi! Hoje vamos aprender as últimas letras do galho!"
+  },
+  {
     "id": "9fa5fd1380deebf0",
     "lang": "en-US",
     "text": "What's this? It's a bird!"
   },
   {
+    "id": "a0177d8b6c87dc39",
+    "lang": "pt-BR",
+    "text": "Hora da história! Primeiro, vamos lembrar as figuras."
+  },
+  {
+    "id": "a0f838dff99862d0",
+    "lang": "en-US",
+    "text": "An umbrella! U is for umbrella!",
+    "say_as": "An umbrella! You is for umbrella!"
+  },
+  {
     "id": "a1febd562c7c80bf",
     "lang": "pt-BR",
     "text": "Esse é o pássaro. Em inglês:"
+  },
+  {
+    "id": "a222ebace9203c45",
+    "lang": "en-US",
+    "text": "K. K is for kite.",
+    "say_as": "Kay. Kay is for kite."
+  },
+  {
+    "id": "a2eed88e9b8420ff",
+    "lang": "en-US",
+    "text": "Z",
+    "say_as": "Zee."
+  },
+  {
+    "id": "a2eed98e9b8422b2",
+    "lang": "en-US",
+    "text": "Y",
+    "say_as": "Why."
+  },
+  {
+    "id": "a2eeda8e9b842465",
+    "lang": "en-US",
+    "text": "X",
+    "say_as": "Ex."
+  },
+  {
+    "id": "a2eedb8e9b842618",
+    "lang": "en-US",
+    "text": "W",
+    "say_as": "Double-u."
+  },
+  {
+    "id": "a2eedc8e9b8427cb",
+    "lang": "en-US",
+    "text": "V",
+    "say_as": "Vee."
+  },
+  {
+    "id": "a2eedd8e9b84297e",
+    "lang": "en-US",
+    "text": "U",
+    "say_as": "You."
+  },
+  {
+    "id": "a2eede8e9b842b31",
+    "lang": "en-US",
+    "text": "T",
+    "say_as": "Tee."
+  },
+  {
+    "id": "a2eedf8e9b842ce4",
+    "lang": "en-US",
+    "text": "S",
+    "say_as": "Ess."
+  },
+  {
+    "id": "a2eee08e9b842e97",
+    "lang": "en-US",
+    "text": "R",
+    "say_as": "Ar."
+  },
+  {
+    "id": "a2eee18e9b84304a",
+    "lang": "en-US",
+    "text": "Q",
+    "say_as": "Cue."
+  },
+  {
+    "id": "a2eee28e9b8431fd",
+    "lang": "en-US",
+    "text": "P",
+    "say_as": "Pee."
+  },
+  {
+    "id": "a2eee38e9b8433b0",
+    "lang": "en-US",
+    "text": "O",
+    "say_as": "Oh."
+  },
+  {
+    "id": "a2eee48e9b843563",
+    "lang": "en-US",
+    "text": "N",
+    "say_as": "En."
+  },
+  {
+    "id": "a2eee58e9b843716",
+    "lang": "en-US",
+    "text": "M",
+    "say_as": "M."
+  },
+  {
+    "id": "a2eee68e9b8438c9",
+    "lang": "en-US",
+    "text": "L",
+    "say_as": "Ell."
+  },
+  {
+    "id": "a2eee78e9b843a7c",
+    "lang": "en-US",
+    "text": "K",
+    "say_as": "Kay."
+  },
+  {
+    "id": "a2eee88e9b843c2f",
+    "lang": "en-US",
+    "text": "J",
+    "say_as": "Jay."
+  },
+  {
+    "id": "a2eee98e9b843de2",
+    "lang": "en-US",
+    "text": "I",
+    "say_as": "Eye."
+  },
+  {
+    "id": "a2eeea8e9b843f95",
+    "lang": "en-US",
+    "text": "H",
+    "say_as": "Aitch."
+  },
+  {
+    "id": "a2eeeb8e9b844148",
+    "lang": "en-US",
+    "text": "G",
+    "say_as": "Gee."
+  },
+  {
+    "id": "a2eeec8e9b8442fb",
+    "lang": "en-US",
+    "text": "F",
+    "say_as": "Ef."
+  },
+  {
+    "id": "a2eeed8e9b8444ae",
+    "lang": "en-US",
+    "text": "E",
+    "say_as": "EE."
+  },
+  {
+    "id": "a2eeee8e9b844661",
+    "lang": "en-US",
+    "text": "D",
+    "say_as": "Dee."
+  },
+  {
+    "id": "a2eeef8e9b844814",
+    "lang": "en-US",
+    "text": "C",
+    "say_as": "See."
+  },
+  {
+    "id": "a2eef08e9b8449c7",
+    "lang": "en-US",
+    "text": "B",
+    "say_as": "Bee."
+  },
+  {
+    "id": "a2eef18e9b844b7a",
+    "lang": "en-US",
+    "text": "A",
+    "say_as": "ey."
   },
   {
     "id": "a3d87f8ca183d4e7",
@@ -470,9 +1397,53 @@
     "text": "Olha! O farol brilhou mais forte!"
   },
   {
+    "id": "a4e9e4ebb5608cc5",
+    "lang": "en-US",
+    "text": "hat?"
+  },
+  {
+    "id": "a4e9f6ebb560ab5b",
+    "lang": "en-US",
+    "text": "hat!"
+  },
+  {
+    "id": "a5a216fc16f13c55",
+    "lang": "en-US",
+    "text": "Z is for zebra!",
+    "say_as": "Zee is for zebra!"
+  },
+  {
+    "id": "a5d581a6a81ea5d8",
+    "lang": "en-US",
+    "text": "R. R is for rain.",
+    "say_as": "Ar. Ar is for rain."
+  },
+  {
+    "id": "a68af6eeb4bce4f9",
+    "lang": "pt-BR",
+    "text": "Você terminou o galho três!"
+  },
+  {
+    "id": "a6d42b569e8804ca",
+    "lang": "pt-BR",
+    "text": "Você descobriu com que letra as palavras começam!"
+  },
+  {
+    "id": "a7cb1989ab4bf5c3",
+    "lang": "en-US",
+    "text": "E is for egg!",
+    "say_as": "Ee is for egg!"
+  },
+  {
     "id": "a8b596a137fc95ca",
     "lang": "pt-BR",
     "text": "Essa aventura está chegando!"
+  },
+  {
+    "id": "a8d6c8b0b28b387e",
+    "lang": "en-US",
+    "text": "V is for van!",
+    "say_as": "Vee is for van!"
   },
   {
     "id": "aa0ae38b6a0302c1",
@@ -480,9 +1451,36 @@
     "text": "Hora de treinar a memória!"
   },
   {
+    "id": "ac2a1ec96a2f61c0",
+    "lang": "pt-BR",
+    "text": "Galho dois:"
+  },
+  {
+    "id": "ac2a5f7886e72a1f",
+    "lang": "en-US",
+    "text": "N is for nest!",
+    "say_as": "En is for nest!"
+  },
+  {
+    "id": "ac3f3aef83e1fe1e",
+    "lang": "en-US",
+    "text": "queen!"
+  },
+  {
+    "id": "ac3f44ef83e20f1c",
+    "lang": "en-US",
+    "text": "queen?"
+  },
+  {
     "id": "ad9d53fc87e80e6f",
     "lang": "pt-BR",
     "text": "Que tal uma pausa? Vou esticar as patinhas."
+  },
+  {
+    "id": "ae108d177b0516b7",
+    "lang": "en-US",
+    "text": "H, I, J, K, L, M!",
+    "say_as": "Aitch, Eye, Jay, Kay, Ell, M!"
   },
   {
     "id": "ae592c0a295769fa",
@@ -490,9 +1488,47 @@
     "text": "Vem! Vamos explorar a ilha!"
   },
   {
+    "id": "afb9615188285c8e",
+    "lang": "en-US",
+    "text": "O. O is for orange.",
+    "say_as": "Oh. Oh is for orange."
+  },
+  {
+    "id": "aff600115d639deb",
+    "lang": "en-US",
+    "text": "T is for tree!",
+    "say_as": "Tee is for tree!"
+  },
+  {
     "id": "b015410eb0043b37",
     "lang": "en-US",
     "text": "A fox sticker!"
+  },
+  {
+    "id": "b031e4c4a0d174d2",
+    "lang": "en-US",
+    "text": "igloo!"
+  },
+  {
+    "id": "b031f6c4a0d19368",
+    "lang": "en-US",
+    "text": "igloo?"
+  },
+  {
+    "id": "b10e1258654405ca",
+    "lang": "en-US",
+    "text": "yoyo!"
+  },
+  {
+    "id": "b10e145865440930",
+    "lang": "en-US",
+    "text": "yoyo?"
+  },
+  {
+    "id": "b1155396e00f3677",
+    "lang": "en-US",
+    "text": "A to M!",
+    "say_as": "Ey to M!"
   },
   {
     "id": "b29a819da7d8816a",
@@ -510,9 +1546,30 @@
     "text": "What's this? It's a mouse!"
   },
   {
+    "id": "b3b6fbb4fa96d20a",
+    "lang": "pt-BR",
+    "text": "Galho quatro: primeiras palavras em inglês!"
+  },
+  {
     "id": "b48d4bd4083b05d0",
     "lang": "pt-BR",
     "text": "Vamos cantar a música dos animais da floresta! Escute e cante comigo!"
+  },
+  {
+    "id": "b6b807cb70454294",
+    "lang": "en-US",
+    "text": "A. A is for apple.",
+    "say_as": "Ey. Ey is for apple."
+  },
+  {
+    "id": "b752075a013b3aa4",
+    "lang": "pt-BR",
+    "text": "Oi! Vamos ler as últimas palavras do galho!"
+  },
+  {
+    "id": "b7af6586122dbe35",
+    "lang": "en-US",
+    "text": "I can read! I can read!"
   },
   {
     "id": "b9e7a38db451273f",
@@ -520,9 +1577,48 @@
     "text": "Olha!"
   },
   {
+    "id": "ba736bd289866336",
+    "lang": "en-US",
+    "text": "An orange! Orange starts with O!",
+    "say_as": "An orange! Orange starts with Oh!"
+  },
+  {
+    "id": "bb945ad612eeb7e6",
+    "lang": "en-US",
+    "text": "R, S, T, U!",
+    "say_as": "Ar, Ess, Tee, You!"
+  },
+  {
+    "id": "bc5f54e7c4f60193",
+    "lang": "pt-BR",
+    "text": "Dentro da árvore, o gatinho achou uma bola."
+  },
+  {
+    "id": "bc64ac77cd4a17b0",
+    "lang": "en-US",
+    "text": "H is for hat!",
+    "say_as": "Aitch is for hat!"
+  },
+  {
+    "id": "bd8a92c58c149d18",
+    "lang": "en-US",
+    "text": "lion!"
+  },
+  {
+    "id": "bd8aa0c58c14b4e2",
+    "lang": "en-US",
+    "text": "lion?"
+  },
+  {
     "id": "be05efda922f2c82",
     "lang": "en-US",
     "text": "What's this? It's a spider!"
+  },
+  {
+    "id": "bfe35cc5de8df8b2",
+    "lang": "en-US",
+    "text": "F-O-X, fox!",
+    "say_as": "Ef, Oh, Ex, fox!"
   },
   {
     "id": "c068e739c7f2f900",
@@ -530,9 +1626,20 @@
     "text": "What's this? What's this? It's a frog!"
   },
   {
+    "id": "c27f59f7758bf218",
+    "lang": "en-US",
+    "text": "Y. Y is for yoyo.",
+    "say_as": "Why. Why is for yoyo."
+  },
+  {
     "id": "c2be7fb57764125d",
     "lang": "en-US",
     "text": "Hello, frog! Hello, snake!"
+  },
+  {
+    "id": "c3af78817eaa0bd1",
+    "lang": "pt-BR",
+    "text": "Galho três: com que letra começa?"
   },
   {
     "id": "c42a15ba1adaf4db",
@@ -540,9 +1647,120 @@
     "text": "Perto do lago, pulava um sapo, e uma cobra tomava sol."
   },
   {
+    "id": "c487a8f6f63e8352",
+    "lang": "pt-BR",
+    "text": "Vamos cantar o fim do alfabeto em inglês! Escute e cante comigo!"
+  },
+  {
+    "id": "c48ee98f055420b2",
+    "lang": "en-US",
+    "text": "zebra?"
+  },
+  {
+    "id": "c48efb8f05543f48",
+    "lang": "en-US",
+    "text": "zebra!"
+  },
+  {
+    "id": "c675d4214938f194",
+    "lang": "pt-BR",
+    "text": "Começa com"
+  },
+  {
+    "id": "c7e847f43935a8f3",
+    "lang": "en-US",
+    "text": "P is for pig!",
+    "say_as": "Pee is for pig!"
+  },
+  {
+    "id": "ca793b0e8e9b17b8",
+    "lang": "en-US",
+    "text": "dog?"
+  },
+  {
+    "id": "ca79490e8e9b2f82",
+    "lang": "en-US",
+    "text": "dog!"
+  },
+  {
+    "id": "ca9845ad16cfcede",
+    "lang": "en-US",
+    "text": "fish?"
+  },
+  {
+    "id": "ca984fad16cfdfdc",
+    "lang": "en-US",
+    "text": "fish!"
+  },
+  {
+    "id": "cafc328d4e959bfa",
+    "lang": "en-US",
+    "text": "A sun sticker!"
+  },
+  {
+    "id": "cba61d20391f3a73",
+    "lang": "en-US",
+    "text": "box!"
+  },
+  {
+    "id": "cba63b20391f6d6d",
+    "lang": "en-US",
+    "text": "box?"
+  },
+  {
+    "id": "cbf226bd3ac0506c",
+    "lang": "en-US",
+    "text": "orange!"
+  },
+  {
+    "id": "cbf23cbd3ac075ce",
+    "lang": "en-US",
+    "text": "orange?"
+  },
+  {
+    "id": "cc362ad366aa23ba",
+    "lang": "en-US",
+    "text": "Q. Q is for queen.",
+    "say_as": "Cue. Cue is for queen."
+  },
+  {
+    "id": "cc6bb97c288e510e",
+    "lang": "en-US",
+    "text": "A, B, C, D!",
+    "say_as": "Ey, Bee, See, Dee!"
+  },
+  {
     "id": "cc8a4fbb95e56695",
     "lang": "en-US",
     "text": "Hello, bird!"
+  },
+  {
+    "id": "cdf6dbe413aceeab",
+    "lang": "pt-BR",
+    "text": "Vamos cantar o alfabeto em inglês! Escute e cante comigo!"
+  },
+  {
+    "id": "ce5173c1d12591fe",
+    "lang": "pt-BR",
+    "text": "Esta é a letra"
+  },
+  {
+    "id": "ce65ae8ae91835f0",
+    "lang": "en-US",
+    "text": "S-U-N, sun!",
+    "say_as": "Ess, You, En, sun!"
+  },
+  {
+    "id": "ceccfa91c8aef152",
+    "lang": "en-US",
+    "text": "H-A-T, hat!",
+    "say_as": "Aitch, Ey, Tee, hat!"
+  },
+  {
+    "id": "cf65e7b1ac819591",
+    "lang": "en-US",
+    "text": "V. V is for van.",
+    "say_as": "Vee. Vee is for van."
   },
   {
     "id": "cffce40942906875",
@@ -550,9 +1768,25 @@
     "text": "Tudo em dia!"
   },
   {
+    "id": "cffefc27e70237ec",
+    "lang": "en-US",
+    "text": "L. L is for lion.",
+    "say_as": "Ell. Ell is for lion."
+  },
+  {
+    "id": "d01de571cd19b09f",
+    "lang": "pt-BR",
+    "text": "Vamos soletrar palavras em inglês! Escute e cante comigo!"
+  },
+  {
     "id": "d158a760cab3938a",
     "lang": "pt-BR",
     "text": "Vamos brincar?"
+  },
+  {
+    "id": "d3b4c2bbc9ed432e",
+    "lang": "pt-BR",
+    "text": "Toque em cada figura e repita comigo!"
   },
   {
     "id": "d40bf44a51bcc56c",
@@ -565,9 +1799,29 @@
     "text": "This is a snake!"
   },
   {
+    "id": "d5ef1e8135bc2f68",
+    "lang": "en-US",
+    "text": "pig, box, bus, cup, fox!"
+  },
+  {
     "id": "d6919f6dff8aa631",
     "lang": "pt-BR",
     "text": "Guardei a sua figurinha no ninho."
+  },
+  {
+    "id": "d69fd428e9b26e34",
+    "lang": "pt-BR",
+    "text": "O gatinho subiu no ônibus."
+  },
+  {
+    "id": "d841c715700ae100",
+    "lang": "en-US",
+    "text": "cat!"
+  },
+  {
+    "id": "d841e515700b13fa",
+    "lang": "en-US",
+    "text": "cat?"
   },
   {
     "id": "d8c8d964b63a186a",
@@ -585,14 +1839,77 @@
     "text": "frog."
   },
   {
+    "id": "db8a2e6e49c2c06c",
+    "lang": "pt-BR",
+    "text": "O que o gatinho abriu? Toque!"
+  },
+  {
+    "id": "dbe89804ad9cf518",
+    "lang": "en-US",
+    "text": "Jam! Jam starts with J!",
+    "say_as": "Jam! Jam starts with Jay!"
+  },
+  {
+    "id": "dc10d4fd7f08a817",
+    "lang": "en-US",
+    "text": "fox!"
+  },
+  {
+    "id": "dc10dafd7f08b249",
+    "lang": "en-US",
+    "text": "fox?"
+  },
+  {
     "id": "dc7ede2ffe6eacf1",
     "lang": "en-US",
     "text": "What's this? What's this? It's a mouse!"
   },
   {
+    "id": "dd7924285f54148d",
+    "lang": "en-US",
+    "text": "A hat! H-A-T, hat!",
+    "say_as": "A hat! Aitch, Ey, Tee, hat!"
+  },
+  {
+    "id": "ddb3316e872e0a25",
+    "lang": "en-US",
+    "text": "J is for jam!",
+    "say_as": "Jay is for jam!"
+  },
+  {
+    "id": "ded5b6c8c6c74896",
+    "lang": "en-US",
+    "text": "An apple sticker!"
+  },
+  {
+    "id": "df605524b8d9db31",
+    "lang": "pt-BR",
+    "text": "Eles desceram, e o cachorro ganhou um chapéu."
+  },
+  {
+    "id": "df9fb50588466874",
+    "lang": "pt-BR",
+    "text": "Ligue cada figura à palavra!"
+  },
+  {
     "id": "e1855f208567faa2",
     "lang": "en-US",
     "text": "Hello, bear!"
+  },
+  {
+    "id": "e1976d08529d1c3f",
+    "lang": "en-US",
+    "text": "egg!"
+  },
+  {
+    "id": "e1978308529d41a1",
+    "lang": "en-US",
+    "text": "egg?"
+  },
+  {
+    "id": "e26f49983ea3fd35",
+    "lang": "pt-BR",
+    "text": "Quem chegou com fome? Toque!"
   },
   {
     "id": "e2d8727b9daa28af",
@@ -603,6 +1920,11 @@
     "id": "e3403f1330f8eadf",
     "lang": "pt-BR",
     "text": "Oi! Hoje nós vamos aprender três animais da floresta!"
+  },
+  {
+    "id": "e3597f893a7a0097",
+    "lang": "en-US",
+    "text": "M. M is for moon."
   },
   {
     "id": "e3670f523ad3c4c6",
@@ -618,6 +1940,16 @@
     "id": "e41e6920a1ad082e",
     "lang": "pt-BR",
     "text": "Esse é o Farol das Línguas!"
+  },
+  {
+    "id": "e44a62deb724d80c",
+    "lang": "en-US",
+    "text": "jam!"
+  },
+  {
+    "id": "e44a78deb724fd6e",
+    "lang": "en-US",
+    "text": "jam?"
   },
   {
     "id": "e5c3fd3ad07cae9f",
@@ -640,9 +1972,27 @@
     "text": "Vamos subir a escada do farol?"
   },
   {
+    "id": "eaefde4189c5f7ac",
+    "lang": "en-US",
+    "text": "B-U-S, bus!",
+    "say_as": "Bee, You, Ess, bus!"
+  },
+  {
+    "id": "ebb7e6998dd508bc",
+    "lang": "en-US",
+    "text": "C-A-T, cat!",
+    "say_as": "See, Ey, Tee, cat!"
+  },
+  {
     "id": "ec7327e589e84777",
     "lang": "en-US",
     "text": "Hello, forest!"
+  },
+  {
+    "id": "ec987749a7484eec",
+    "lang": "en-US",
+    "text": "A, B, C, D, E, F, G!",
+    "say_as": "Ey, Bee, See, Dee, Ee, Ef, Gee!"
   },
   {
     "id": "ecaf010af4359ec7",
@@ -650,9 +2000,47 @@
     "text": "Oi! Eu sou o Nino."
   },
   {
+    "id": "ee1ce8ee9e5d83fc",
+    "lang": "en-US",
+    "text": "Rain! R is for rain!",
+    "say_as": "Rain! Ar is for rain!"
+  },
+  {
+    "id": "ee4517364cf102b0",
+    "lang": "pt-BR",
+    "text": "Oi! Hoje nós vamos aprender quatro letras novas em inglês!"
+  },
+  {
     "id": "eeb5a4b00ae508bc",
     "lang": "pt-BR",
     "text": "Você treinou a memória!"
+  },
+  {
+    "id": "f2a776c2fb8482ba",
+    "lang": "pt-BR",
+    "text": "Você terminou o galho dois!"
+  },
+  {
+    "id": "f2de0bf8150336f2",
+    "lang": "en-US",
+    "text": "Z. Z is for zebra.",
+    "say_as": "Zee. Zee is for zebra."
+  },
+  {
+    "id": "f53e59a74087ba66",
+    "lang": "en-US",
+    "text": "The sun! S is for sun!",
+    "say_as": "The sun! Ess is for sun!"
+  },
+  {
+    "id": "f71487afd97d8ed9",
+    "lang": "en-US",
+    "text": "ball!"
+  },
+  {
+    "id": "f714a1afd97dbb07",
+    "lang": "en-US",
+    "text": "ball?"
   },
   {
     "id": "f7c8107ad27a6161",
@@ -663,5 +2051,50 @@
     "id": "f7d2b12c4bfe82d2",
     "lang": "pt-BR",
     "text": "Lição dois. Vamos!"
+  },
+  {
+    "id": "f95e255e7f301d06",
+    "lang": "en-US",
+    "text": "tree!"
+  },
+  {
+    "id": "f95e3f5e7f304934",
+    "lang": "en-US",
+    "text": "tree?"
+  },
+  {
+    "id": "f9c10407bd342b29",
+    "lang": "en-US",
+    "text": "K is for kite!",
+    "say_as": "Kay is for kite!"
+  },
+  {
+    "id": "faa5732bf1b9de2a",
+    "lang": "en-US",
+    "text": "The bus! B-U-S, bus!",
+    "say_as": "The bus! Bee, You, Ess, bus!"
+  },
+  {
+    "id": "fb8ca1ec5fd8a29f",
+    "lang": "pt-BR",
+    "text": "Oi! Hoje nós vamos aprender quatro letras em inglês!"
+  },
+  {
+    "id": "fc4c37f21b646904",
+    "lang": "en-US",
+    "text": "U. U is for umbrella.",
+    "say_as": "You. You is for umbrella."
+  },
+  {
+    "id": "fc512b66ecda2596",
+    "lang": "en-US",
+    "text": "An apple! A is for apple!",
+    "say_as": "An apple! Ey is for apple!"
+  },
+  {
+    "id": "ffa8a7181ea3cfbf",
+    "lang": "en-US",
+    "text": "R is for rain!",
+    "say_as": "Ar is for rain!"
   }
 ]

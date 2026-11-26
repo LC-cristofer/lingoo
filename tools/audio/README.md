@@ -26,9 +26,14 @@ uv pip install --python tools/audio/.venv/bin/python -r tools/audio/requirements
 | `generate.py [--only id,id] [--seed N] [--force]` | Voices every line of `lines.json` to `public/audio/{id}.mp3` (skips existing). Prints `generated N, skipped M`. About 30-60 s per line on CPU. |
 | `verify.py [--only id,id] [--engine eleven\|chatterbox]` | Transcribes each MP3 (faster-whisper small, int8), compares with the text (difflib ratio, threshold 0.80), regenerates failures with seeds 43 and 44 using the same engine (ElevenLabs by default), writes `review.md` for the rest (a run with `--only` never deletes it). Prints `ok X, retried Y, flagged Z`. |
 | `sfx.py` | Synthesizes `public/audio/sfx/{correct,retry,star,chest,tap}.mp3` (max 1.2 s, about 6 dB under the voice). |
-| `chant.py [--dry-run]` | Original C-G-Am-F instrumental plus the voice MP3s on the beat -> `public/audio/song-forest-animals.mp3`. Fails listing missing ids if `generate.py` has not run. `--dry-run` prints the timeline. |
+| `chant.py [unit-id] [--dry-run]` | Original C-G-Am-F instrumental plus the voice MP3s on the beat, from the song stop of `content/units/{unit-id}.json` (default `forest-animals`; also `letras-1` ... `letras-4`) -> `public/audio/song-{unit-id}.mp3`, the file the app plays. Fails listing missing ids if the voices have not been generated. `--dry-run` prints the timeline. |
 
 | `music.py [--only trail,album]` | Original background loops -> `public/audio/music/{trail,album}.mp3`. Needs `fluidsynth` and the `fluid-soundfont-gm` package (`apt-get install -y fluidsynth fluid-soundfont-gm`) and `mido`. |
+
+Letters are said by their English names: `npm run audio:lines` writes a `say_as` for every English line that has letters
+("B" -> "bee", "B is for ball!" -> "bee is for ball!", "D-O-G, dog!" -> "dee, oh, gee, dog!"), built from the names in
+`content/areas/letras/bank.json` (`src/domain/letras/say-as.ts`). The voice is sent `say_as`; the id and the app text do not change,
+and `verify.py` accepts the letter, its name or a usual Whisper spelling of it for a bare-letter line.
 
 Full run: `generate_eleven.py && verify.py && chant.py`, then `sfx.py` and `music.py`.
 The Whisper model is cached in `tools/audio/.cache/` (git-ignored).

@@ -2,7 +2,8 @@
 
     python tools/audio/generate_eleven.py [--only id1,id2] [--seed 42] [--force] [--jobs 3]
 
-Same contract as generate.py (Chatterbox): one MP3 per line of lines.json at public/audio/{id}.mp3,
+A line with `say_as` (English letters said by their names, see src/domain/letras/say-as.ts) sends that to the
+voice instead of its text; the file name (the id) is unchanged. Same contract as generate.py (Chatterbox): one MP3 per line of lines.json at public/audio/{id}.mp3,
 normalised with the same loudnorm, so the app needs no change. The API key is NOT read here: the
 session's network proxy injects it into requests to api.elevenlabs.io. Elsewhere, export
 ELEVENLABS_API_KEY and it is sent as the xi-api-key header.
@@ -70,7 +71,7 @@ def main():
 
     def one(l):
         t0 = time.time()
-        synth(l["text"], l["lang"], mp3_path(l["id"]), args.seed)
+        synth(l.get("say_as", l["text"]), l["lang"], mp3_path(l["id"]), args.seed)
         print(f"{l['id']} {time.time() - t0:.1f}s  {l['text']}", flush=True)
 
     with ThreadPoolExecutor(max_workers=args.jobs) as pool:

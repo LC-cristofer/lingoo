@@ -1,9 +1,10 @@
 """Build the unit chant: original instrumental (numpy) + the gatinho speaking lyrics on the beat.
 
-    python tools/audio/chant.py [--dry-run]
+    python tools/audio/chant.py [unit-id] [--dry-run]     (default unit: forest-animals; e.g. letras-1 ... letras-4)
 
-Voice = the per-line MP3s made by generate.py (matched on lang + normalised text).
-Output: public/audio/song-forest-animals.mp3
+Voice = the per-line MP3s made by generate_eleven.py / generate.py (matched on lang + exact text).
+Reads the song stop of content/units/{unit-id}.json (bpm, introBars, lyrics bars).
+Output: public/audio/song-{unit-id}.mp3 (the app plays /audio/song-${unit.id}.mp3)
 """
 import argparse
 import json
@@ -11,34 +12,41 @@ import os
 import subprocess
 import sys
 import tempfile
+import unicodedata
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from common import AUDIO, ROOT, load_lines, mp3_path, normalize  # noqa: E402
+from common import AUDIO, ROOT, load_lines, mp3_path  # noqa: E402
 
 SR = 44100
-UNIT = os.path.join(ROOT, "content", "units", "forest-animals.json")
-OUT = os.path.join(AUDIO, "song-forest-animals.mp3")
 VOICE_GAIN = 1.0
 MUSIC_GAIN = 0.35  # voice clearly louder than the music
 TAIL_BARS = 2
 
 
-def load_song():
-    with open(UNIT, encoding="utf-8") as f:
+def load_song(unit_id):
+    path = os.path.join(ROOT, "content", "units", f"{unit_id}.json")
+    if not os.path.exists(path):
+        sys.exit(f"chant.py: no unit file {path}")
+    with open(path, encoding="utf-8") as f:
         stop = json.load(f)["stops"][0]
     assert stop["kind"] == "song", "stops[0] is not a song"
     return stop
 
 
+def exact(text):
+    return unicodedata.normalize("NFC", text).strip()
+
+
 def timeline(song):
     beat = 60.0 / song["bpm"]
     bar_sec = 4 * beat
-    index = {(l["lang"], normalize(l["text"])): l["id"] for l in load_lines()}
+    # Exact text, not the loose match: "B" and "B?" are different recordings.
+    index = {(l["lang"], exact(l["text"])): l["id"] for l in load_lines()}
     items, missing = [], []
     for lyric in song["lyrics"]:
         t = (song["introBars"] + lyric["bar"] - 1) * bar_sec
         for seg in lyric["say"]:
-            lid = index.get((seg["lang"], normalize(seg["text"])))
+            lid = index.get((seg["lang"], exact(seg["text"])))
             if lid is None:
                 missing.append(f"(not in lines.json) {seg['text']}")
                 continue
@@ -120,10 +128,12 @@ def instrumental(total_sec, bpm):
 
 def main():
     ap = argparse.ArgumentParser()
+    ap.add_argument("unit", nargs="?", default="forest-animals", help="unit id whose song stop is built")
     ap.add_argument("--dry-run", action="store_true", help="print the timeline and exit")
     args = ap.parse_args()
 
-    song = load_song()
+    song = load_song(args.unit)
+    out_path = os.path.join(AUDIO, f"song-{args.unit}.mp3")
     items, missing, bar_sec = timeline(song)
 
     print(f"bpm {song['bpm']}, introBars {song['introBars']}, bar = {bar_sec:.2f}s")
@@ -157,8 +167,8 @@ def main():
         sf.write(wav, mix.astype(np.float32), SR)
         os.makedirs(AUDIO, exist_ok=True)
         subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", wav, "-af", "loudnorm=I=-16:TP=-1.5",
-                        "-b:a", "128k", OUT], check=True)
-    print("wrote", OUT)
+                        "-b:a", "128k", out_path], check=True)
+    print("wrote", out_path)
 
 
 if __name__ == "__main__":

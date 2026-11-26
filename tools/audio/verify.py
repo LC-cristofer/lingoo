@@ -21,9 +21,50 @@ RETRY_SEEDS = (43, 44)
 _whisper = None
 
 
-def score(text, heard):
-    a, b = normalize(text).split(), normalize(heard).split()
-    return difflib.SequenceMatcher(None, a, b).ratio()
+# What Whisper may write for a spoken letter, by letter. A bare letter line passes if it hears the letter, the spoken
+# name sent to the voice (say_as) or one of these.
+HOMOPHONES = {"a": {"ay", "hey", "eh", "a"}, "b": {"bee", "be"}, "c": {"see", "sea"}, "d": {"dee"}, "e": {"ee", "eh"},
+              "f": {"ef", "eff"}, "g": {"gee"}, "h": {"aitch", "age"}, "i": {"eye", "eyes"}, "j": {"jay"},
+              "k": {"kay", "okay"}, "l": {"el", "ell", "elle"}, "m": {"em", "am"}, "n": {"en", "and"},
+              "o": {"oh", "owe"}, "p": {"pee", "pea"}, "q": {"cue", "queue"}, "r": {"ar", "are"}, "s": {"ess", "us", "cess"},
+              "t": {"tee", "tea"}, "u": {"you"}, "v": {"vee"}, "w": {"double u", "double you"}, "x": {"ex"},
+              "y": {"why"}, "z": {"zee", "zed"}}
+
+
+# Spoken letter name or Whisper spelling -> letter. Only applied to lines that have letters (those with `say_as`).
+SPOKEN = {}
+for _letter, _names in HOMOPHONES.items():
+    for _n in _names | {_letter}:
+        SPOKEN[_n] = _letter
+SPOKEN.update({"and": "n", "this": "s", "double": "w"})
+
+
+def canon(tokens):
+    """Tokens with spoken letter names turned into the letters ("double u" -> "w", "why" -> "y")."""
+    out, i = [], 0
+    while i < len(tokens):
+        if tokens[i] == "double" and i + 1 < len(tokens) and tokens[i + 1] in ("u", "you"):
+            out.append("w")
+            i += 2
+            continue
+        out.append(SPOKEN.get(tokens[i], tokens[i]))
+        i += 1
+    return out
+
+
+def score(text, heard, say_as=None):
+    """Similarity of what was heard with the text. A line with letters (`say_as`) is compared letter for letter, so
+    "Why is for yoyo" matches "Y is for yoyo"; a bare letter passes on the letter, its name or a usual spelling."""
+    b = normalize(heard).split()
+    if "".join(normalize(text).split()) == "".join(b):  # same letters, spaced differently ("yoyo" / "yo-yo")
+        return 1.0
+    if not say_as:
+        return difflib.SequenceMatcher(None, normalize(text).split(), b).ratio()
+    best = 0.0
+    for want in (text, say_as):
+        w, h = canon(normalize(want).split()), canon(b)
+        best = max(best, 1.0 if "".join(w) == "".join(h) else difflib.SequenceMatcher(None, w, h).ratio())
+    return best
 
 
 def transcribe(path, lang):
@@ -38,7 +79,7 @@ def transcribe(path, lang):
 
 def check(line):
     heard = transcribe(mp3_path(line["id"]), line["lang"])
-    return score(line["text"], heard), heard
+    return score(line["text"], heard, line.get("say_as")), heard
 
 
 def main():
@@ -70,7 +111,7 @@ def main():
         best_copy = os.path.join(tempfile.mkdtemp(), "best.mp3")
         shutil.copy(path, best_copy)
         for seed in RETRY_SEEDS:
-            synth(l["text"], l["lang"], path, seed)
+            synth(l.get("say_as", l["text"]), l["lang"], path, seed)
             s, h = check(l)
             print(f"retry seed {seed}: {s:.2f} {l['id']} (heard: {h.strip()})", flush=True)
             if s > best:
