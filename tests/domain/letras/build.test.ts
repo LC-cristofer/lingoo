@@ -62,6 +62,26 @@ describe("buildLetrasUnits", () => {
     expect([letras1, letras2, letras3, letras4]).toEqual(JSON.parse(JSON.stringify(units)));
   });
 
+  it("in the sounds lessons the hidden letter is never asked elsewhere and the asked letters are distinct", () => {
+    for (const s of units[2].stops) {
+      if (s.kind !== "lesson") continue;
+      const asked: string[] = [];
+      let hidden = "";
+      for (const e of s.exercises) {
+        if (e.kind === "trueFalse") asked.push(e.wordId);
+        if (e.kind !== "adaptive") continue;
+        const first = e.levels[0];
+        if (first.kind === "listenTap") asked.push(first.answerId);
+        if (first.kind === "whatsMissing") hidden = first.missingId;
+      }
+      expect(hidden, s.id).not.toBe("");
+      expect(asked, s.id).not.toContain(hidden);
+      expect(asked, s.id).not.toContain(`letter-${hidden}`);
+      const mains = asked.filter((id) => id.startsWith("letter-"));
+      expect(new Set(mains).size, s.id).toBe(mains.length);
+    }
+  });
+
   it("lessons and challenges have 8 to 12 exercises", () => {
     for (const u of units) {
       for (const s of u.stops) {

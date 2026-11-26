@@ -93,13 +93,13 @@
       ]
     },
     {
-      "id": "letter-e",
-      "en": "E",
-      "pt": "a letra E",
+      "id": "letter-f",
+      "en": "F",
+      "pt": "a letra F",
       "say": [
         {
           "lang": "en-US",
-          "text": "E"
+          "text": "F"
         }
       ],
       "ask": [
@@ -109,7 +109,7 @@
         },
         {
           "lang": "en-US",
-          "text": "E"
+          "text": "F"
         }
       ]
     },
@@ -152,6 +152,27 @@
         {
           "lang": "en-US",
           "text": "H"
+        }
+      ]
+    },
+    {
+      "id": "letter-i",
+      "en": "I",
+      "pt": "a letra I",
+      "say": [
+        {
+          "lang": "en-US",
+          "text": "I"
+        }
+      ],
+      "ask": [
+        {
+          "lang": "pt-BR",
+          "text": "Toque no"
+        },
+        {
+          "lang": "en-US",
+          "text": "I"
         }
       ]
     },
@@ -1556,11 +1577,11 @@
         },
         {
           "kind": "trueFalse",
-          "wordId": "ball",
+          "wordId": "cat",
           "say": [
             {
               "lang": "en-US",
-              "text": "ball!"
+              "text": "cat!"
             },
             {
               "lang": "pt-BR",
@@ -1568,7 +1589,7 @@
             },
             {
               "lang": "en-US",
-              "text": "B?"
+              "text": "C?"
             },
             {
               "lang": "pt-BR",
@@ -1589,14 +1610,14 @@
                 },
                 {
                   "lang": "en-US",
-                  "text": "D"
+                  "text": "H"
                 }
               ],
               "optionIds": [
-                "letter-d",
+                "letter-o",
                 "letter-h"
               ],
-              "answerId": "letter-d"
+              "answerId": "letter-h"
             },
             {
               "kind": "listenTap",
@@ -1607,15 +1628,15 @@
                 },
                 {
                   "lang": "en-US",
-                  "text": "D"
+                  "text": "H"
                 }
               ],
               "optionIds": [
-                "letter-h",
-                "letter-d",
-                "letter-b"
+                "letter-o",
+                "letter-n",
+                "letter-h"
               ],
-              "answerId": "letter-d"
+              "answerId": "letter-h"
             },
             {
               "kind": "listenTap",
@@ -1626,16 +1647,16 @@
                 },
                 {
                   "lang": "en-US",
-                  "text": "D"
+                  "text": "H"
                 }
               ],
               "optionIds": [
-                "letter-p",
+                "letter-o",
                 "letter-h",
-                "letter-b",
-                "letter-d"
+                "letter-n",
+                "letter-k"
               ],
-              "answerId": "letter-d"
+              "answerId": "letter-h"
             }
           ]
         },
@@ -1651,14 +1672,14 @@
                 },
                 {
                   "lang": "en-US",
-                  "text": "H?"
+                  "text": "B?"
                 }
               ],
               "optionIds": [
-                "hat",
-                "egg"
+                "rain",
+                "ball"
               ],
-              "answerId": "hat"
+              "answerId": "ball"
             },
             {
               "kind": "listenTap",
@@ -1669,15 +1690,15 @@
                 },
                 {
                   "lang": "en-US",
-                  "text": "H?"
+                  "text": "B?"
                 }
               ],
               "optionIds": [
-                "egg",
-                "nest",
-                "hat"
+                "ball",
+                "rain",
+                "pig"
               ],
-              "answerId": "hat"
+              "answerId": "ball"
             },
             {
               "kind": "listenTap",
@@ -1688,16 +1709,16 @@
                 },
                 {
                   "lang": "en-US",
-                  "text": "H?"
+                  "text": "B?"
                 }
               ],
               "optionIds": [
-                "egg",
-                "nest",
-                "kite",
-                "hat"
+                "pig",
+                "rain",
+                "dog",
+                "ball"
               ],
-              "answerId": "hat"
+              "answerId": "ball"
             }
           ]
         },
@@ -1710,19 +1731,19 @@
             }
           ],
           "wordIds": [
-            "goat",
             "fish",
             "cat",
-            "igloo"
+            "igloo",
+            "apple"
           ]
         },
         {
           "kind": "trueFalse",
-          "wordId": "fish",
+          "wordId": "igloo",
           "say": [
             {
               "lang": "en-US",
-              "text": "fish!"
+              "text": "igloo!"
             },
             {
               "lang": "pt-BR",
@@ -1730,7 +1751,7 @@
             },
             {
               "lang": "en-US",
-              "text": "S?"
+              "text": "E?"
             },
             {
               "lang": "pt-BR",
@@ -1751,33 +1772,14 @@
                 },
                 {
                   "lang": "en-US",
-                  "text": "C?"
+                  "text": "D?"
                 }
               ],
               "optionIds": [
-                "cat",
-                "pig"
-              ],
-              "answerId": "cat"
-            },
-            {
-              "kind": "listenTap",
-              "prompt": [
-                {
-                  "lang": "pt-BR",
-                  "text": "Qual começa com"
-                },
-                {
-                  "lang": "en-US",
-                  "text": "C?"
-                }
-              ],
-              "optionIds": [
-                "cat",
-                "pig",
+                "dog",
                 "kite"
               ],
-              "answerId": "cat"
+              "answerId": "dog"
             },
             {
               "kind": "listenTap",
@@ -1788,16 +1790,35 @@
                 },
                 {
                   "lang": "en-US",
-                  "text": "C?"
+                  "text": "D?"
                 }
               ],
               "optionIds": [
-                "sun",
-                "pig",
+                "dog",
                 "kite",
-                "cat"
+                "pig"
               ],
-              "answerId": "cat"
+              "answerId": "dog"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Qual começa com"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "D?"
+                }
+              ],
+              "optionIds": [
+                "pig",
+                "box",
+                "kite",
+                "dog"
+              ],
+              "answerId": "dog"
             }
           ]
         },
@@ -1813,14 +1834,14 @@
                 }
               ],
               "shownIds": [
-                "letter-a",
-                "letter-e",
-                "letter-b"
+                "letter-c",
+                "letter-i",
+                "letter-a"
               ],
-              "missingId": "letter-d",
+              "missingId": "letter-f",
               "optionIds": [
-                "letter-d",
-                "letter-c"
+                "letter-f",
+                "letter-b"
               ]
             },
             {
@@ -1832,15 +1853,15 @@
                 }
               ],
               "shownIds": [
-                "letter-a",
-                "letter-e",
-                "letter-b"
-              ],
-              "missingId": "letter-d",
-              "optionIds": [
-                "letter-p",
                 "letter-c",
-                "letter-d"
+                "letter-i",
+                "letter-a"
+              ],
+              "missingId": "letter-f",
+              "optionIds": [
+                "letter-s",
+                "letter-b",
+                "letter-f"
               ]
             },
             {
@@ -1852,16 +1873,16 @@
                 }
               ],
               "shownIds": [
-                "letter-a",
-                "letter-e",
-                "letter-b"
-              ],
-              "missingId": "letter-d",
-              "optionIds": [
-                "letter-p",
-                "letter-d",
                 "letter-c",
-                "letter-o"
+                "letter-i",
+                "letter-a"
+              ],
+              "missingId": "letter-f",
+              "optionIds": [
+                "letter-s",
+                "letter-f",
+                "letter-b",
+                "letter-v"
               ]
             }
           ]
@@ -2150,11 +2171,11 @@
         },
         {
           "kind": "trueFalse",
-          "wordId": "jam",
+          "wordId": "moon",
           "say": [
             {
               "lang": "en-US",
-              "text": "jam!"
+              "text": "moon!"
             },
             {
               "lang": "pt-BR",
@@ -2162,7 +2183,7 @@
             },
             {
               "lang": "en-US",
-              "text": "J?"
+              "text": "M?"
             },
             {
               "lang": "pt-BR",
@@ -2183,33 +2204,14 @@
                 },
                 {
                   "lang": "en-US",
-                  "text": "P"
+                  "text": "Q"
                 }
               ],
               "optionIds": [
-                "letter-p",
-                "letter-w"
-              ],
-              "answerId": "letter-p"
-            },
-            {
-              "kind": "listenTap",
-              "prompt": [
-                {
-                  "lang": "pt-BR",
-                  "text": "Toque no"
-                },
-                {
-                  "lang": "en-US",
-                  "text": "P"
-                }
-              ],
-              "optionIds": [
-                "letter-w",
-                "letter-p",
+                "letter-y",
                 "letter-q"
               ],
-              "answerId": "letter-p"
+              "answerId": "letter-q"
             },
             {
               "kind": "listenTap",
@@ -2220,16 +2222,35 @@
                 },
                 {
                   "lang": "en-US",
-                  "text": "P"
+                  "text": "Q"
                 }
               ],
               "optionIds": [
-                "letter-w",
-                "letter-b",
+                "letter-y",
                 "letter-q",
                 "letter-p"
               ],
-              "answerId": "letter-p"
+              "answerId": "letter-q"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Toque no"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "Q"
+                }
+              ],
+              "optionIds": [
+                "letter-q",
+                "letter-o",
+                "letter-p",
+                "letter-y"
+              ],
+              "answerId": "letter-q"
             }
           ]
         },
@@ -2245,14 +2266,14 @@
                 },
                 {
                   "lang": "en-US",
-                  "text": "Q?"
+                  "text": "J?"
                 }
               ],
               "optionIds": [
-                "queen",
-                "tree"
+                "jam",
+                "kite"
               ],
-              "answerId": "queen"
+              "answerId": "jam"
             },
             {
               "kind": "listenTap",
@@ -2263,15 +2284,15 @@
                 },
                 {
                   "lang": "en-US",
-                  "text": "Q?"
+                  "text": "J?"
                 }
               ],
               "optionIds": [
-                "tree",
-                "pig",
-                "queen"
+                "kite",
+                "igloo",
+                "jam"
               ],
-              "answerId": "queen"
+              "answerId": "jam"
             },
             {
               "kind": "listenTap",
@@ -2282,16 +2303,16 @@
                 },
                 {
                   "lang": "en-US",
-                  "text": "Q?"
+                  "text": "J?"
                 }
               ],
               "optionIds": [
-                "orange",
-                "queen",
-                "tree",
-                "pig"
+                "igloo",
+                "jam",
+                "goat",
+                "kite"
               ],
-              "answerId": "queen"
+              "answerId": "jam"
             }
           ]
         },
@@ -2304,19 +2325,19 @@
             }
           ],
           "wordIds": [
-            "rain",
             "orange",
             "moon",
-            "kite"
+            "kite",
+            "nest"
           ]
         },
         {
           "kind": "trueFalse",
-          "wordId": "orange",
+          "wordId": "kite",
           "say": [
             {
               "lang": "en-US",
-              "text": "orange!"
+              "text": "kite!"
             },
             {
               "lang": "pt-BR",
@@ -2324,7 +2345,7 @@
             },
             {
               "lang": "en-US",
-              "text": "Q?"
+              "text": "C?"
             },
             {
               "lang": "pt-BR",
@@ -2345,14 +2366,14 @@
                 },
                 {
                   "lang": "en-US",
-                  "text": "M?"
+                  "text": "P?"
                 }
               ],
               "optionIds": [
-                "lion",
-                "moon"
+                "pig",
+                "rain"
               ],
-              "answerId": "moon"
+              "answerId": "pig"
             },
             {
               "kind": "listenTap",
@@ -2363,15 +2384,15 @@
                 },
                 {
                   "lang": "en-US",
-                  "text": "M?"
+                  "text": "P?"
                 }
               ],
               "optionIds": [
-                "lion",
-                "nest",
-                "moon"
+                "box",
+                "pig",
+                "rain"
               ],
-              "answerId": "moon"
+              "answerId": "pig"
             },
             {
               "kind": "listenTap",
@@ -2382,16 +2403,16 @@
                 },
                 {
                   "lang": "en-US",
-                  "text": "M?"
+                  "text": "P?"
                 }
               ],
               "optionIds": [
-                "moon",
-                "nest",
-                "web",
-                "lion"
+                "rain",
+                "queen",
+                "box",
+                "pig"
               ],
-              "answerId": "moon"
+              "answerId": "pig"
             }
           ]
         },
@@ -2407,14 +2428,14 @@
                 }
               ],
               "shownIds": [
-                "letter-n",
-                "letter-l",
-                "letter-j"
+                "letter-m",
+                "letter-k",
+                "letter-n"
               ],
-              "missingId": "letter-p",
+              "missingId": "letter-o",
               "optionIds": [
                 "letter-g",
-                "letter-p"
+                "letter-o"
               ]
             },
             {
@@ -2426,15 +2447,15 @@
                 }
               ],
               "shownIds": [
-                "letter-n",
-                "letter-l",
-                "letter-j"
+                "letter-m",
+                "letter-k",
+                "letter-n"
               ],
-              "missingId": "letter-p",
+              "missingId": "letter-o",
               "optionIds": [
-                "letter-q",
+                "letter-c",
                 "letter-g",
-                "letter-p"
+                "letter-o"
               ]
             },
             {
@@ -2446,16 +2467,16 @@
                 }
               ],
               "shownIds": [
-                "letter-n",
-                "letter-l",
-                "letter-j"
+                "letter-m",
+                "letter-k",
+                "letter-n"
               ],
-              "missingId": "letter-p",
+              "missingId": "letter-o",
               "optionIds": [
                 "letter-g",
-                "letter-b",
                 "letter-q",
-                "letter-p"
+                "letter-c",
+                "letter-o"
               ]
             }
           ]
@@ -2744,11 +2765,11 @@
         },
         {
           "kind": "trueFalse",
-          "wordId": "yoyo",
+          "wordId": "umbrella",
           "say": [
             {
               "lang": "en-US",
-              "text": "yoyo!"
+              "text": "umbrella!"
             },
             {
               "lang": "pt-BR",
@@ -2756,7 +2777,7 @@
             },
             {
               "lang": "en-US",
-              "text": "Y?"
+              "text": "U?"
             },
             {
               "lang": "pt-BR",
@@ -2777,14 +2798,14 @@
                 },
                 {
                   "lang": "en-US",
-                  "text": "V"
+                  "text": "X"
                 }
               ],
               "optionIds": [
-                "letter-t",
-                "letter-v"
+                "letter-x",
+                "letter-a"
               ],
-              "answerId": "letter-v"
+              "answerId": "letter-x"
             },
             {
               "kind": "listenTap",
@@ -2795,15 +2816,15 @@
                 },
                 {
                   "lang": "en-US",
-                  "text": "V"
+                  "text": "X"
                 }
               ],
               "optionIds": [
-                "letter-v",
-                "letter-u",
-                "letter-t"
+                "letter-s",
+                "letter-x",
+                "letter-a"
               ],
-              "answerId": "letter-v"
+              "answerId": "letter-x"
             },
             {
               "kind": "listenTap",
@@ -2814,16 +2835,16 @@
                 },
                 {
                   "lang": "en-US",
-                  "text": "V"
+                  "text": "X"
                 }
               ],
               "optionIds": [
-                "letter-u",
-                "letter-t",
-                "letter-v",
-                "letter-w"
+                "letter-a",
+                "letter-k",
+                "letter-s",
+                "letter-x"
               ],
-              "answerId": "letter-v"
+              "answerId": "letter-x"
             }
           ]
         },
@@ -2835,57 +2856,57 @@
               "prompt": [
                 {
                   "lang": "pt-BR",
-                  "text": "Qual termina com"
+                  "text": "Qual começa com"
                 },
                 {
                   "lang": "en-US",
-                  "text": "X?"
+                  "text": "Y?"
                 }
               ],
               "optionIds": [
-                "van",
-                "box"
+                "yoyo",
+                "jam"
               ],
-              "answerId": "box"
+              "answerId": "yoyo"
             },
             {
               "kind": "listenTap",
               "prompt": [
                 {
                   "lang": "pt-BR",
-                  "text": "Qual termina com"
+                  "text": "Qual começa com"
                 },
                 {
                   "lang": "en-US",
-                  "text": "X?"
+                  "text": "Y?"
                 }
               ],
               "optionIds": [
-                "box",
-                "sun",
+                "yoyo",
+                "jam",
+                "igloo"
+              ],
+              "answerId": "yoyo"
+            },
+            {
+              "kind": "listenTap",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Qual começa com"
+                },
+                {
+                  "lang": "en-US",
+                  "text": "Y?"
+                }
+              ],
+              "optionIds": [
+                "jam",
+                "igloo",
+                "yoyo",
                 "van"
               ],
-              "answerId": "box"
-            },
-            {
-              "kind": "listenTap",
-              "prompt": [
-                {
-                  "lang": "pt-BR",
-                  "text": "Qual termina com"
-                },
-                {
-                  "lang": "en-US",
-                  "text": "X?"
-                }
-              ],
-              "optionIds": [
-                "box",
-                "van",
-                "kite",
-                "sun"
-              ],
-              "answerId": "box"
+              "answerId": "yoyo"
             }
           ]
         },
@@ -2898,18 +2919,19 @@
             }
           ],
           "wordIds": [
-            "web",
             "tree",
-            "umbrella"
+            "umbrella",
+            "zebra",
+            "sun"
           ]
         },
         {
           "kind": "trueFalse",
-          "wordId": "umbrella",
+          "wordId": "zebra",
           "say": [
             {
               "lang": "en-US",
-              "text": "umbrella!"
+              "text": "zebra!"
             },
             {
               "lang": "pt-BR",
@@ -2917,7 +2939,7 @@
             },
             {
               "lang": "en-US",
-              "text": "V?"
+              "text": "S?"
             },
             {
               "lang": "pt-BR",
@@ -2938,14 +2960,14 @@
                 },
                 {
                   "lang": "en-US",
-                  "text": "U?"
+                  "text": "V?"
                 }
               ],
               "optionIds": [
-                "tree",
-                "umbrella"
+                "hat",
+                "van"
               ],
-              "answerId": "umbrella"
+              "answerId": "van"
             },
             {
               "kind": "listenTap",
@@ -2956,15 +2978,15 @@
                 },
                 {
                   "lang": "en-US",
-                  "text": "U?"
+                  "text": "V?"
                 }
               ],
               "optionIds": [
                 "umbrella",
-                "tree",
-                "nest"
+                "hat",
+                "van"
               ],
-              "answerId": "umbrella"
+              "answerId": "van"
             },
             {
               "kind": "listenTap",
@@ -2975,16 +2997,16 @@
                 },
                 {
                   "lang": "en-US",
-                  "text": "U?"
+                  "text": "V?"
                 }
               ],
               "optionIds": [
                 "van",
                 "umbrella",
-                "tree",
-                "nest"
+                "web",
+                "hat"
               ],
-              "answerId": "umbrella"
+              "answerId": "van"
             }
           ]
         },
@@ -3000,33 +3022,13 @@
                 }
               ],
               "shownIds": [
+                "letter-u",
                 "letter-z",
-                "letter-s",
-                "letter-y"
+                "letter-s"
               ],
-              "missingId": "letter-v",
+              "missingId": "letter-t",
               "optionIds": [
-                "letter-v",
-                "letter-p"
-              ]
-            },
-            {
-              "kind": "whatsMissing",
-              "prompt": [
-                {
-                  "lang": "pt-BR",
-                  "text": "Uma letra se escondeu! Qual sumiu?"
-                }
-              ],
-              "shownIds": [
-                "letter-z",
-                "letter-s",
-                "letter-y"
-              ],
-              "missingId": "letter-v",
-              "optionIds": [
-                "letter-v",
-                "letter-p",
+                "letter-t",
                 "letter-w"
               ]
             },
@@ -3039,16 +3041,36 @@
                 }
               ],
               "shownIds": [
+                "letter-u",
                 "letter-z",
-                "letter-s",
-                "letter-y"
+                "letter-s"
               ],
-              "missingId": "letter-v",
+              "missingId": "letter-t",
               "optionIds": [
-                "letter-p",
+                "letter-t",
                 "letter-w",
-                "letter-v",
-                "letter-u"
+                "letter-l"
+              ]
+            },
+            {
+              "kind": "whatsMissing",
+              "prompt": [
+                {
+                  "lang": "pt-BR",
+                  "text": "Uma letra se escondeu! Qual sumiu?"
+                }
+              ],
+              "shownIds": [
+                "letter-u",
+                "letter-z",
+                "letter-s"
+              ],
+              "missingId": "letter-t",
+              "optionIds": [
+                "letter-w",
+                "letter-l",
+                "letter-t",
+                "letter-f"
               ]
             }
           ]

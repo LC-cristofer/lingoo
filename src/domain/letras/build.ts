@@ -79,21 +79,29 @@ function lettersLesson(ctx: Ctx, pools: Pools, S: string[], seed: string): StopE
 
 /** Lesson of the letter-sounds unit: which picture starts with the letter, true or false, the missing letter. */
 function soundsLesson(ctx: Ctx, pools: Pools, S: string[], seed: string): StopExercise[] {
+  // One distinct letter per slot: o[0..3] are asked with pictures, o[4..5] with letter cards, o[6] hides in the
+  // "what is missing" game (its three shown cards and the matched pictures come from the rest, wrapping around).
   const o = shuffle(S, `${seed}#order`);
-  const t = o.filter((l) => ctx.mainWord(l).initial === l);
+  const at = (i: number) => o[i % o.length];
+  const hidden = at(6);
+  const asked = new Set(o.slice(0, 6));
+  // The true/false words: letters whose main word starts with them, never the hidden one, preferring ones not asked above.
+  const rank = (l: string) => (l === hidden ? 2 : asked.has(l) ? 1 : 0);
+  const t = o.filter((l) => ctx.mainWord(l).initial === l).sort((a, b) => rank(a) - rank(b));
   const lettersPool = pools.letters;
+  const shown = [at(7), at(8), at(9)];
   return [
     repeatPictures(ctx, S),
-    startsWith(ctx, o[0], pools.pictures, `${seed}#s0`),
-    startsWith(ctx, o[1], pools.pictures, `${seed}#s1`),
-    trueStarts(ctx.mainWord(t[2]), true),
-    tapLetter(o[3], lettersPool, `${seed}#t3`),
-    startsWith(ctx, o[4], pools.pictures, `${seed}#s4`),
-    matchPictures(o.slice(5, 9).map(ctx.mainWord)),
-    trueStarts(ctx.mainWord(t[6 % t.length]), false),
-    startsWith(ctx, o[7], pools.pictures, `${seed}#s7`),
-    missing(o.slice(0, 3), o[3], lettersPool, letterScore(o[3]), letterArt, "letra", `${seed}#m`),
-    tapLetter(o[5], lettersPool, `${seed}#t5`),
+    startsWith(ctx, at(0), pools.pictures, `${seed}#s0`),
+    startsWith(ctx, at(1), pools.pictures, `${seed}#s1`),
+    trueStarts(ctx.mainWord(t[0]), true),
+    tapLetter(at(4), lettersPool, `${seed}#t4`),
+    startsWith(ctx, at(2), pools.pictures, `${seed}#s2`),
+    matchPictures([at(6), at(7), at(8), at(9)].map(ctx.mainWord)),
+    trueStarts(ctx.mainWord(t[1]), false),
+    startsWith(ctx, at(3), pools.pictures, `${seed}#s3`),
+    missing(shown, hidden, lettersPool, letterScore(hidden), letterArt, "letra", `${seed}#m`),
+    tapLetter(at(5), lettersPool, `${seed}#t5`),
   ];
 }
 
