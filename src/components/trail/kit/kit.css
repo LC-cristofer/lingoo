@@ -385,6 +385,7 @@
   .k-stage > .k-words { grid-column: 2; grid-row: 2; }
   .k-stage > .k-cta { grid-column: 2; grid-row: 3; margin: 0; width: 100%; max-width: 380px; }
   .k-words .k-tiles > *, .k-words .k-tiles.is-six > * { width: min(112px, calc((100% - 24px) / 3)); }
+  .k-words .k-tiles.is-small:has(> :nth-child(4)) > * { width: min(100px, calc((100% - 36px) / 4)); } /* four words in one row, so the button stays on screen */
   .k-word { gap: 6px; }
   .k-word-en { font-size: 18px; padding: 5px 10px 3px; }
   .k-btn-lg { font-size: 22px; padding: 14px 24px 12px; }

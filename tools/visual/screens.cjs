@@ -2,7 +2,8 @@
 // Captures the screens of NESTOY from a running production build (npm run build && npx next start -p 3220) with
 // Playwright's preinstalled Chromium, at phone portrait (390x844), tablet landscape (1024x768) and a phone on its side (844x390):
 //   routes   /  (opening, island day and night, focus on the farol), /farol, /parada/forest-animals/<stop>,
-//            /ninho, /responsaveis (gate and sheet), /memoria, /revisao, and the old /mapa and /album redirects.
+//            /ninho, /responsaveis (gate and sheet), /memoria, /revisao, and the old /mapa and /album redirects;
+//            the cadastro (new install), /arvore (new, branch 1 done, English: alphabet) and a letras lesson's opening.
 // The lessons use the review mode (?revisao=1) so no progress is needed; the other routes get settings
 // (lingoo:settings:v1) and progress (lingoo:progress:v2, migrated to v3 on load) stored before the app loads.
 // For each capture it also checks that the page does not scroll and that buttons are >= 64 px and answer tiles >= 120 px.
@@ -35,6 +36,7 @@ async function report(page, label) {
     for (const el of document.querySelectorAll("button, a")) {
       const r = el.getBoundingClientRect();
       if (r.width === 0 || r.height === 0) continue;
+      if (getComputedStyle(el).visibility === "hidden" || el.closest("[inert], [aria-hidden='true']")) continue; // (the island's pins under the cadastro)
       const tile = el.hasAttribute("data-card");
       const min = tile ? (innerHeight <= 520 ? 96 : 120) : 64; // a phone on its side fits cards of 96 px and up
       if (r.width < min - 0.5 || r.height < min - 0.5) out.push(`${tile ? "tile" : "button"} ${el.getAttribute("aria-label") ?? el.textContent} is ${Math.round(r.width)}x${Math.round(r.height)}`);
@@ -181,6 +183,8 @@ const settingsOf = (patch = {}) => ({ version: 1, ambient: "dia", bedtime: "19:3
 /** A fresh context whose settings and progress are stored before the app loads. `motion: "reduce"` is the browser preference. */
 async function withProgress(browser, vp, progress, settings = settingsOf(), motion = "reduce") {
   const ctx = await browser.newContext({ viewport: { width: vp.width, height: vp.height }, deviceScaleFactor: SCALE, reducedMotion: motion });
+  // (the cadastro was done: without a stored profile every route would start with it)
+  await ctx.addInitScript(([k, v]) => localStorage.setItem(k, v), ["lingoo:profile:v1", JSON.stringify({ version: 1, name: "", age: null, english: null, onboarding: "skipped", createdAt: null, islands: { descoberta: { letras: { levels: {} } } } })]);
   if (progress) await ctx.addInitScript(([k, v]) => localStorage.setItem(k, v), ["lingoo:progress:v2", JSON.stringify(progress)]);
   if (settings) await ctx.addInitScript(([k, v]) => localStorage.setItem(k, v), [SETTINGS_KEY, JSON.stringify(settings)]);
   return { ctx, page: await ctx.newPage() };
@@ -326,6 +330,63 @@ async function extras(browser, vp) {
   await ctx.close();
 }
 
+const PROFILE_KEY = "lingoo:profile:v1";
+const profileOf = (patch = {}) => ({ version: 1, name: "Ana", age: 5, english: "none", onboarding: "done", createdAt: "2026-11-26T10:00:00.000Z", islands: { descoberta: { letras: { levels: {} } } }, ...patch });
+const letrasProgress = (slugs) => ({ version: 3, completedStops: Object.fromEntries(slugs.map((s) => [`letras-1/${s}`, dayKey(0)])), stickers: {}, daysPlayed: slugs.length ? [dayKey(0)] : [], memory: {}, legacy: null });
+
+/** The Árvore das Letras: the cadastro (a new install), the tree inside (new, branch 1 done, branch 3 start) and a letras lesson's opening. */
+async function arvoreScreens(browser, vp) {
+  const P = vp.prefix;
+  console.log(`\n== ${P} cadastro and the Árvore das Letras`);
+  const ctxFor = async (profile, progress) => {
+    const ctx = await browser.newContext({ viewport: { width: vp.width, height: vp.height }, deviceScaleFactor: SCALE, reducedMotion: "reduce" });
+    await ctx.addInitScript(([sk, sv, pk, pv, gk, gv]) => {
+      localStorage.setItem(sk, sv);
+      if (pv) localStorage.setItem(pk, pv);
+      if (gv) localStorage.setItem(gk, gv);
+    }, [SETTINGS_KEY, JSON.stringify(settingsOf()), PROFILE_KEY, profile ? JSON.stringify(profile) : "", "lingoo:progress:v3", progress ? JSON.stringify(progress) : ""]);
+    return { ctx, page: await ctx.newPage() };
+  };
+
+  // The cadastro of a new install, step by step.
+  let { ctx, page } = await ctxFor(null, null);
+  await page.goto(`${BASE}/`, { waitUntil: "networkidle" });
+  const gate = page.getByRole("button", { name: "Segure para entrar" });
+  await gate.waitFor();
+  await shot(page, P, "cadastro-gate");
+  const box = await gate.boundingBox();
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  await page.mouse.down();
+  await page.waitForTimeout(2400);
+  await page.mouse.up();
+  await page.getByLabel("Nome da criança").fill("Ana");
+  await shot(page, P, "cadastro-name");
+  await page.getByRole("button", { name: "Seguir" }).click();
+  await shot(page, P, "cadastro-age");
+  await page.getByRole("button", { name: "5", exact: true }).click();
+  await shot(page, P, "cadastro-english");
+  await page.getByRole("button", { name: "Nenhum ainda" }).click();
+  await shot(page, P, "cadastro-ready");
+  await ctx.close();
+
+  // The tree inside.
+  for (const [name, profile, slugs] of [["new", profileOf(), []], ["branch1-done", profileOf(), ["song", "lesson-1", "lesson-2", "lesson-3", "story", "challenge"]], ["alphabet", profileOf({ english: "alphabet" }), []]]) {
+    ({ ctx, page } = await ctxFor(profile, letrasProgress(slugs)));
+    await page.goto(`${BASE}/arvore`, { waitUntil: "networkidle" });
+    await page.locator(".nz-hit").first().waitFor();
+    await page.waitForTimeout(600);
+    await shot(page, P, `arvore-${name}`);
+    await ctx.close();
+  }
+
+  // A letras lesson: four letters on the opening (the start button must stay on screen).
+  ({ ctx, page } = await ctxFor(profileOf(), letrasProgress(["song"])));
+  await page.goto(`${BASE}/parada/letras-1/lesson-1`, { waitUntil: "networkidle" });
+  await page.getByRole("button", { name: "Começar" }).waitFor();
+  await shot(page, P, "letras-opening");
+  await ctx.close();
+}
+
 async function run() {
   fs.mkdirSync(OUT, { recursive: true });
   const sandboxChromium = process.env.PW_CHROMIUM_PATH ?? "/opt/pw-browsers/chromium";
@@ -334,6 +395,7 @@ async function run() {
     for (const vp of VIEWPORTS) {
       if (ONLY && vp.prefix !== ONLY) continue;
       await extras(browser, vp);
+      await arvoreScreens(browser, vp);
       console.log(`\n== ${vp.prefix} ${vp.width}x${vp.height} lessons`);
       const ctx = await browser.newContext({ viewport: { width: vp.width, height: vp.height }, deviceScaleFactor: SCALE, reducedMotion: "reduce" });
       const page = await ctx.newPage();

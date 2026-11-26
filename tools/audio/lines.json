@@ -361,11 +361,6 @@
     "say_as": "A goat! Goat starts with Gee!"
   },
   {
-    "id": "3514f2465dc54a3a",
-    "lang": "pt-BR",
-    "text": "Essa é a Árvore das Letras! Vamos aprender o ABC!"
-  },
-  {
     "id": "36b84f6430ae5029",
     "lang": "pt-BR",
     "text": "Uma figurinha nova para o seu álbum!"
@@ -2105,6 +2100,11 @@
     "lang": "en-US",
     "text": "An apple! A is for apple!",
     "say_as": "An apple! Ey is for apple!"
+  },
+  {
+    "id": "fe4faa993d78c594",
+    "lang": "pt-BR",
+    "text": "Essa é a Árvore das Letras! Vamos aprender as letras em inglês!"
   },
   {
     "id": "ffa8a7181ea3cfbf",
