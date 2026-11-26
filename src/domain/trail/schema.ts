@@ -18,7 +18,7 @@ export const WORD_IDS = [
   "word-cat", "word-dog", "word-sun", "word-hat", "word-bed", "word-pig", "word-box", "word-bus",
   "word-cup", "word-fox", "word-hen", "word-jam", "word-map", "word-net", "word-van",
 ] as const;
-/** Illustrated words (drawn in Task 2; stubs render the word until then). */
+/** Illustrated words (each has its own drawing in src/art/words). */
 export const PICTURE_IDS = [
   "apple", "ball", "cat", "dog", "egg", "fish", "goat", "hat", "igloo", "jam", "kite", "lion", "moon", "nest",
   "orange", "pig", "queen", "rain", "sun", "tree", "umbrella", "van", "web", "box", "yoyo", "zebra", "bed",

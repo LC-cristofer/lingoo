@@ -6,6 +6,39 @@ import { Frog } from "./animals/Frog";
 import { Mouse } from "./animals/Mouse";
 import { Snake } from "./animals/Snake";
 import { Spider } from "./animals/Spider";
+import { Apple } from "./words/Apple";
+import { Ball } from "./words/Ball";
+import { Cat } from "./words/Cat";
+import { Dog } from "./words/Dog";
+import { Egg } from "./words/Egg";
+import { Fish } from "./words/Fish";
+import { Goat } from "./words/Goat";
+import { Hat } from "./words/Hat";
+import { Igloo } from "./words/Igloo";
+import { Jam } from "./words/Jam";
+import { Kite } from "./words/Kite";
+import { Lion } from "./words/Lion";
+import { Moon } from "./words/Moon";
+import { Nest } from "./words/Nest";
+import { Orange } from "./words/Orange";
+import { Pig } from "./words/Pig";
+import { Queen } from "./words/Queen";
+import { Rain } from "./words/Rain";
+import { Sun } from "./words/Sun";
+import { Tree } from "./words/Tree";
+import { Umbrella } from "./words/Umbrella";
+import { Van } from "./words/Van";
+import { Web } from "./words/Web";
+import { Box } from "./words/Box";
+import { Yoyo } from "./words/Yoyo";
+import { Zebra } from "./words/Zebra";
+import { Bed } from "./words/Bed";
+import { Bus } from "./words/Bus";
+import { Cup } from "./words/Cup";
+import { Fox } from "./words/Fox";
+import { Hen } from "./words/Hen";
+import { MapWord } from "./words/MapWord";
+import { Net } from "./words/Net";
 import { Glyph, glyphText } from "./glyphs/Glyph";
 import { SUN, Sparkle } from "./shared";
 
@@ -20,6 +53,39 @@ const DRAWINGS: Partial<Record<ArtId, ComponentType>> = {
   snake: Snake,
   spider: Spider,
   mouse: Mouse,
+  apple: Apple,
+  ball: Ball,
+  cat: Cat,
+  dog: Dog,
+  egg: Egg,
+  fish: Fish,
+  goat: Goat,
+  hat: Hat,
+  igloo: Igloo,
+  jam: Jam,
+  kite: Kite,
+  lion: Lion,
+  moon: Moon,
+  nest: Nest,
+  orange: Orange,
+  pig: Pig,
+  queen: Queen,
+  rain: Rain,
+  sun: Sun,
+  tree: Tree,
+  umbrella: Umbrella,
+  van: Van,
+  web: Web,
+  box: Box,
+  yoyo: Yoyo,
+  zebra: Zebra,
+  bed: Bed,
+  bus: Bus,
+  cup: Cup,
+  fox: Fox,
+  hen: Hen,
+  map: MapWord,
+  net: Net,
 };
 
 /** The English word each drawing stands for: its accessible name. */
@@ -44,7 +110,7 @@ function Glow() {
 }
 
 export function Animal({ id, size = 200, glow = false }: { id: ArtId; size?: number; glow?: boolean }) {
-  // Letter and word cards, and pictures not drawn yet, are glyph cards.
+  // Letter and word cards are glyph cards; every picture word has its own drawing.
   const Drawing = DRAWINGS[id];
   return (
     <svg

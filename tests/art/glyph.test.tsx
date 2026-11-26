@@ -41,7 +41,7 @@ describe("letter and word cards", () => {
     expect(ART_WORDS["word-van"]).toBe("van");
   });
 
-  it.each(PICTURE_IDS)("picture %s renders (stub) with its word", (id) => {
+  it.each(PICTURE_IDS)("picture %s renders with its word", (id) => {
     render(<Animal id={id} />);
     expect(screen.getByRole("img", { name: id })).toHaveAttribute("data-art", id);
   });
