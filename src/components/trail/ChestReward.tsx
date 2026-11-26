@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Chest } from "@/art/scenes/Chest";
 import { Sticker } from "@/art/scenes/Sticker";
 import { narrator } from "@/audio/narrator";
 import type { Lines, LessonStop } from "@/domain/trail/schema";
 import { ChunkyButton } from "./kit/ChunkyButton";
-import { Backdrop } from "./kit/Backdrop";
+import { Backdrop, InteriorContext } from "./kit/Backdrop";
 import { NarrationText } from "./NarrationText";
 
 type ChestRewardProps = {
@@ -19,6 +19,7 @@ type ChestRewardProps = {
 export function ChestReward({ stop, lines, onBack }: ChestRewardProps) {
   const [open, setOpen] = useState(false);
   const sticker = stop.sticker;
+  const back = useContext(InteriorContext) === "arvore" ? "Voltar à árvore" : "Voltar ao farol";
 
   useEffect(() => {
     void narrator.playNarration(lines.chestPrompt);
@@ -31,8 +32,8 @@ export function ChestReward({ stop, lines, onBack }: ChestRewardProps) {
         <Backdrop variant="farol" />
         <i className="k-rays" aria-hidden="true" />
         <div className="k-reward-stage justify-center">
-          <ChunkyButton label="Voltar ao farol" tone="area" size="lg" onPress={onBack}>
-            Voltar ao farol
+          <ChunkyButton label={back} tone="area" size="lg" onPress={onBack}>
+            {back}
           </ChunkyButton>
         </div>
       </div>
@@ -64,8 +65,8 @@ export function ChestReward({ stop, lines, onBack }: ChestRewardProps) {
         {open ? <p className="k-reward-note">A figurinha vai morar no ninho.</p> : null}
         <div className="k-cta min-h-16" style={{ display: "flex", justifyContent: "center" }}>
           {open ? (
-            <ChunkyButton label="Voltar ao farol" tone="area" size="lg" onPress={onBack} className="w-full">
-              Voltar ao farol
+            <ChunkyButton label={back} tone="area" size="lg" onPress={onBack} className="w-full">
+              {back}
             </ChunkyButton>
           ) : null}
         </div>

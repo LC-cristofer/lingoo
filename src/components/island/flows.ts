@@ -6,7 +6,7 @@ import { narrator, type SfxName } from "@/audio/narrator";
 import { poseState, type NinoPose } from "@/art/nino/poses";
 import type { NinoState } from "@/art/nino/rig";
 import { focusCam, overviewCam, type Cam, type Viewport } from "@/world/camera";
-import { FAROL_DOOR, PLACE_ANCHORS, type PlaceId } from "@/world/island";
+import { ARVORE_DOOR, FAROL_DOOR, PLACE_ANCHORS, type PlaceId } from "@/world/island";
 import type { Ease } from "@/world/timeline";
 import type { Stage } from "@/world/stage";
 
@@ -16,6 +16,8 @@ export const NINO_ISLAND_SCALE = 0.45;
 export const NEST_FRONT = { x: 578, y: 930 } as const;
 /** Where the farol's path ends, at the door. */
 export const FAROL_STAND = { x: 828, y: 1158 } as const;
+/** Where the tree's path ends, beside the trunk door. */
+export const ARVORE_STAND = { x: 282, y: 952 } as const;
 
 const FOCUS_MS = 1000;
 const FAROL_FOCUS_MS = 1100;
@@ -37,6 +39,7 @@ export function settle(stage: Stage): void {
   stage.fx.hammerFast = false;
   stage.fx.wiggle = {};
   stage.fx.lampPulse = 0;
+  stage.fx.treeShake = 0;
   stage.nino.st.walk = 0;
 }
 
@@ -62,6 +65,37 @@ export async function focusPlace(stage: Stage, id: PlaceId, vp: Viewport): Promi
   await stage.tl.wait(HOLD_MS);
   stage.fx.hammerFast = false;
   stage.fx.wiggle[id] = 0;
+}
+
+/** The tree answers: its crown rustles for a moment (no motion under reduced motion; the sound still plays). */
+export async function shakeTree(stage: Stage, ms = 900): Promise<void> {
+  narrator.playSfx("leaves");
+  if (stage.env.reduced) return;
+  await stage.tl.tween(stage.fx, { treeShake: 1 }, 180, "out");
+  await stage.tl.tween(stage.fx, { treeShake: 0 }, ms, "io");
+}
+
+/** Nino walks the path to the tree while the camera closes in on it; the crown rustles when he arrives. */
+export async function goToArvore(stage: Stage, vp: Viewport): Promise<void> {
+  const st = stage.nino.st;
+  const cam = camTo(stage, focusCam(PLACE_ANCHORS.letras, vp), FOCUS_MS);
+  onIsland(stage);
+  if (stage.env.reduced) {
+    Object.assign(st, { x: ARVORE_STAND.x, y: ARVORE_STAND.y, walk: 0, facing: -1 });
+  } else {
+    let walking = true;
+    void (async () => {
+      while (walking) {
+        narrator.playSfx("steps");
+        await stage.tl.wait(1000);
+      }
+    })();
+    await stage.walk("letras");
+    walking = false;
+    st.facing = -1; // looking at the trunk door
+  }
+  await cam;
+  void shakeTree(stage);
 }
 
 /** Nino walks the path to the lighthouse while the camera closes in; the bell rings and the lamp pulses. */
@@ -92,7 +126,16 @@ export async function goToFarol(stage: Stage, vp: Viewport): Promise<void> {
  * The camera dives into the lighthouse door while Nino fades; `onFade` gets the cream veil's opacity (0 to 1)
  * so the screen can cover the cut. Reduced motion: no dive, only a 300 ms fade.
  */
-export async function diveIntoFarol(stage: Stage, onFade?: (v: number) => void): Promise<void> {
+export function diveIntoFarol(stage: Stage, onFade?: (v: number) => void): Promise<void> {
+  return diveInto(stage, FAROL_DOOR, onFade);
+}
+
+/** The same dive, into the tree's trunk door. */
+export function diveIntoArvore(stage: Stage, onFade?: (v: number) => void): Promise<void> {
+  return diveInto(stage, ARVORE_DOOR, onFade);
+}
+
+async function diveInto(stage: Stage, door: { x: number; y: number }, onFade?: (v: number) => void): Promise<void> {
   narrator.playSfx("dive");
   if (stage.env.reduced) {
     const k = { v: 0 };
@@ -101,7 +144,7 @@ export async function diveIntoFarol(stage: Stage, onFade?: (v: number) => void):
     return;
   }
   void stage.tl.tween(stage.nino.st, { alpha: 0 }, 300, "io", { delay: 200 });
-  await camTo(stage, { X: FAROL_DOOR.x, Y: FAROL_DOOR.y, D: 0.035 }, DIVE_MS, "in", (e) => onFade?.(Math.min(1, Math.max(0, (e - 0.7) / 0.3))));
+  await camTo(stage, { X: door.x, Y: door.y, D: 0.035 }, DIVE_MS, "in", (e) => onFade?.(Math.min(1, Math.max(0, (e - 0.7) / 0.3))));
   onFade?.(1);
 }
 
@@ -158,6 +201,10 @@ export const BOAT_AWAY = 120;
 export const BOAT_DOCKED = -20;
 export function farolWorld(level: 1 | 2 | 3 | 4): { pennant: number[]; boatX: number } {
   return { pennant: [0, 1, 2, 3, 4].map((i) => (i < FAROL_PENNANTS[level] ? 1 : 0)), boatX: level >= 2 ? BOAT_DOCKED : BOAT_AWAY };
+}
+/** The tree's growth layers shown at each level (spec §4.1): letter-fruits from 2, birds and lanterns from 3, flowers from 4. */
+export function arvoreWorld(level: 1 | 2 | 3 | 4): number[] {
+  return [2, 3, 4].map((l) => (level >= l ? 1 : 0));
 }
 
 /** Eases Nino into a pose: the numbers tween, the face (eyes, mouth) changes at once. */

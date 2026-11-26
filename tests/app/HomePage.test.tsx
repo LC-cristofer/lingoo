@@ -18,6 +18,7 @@ vi.mock("@/components/trail/TrailProgressProvider", () => ({
 }));
 vi.mock("@/components/nestoy/ProfileProvider", () => ({
   useProfile: () => ({ profile: { ...defaultProfile(), onboarding: "done" }, hydrated: true, update: vi.fn(), setLevel: vi.fn() }),
+  useOptionalProfile: () => ({ profile: { ...defaultProfile(), onboarding: "done" }, hydrated: true, update: vi.fn(), setLevel: vi.fn() }),
 }));
 vi.mock("@/components/nestoy/SettingsProvider", () => ({
   useSettings: () => ({ settings: { ...defaultSettings(), motion: "reduzir" }, update: vi.fn(), hydrated: true }),

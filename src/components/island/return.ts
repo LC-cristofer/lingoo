@@ -2,37 +2,57 @@
    Plain async functions over a Stage (testable with a manual clock). Ported from tools/visual/ilha/src/app.js
    (backOutside, bedtime). A caller that interrupts a flow calls `stage.tl.cancelAll()`. */
 import { poseState } from "@/art/nino/poses";
-import { farolCloseCam, overviewCam, type Viewport } from "@/world/camera";
+import { farolCloseCam, overviewCam, type Cam, type Viewport } from "@/world/camera";
 import { NEST, type PlaceId } from "@/world/island";
-import { farolLevel, levelBefore, nestThreads } from "@/domain/nestoy/island-view";
+import { areaOfStop, arvoreLevel, arvoreLevelBefore, farolLevel, levelBefore, THREAD_INDEX, wovenThreads, type AreaUnits } from "@/domain/nestoy/island-view";
 import type { Progress } from "@/domain/trail/progress";
-import type { Unit } from "@/domain/trail/schema";
 import type { Stage } from "@/world/stage";
 import {
-  BOAT_DOCKED, blendPose, camTo, farolWorld, FAROL_PENNANTS, FAROL_STAND, hopInPlace, NEST_FRONT, NINO_ISLAND_SCALE, pulseLamp, setNight, speakLine,
+  ARVORE_STAND, arvoreWorld, BOAT_DOCKED, blendPose, camTo, farolWorld, FAROL_PENNANTS, FAROL_STAND, hopInPlace, NEST_FRONT, NINO_ISLAND_SCALE, pulseLamp, setNight, shakeTree, speakLine,
   type Say, type Sfx,
 } from "./flows";
 import { arm } from "./opening";
 
 type Level = 1 | 2 | 3 | 4;
-export type ReturnOpts = { from: Level; to: Level; newThread: boolean; sticker: boolean };
+/** Coming back from a stop of the farol or of the tree: that place's level before and after, a first thread of its area, a sticker. */
+export type ReturnOpts = { place: "farol" | "arvore"; from: Level; to: Level; newThread: boolean; sticker: boolean };
 
 const PLACES: PlaceId[] = ["ninho", "letras", "numeros", "cores", "lago", "farol"];
 const FADE_MS = 350;
 const FADE_REDUCED_MS = 400;
 
-/** What to show on coming back from `stopId`: null unless it names a finished stop of the unit (then the island just opens to explore). */
-export function returnPlan(p: Progress, unit: Unit, stopId: string | null): ReturnOpts | null {
+/** What to show on coming back from `stopId`: null unless it names a finished stop of an area (then the island just opens to explore). */
+export function returnPlan(p: Progress, areas: AreaUnits, stopId: string | null): ReturnOpts | null {
   if (!stopId) return null;
-  const stop = unit.stops.find((s) => s.id === stopId);
+  const area = areaOfStop(stopId);
+  const units = area === "farol" ? [areas.farol] : areas.letras;
+  const stop = units.flatMap((u) => u.stops).find((s) => s.id === stopId);
   if (!stop || !Object.hasOwn(p.completedStops, stopId)) return null;
   const without: Progress = { ...p, completedStops: Object.fromEntries(Object.entries(p.completedStops).filter(([k]) => k !== stopId)) };
+  const i = THREAD_INDEX[area];
   return {
-    from: levelBefore(p, unit, stopId),
-    to: farolLevel(p, unit),
-    newThread: nestThreads(without, unit) < nestThreads(p, unit),
+    place: area === "farol" ? "farol" : "arvore",
+    from: area === "farol" ? levelBefore(p, areas.farol, stopId) : arvoreLevelBefore(p, areas.letras, stopId),
+    to: area === "farol" ? farolLevel(p, areas.farol) : arvoreLevel(p, areas.letras),
+    newThread: !wovenThreads(without, areas)[i] && wovenThreads(p, areas)[i],
     sticker: stop.kind === "challenge" && !!stop.sticker,
   };
+}
+
+/** The tree's growth layers as they are at `level`. */
+export function settleArvore(stage: Stage, level: Level): void {
+  stage.fx.arvore = arvoreWorld(level);
+}
+
+/** The tree close-up the return opens on: the whole tree (crown top to the trunk door, about 560 world units tall) with Nino beside it, between the UI insets. */
+export function arvoreCloseCam(vp: Viewport): Cam {
+  const base = (vp.w > vp.h ? Math.min(vp.w, vp.h * 0.75) : vp.w) / 1000;
+  const availH = Math.max(60, vp.h - vp.top - vp.bottom);
+  const D = Math.max(0.4, (base * 560) / availH);
+  const p = base / D;
+  const shift = (vp.top + (vp.h - vp.bottom)) / 2 - vp.h / 2;
+  const shiftX = ((vp.left ?? 0) + (vp.w - (vp.right ?? 0))) / 2 - vp.w / 2;
+  return { X: 280 - shiftX / p, Y: 735 - shift / p, D };
 }
 
 /** The farol's lamp, pennants and boat as they are at `level` (the island arrives like this when nothing changed). */
@@ -48,20 +68,37 @@ export function settleFarol(stage: Stage, level: Level): void {
  */
 export async function playReturn(stage: Stage, vp: Viewport, o: ReturnOpts, say: Say, sfx: Sfx, onNest?: () => void): Promise<void> {
   const { tl, fx, env } = stage, st = stage.nino.st, reduced = env.reduced;
+  const tree = o.place === "arvore";
   // the world as it was before the stop
-  settleFarol(stage, o.from);
-  const woven = fx.thread.filter((v) => v >= 1).length;
-  const threadAt = Math.max(0, woven - 1);
+  if (tree) settleArvore(stage, o.from);
+  else settleFarol(stage, o.from);
+  const threadAt = THREAD_INDEX[tree ? "letras" : "farol"];
   if (o.newThread) fx.thread[threadAt] = 0;
-  // arrival: at the lighthouse door, under the cream fade
+  // arrival: at the place's door, under the cream fade
   for (const id of PLACES) fx.pins[id] = 0; // the pins come back once the camera pulls out
   stage.moveNino("actors");
-  Object.assign(st, poseState("idle"), { x: FAROL_STAND.x, y: FAROL_STAND.y, s: NINO_ISLAND_SCALE, alpha: 1, facing: -1, lift: 0, walk: 0, talking: false });
-  Object.assign(stage.cam, farolCloseCam(vp));
+  const stand = tree ? ARVORE_STAND : FAROL_STAND;
+  Object.assign(st, poseState("idle"), { x: stand.x, y: stand.y, s: NINO_ISLAND_SCALE, alpha: 1, facing: -1, lift: 0, walk: 0, talking: false });
+  Object.assign(stage.cam, tree ? arvoreCloseCam(vp) : farolCloseCam(vp));
   fx.intro.fade = 1;
   await tl.tween(fx.intro, { fade: 0 }, reduced ? FADE_REDUCED_MS : FADE_MS, "lin");
   // the place transforms
-  if (o.to > o.from) {
+  if (tree && o.to > o.from) {
+    // the new layers drop in one after the other while the crown rustles (no line: the farol's would be wrong here)
+    await tl.wait(300);
+    sfx("grow");
+    void shakeTree(stage, 1400);
+    const to = arvoreWorld(o.to);
+    to.forEach((v, i) => {
+      if (v <= fx.arvore[i]) return;
+      if (reduced) fx.arvore[i] = 1;
+      else void tl.tween(fx.arvore as Record<number, number>, { [i]: 1 }, 520, "back", { delay: 200 + i * 260 });
+    });
+    void blendPose(stage, "happy", 200, "out");
+    if (!reduced) void hopInPlace(stage);
+    await tl.wait(1900);
+    await blendPose(stage, "idle", 300, "io");
+  } else if (o.to > o.from) {
     await tl.wait(300);
     sfx("grow");
     env.farolLevel = o.to;
@@ -93,7 +130,7 @@ export async function playReturn(stage: Stage, vp: Viewport, o: ReturnOpts, say:
         await tl.wait(1000);
       }
     })();
-    await stage.walk("farol", true);
+    await stage.walk(tree ? "letras" : "farol", true);
     walking = false;
     await tl.tween(st, { x: NEST_FRONT.x, y: NEST_FRONT.y }, 200, "io");
     Object.assign(st, { facing: 1, walk: 0 });
@@ -135,6 +172,10 @@ export async function playBedtime(stage: Stage, vp: Viewport, say: Say, sfx: Sfx
   } else {
     if (Math.hypot(st.x - FAROL_STAND.x, st.y - FAROL_STAND.y) < 40) {
       await stage.walk("farol", true); // he was left at the lighthouse: the long way home along the path
+      st.walk = 0;
+    }
+    if (Math.hypot(st.x - ARVORE_STAND.x, st.y - ARVORE_STAND.y) < 40) {
+      await stage.walk("letras", true); // he was left at the tree
       st.walk = 0;
     }
     if (Math.hypot(st.x - NEST_FRONT.x, st.y - NEST_FRONT.y) > 10) {

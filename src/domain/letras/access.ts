@@ -1,5 +1,5 @@
 /* Which branches of the Árvore das Letras are open, and where the child is sent next.
-   `unitStatus` treats the whole path as one sequence across areas, so it is not used here: the branches have their own rule. */
+   The branches have their own rule (not `unitStatus`, which only orders the units of one area in sequence). */
 import { startBranch, type Profile } from "@/domain/nestoy/profile";
 import { getUnit } from "@/domain/trail/content";
 import type { Progress } from "@/domain/trail/progress";

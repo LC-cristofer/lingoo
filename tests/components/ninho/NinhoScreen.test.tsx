@@ -83,6 +83,20 @@ describe("NinhoScreen stickers", () => {
     expect(screen.getByRole("img", { name: "Unidade 2, Cores" })).toBeInTheDocument();
   });
 
+  it("the Árvore das Letras has its own section with the four branch stickers; an earned one says its name", () => {
+    progress = { ...emptyProgress(), stickers: { "sticker-letras-sun": "2026-11-12T10:00:00.000Z" } };
+    render(<NinhoScreen />);
+    const tree = screen.getByRole("region", { name: "Árvore das Letras" });
+    const slots = within(tree).getAllByRole("button");
+    expect(slots).toHaveLength(4);
+    expect(slots.map((b) => b.querySelector("[data-earned]")!.getAttribute("data-earned"))).toEqual(["false", "true", "false", "false"]);
+    vi.mocked(narrator.playNarration).mockClear();
+    fireEvent.click(slots[1]);
+    const ch = getUnit("letras-2")!.stops.find((s) => s.kind === "challenge")!;
+    expect(narrator.playNarration).toHaveBeenCalledWith(ch.kind === "challenge" ? ch.sticker!.name : null);
+    expect(screen.getByText("1/11")).toBeInTheDocument();
+  });
+
   it("keeps the phase 1 fox sticker in a special section, saying its name", () => {
     const at = "2026-11-01T12:00:00.000Z";
     progress = { ...emptyProgress(), legacy: { completedLessons: { "forest-animals": at }, stickers: { "sticker-fox": at } } };

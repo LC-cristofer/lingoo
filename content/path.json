@@ -64,37 +64,33 @@
   },
   {
     "unitId": "letras-1",
-    "world": "floresta",
     "title": "ABC: A a M",
     "icon": "🔤",
-    "hasContent": false,
+    "hasContent": true,
     "island": "descoberta",
     "area": "letras"
   },
   {
     "unitId": "letras-2",
-    "world": "floresta",
     "title": "ABC: N a Z",
     "icon": "🔡",
-    "hasContent": false,
+    "hasContent": true,
     "island": "descoberta",
     "area": "letras"
   },
   {
     "unitId": "letras-3",
-    "world": "floresta",
     "title": "Com que letra começa?",
     "icon": "🍎",
-    "hasContent": false,
+    "hasContent": true,
     "island": "descoberta",
     "area": "letras"
   },
   {
     "unitId": "letras-4",
-    "world": "floresta",
     "title": "Primeiras palavras",
     "icon": "📖",
-    "hasContent": false,
+    "hasContent": true,
     "island": "descoberta",
     "area": "letras"
   }

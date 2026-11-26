@@ -190,3 +190,29 @@ describe("MemoriaPage with no cards at all", () => {
     expect(screen.queryByRole("button", { name: "Ouvir de novo" })).not.toBeInTheDocument();
   });
 });
+
+describe("MemoriaPage with the tree's cards", () => {
+  it("trains letras cards too: a round keeps one unit, the letter card shows its glyph and asks among letters", async () => {
+    memory = {
+      "letras-1:letter-b": { box: 0, due: "2026-11-10" },
+      "letras-1:letter-a": { box: 0, due: TODAY },
+      "forest-animals:bear": { box: 0, due: TODAY },
+    };
+    render(<MemoriaPage />);
+    await flush();
+    expect(screen.getByText("3", { exact: true })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Treinar" }));
+    await flush();
+    expect(screen.getByText("1 de 2")).toBeInTheDocument(); // the letters' round: the bear waits for the next one
+    const front = screen.getByRole("button", { name: "Virar o cartão" });
+    expect(front.querySelector('svg[aria-label="B"]')).not.toBeNull();
+    fireEvent.click(front);
+    fireEvent.click(screen.getByRole("button", { name: "Próximo" }));
+    fireEvent.click(screen.getByRole("button", { name: "Virar o cartão" }));
+    fireEvent.click(screen.getByRole("button", { name: "Próximo" }));
+    await flush();
+    const options = [...document.querySelectorAll("button[data-card]")].map((b) => b.getAttribute("data-card"));
+    expect(options.length).toBeGreaterThanOrEqual(2);
+    for (const id of options) expect(id).toMatch(/^letter-/);
+  });
+});

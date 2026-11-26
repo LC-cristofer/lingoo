@@ -40,12 +40,13 @@ describe("trail content", () => {
     expect(found.unit.id).toBe("forest-animals");
   });
 
-  it("path has the 7 farol units and the 4 letras units, only forest-animals with content", () => {
+  it("path has the 7 farol units and the 4 letras units; forest-animals and the four branches have content", () => {
     const path = getPath();
     const farol = path.filter((p) => p.area === "farol");
     expect(farol.map((p) => p.unitId)).toEqual(["forest-animals", "colors", "numbers", "hello", "family", "home", "food"]);
     expect(path.filter((p) => p.area === "letras").map((p) => p.unitId)).toEqual(["letras-1", "letras-2", "letras-3", "letras-4"]);
-    expect(path.filter((p) => p.hasContent).map((p) => p.unitId)).toEqual(["forest-animals"]);
+    expect(path.filter((p) => p.hasContent).map((p) => p.unitId)).toEqual(["forest-animals", "letras-1", "letras-2", "letras-3", "letras-4"]);
+    expect(path.filter((p) => p.area === "letras").every((p) => p.world === undefined)).toBe(true);
     expect(farol.map((p) => p.world)).toEqual(["floresta", "floresta", "floresta", "vilarejo", "vilarejo", "vilarejo", "vilarejo"]);
   });
 

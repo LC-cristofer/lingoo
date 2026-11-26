@@ -21,24 +21,29 @@ import { MemoryRound } from "./MemoryRound";
 
 type Kind = "loading" | "none" | "due" | "empty-tomorrow" | "empty-later";
 
-/** The first unit that has content: the one the cards belong to (one unit exists for now). */
-function trainingUnit(): Unit | null {
-  const entry = getPath().find((u) => u.hasContent);
-  return entry ? getUnit(entry.unitId) : null;
+/** Every unit with content, by id: the farol's and the tree's branches (a card names its unit). */
+function trainingUnits(): Map<string, Unit> {
+  const out = new Map<string, Unit>();
+  for (const entry of getPath()) {
+    const unit = entry.hasContent ? getUnit(entry.unitId) : null;
+    if (unit) out.set(unit.id, unit);
+  }
+  return out;
 }
 
 /** The memory training door (reached from the nest): how many cards are ready today and the big Treinar button; "×" goes back to the nest. */
 export function MemoryHome() {
   const router = useRouter();
   const lines = useMemo(() => getLines(), []);
-  const unit = useMemo(() => trainingUnit(), []);
+  const units = useMemo(() => trainingUnits(), []);
   const { progress, hydrated } = useTrailProgress();
-  const [round, setRound] = useState<CardId[] | null>(null);
+  // One round trains one unit's cards (its check asks among that unit's words); the next unit's wait for the next round.
+  const [round, setRound] = useState<{ unit: Unit; ids: CardId[] } | null>(null);
 
   const today = useToday();
   const ready = hydrated && today !== null;
   const memory = ready ? progress.memory : {};
-  const cards = Object.keys(memory).filter((id) => !unit || unitOfCard(id) === unit.id);
+  const cards = Object.keys(memory).filter((id) => units.has(unitOfCard(id)));
   const due = ready ? dueCards(memory, today).filter((id) => cards.includes(id)) : [];
   const next = ready ? nextDue(memory, today) : null;
   const daysToNext = next && today ? daysBetween(today, next) : null;
@@ -74,9 +79,13 @@ export function MemoryHome() {
   // The round is an exercise (the child must hear the English words): music only on the home.
   useBackgroundMusic(round === null ? "album" : null);
 
-  if (round !== null && unit) {
-    return <MemoryRound unit={unit} cardIds={round} record onDone={() => setRound(null)} onExit={() => setRound(null)} />;
+  if (round !== null) {
+    return <MemoryRound unit={round.unit} cardIds={round.ids} record onDone={() => setRound(null)} onExit={() => setRound(null)} />;
   }
+  const startRound = () => {
+    const unit = due.length > 0 ? units.get(unitOfCard(due[0])) : undefined;
+    if (unit) setRound({ unit, ids: due.filter((id) => unitOfCard(id) === unit.id).slice(0, ROUND_LIMIT) });
+  };
 
   const pictureIds = (kind === "due" ? due : cards).map((id) => wordOfCard(id) as ArtId);
   const faded = kind !== "due";
@@ -117,7 +126,7 @@ export function MemoryHome() {
             )}
           </div>
           {kind === "due" ? (
-            <ChunkyButton label="Treinar" tone="ok" size="lg" className="k-mtab-cta" onPress={() => setRound(due.slice(0, ROUND_LIMIT))}>
+            <ChunkyButton label="Treinar" tone="ok" size="lg" className="k-mtab-cta" onPress={startRound}>
               Treinar
               <PlayIcon size={28} />
             </ChunkyButton>

@@ -203,11 +203,11 @@ describe("letras units in the content", () => {
     }
   });
 
-  it("are on the path of the descoberta island, hidden until they open", () => {
+  it("are on the path of the descoberta island, open (with content)", () => {
     const path = getPath();
     const letras = path.filter((p) => p.area === "letras");
     expect(letras.map((p) => p.unitId)).toEqual(["letras-1", "letras-2", "letras-3", "letras-4"]);
-    for (const p of letras) expect(p).toMatchObject({ island: "descoberta", hasContent: false });
+    for (const p of letras) expect(p).toMatchObject({ island: "descoberta", hasContent: true });
     for (const p of path.filter((p) => p.area !== "letras")) expect(p).toMatchObject({ island: "descoberta", area: "farol" });
   });
 });

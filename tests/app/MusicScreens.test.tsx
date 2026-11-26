@@ -16,6 +16,7 @@ vi.mock("@/audio/narrator", () => ({
 vi.mock("next/navigation", () => ({ useRouter: () => ({ push: vi.fn(), replace: vi.fn() }), useSearchParams: () => new URLSearchParams() }));
 vi.mock("@/components/nestoy/ProfileProvider", () => ({
   useProfile: () => ({ profile: { ...defaultProfile(), onboarding: "done" }, hydrated: true, update: vi.fn(), setLevel: vi.fn() }),
+  useOptionalProfile: () => ({ profile: { ...defaultProfile(), onboarding: "done" }, hydrated: true, update: vi.fn(), setLevel: vi.fn() }),
 }));
 vi.mock("@/components/nestoy/SettingsProvider", () => ({
   useSettings: () => ({ settings: { motion: "reduzir", ambient: "dia" }, update: vi.fn(), hydrated: true }),

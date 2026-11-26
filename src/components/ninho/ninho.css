@@ -21,6 +21,8 @@
 .nn-legacy img { border-radius: 50%; background: var(--paper); border: 4px solid var(--white); box-sizing: content-box; box-shadow: 0 3px 0 var(--edge); }
 .nn-soon { flex: none; width: 56px; height: 56px; display: grid; place-items: center; border-radius: 50%; background: var(--paper); box-shadow: inset 0 0 0 3px var(--line); opacity: 0.8; }
 .nn-special { display: grid; gap: var(--sp-3); padding-top: var(--sp-2); }
+.nn-sub { margin: 0; display: flex; align-items: center; gap: var(--sp-2); font-family: var(--font-display); font-weight: 700; font-size: var(--fs-body); line-height: 1.2; color: var(--cocoa); }
+.nn-area[data-area="letras"] .nn-sub::before { content: ""; width: 12px; height: 12px; border-radius: 50%; background: var(--area-letras); }
 .nn-special-title { justify-self: start; min-height: 48px; padding: 0 var(--sp-4); border: 0; border-radius: var(--r-pill); background: var(--paper); box-shadow: inset 0 0 0 2px var(--line); font-family: var(--font-display); font-weight: 700; font-size: var(--fs-body); color: var(--cocoa); cursor: pointer; }
 
 /* memory training */

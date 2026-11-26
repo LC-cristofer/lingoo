@@ -80,9 +80,10 @@ export function unitStatus(
   const unit = Object.hasOwn(units, unitId) ? units[unitId] : undefined;
   if (!entry || !entry.hasContent || !unit) return "soon";
   if (unitDone(unit, p)) return "done";
+  // Each area of the island is its own sequence: an unfinished farol never locks the tree (whose branches open by `unitOpen`).
   for (const u of path) {
     if (u.unitId === unitId) return "current";
-    if (!u.hasContent) continue;
+    if (!u.hasContent || u.area !== entry.area) continue;
     const other = Object.hasOwn(units, u.unitId) ? units[u.unitId] : undefined;
     if (other && !unitDone(other, p)) return "locked";
   }

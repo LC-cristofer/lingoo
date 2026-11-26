@@ -9,6 +9,10 @@ type Pt = [number, number];
 export type PlaceId = "ninho" | "farol" | "letras" | "numeros" | "cores" | "lago";
 export type PlaceState = "pronto" | "obra" | "futuro";
 export type IslandStates = { letras: PlaceState; numeros: PlaceState; cores: PlaceState; lago: PlaceState };
+/** The nest's threads: a count (the first n are woven) or one flag per thread (0 Línguas, 1 Letras, 2 Números, 3 Cores). */
+export type Threads = number | readonly boolean[];
+/** Whether thread `i` is woven. */
+export const threadWoven = (t: Threads, i: number): boolean => (typeof t === "number" ? i < t : !!t[i]);
 
 /* ---------- island geometry ---------- */
 const ISLAND = { cx: 500, cy: 1120, rx: 430, ry: 360 };
@@ -94,9 +98,9 @@ function nestBack(): string {
     `<path d="M${x - 40} ${y - 8} q8 -6 16 -2 M${x - 6} ${y - 12} q8 -6 16 -2 M${x + 24} ${y - 9} q8 -5 15 -1" stroke="#E6D2B2" stroke-width="2.4" fill="none" stroke-linecap="round"/>` +
     `<path d="M${x - 70} ${y - 2} q-10 -10 -16 -20 M${x + 66} ${y - 4} q12 -8 18 -22 M${x - 30} ${y - 16} q-4 -12 2 -22" stroke="${PAL.woodDark}" stroke-width="3.4" fill="none" stroke-linecap="round"/>`;
 }
-function nestFront(threads = 2): string {
+function nestFront(threads: Threads = 2): string {
   const { x, y } = NEST;
-  const thread = (i: number, c: string) => `<path class="thread" data-i="${i}" d="M${x - 62} ${y + 10 + i * 7} Q${x} ${y + 30 + i * 8} ${x + 62} ${y + 10 + i * 7}" stroke="${c}" stroke-width="3.2" stroke-dasharray="9 6" fill="none" stroke-linecap="round" ${i >= threads ? 'opacity="0"' : ""}/>`;
+  const thread = (i: number, c: string) => `<path class="thread" data-i="${i}" d="M${x - 62} ${y + 10 + i * 7} Q${x} ${y + 30 + i * 8} ${x + 62} ${y + 10 + i * 7}" stroke="${c}" stroke-width="3.2" stroke-dasharray="9 6" fill="none" stroke-linecap="round" ${threadWoven(threads, i) ? "" : 'opacity="0"'}/>`;
   return `<path d="M${x - 68} ${y + 2} C${x - 66} ${y + 30} ${x - 40} ${y + 46} ${x} ${y + 48} C${x + 40} ${y + 46} ${x + 66} ${y + 30} ${x + 68} ${y + 2} C${x + 40} ${y + 18} ${x - 40} ${y + 18} ${x - 68} ${y + 2}Z" fill="${PAL.wood}"/>` +
     `<path d="M${x + 20} ${y + 16} C${x + 50} ${y + 12} ${x + 64} ${y + 6} ${x + 68} ${y + 2} C${x + 66} ${y + 30} ${x + 44} ${y + 44} ${x + 12} ${y + 47}Z" fill="${PAL.woodDark}" opacity=".55"/>` +
     // weave
@@ -148,21 +152,64 @@ function lighthouse(): string {
   g += `</g>`;
   return g;
 }
-function letterTree(state: PlaceState): string {
-  const x = 255, b = 972;
+type TreeLevel = 1 | 2 | 3 | 4;
+/** The tree's growth layers (classes `arvore-l2..4`): each is drawn always and shown from its level up, so the return can grow it. */
+const show = (on: boolean) => (on ? "" : ' opacity="0"');
+/* Level 2: letter-fruits hanging in the crown */
+function letterFruits(x: number, b: number, on: boolean): string {
+  const fruits: [string, number, number, string][] = [["A", -84, -232, PAL.letras], ["B", 82, -226, PAL.lamp], ["C", -50, -318, PAL.linguas], ["D", 52, -320, PAL.letras], ["E", -110, -286, PAL.lamp], ["F", 112, -280, PAL.linguas]];
+  return `<g class="arvore-l2"${show(on)}>` + fruits.map(([L, dx, dy, c], i) => {
+    const fx = x + dx, fy = b + dy;
+    return `<g class="dangle" style="--i:${i};transform-origin:${fx}px ${fy - 16}px"><path d="M${fx} ${fy - 16} v6" stroke="${PAL.woodDark}" stroke-width="2.2" stroke-linecap="round"/>` +
+      `<ellipse cx="${fx + 5}" cy="${fy - 13}" rx="5" ry="2.6" fill="${PAL.leafLight}" transform="rotate(-25 ${fx + 5} ${fy - 13})"/>` +
+      `<circle cx="${fx}" cy="${fy}" r="12" fill="${c}"/><circle cx="${fx + 3}" cy="${fy + 3}" r="9" fill="#000" opacity=".08"/><circle cx="${fx - 4}" cy="${fy - 4}" r="3.4" fill="#fff" opacity=".45"/>` +
+      `<text x="${fx}" y="${fy + 5}" text-anchor="middle" font-family="Fredoka, Nunito, sans-serif" font-weight="700" font-size="14" fill="#fff">${L}</text></g>`;
+  }).join("") + `</g>`;
+}
+/* Level 3: two birds on the crown and two lanterns under it (they glow at night: see nightLights) */
+function birdsAndLanterns(x: number, b: number, on: boolean): string {
+  const bird = (bx: number, by: number, c: string, dark: string, facing: 1 | -1) =>
+    `<g transform="translate(${bx} ${by}) scale(${facing} 1)">${shadowAt(0, 10, 10, 2.4, 0.14)}` +
+    `<path d="M-12 2 q-8 -2 -12 -8 q8 0 13 3z" fill="${dark}"/>` +
+    `<ellipse cx="0" cy="0" rx="12" ry="10" fill="${c}"/><ellipse cx="-2" cy="3" rx="7" ry="5" fill="${PAL.cream}" opacity=".85"/>` +
+    `<path d="M-4 -2 q4 -7 10 -2 q-5 3 -10 2z" fill="${dark}"/>` +
+    `<circle cx="7" cy="-8" r="7.5" fill="${c}"/><circle cx="9" cy="-9" r="1.8" fill="${PAL.ink}"/><circle cx="9.6" cy="-9.6" r=".6" fill="#fff"/>` +
+    `<path d="M14 -8 l6 1.6 l-6 2z" fill="${PAL.lamp}"/><path d="M-2 9 v4 M3 9 v4" stroke="${PAL.woodDark}" stroke-width="1.6" stroke-linecap="round"/></g>`;
+  const lantern = (lx: number, ly: number) =>
+    `<g class="lantern-swing" style="transform-origin:${lx}px ${ly - 18}px"><path d="M${lx} ${ly - 18} v8" stroke="${PAL.woodDeep}" stroke-width="2"/>` +
+    `<rect x="${lx - 7}" y="${ly - 10}" width="14" height="17" rx="5" fill="${PAL.lamp}"/><rect x="${lx - 9}" y="${ly - 12}" width="18" height="4.5" rx="2.2" fill="${PAL.letrasDark}"/><rect x="${lx - 9}" y="${ly + 5}" width="18" height="4" rx="2" fill="${PAL.letrasDark}"/></g>`;
+  return `<g class="arvore-l3"${show(on)}>` + bird(x - 46, b - 398, PAL.linguas, PAL.linguasDark, 1) + bird(x + 70, b - 384, PAL.letras, PAL.letrasDark, -1) +
+    lantern(x - 98, b - 196) + lantern(x + 104, b - 192) + `</g>`;
+}
+/* Level 4: the crown in flower */
+function crownFlowers(x: number, b: number, on: boolean): string {
+  const spots: [number, number, string][] = [[-120, -258, "#fff"], [-64, -366, PAL.letras], [8, -420, "#fff"], [70, -380, PAL.letras], [124, -250, "#fff"], [-26, -336, "#fff"], [96, -320, PAL.letras], [-98, -330, PAL.letras], [30, -280, "#fff"], [-136, -214, PAL.letras], [140, -214, "#fff"]];
+  return `<g class="arvore-l4"${show(on)}>` + spots.map(([dx, dy, c]) => {
+    const fx = x + dx, fy = b + dy;
+    return `<g fill="${c}">${[0, 72, 144, 216, 288].map(a => `<circle cx="${f1(fx + Math.cos(a * Math.PI / 180) * 5)}" cy="${f1(fy + Math.sin(a * Math.PI / 180) * 5)}" r="4.4"/>`).join("")}</g><circle cx="${fx}" cy="${fy}" r="3" fill="${PAL.lamp}"/>`;
+  }).join("") + `</g>`;
+}
+function letterTree(state: PlaceState, level: TreeLevel = 1): string {
+  const x = 255, b = 972, ready = state === "pronto";
   let g = `<g id="letras">` + shadowAt(x + 12, b + 4, 74, 16, 0.18);
   g += `<path d="M${x - 26} ${b} C${x - 16} ${b - 40} ${x - 14} ${b - 140} ${x - 12} ${b - 196} h26 C${x + 16} ${b - 140} ${x + 18} ${b - 40} ${x + 30} ${b} C${x + 10} ${b - 6} ${x - 6} ${b - 6} ${x - 26} ${b}Z" fill="${PAL.trunk}"/>`;
   g += `<path d="M${x + 4} ${b - 4} C${x + 6} ${b - 60} ${x + 6} ${b - 140} ${x + 8} ${b - 196} h6 C${x + 16} ${b - 140} ${x + 18} ${b - 40} ${x + 30} ${b}Z" fill="${PAL.trunkDark}"/>`;
   g += `<path d="M${x - 26} ${b} q-16 2 -22 6 M${x + 30} ${b} q14 1 20 6" stroke="${PAL.trunk}" stroke-width="8" stroke-linecap="round"/>`;
+  // the trunk's door, where the camera dives in (the hollow trunk inside is /arvore)
+  if (ready) g += `<path d="M${x - 9} ${b - 2} v-20 a10 10 0 0 1 20 0 v20z" fill="${PAL.woodDeep}"/><path d="M${x - 6} ${b - 2} v-18 a7 7 0 0 1 14 0 v18z" fill="${PAL.woodDark}"/><circle cx="${x + 5}" cy="${b - 12}" r="1.6" fill="${PAL.lamp}"/>`;
   // canopy
   const parts: [number, number, number][] = [[0, -300, 92], [-82, -250, 64], [84, -246, 66], [-46, -350, 62], [52, -352, 60], [0, -390, 52]];
   g += `<g class="sway" style="transform-origin:${x}px ${b - 200}px">`;
   g += `<g fill="${PAL.leafDark}">${parts.map(([dx, dy, r]) => `<circle cx="${x + dx + r * 0.1}" cy="${b + dy + r * 0.12}" r="${r}"/>`).join("")}</g>`;
   g += `<g fill="${PAL.leaf}">${parts.map(([dx, dy, r]) => `<circle cx="${x + dx - r * 0.05}" cy="${b + dy - r * 0.05}" r="${r * 0.92}"/>`).join("")}</g>`;
   g += `<g fill="${PAL.leafLight}" opacity=".6">${parts.map(([dx, dy, r]) => `<circle cx="${x + dx - r * 0.34}" cy="${b + dy - r * 0.36}" r="${r * 0.38}"/>`).join("")}</g>`;
-  // hanging letter blocks
-  g += ([["A", -70, -236, PAL.letras], ["B", 76, -228, PAL.lamp], ["C", -20, -214, PAL.linguas]] as [string, number, number, string][]).map(([L, dx, dy, c], i) =>
-    `<g class="dangle" style="--i:${i};transform-origin:${x + dx}px ${b + dy - 26}px"><path d="M${x + dx} ${b + dy - 26} v18" stroke="${PAL.wool}" stroke-width="1.6"/><rect x="${x + dx - 11}" y="${b + dy - 8}" width="22" height="22" rx="5" fill="${c}"/><text x="${x + dx}" y="${b + dy + 9}" text-anchor="middle" font-family="Fredoka, Nunito, sans-serif" font-weight="700" font-size="16" fill="#fff">${L}</text></g>`).join("");
+  if (ready) {
+    g += crownFlowers(x, b, level >= 4) + letterFruits(x, b, level >= 2);
+  } else {
+    // hanging letter blocks (the place being built)
+    g += ([["A", -70, -236, PAL.letras], ["B", 76, -228, PAL.lamp], ["C", -20, -214, PAL.linguas]] as [string, number, number, string][]).map(([L, dx, dy, c], i) =>
+      `<g class="dangle" style="--i:${i};transform-origin:${x + dx}px ${b + dy - 26}px"><path d="M${x + dx} ${b + dy - 26} v18" stroke="${PAL.wool}" stroke-width="1.6"/><rect x="${x + dx - 11}" y="${b + dy - 8}" width="22" height="22" rx="5" fill="${c}"/><text x="${x + dx}" y="${b + dy + 9}" text-anchor="middle" font-family="Fredoka, Nunito, sans-serif" font-weight="700" font-size="16" fill="#fff">${L}</text></g>`).join("");
+  }
   g += `</g>`;
   // treehouse
   const hy = b - 190;
@@ -172,6 +219,7 @@ function letterTree(state: PlaceState): string {
   g += `<path d="M${x + 6} ${hy + 34} v-24 a10 10 0 0 1 20 0 v24z" fill="${PAL.woodDark}"/>`;
   g += `<path d="M${x - 56} ${hy - 22} L${x} ${hy - 86} L${x + 56} ${hy - 22} Q${x} ${hy - 6} ${x - 56} ${hy - 22}Z" fill="${PAL.letras}"/><path d="M${x} ${hy - 86} L${x + 56} ${hy - 22} Q${x + 30} ${hy - 12} ${x + 10} ${hy - 12}Z" fill="${PAL.letrasDark}"/>`;
   g += `<path d="M${x - 50} ${hy + 44} l-6 150 M${x - 34} ${hy + 44} l-4 150" stroke="${PAL.woodLight}" stroke-width="3"/>` + [0, 1, 2, 3, 4, 5].map(i => `<path d="M${x - 53 - i * 0.2} ${hy + 64 + i * 24} h17" stroke="${PAL.woodLight}" stroke-width="3"/>`).join("");
+  if (ready) g += birdsAndLanterns(x, b, level >= 3);
   if (state === "obra") g += scaffold(x, hy, b);
   g += `</g>`;
   return g;
@@ -233,19 +281,24 @@ function pond(state: PlaceState): string {
 }
 
 /* ---------- emissive night lights (drawn above the night grade) ---------- */
-function nightLights(): string {
+/** The tree's night lights (island space, after the places' translate(-15 -32)): its two lanterns and, in flower, a warm glow around the crown. */
+const TREE_GLOW = { lanterns: [[142, 744], [344, 748]] as Pt[], crown: [240, 610] as Pt };
+function nightLights(level: TreeLevel = 1): string {
   const g = (x: number, y: number, r: number, c: string = PAL.glow, cls = "") => `<circle class="${cls}" cx="${x}" cy="${y}" r="${r}" fill="url(#glowGrad)" style="--c:${c}"/>`;
   return `<defs><radialGradient id="glowGrad"><stop offset="0" stop-color="#FFE7A8" stop-opacity=".95"/><stop offset=".35" stop-color="#FFD27A" stop-opacity=".45"/><stop offset="1" stop-color="#FFD27A" stop-opacity="0"/></radialGradient>
     <radialGradient id="poolGrad"><stop offset="0" stop-color="#FFB866" stop-opacity=".55"/><stop offset=".6" stop-color="#FFB866" stop-opacity=".2"/><stop offset="1" stop-color="#FFB866" stop-opacity="0"/></radialGradient>
     <linearGradient id="beamGrad" x1="0" x2="1"><stop offset="0" stop-color="#FFE7A8" stop-opacity=".55"/><stop offset="1" stop-color="#FFE7A8" stop-opacity="0"/></linearGradient></defs>` +
     `<g id="lights"><circle id="poolNest" cx="520" cy="842" r="130" fill="url(#poolGrad)" style="mix-blend-mode:screen"/><circle id="poolNino" cx="0" cy="0" r="70" fill="url(#poolGrad)" style="mix-blend-mode:screen"/>${g(604, 804, 34, "", "l-lantern")}${g(228, 748, 30, "", "l-letras")}${g(862, 949, 46, "", "l-farol")}${g(862, 1064, 14)}
+     <circle id="arvore-aura" cx="${TREE_GLOW.crown[0]}" cy="${TREE_GLOW.crown[1]}" r="190" fill="url(#poolGrad)" style="mix-blend-mode:screen"${show(level >= 4)}/>
+     <g id="arvore-lights"${show(level >= 3)}>${TREE_GLOW.lanterns.map(([x, y]) => g(x, y, 24, "", "l-arvore")).join("")}</g>
      <path id="beam" d="M862 949 L1240 890 L1240 1010 Z" fill="url(#beamGrad)" opacity="0"/>
      <g id="fireflies" fill="#FFE7A8">${[[330, 1000], [420, 1110], [720, 1000], [560, 1200], [180, 1150], [800, 1250], [460, 930]].map(([x, y], i) => `<circle class="ff" data-i="${i}" cx="${x}" cy="${y}" r="3"/>`).join("")}</g></g>`;
 }
 
 /* ---------- layers ---------- */
-export function buildIsland(o: { states: IslandStates; threads: number }): { far: string; mid: string; island: string; near: string } {
+export function buildIsland(o: { states: IslandStates; threads: Threads; arvoreLevel?: TreeLevel }): { far: string; mid: string; island: string; near: string } {
   const st = { ...o.states, threads: o.threads };
+  const treeLevel = o.arvoreLevel ?? 1;
   const far = `<g id="sun"><circle cx="330" cy="520" r="90" fill="#FFF6D8" opacity=".55"/><circle cx="330" cy="520" r="44" fill="#FFF3C4"/></g>` +
     `<g id="moon" opacity="0"><circle cx="700" cy="520" r="40" fill="#FFF3D1"/><circle cx="718" cy="508" r="36" fill="#16205A" class="moon-cut"/></g>` +
     `<g id="stars" opacity="0">${(() => { const r = rng(77); let s = ""; for (let i = 0; i < 90; i++) { const x = r() * 1000, y = r() * 2200, rr = r() < 0.85 ? 1.4 + r() : 2.6 + r() * 1.4; s += `<circle class="st" data-i="${i % 7}" cx="${f1(x)}" cy="${f1(y)}" r="${f1(rr)}" fill="#FFF6E0"/>`; } return s; })()}</g>` +
@@ -256,12 +309,12 @@ export function buildIsland(o: { states: IslandStates; threads: number }): { far
     `<g id="islandBase">${floatingRocks()}${islandBase()}</g>` +
     `<g id="decorBack">${tree(372, 800, 0.95, 4)}${tree(642, 796, 1.0, 5)}${tree(118, 1070, 1.0, 6)}${tree(910, 1010, 0.85, 7)}${bush(160, 960, 1)}${bush(830, 1020, 0.9)}${rock(700, 866)}${tuft(330, 880)}${tuft(690, 884)}${tree(340, 1350, 0.8, 8)}${tree(470, 1170, 0.7, 9)}${bush(690, 1250, 0.8)}${rock(650, 1080, 0.8, 11)}${mushrooms(612, 968)}${mushrooms(330, 1060)}<path d="${blob(452, 1096, 44, 14, 8, 0.2, 71)}" fill="${PAL.grassLight}"/>${flower(440, 1094, PAL.letras)}${flower(458, 1102, "#fff")}${flower(470, 1090, PAL.cores)}${flower(690, 1180, PAL.lamp)}${flower(706, 1188, "#fff")}</g>` +
     `<g id="pathsG">${paths()}</g>` +
-    `<g id="places"><g transform="translate(-15 -32)">${letterTree(st.letras)}</g><g transform="translate(32 -38)">${numberTower(st.numeros)}</g><g transform="translate(-60 80)">${pond(st.lago)}</g><g transform="translate(-22 -32)">${garden(st.cores)}</g><g transform="translate(-6 12)">${lighthouse()}</g></g>` +
+    `<g id="places"><g transform="translate(-15 -32)">${letterTree(st.letras, treeLevel)}</g><g transform="translate(32 -38)">${numberTower(st.numeros)}</g><g transform="translate(-60 80)">${pond(st.lago)}</g><g transform="translate(-22 -32)">${garden(st.cores)}</g><g transform="translate(-6 12)">${lighthouse()}</g></g>` +
     `<g id="nestG" transform="translate(0 -190)">${stump()}${nestGrounds()}${nestBack()}<g id="slotNest"></g>${nestFront(st.threads)}${lantern()}</g><g id="butterflies">${butterfly(0)}${butterfly(1)}</g>` +
     `<g id="decorFront">${bush(120, 1330, 1.1)}${bush(440, 1450, 0.9)}${bush(860, 1340, 0.8)}${bush(210, 1410, 0.8)}${rock(300, 1420, 1.1, 8)}${rock(780, 1420, 0.9, 9)}${flower(140, 1232, PAL.letras)}${flower(160, 1248, PAL.lamp)}${flower(450, 1300, PAL.cores)}${flower(720, 1200, "#fff")}${flower(740, 1212, PAL.letras)}${flower(680, 1440, PAL.lamp)}${tuft(470, 1380)}${tuft(300, 1330)}${tuft(700, 1460)}</g>` +
     `<g id="slotActors"></g>` +
     `<rect id="nightGrade" x="-2000" y="-2000" width="5000" height="6000" fill="#3A4A8C" opacity="0" style="mix-blend-mode:multiply"/>` +
-    nightLights();
+    nightLights(st.letras === "pronto" ? treeLevel : 1);
   const near = cloud(60, 1760, 1.5) + cloud(940, 1820, 1.6) + cloud(500, 2060, 1.2, 0.9);
   return { far, mid, island, near };
 }
@@ -275,6 +328,9 @@ export const PLACE_ANCHORS: Record<PlaceId, { x: number; y: number }> = {
   cores: { x: 240, y: 1100 },
   lago: { x: 640, y: 1306 },
 };
+
+/** The tree's trunk door where the camera dives in (island space, after translate(-15 -32)). */
+export const ARVORE_DOOR = { x: 241, y: 928 } as const;
 
 /** The lighthouse door where Nino goes in/out (island space, after translate(-6 12)). */
 export const FAROL_DOOR = { x: 862, y: 1136 } as const;

@@ -33,6 +33,7 @@ type MemoryRoundProps = {
 type Phase = "recall" | "check" | "summary";
 
 const sentence = (text: string) => text.charAt(0).toUpperCase() + text.slice(1);
+const artKind = (id: ArtId) => (id.startsWith("letter-") ? "letter" : id.startsWith("word-") ? "word" : "picture");
 
 /** Lembrar (flip each card), Conferir (Ouça e toque, another order), Fim (how many were remembered). */
 export function MemoryRound({ unit, cardIds, record, intro = false, onDone, onExit }: MemoryRoundProps) {
@@ -235,7 +236,9 @@ type CheckCardProps = {
 /** One card's check: "Qual é o bear? Toque nele!" with the lessons' retry and hint, asked once. */
 function CheckCard({ card, unit, known, topBar, praise, onAttempt, onExit, onFinished }: CheckCardProps) {
   const [exercise] = useState<Exercise>(() => {
-    const options = [card.word.id, ...pickDistractors(card.word.id, known, unit.words.map((w) => w.id))];
+    // Wrong options of the same kind as the card: letters with a letter, written words with a word, pictures with a picture.
+    const same = (id: ArtId) => artKind(id) === artKind(card.word.id);
+    const options = [card.word.id, ...pickDistractors(card.word.id, known.filter(same), unit.words.map((w) => w.id).filter(same))];
     return {
       kind: "listenTap",
       prompt: card.word.ask,

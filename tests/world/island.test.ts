@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { AREA, PAL } from "@/world/palette";
 import {
+  ARVORE_DOOR,
   FAROL_DOOR,
   NEST,
   PLACE_ANCHORS,
@@ -81,3 +82,52 @@ describe("buildIsland", () => {
     expect(AREA.ninho).toBe("#C98A4B");
   });
 });
+
+describe("the Árvore das Letras on the island", () => {
+  const ready: IslandStates = { ...base, letras: "pronto" };
+  const layer = (svg: string, cls: string) => svg.match(new RegExp(`<g class="${cls}"[^>]*>`))?.[0] ?? null;
+  const shown = (svg: string, cls: string) => {
+    const tag = layer(svg, cls);
+    expect(tag, cls).not.toBeNull();
+    return !tag!.includes('opacity="0"');
+  };
+
+  it("ready: no scaffolding, a trunk door; each level shows its marker layer and hides the ones above", () => {
+    for (const level of [1, 2, 3, 4] as const) {
+      const { island } = buildIsland({ states: ready, threads: 0, arvoreLevel: level });
+      expect(island).not.toContain('class="obra"');
+      expect(island).not.toContain('class="hammer"');
+      expect(shown(island, "arvore-l2"), `level ${level}: letter-fruits`).toBe(level >= 2);
+      expect(shown(island, "arvore-l3"), `level ${level}: birds and lanterns`).toBe(level >= 3);
+      expect(shown(island, "arvore-l4"), `level ${level}: flowers`).toBe(level >= 4);
+      expect(island.match(/<g id="arvore-lights"[^>]*>/)![0].includes('opacity="0"'), `level ${level}: lanterns at night`).toBe(level < 3);
+      expect(island.match(/<circle id="arvore-aura"[^>]*>/)![0].includes('opacity="0"'), `level ${level}: crown glow`).toBe(level < 4);
+    }
+  });
+
+  it("level 1 is a plain crown: no letter-fruits showing; level 2 hangs letters A to F", () => {
+    expect(layer(buildIsland({ states: ready, threads: 0, arvoreLevel: 1 }).island, "arvore-l2")).toBe('<g class="arvore-l2" opacity="0">');
+    expect(layer(buildIsland({ states: ready, threads: 0, arvoreLevel: 2 }).island, "arvore-l2")).toBe('<g class="arvore-l2">');
+    const { island } = buildIsland({ states: ready, threads: 0, arvoreLevel: 2 });
+    const fruits = island.slice(island.indexOf('<g class="arvore-l2">'), island.indexOf('<g class="arvore-l3"'));
+    for (const L of ["A", "B", "C", "D", "E", "F"]) expect(fruits).toContain(`>${L}</text>`);
+  });
+
+  it("under construction keeps the scaffold and no growth layers", () => {
+    const { island } = buildIsland({ states: base, threads: 0, arvoreLevel: 4 });
+    expect(island).toContain('class="obra"');
+    expect(island).not.toContain("arvore-l2");
+  });
+
+  it("threads can be given per area: only the Letras thread (index 1) woven", () => {
+    const { island } = buildIsland({ states: ready, threads: [false, true] });
+    const threads = island.match(/<path class="thread"[^>]*>/g)!;
+    expect(threads.map((t) => !t.includes('opacity="0"'))).toEqual([false, true, false, false]);
+    expect(threads[1]).toContain(PAL.letras);
+  });
+
+  it("the tree's door sits at the trunk's foot", () => {
+    expect(ARVORE_DOOR).toEqual({ x: 241, y: 928 });
+  });
+});
+

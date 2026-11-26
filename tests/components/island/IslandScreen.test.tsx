@@ -61,9 +61,9 @@ describe("IslandScreen", () => {
     expect(ambience.stop).toHaveBeenCalled();
   });
 
-  it("carries the launch states on the pins: farol and ninho ready, letras in construction, the rest soon", () => {
+  it("carries the launch states on the pins: farol, ninho and the tree ready, the rest soon", () => {
     render(<IslandScreen mode="explore" />);
-    expect(pin("Árvore das Letras")).toHaveAttribute("data-state", "obra");
+    expect(pin("Árvore das Letras")).toHaveAttribute("data-state", "pronto");
     expect(pin("Torre dos Números")).toHaveAttribute("data-state", "futuro");
     expect(pin("Jardim das Cores")).toHaveAttribute("data-state", "futuro");
     expect(pin("Lago das Descobertas")).toHaveAttribute("data-state", "futuro");
@@ -71,13 +71,17 @@ describe("IslandScreen", () => {
     expect(pin("Ninho do Nino")).toHaveAttribute("data-state", "pronto");
   });
 
-  it("letras: the card says it is under construction and the building line plays", () => {
+  it("the tree: chip Pronto, its branch on the card, no building line, and entering pushes /arvore", async () => {
     render(<IslandScreen mode="explore" />);
     fireEvent.click(pin("Árvore das Letras"));
-    expect(card()).toHaveTextContent("Em construção");
-    expect(card()).toHaveTextContent("Os construtores estão trabalhando aqui.");
-    expect(narrator.playNarration).toHaveBeenCalledWith(getLines().placeBuilding);
+    expect(card()).toHaveTextContent("Pronto");
+    expect(card()).toHaveTextContent("Inglês · Galho 1: ABC: A a M");
+    expect(narrator.playNarration).not.toHaveBeenCalledWith(getLines().placeBuilding);
+    const enter = await screen.findByRole("button", { name: "Entrar na árvore" });
     expect(screen.queryByRole("button", { name: "Entrar no farol" })).not.toBeInTheDocument();
+    fireEvent.click(enter);
+    await waitFor(() => expect(push).toHaveBeenCalledWith("/arvore"));
+    expect(push).toHaveBeenCalledTimes(1);
   });
 
   it("a future place says soon and plays the soon line", () => {
@@ -161,11 +165,11 @@ describe("IslandScreen", () => {
     settings = { ...defaultSettings(), motion: "auto" };
     render(<IslandScreen mode="explore" />);
     fireEvent.click(pin("Farol das Línguas"));
-    fireEvent.click(pin("Árvore das Letras"));
-    expect(card()).toHaveTextContent("Em construção");
+    fireEvent.click(pin("Torre dos Números"));
+    expect(card()).toHaveTextContent("Em breve");
     await new Promise((r) => setTimeout(r, 300));
     expect(screen.queryByRole("button", { name: "Entrar no farol" })).not.toBeInTheDocument();
-    expect(card()).toHaveTextContent("Em construção");
+    expect(card()).toHaveTextContent("Em breve");
   });
 
   it("taps during the dive are ignored: the dive finishes and /farol is pushed once", async () => {

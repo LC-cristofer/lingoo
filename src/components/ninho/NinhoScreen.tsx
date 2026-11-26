@@ -14,7 +14,7 @@ import { CloseIcon, PlayIcon } from "@/components/trail/icons";
 import { ChunkyButton } from "@/components/trail/kit/ChunkyButton";
 import { useToday } from "@/components/trail/useToday";
 import { useTrailProgress } from "@/components/trail/TrailProgressProvider";
-import { nestThreads } from "@/domain/nestoy/island-view";
+import { getAreaUnits, wovenThreads } from "@/domain/nestoy/island-view";
 import { isNight } from "@/domain/nestoy/settings";
 import { getLines, getPath, getUnit } from "@/domain/trail/content";
 import { daysBetween, dueCards, nextDue } from "@/domain/trail/memory";
@@ -32,6 +32,21 @@ const LEGACY_STICKERS: Record<string, { image: string; name: (lines: ReturnType<
 };
 
 type Slot = { unitId: string; number: number; title: string; sticker: { id: string; art: ArtId; name: Narration } | null };
+
+/** One slot per unit of an area of the path, with the sticker of its challenge once it has content. */
+const slotsOf = (area: "farol" | "letras"): Slot[] =>
+  getPath()
+    .filter((entry) => entry.area === area)
+    .map((entry, index) => {
+      const unit = entry.hasContent ? getUnit(entry.unitId) : null;
+      const challenge = unit?.stops.find((s) => s.kind === "challenge");
+      return {
+        unitId: entry.unitId,
+        number: index + 1,
+        title: entry.title,
+        sticker: challenge && challenge.kind === "challenge" && challenge.sticker ? challenge.sticker : null,
+      };
+    });
 
 /** The nest: Nino awake in it on top, and a cream sheet with the stickers and the memory training. */
 export function NinhoScreen() {
@@ -51,28 +66,11 @@ export function NinhoScreen() {
     return () => narrator.stop();
   }, []);
 
-  const slots = useMemo<Slot[]>(
-    () =>
-      // The farol's units; the Árvore das Letras gets its own section when it opens.
-      getPath()
-        .filter((entry) => entry.area === "farol")
-        .map((entry, index) => {
-          const unit = entry.hasContent ? getUnit(entry.unitId) : null;
-          const challenge = unit?.stops.find((s) => s.kind === "challenge");
-          return {
-            unitId: entry.unitId,
-            number: index + 1,
-            title: entry.title,
-            sticker: challenge && challenge.kind === "challenge" && challenge.sticker ? challenge.sticker : null,
-          };
-        }),
-    [],
-  );
-  const unit = useMemo(() => {
-    const entry = getPath().find((u) => u.hasContent);
-    return entry ? getUnit(entry.unitId) : null;
-  }, []);
-  const threads = unit ? nestThreads(shown, unit) : 0;
+  // The farol's units, then the Árvore das Letras' branches in a section of their own.
+  const slots = useMemo(() => slotsOf("farol"), []);
+  const treeSlots = useMemo(() => slotsOf("letras"), []);
+  const areas = useMemo(() => getAreaUnits(), []);
+  const threads = areas ? wovenThreads(shown, areas) : 0;
 
   const legacy = Object.keys(shown.legacy?.stickers ?? {})
     .filter((id) => Object.hasOwn(LEGACY_STICKERS, id))
@@ -130,8 +128,33 @@ export function NinhoScreen() {
     if (vpRef.current) Object.assign(s.cam, nestViewCam(vpRef.current));
   }, [stage, settings, settingsReady]);
 
-  const earnedCount = slots.filter((s) => s.sticker && Object.hasOwn(shown.stickers, s.sticker.id)).length + legacy.length;
-  const totalCount = slots.length + legacy.length;
+  const allSlots = [...slots, ...treeSlots];
+  const earnedCount = allSlots.filter((s) => s.sticker && Object.hasOwn(shown.stickers, s.sticker.id)).length + legacy.length;
+  const totalCount = allSlots.length + legacy.length;
+  const slotView = (u: Slot) => {
+    const sticker = u.sticker;
+    if (!sticker) {
+      return (
+        <span key={u.unitId} className="nn-soon" role="img" aria-label={`Unidade ${u.number}, ${u.title}`} data-soon="true">
+          <LockIcon />
+        </span>
+      );
+    }
+    const earned = Object.hasOwn(shown.stickers, sticker.id);
+    return (
+      <button
+        key={u.unitId}
+        type="button"
+        className="nn-sticker"
+        aria-disabled={earned ? undefined : "true"}
+        onClick={() => {
+          if (earned) void narrator.playNarration(sticker.name);
+        }}
+      >
+        <Sticker art={sticker.art} earned={earned} size={72} />
+      </button>
+    );
+  };
 
   return (
     <div className="nz-screen nn-screen" data-testid="ninho" data-side={side}>
@@ -148,32 +171,11 @@ export function NinhoScreen() {
             <h2 id="nn-h-stickers" className="nn-title">Figurinhas</h2>
             <span className="nn-count" aria-hidden="true">{earnedCount}/{totalCount}</span>
           </header>
-          <div className="nn-grid">
-            {slots.map((u) => {
-              const sticker = u.sticker;
-              if (!sticker) {
-                return (
-                  <span key={u.unitId} className="nn-soon" role="img" aria-label={`Unidade ${u.number}, ${u.title}`} data-soon="true">
-                    <LockIcon />
-                  </span>
-                );
-              }
-              const earned = Object.hasOwn(shown.stickers, sticker.id);
-              return (
-                <button
-                  key={u.unitId}
-                  type="button"
-                  className="nn-sticker"
-                  aria-disabled={earned ? undefined : "true"}
-                  onClick={() => {
-                    if (earned) void narrator.playNarration(sticker.name);
-                  }}
-                >
-                  <Sticker art={sticker.art} earned={earned} size={72} />
-                </button>
-              );
-            })}
-          </div>
+          <div className="nn-grid">{slots.map(slotView)}</div>
+          <section className="nn-special nn-area" aria-labelledby="nn-h-arvore" data-area="letras">
+            <h3 id="nn-h-arvore" className="nn-sub">Árvore das Letras</h3>
+            <div className="nn-grid">{treeSlots.map(slotView)}</div>
+          </section>
           {legacy.length > 0 ? (
             <section className="nn-special" aria-label="Figurinhas especiais">
               <button

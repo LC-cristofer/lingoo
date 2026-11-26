@@ -121,4 +121,10 @@ describe("progress v3 fields", () => {
     expect(q.legacy).toBe(legacy);
     expect(Object.keys(q.completedStops)).toEqual(["forest-animals/song"]);
   });
+  it("each area is its own sequence: an unfinished farol does not lock the tree", () => {
+    const all = { ...units, "letras-1": getUnit("letras-1")!, "letras-2": getUnit("letras-2")! };
+    expect(unitStatus(path, all, emptyProgress(), "letras-1")).toBe("current");
+    expect(unitStatus(path, all, emptyProgress(), "letras-2")).toBe("locked");
+    expect(unitStatus(path, all, emptyProgress(), "forest-animals")).toBe("current");
+  });
 });

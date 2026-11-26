@@ -3,7 +3,7 @@
 import { useEffect, useRef, useSyncExternalStore } from "react";
 import { useSettings } from "@/components/nestoy/SettingsProvider";
 import type { Viewport } from "@/world/camera";
-import type { IslandStates } from "@/world/island";
+import type { IslandStates, Threads } from "@/world/island";
 import { createStage, type Stage } from "@/world/stage";
 
 export type StageInsets = { top: number; bottom: number; left?: number; right?: number };
@@ -12,8 +12,10 @@ type StageViewProps = {
   scene: "island" | "farol" | "arvore";
   /** Island places' states and nest threads (read when the stage is built). */
   states?: IslandStates;
-  threads?: number;
+  threads?: Threads;
   farolLevel: 1 | 2 | 3 | 4;
+  /** The Árvore das Letras' growth on the island (read when the stage is built; the return animates it itself). */
+  arvoreLevel?: 1 | 2 | 3 | 4;
   /** What the UI over the world covers, in px: the camera keeps its subject between them. */
   insets: StageInsets;
   /** The live stage once mounted, and null once destroyed. */
@@ -55,25 +57,26 @@ export function useSideLayout(): boolean {
 const NO_STATES: IslandStates = { letras: "obra", numeros: "futuro", cores: "futuro", lago: "futuro" };
 
 /** A full-bleed host for the world stage: builds it, keeps its viewport in step with the box, destroys it on unmount. */
-export function StageView({ scene, states = NO_STATES, threads = 0, farolLevel, insets, onStage, onViewport }: StageViewProps) {
+export function StageView({ scene, states = NO_STATES, threads = 0, farolLevel, arvoreLevel = 1, insets, onStage, onViewport }: StageViewProps) {
   const hostRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<Stage | null>(null);
   const reduced = useReducedMotion();
   const { hydrated } = useSettings();
   // Latest props for the long-lived callbacks below.
-  const live = useRef({ insets, onStage, onViewport, states, threads, farolLevel });
+  const live = useRef({ insets, onStage, onViewport, states, threads, farolLevel, arvoreLevel });
   useEffect(() => {
-    live.current = { insets, onStage, onViewport, states, threads, farolLevel };
+    live.current = { insets, onStage, onViewport, states, threads, farolLevel, arvoreLevel };
   });
   const push = useRef<() => void>(() => {});
   const statesKey = JSON.stringify(states);
+  const threadsKey = JSON.stringify(threads);
 
   useEffect(() => {
     const host = hostRef.current;
     // Until the stored settings are in, `reduced` is a guess: building now would mean a second build when it flips.
     if (!host || !hydrated) return;
-    const { states: st, threads: th, farolLevel: lv } = live.current;
-    const stage = createStage(host, { scene, states: st, threads: th, farolLevel: lv, reduced });
+    const { states: st, threads: th, farolLevel: lv, arvoreLevel: av } = live.current;
+    const stage = createStage(host, { scene, states: st, threads: th, farolLevel: lv, arvoreLevel: av, reduced });
     stageRef.current = stage;
     const sync = () => {
       const { insets: i, onViewport: cb } = live.current;
@@ -94,7 +97,7 @@ export function StageView({ scene, states = NO_STATES, threads = 0, farolLevel, 
       stage.destroy();
     };
     // The stage is rebuilt only when the world or the motion preference changes.
-  }, [scene, reduced, hydrated, statesKey, threads]);
+  }, [scene, reduced, hydrated, statesKey, threadsKey]);
 
   useEffect(() => {
     push.current();

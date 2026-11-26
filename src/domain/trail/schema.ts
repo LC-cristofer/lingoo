@@ -199,7 +199,8 @@ export const unitSchema = z
 export const pathSchema = z.array(
   z.object({
     unitId: z.string().min(1),
-    world: z.enum(["floresta", "vilarejo"]),
+    /** The farol's map world (its units only; the tree's branches have none). */
+    world: z.enum(["floresta", "vilarejo"]).optional(),
     title: z.string().min(1),
     icon: z.string().min(1),
     hasContent: z.boolean(),

@@ -1,6 +1,6 @@
 # NESTOY
 
-NESTOY é um aplicativo (PWA) para crianças de 5 a 8 anos aprenderem inglês brincando. O mundo é uma **ilha** com o ninho do Nino, um gatinho laranja, no alto e ao centro. A criança explora a ilha, entra no **Farol das Línguas** e sobe a escada em espiral: cada patamar é uma parada da unidade (música, três lições, história e desafio). Quase sem texto na tela, tudo com som e imagem.
+NESTOY é um aplicativo (PWA) para crianças de 5 a 8 anos aprenderem inglês brincando. O mundo é uma **ilha** com o ninho do Nino, um gatinho laranja, no alto e ao centro. A criança explora a ilha, entra no **Farol das Línguas** e sobe a escada em espiral, ou entra na **Árvore das Letras** e sobe os seus quatro galhos: cada patamar (ou plataforma) é uma parada da unidade (música, três lições, história e desafio). Quase sem texto na tela, tudo com som e imagem.
 
 A frase que guia o desenho: **o ninho apresenta o universo, a câmera revela a ilha, a ilha convida a explorar, cada descoberta transforma o mundo.**
 
@@ -43,6 +43,7 @@ Todas usam um build de produção rodando (`npm run build && npx next start -p 3
 |---|---|
 | `/` | A **ilha**: tela principal. Faz a abertura, a volta de uma parada (`?volta=<parada>`) e a hora de dormir. |
 | `/farol` | O interior do Farol das Línguas: a escada em espiral é a trilha da unidade. |
+| `/arvore` | O interior da Árvore das Letras: o tronco oco com quatro galhos em espiral, um por unidade, seis plataformas cada. |
 | `/parada/<unidade>/<parada>` | Uma parada: sequência curta de exercícios narrados, música ou história. |
 | `/ninho` | O ninho do Nino: figurinhas, fios tecidos por área e o **Treino de memória**. |
 | `/memoria` | A rodada do Treino de memória (cartões que voltam em dias diferentes). |
@@ -52,11 +53,20 @@ Todas usam um build de produção rodando (`npm run build && npx next start -p 3
 
 ## A ilha
 
-- **Lugares:** Ninho (alto/centro), Árvore das Letras (em construção), Torre dos Números, Jardim das Cores e Lago das Descobertas (em breve) e o **Farol das Línguas** (pronto). Tocar num lugar aproxima a câmera; o Nino anda até lá e aparece o botão para entrar.
-- **O mundo cresce:** o farol sobe de nível conforme as paradas da unidade 1 são concluídas (1: luz fraca; 2: a partir de 1 parada; 3: a partir de 3, com o feixe à noite; 4: 6 de 6, lâmpada acesa). Cada área com alguma parada concluída tece um fio da sua cor no ninho.
+- **Lugares:** Ninho (alto/centro), **Árvore das Letras** e **Farol das Línguas** (prontos), Torre dos Números, Jardim das Cores e Lago das Descobertas (em breve). Tocar num lugar aproxima a câmera; o Nino anda até lá e aparece o botão para entrar ("Entrar no farol", "Entrar na árvore"). O lugar sugerido brilha: entre as áreas com parada por fazer, a jogada há mais tempo (só muda quando uma parada é concluída).
+- **O mundo cresce:** o farol sobe de nível conforme as paradas da unidade 1 são concluídas (1: luz fraca; 2: a partir de 1 parada; 3: a partir de 3, com o feixe à noite; 4: 6 de 6, lâmpada acesa). A árvore cresce com as paradas de todos os galhos somadas (1: copa simples; 2: a partir de 3, letras-fruta; 3: a partir de 9, passarinhos e lanternas que acendem à noite; 4: a partir de 18, flores na copa e brilho ao entardecer). Cada área com alguma parada concluída tece um fio da sua cor no ninho (azul do farol, coral da árvore).
+- **Volta de uma parada:** a ilha abre no lugar da parada (farol ou árvore), mostra a mudança só se o nível subiu, o Nino volta andando ao ninho e o fio aparece se for o primeiro da área. Rejogar uma parada já concluída não repete nada disso.
 - **Abertura:** completa (~14 s) só na primeira vez; depois, curta (~2,5 s); voltando no mesmo dia, direto na ilha. Com movimento reduzido, apenas um esmaecer de 0,4 s.
 - **Noite:** o mesmo mundo com outra luz. Só os responsáveis decidem quando: "Sempre dia" (padrão), "Seguir a rotina" (anoitece no horário escolhido, até as 06:00) ou "Noite". O relógio do aparelho sozinho não decide nada.
 - **Sem pressão:** nada se perde por ausência, nada murcha, nenhum contador zera, sem vidas nem tempo. Nunca vermelho para erro.
+
+## A Árvore das Letras e o cadastro
+
+- **Cadastro da criança:** na primeira abertura, antes da ilha, um adulto informa nome (só escrito, o Nino nunca fala), idade e o contato com inglês (quem já tinha progresso antes do cadastro pode adiar com "Agora não"). Fica só no aparelho, na chave **`lingoo:profile:v1`**, e pode ser mudado na área dos responsáveis.
+- **Galhos:** 1 e 2 ensinam o nome das letras em inglês com uma palavra ("A is for apple"), 3 com que letra a palavra começa, 4 palavras curtas escritas. O contato com inglês escolhe o galho de partida; os galhos anteriores ficam abertos e cada galho seguinte abre com o Desafio do anterior (fechado mostra um broto, nunca cadeado).
+- **Níveis:** as atividades se ajustam ao acerto da criança (nível salvo por galho no perfil).
+- **Ninho:** as figurinhas da árvore ficam na seção "Árvore das Letras"; os cartões de letras e palavras entram no Treino de memória (uma rodada treina os cartões de uma unidade por vez).
+- **Conteúdo:** as unidades `content/units/letras-1..4.json` são geradas a partir do banco `content/areas/letras/bank.json` com **`npm run content:letras`** (não edite os JSON gerados à mão; depois de mudar o banco, rode o comando e os testes de áudio).
 
 ## Bíblia visual (resumo)
 
@@ -72,13 +82,13 @@ Todas usam um build de produção rodando (`npm run build && npx next start -p 3
 
 - **Preferências dos responsáveis** ficam em `localStorage`, na chave **`lingoo:settings:v1`**: ambiente (`dia`, `rotina`, `noite`), horário de dormir (`HH:MM`, padrão 19:30), lembrete de pausa (0, 15, 20 ou 30 min), abertura (`auto` ou `curta`), movimento (`auto` ou `reduzir`), `openingSeen` e `lastVisit` (data local `AAAA-MM-DD`). Valores inválidos voltam ao padrão; armazenamento bloqueado nunca quebra o app.
 - **Música** (ligada ou desligada, escolha dos responsáveis) fica na chave `lingoo:music`; desligada, também some o som de ambiente da ilha.
-- **Progresso** fica em `localStorage`, na chave **`lingoo:progress:v3`** (formato intocado). As chaves antigas (v1 e v2) são mantidas e migradas para a v3 sem apagar nada.
+- **Progresso** fica em `localStorage`, na chave **`lingoo:progress:v3`** (formato intocado; as paradas da árvore usam ids como `letras-1/lesson-1`). As chaves antigas (v1 e v2) são mantidas e migradas para a v3 sem apagar nada.
 
 ## Como o código é organizado
 
-- `src/world/`: o mundo desenhado em **SVG por funções puras** (`island.ts`, `farol-interior.ts`), o motor imperativo (`stage.ts`: câmera de 4 camadas por `viewBox`, linha do tempo determinística em `timeline.ts`) e a câmera (`camera.ts`). O React não re-renderiza por quadro: por quadro só mudam `viewBox`, atributos, `transform` e `opacity`.
+- `src/world/`: o mundo desenhado em **SVG por funções puras** (`island.ts`, `farol-interior.ts`, `arvore-interior.ts`), o motor imperativo (`stage.ts`: câmera de 4 camadas por `viewBox`, linha do tempo determinística em `timeline.ts`) e a câmera (`camera.ts`). O React não re-renderiza por quadro: por quadro só mudam `viewBox`, atributos, `transform` e `opacity`.
 - `src/art/nino/`: o Nino em partes (`rig.ts`, `poses.ts`, `Nino.tsx`).
-- `src/components/island/`, `farol/`, `ninho/`, `parents/`, `nestoy/`: as telas e o `StageView` que hospeda o palco.
+- `src/components/island/`, `farol/`, `arvore/`, `ninho/`, `onboarding/`, `parents/`, `nestoy/`: as telas e o `StageView` que hospeda o palco.
 - `src/components/trail/`: paradas, exercícios, recompensas e o Treino de memória.
 - `src/domain/`: regras puras (progresso, unidades, memória, ilha, preferências).
 - `content/`: `path.json`, `units/` e `lines.json` (falas); os áudios ficam em `public/audio/` (veja `tools/audio/README.md`).

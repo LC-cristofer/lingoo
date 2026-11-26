@@ -4,7 +4,7 @@
 import { createNinoRig, type NinoRig } from "@/art/nino/rig";
 import { ARVORE_DOOR, buildArvoreInterior } from "./arvore-interior";
 import { FAROL_INTERIOR_DOOR, buildFarolInterior } from "./farol-interior";
-import { NEST, ROUTES, buildIsland, type IslandStates, type PlaceId } from "./island";
+import { NEST, ROUTES, buildIsland, threadWoven, type IslandStates, type PlaceId, type Threads } from "./island";
 import { LAYER_K, layerViewBox, toScreen, overviewCam, type Cam, type Viewport } from "./camera";
 import { createTimeline, type Timeline } from "./timeline";
 
@@ -25,6 +25,10 @@ export type Stage = {
   env: { night: number; farolLevel: number; reduced: boolean };
   fx: {
     pennant: number[]; boatX: number; thread: number[]; lampPulse: number; hammerFast: boolean; wiggle: Partial<Record<PlaceId, number>>;
+    /** How much of the tree's growth layers shows (0 hidden, 1 shown): letter-fruits (level 2), birds and lanterns (3), flowers (4). */
+    arvore: number[];
+    /** The tree answering a tap or a growth: its crown sways harder (0 to 1). */
+    treeShake: number;
     /** How much each place's pin has appeared (0 hidden, 1 shown; the opening pops them one by one). */
     pins: Record<PlaceId, number>;
     /** The opening's overlay: logo, "Pular" and the cream fade (all 0 to 1). */
@@ -40,7 +44,9 @@ export type Stage = {
 };
 
 export type StageOptions = {
-  scene: "island" | "farol" | "arvore"; states: IslandStates; threads: number; farolLevel: 1 | 2 | 3 | 4; reduced: boolean; clock?: "raf" | "manual";
+  scene: "island" | "farol" | "arvore"; states: IslandStates; threads: Threads; farolLevel: 1 | 2 | 3 | 4; reduced: boolean; clock?: "raf" | "manual";
+  /** The Árvore das Letras' growth on the island (1 when omitted). */
+  arvoreLevel?: 1 | 2 | 3 | 4;
 };
 
 function svgEl(html: string, id: string, cls = "stage-layer"): SVGSVGElement {
@@ -68,7 +74,8 @@ export function createStage(host: HTMLElement, o: StageOptions): Stage {
   const isIsland = o.scene === "island";
   const env = { night: 0, farolLevel: o.farolLevel as number, reduced: o.reduced };
   const fx: Stage["fx"] = {
-    pennant: [1, 1, 0, 0, 0], boatX: 120, thread: [0, 1, 2, 3].map(i => (i < o.threads ? 1 : 0)), lampPulse: 0, hammerFast: false, wiggle: {},
+    pennant: [1, 1, 0, 0, 0], boatX: 120, thread: [0, 1, 2, 3].map(i => (threadWoven(o.threads, i) ? 1 : 0)), lampPulse: 0, hammerFast: false, wiggle: {},
+    arvore: [2, 3, 4].map(l => ((o.arvoreLevel ?? 1) >= l ? 1 : 0)), treeShake: 0,
     pins: { ninho: 1, letras: 1, numeros: 1, cores: 1, lago: 1, farol: 1 }, intro: { logo: 0, skip: 0, fade: 0 },
   };
   let vp: Viewport = { w: host.clientWidth || 390, h: host.clientHeight || 844, top: 108, bottom: 150 };
@@ -85,7 +92,7 @@ export function createStage(host: HTMLElement, o: StageOptions): Stage {
   let layers: { el: SVGSVGElement; k: number }[] = [];
   let isl: SVGSVGElement | null = null, far: SVGSVGElement | null = null, inter: SVGSVGElement | null = null;
   if (isIsland) {
-    const art = buildIsland({ states: o.states, threads: o.threads });
+    const art = buildIsland({ states: o.states, threads: o.threads, arvoreLevel: o.arvoreLevel ?? 1 });
     skySvg = svgEl(`<defs><linearGradient id="stageSkyG" x1="0" y1="0" x2="0" y2="1"><stop offset="0"/><stop offset=".55"/><stop offset="1"/></linearGradient></defs><rect width="1000" height="1000" fill="url(#stageSkyG)"/>`, "Lsky", "stage-sky");
     skySvg.setAttribute("preserveAspectRatio", "none");
     skyStops.push(...(skySvg.querySelectorAll("stop") as unknown as SVGStopElement[]));
@@ -122,6 +129,8 @@ export function createStage(host: HTMLElement, o: StageOptions): Stage {
     pennants: isl ? [...isl.querySelectorAll(".pennant")] : [], threads: isl ? [...isl.querySelectorAll(".thread")] : [],
     ff: isl ? [...isl.querySelectorAll(".ff")] : [], bf: isl ? [...isl.querySelectorAll(".bfly")] : [],
     sprouts: isl ? [...isl.querySelectorAll(".sprout")] : [],
+    treeLayers: isl ? [2, 3, 4].map(l => isl!.querySelector(`.arvore-l${l}`)) : [],
+    treeLights: q("#arvore-lights"), treeAura: q("#arvore-aura"), treeSway: isl?.querySelector("#letras .sway") ?? null,
     sways: all(roots, ".sway"), drifts: all(roots, ".drift"), bobs: all(roots, ".bob"), dangles: all(roots, ".dangle"),
     lanterns: all(roots, ".lantern-swing"), ripples: all(roots, ".ripple"),
     bigLamp: inter?.querySelector("#bigLamp") ?? null, bigGlow: inter?.querySelector("#bigLampGlow") ?? null,
@@ -200,6 +209,14 @@ export function createStage(host: HTMLElement, o: StageOptions): Stage {
         g.children[0]?.setAttribute("transform", `scale(${k.toFixed(3)} 1)`);
         g.children[1]?.setAttribute("transform", `scale(${k.toFixed(3)} 1)`);
       });
+      els.treeLayers.forEach((g, i) => {
+        const v = fx.arvore[i] ?? 0;
+        g?.setAttribute("opacity", Math.min(1, Math.max(0, v)).toFixed(2));
+        g?.setAttribute("transform", v < 1 ? `translate(0 ${((1 - v) * -12).toFixed(1)})` : "");
+      });
+      setOp(els.treeLights, Math.min(1, fx.arvore[1] ?? 0));
+      // in flower the crown glows from dusk on
+      setOp(els.treeAura, Math.min(1, fx.arvore[2] ?? 0) * (0.55 + 0.45 * Math.sin(Math.min(1, n) * Math.PI / 2)));
       const inNest = slot === "nest";
       els.poolNino?.setAttribute("cx", (inNest ? 500 : nino.st.x).toFixed(1));
       els.poolNino?.setAttribute("cy", (inNest ? 850 : nino.st.y - 40).toFixed(1));
@@ -221,7 +238,7 @@ export function createStage(host: HTMLElement, o: StageOptions): Stage {
       els.bigGlow?.setAttribute("opacity", (0.2 + 0.12 * lv + fx.lampPulse * 0.6).toFixed(2));
     }
     if (!red) {
-      els.sways.forEach((g, i) => g.setAttribute("transform", `rotate(${(Math.sin(t / 2100 + i) * 1.1).toFixed(3)})`));
+      els.sways.forEach((g, i) => g.setAttribute("transform", `rotate(${(Math.sin(t / 2100 + i) * 1.1 + (g === els.treeSway ? Math.sin(t / 90) * 2.2 * fx.treeShake : 0)).toFixed(3)})`));
       els.drifts.forEach((g, i) => g.setAttribute("transform", `translate(${(Math.sin(t / 9000 + i * 2) * 26).toFixed(2)} 0)`));
       els.bobs.forEach((g, i) => g.setAttribute("transform", `translate(0 ${(Math.sin(t / 1700 + i) * 6).toFixed(2)})`));
       els.dangles.forEach((g, i) => g.setAttribute("transform", `rotate(${(Math.sin(t / 800 + i * 1.7) * 6).toFixed(2)})`));

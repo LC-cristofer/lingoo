@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { ART_WORDS } from "@/art/Animal";
 import { Nino } from "@/art/nino/Nino";
 import type { NinoPose } from "@/art/nino/poses";
@@ -16,7 +16,7 @@ import { ExerciseView } from "./exercises/ExerciseView";
 import { AnswerTile, TileGrid } from "./kit/AnswerTile";
 import { Bubble } from "./kit/Bubble";
 import { ChunkyButton } from "./kit/ChunkyButton";
-import { Backdrop } from "./kit/Backdrop";
+import { Backdrop, InteriorContext } from "./kit/Backdrop";
 import { LessonTopBar } from "./kit/LessonTopBar";
 import { PlayIcon } from "./icons";
 import { NarrationText } from "./NarrationText";
@@ -124,7 +124,7 @@ type StopClosingProps = {
   closing: Narration;
   words: Word[];
   wordIds: ArtId[];
-  /** Challenge: "Continuar" leads to the chest. Otherwise "Voltar ao farol" leaves ("Voltar" in review mode). */
+  /** Challenge: "Continuar" leads to the chest. Otherwise "Voltar ao farol" ("Voltar à árvore" in the tree) leaves ("Voltar" in review mode). */
   isChallenge?: boolean;
   /** False in review mode: nothing is saved and the way out goes back to the review list. */
   record?: boolean;
@@ -139,7 +139,8 @@ export function StopClosing({ closing, words, wordIds, isChallenge = false, reco
     void narrator.playNarration([...closing, ...lines.star]);
   }, [closing, lines.star]);
   // In review mode the way out is the review list, not the map.
-  const label = isChallenge ? "Continuar" : record ? "Voltar ao farol" : "Voltar";
+  const backLabel = useContext(InteriorContext) === "arvore" ? "Voltar à árvore" : "Voltar ao farol";
+  const label = isChallenge ? "Continuar" : record ? backLabel : "Voltar";
   return (
     <div className="k-screen">
       <Backdrop variant="farol" />
