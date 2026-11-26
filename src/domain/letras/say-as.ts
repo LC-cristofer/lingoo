@@ -11,8 +11,8 @@ const BARE: Record<string, string> = { a: "ey", e: "EE", l: "Ell", m: "M" };
 /** Respellings for a letter inside a line ("A is for apple!", "A, B, C!", "D-O-G, dog!"). */
 const INLINE: Record<string, string> = { a: "Ey", e: "Ee", l: "Ell", m: "M", s: "Ess" };
 
-/** Whole lines the voice cannot say as written: alone, "van!" comes out "then" with every seed, "van?" comes out right. */
-const LINES: Record<string, string> = { "van!": "van?" };
+/** Whole lines the voice cannot say as written: alone, "van!" comes out "then" with every seed, "van?" comes out right; "Ess is for sun!" runs together as "This is for sun!" (no seed fixes it), a comma after the name does. */
+const LINES: Record<string, string> = { "van!": "van?", "S is for sun!": "Ess, is for sun!" };
 
 function names(): Map<string, string> {
   const out = new Map<string, string>();

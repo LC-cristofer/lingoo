@@ -361,6 +361,11 @@
     "say_as": "A goat! Goat starts with Gee!"
   },
   {
+    "id": "3514f2465dc54a3a",
+    "lang": "pt-BR",
+    "text": "Essa é a Árvore das Letras! Vamos aprender o ABC!"
+  },
+  {
     "id": "36b84f6430ae5029",
     "lang": "pt-BR",
     "text": "Uma figurinha nova para o seu álbum!"
@@ -784,7 +789,7 @@
     "id": "646fca0b2aec02c4",
     "lang": "en-US",
     "text": "S is for sun!",
-    "say_as": "Ess is for sun!"
+    "say_as": "Ess, is for sun!"
   },
   {
     "id": "64c96ec0e585a16c",
@@ -1967,6 +1972,11 @@
     "text": "mouse!"
   },
   {
+    "id": "e869d84ab760e64e",
+    "lang": "pt-BR",
+    "text": "A árvore cresceu!"
+  },
+  {
     "id": "e8cd481af8b3f393",
     "lang": "pt-BR",
     "text": "Vamos subir a escada do farol?"
@@ -2014,6 +2024,11 @@
     "id": "eeb5a4b00ae508bc",
     "lang": "pt-BR",
     "text": "Você treinou a memória!"
+  },
+  {
+    "id": "efb0c80452323fda",
+    "lang": "pt-BR",
+    "text": "Vamos subir nos galhos!"
   },
   {
     "id": "f2a776c2fb8482ba",

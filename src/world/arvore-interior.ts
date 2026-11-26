@@ -25,7 +25,7 @@ export const ARVORE_LANDINGS: { unit: 1 | 2 | 3 | 4; stop: number; x: number; y:
 }));
 
 /** The door we came in through (interior space). */
-export const ARVORE_DOOR = { x: 500, y: 5890 } as const;
+export const ARVORE_INTERIOR_DOOR = { x: 500, y: 5890 } as const;
 
 const FONT = "Fredoka, sans-serif";
 
@@ -99,7 +99,7 @@ export function buildArvoreInterior(): string {
   // floor, rug, the door we came in through
   g += `<rect x="-400" y="${FLOOR_Y}" width="1800" height="${ARVORE_HEIGHT - FLOOR_Y}" fill="${P.soilMid}"/><g stroke="${P.soilDark}" stroke-width="3">${Array.from({ length: 14 }, (_, i) => `<path d="M${-300 + i * 120} ${FLOOR_Y} v${ARVORE_HEIGHT - FLOOR_Y}"/>`).join("")}</g>`;
   g += `<ellipse cx="500" cy="5970" rx="250" ry="56" fill="${P.leaf}"/><ellipse cx="500" cy="5970" rx="200" ry="40" fill="none" stroke="${P.cream}" stroke-width="6" stroke-dasharray="14 10"/>`;
-  const dy = ARVORE_DOOR.y;
+  const dy = ARVORE_INTERIOR_DOOR.y;
   g += `<rect x="400" y="${dy - 250}" width="200" height="250" fill="url(#ai-door-light)"/><path d="M430 ${dy} V${dy - 140} a70 70 0 0 1 140 0 V${dy}Z" fill="${P.woodDark}"/><path d="M500 ${dy - 200} V${dy}" stroke="${P.woodDeep}" stroke-width="5"/><circle cx="530" cy="${dy - 70}" r="6" fill="${P.lamp}"/>`;
 
   // the climb: planks between platforms, with a vine for a rail

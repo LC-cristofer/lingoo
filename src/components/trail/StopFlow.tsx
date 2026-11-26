@@ -203,6 +203,8 @@ export function ExerciseLoop({ exercises, sessionId, words, onExit, onFinished, 
     return startRun(p.islands.descoberta.letras.levels[adaptive.unitId] ?? startLevel(p));
   });
   const runRef = useRef(firstRun);
+  // The run started from the stored level only if the profile was loaded then; otherwise its level is a guess and must not overwrite the saved one.
+  const [startedHydrated] = useState(() => profileCtx?.hydrated === true);
   const [itemLevel, setItemLevel] = useState<Level>(firstRun.level);
   const [shown, setShown] = useState(0);
   const [correctCount, setCorrectCount] = useState(0);
@@ -265,7 +267,7 @@ export function ExerciseLoop({ exercises, sessionId, words, onExit, onFinished, 
     setSession(after);
     setItemLevel(runRef.current.level);
     if (after.finished) {
-      if (adaptive?.record && profileCtx && exercises.some((e) => e.kind === "adaptive")) profileCtx.setLevel(adaptive.unitId, runRef.current.level);
+      if (adaptive?.record && profileCtx && startedHydrated && exercises.some((e) => e.kind === "adaptive")) profileCtx.setLevel(adaptive.unitId, runRef.current.level);
       onFinished();
     }
   };

@@ -166,10 +166,10 @@ describe("NinhoScreen exit", () => {
 });
 
 describe("NinhoScreen title", () => {
-  it('reads "Ninho da Ana" when the profile has a name', () => {
+  it('reads "Ninho de Ana" when the profile has a name', () => {
     profile = { ...defaultProfile(), name: "Ana" };
     render(<NinhoScreen />);
-    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("Ninho da Ana");
+    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("Ninho de Ana");
   });
   it('reads "Ninho" when the name is empty', () => {
     render(<NinhoScreen />);

@@ -33,7 +33,7 @@ uv pip install --python tools/audio/.venv/bin/python -r tools/audio/requirements
 Letters are said by their English names: `npm run audio:lines` writes a `say_as` for every English line that has letters
 ("B" -> "bee", "B is for ball!" -> "bee is for ball!", "D-O-G, dog!" -> "dee, oh, gee, dog!"), built from the names in
 `content/areas/letras/bank.json` (`src/domain/letras/say-as.ts`). The voice is sent `say_as`; the id and the app text do not change,
-and `verify.py` accepts the letter, its name or a usual Whisper spelling of it for a bare-letter line.
+and `verify.py` accepts the letter, its name or a usual Whisper spelling of it for a bare-letter line; inside a sentence only the letter or its name pass ("This is for sun!" is not "S is for sun!").
 
 Full run: `generate_eleven.py && verify.py && chant.py`, then `sfx.py` and `music.py`.
 The Whisper model is cached in `tools/audio/.cache/` (git-ignored).

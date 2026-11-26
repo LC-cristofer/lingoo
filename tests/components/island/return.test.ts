@@ -162,7 +162,7 @@ describe("playBedtime", () => {
 });
 
 describe("playReturn at the tree", () => {
-  it("level 1 to 2: opens on the tree, the letter-fruits drop in, no farol line, the coral thread is woven, Nino walks home", async () => {
+  it("level 1 to 2: opens on the tree, the letter-fruits drop in, the tree line (never the farol's), the coral thread is woven, Nino walks home", async () => {
     make({ threads: [false, true], tree: 2 });
     const p = playReturn(stage, vp, { place: "arvore", from: 1, to: 2, newThread: true, sticker: false }, say, sfx);
     expect(stage.fx.arvore).toEqual([0, 0, 0]);
@@ -174,7 +174,7 @@ describe("playReturn at the tree", () => {
     expect(stage.fx.thread[0]).toBe(0); // the Línguas thread stays out
     expect(stage.fx.thread[1]).toBe(1);
     expect(stage.env.farolLevel).toBe(1); // the farol is untouched
-    expect(said).toEqual([]);
+    expect(said).toEqual(["arvoreGrew"]);
     for (const name of ["grow", "steps", "thread"]) expect(sfx).toHaveBeenCalledWith(name);
     expect(stage.nino.st.x).toBeCloseTo(NEST_FRONT.x, 1);
     expect(stage.cam.D).toBeCloseTo(overviewCam(vp).D, 6);
@@ -186,13 +186,14 @@ describe("playReturn at the tree", () => {
     await run(playReturn(stage, vp, { place: "arvore", from: 2, to: 2, newThread: false, sticker: false }, say, sfx));
     expect(stage.fx.arvore).toEqual([1, 0, 0]);
     expect(sfx).not.toHaveBeenCalledWith("grow");
+    expect(said).toEqual([]);
   });
 
   it("reduced: the layers appear at once, nobody walks", async () => {
     make({ tree: 4, reduced: true });
     await run(playReturn(stage, vp, { place: "arvore", from: 3, to: 4, newThread: false, sticker: true }, say, sfx), 160);
     expect(stage.fx.arvore).toEqual([1, 1, 1]);
-    expect(said).toEqual(["nestSaved"]);
+    expect(said).toEqual(["arvoreGrew", "nestSaved"]);
     expect(sfx).not.toHaveBeenCalledWith("steps");
   });
 });

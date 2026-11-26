@@ -14,8 +14,9 @@ vi.mock("@/audio/narrator", () => ({ narrator: narratorMock }));
 
 const setLevel = vi.fn();
 let profile: Profile = defaultProfile();
+let hydrated = true;
 vi.mock("@/components/nestoy/ProfileProvider", () => ({
-  useOptionalProfile: () => ({ profile, hydrated: true, update: vi.fn(), setLevel }),
+  useOptionalProfile: () => ({ profile, hydrated, update: vi.fn(), setLevel }),
 }));
 
 import { ExerciseLoop } from "@/components/trail/StopFlow";
@@ -71,6 +72,7 @@ beforeEach(() => {
   narratorMock.playNarration.mockImplementation(() => Promise.resolve());
   setLevel.mockClear();
   profile = defaultProfile();
+  hydrated = true;
 });
 afterEach(() => vi.useRealTimers());
 
@@ -110,6 +112,15 @@ describe("ExerciseLoop with adaptive slots", () => {
     renderLoop([slot("a")], { unitId: "letras-1", record: false });
     await flush();
     expect(cards()).toHaveLength(4);
+    await tap("a");
+    await proceed();
+    expect(setLevel).not.toHaveBeenCalled();
+  });
+
+  it("a run that started before the profile was loaded does not overwrite the saved level", async () => {
+    hydrated = false;
+    renderLoop([slot("a")], { unitId: "letras-1", record: true });
+    await flush();
     await tap("a");
     await proceed();
     expect(setLevel).not.toHaveBeenCalled();

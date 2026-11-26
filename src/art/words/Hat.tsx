@@ -1,20 +1,21 @@
 import { GroundShadow } from "../shared";
 import { CORAL, CORAL_DARK, Gloss, WOOD } from "./parts";
 
+// A straw hat seen from the front and a little above: a wide curled brim and a low, dented crown with a coral band.
+// Wide and flat on purpose, so it never reads as a mushroom.
 export function Hat() {
   return (
     <g>
-      <GroundShadow rx={86} />
-      <ellipse cx="100" cy="164" rx="92" ry="34" fill={WOOD.dark} />
-      <ellipse cx="100" cy="156" rx="92" ry="32" fill={WOOD.light} />
-      <path d="M46 152 C42 96 62 60 100 60 C138 60 158 96 154 152 C140 176 60 176 46 152Z" fill={WOOD.dark} />
-      <path d="M42 142 C40 92 60 54 96 54 C134 54 156 90 152 142 C136 168 56 168 42 142Z" fill={WOOD.base} />
-      <path d="M44 128 C84 150 112 150 152 124 L154 142 C120 170 76 170 44 148Z" fill={CORAL_DARK} />
-      <path d="M42 122 C84 144 112 144 152 118 L152 136 C116 160 78 160 42 140Z" fill={CORAL} />
-      <circle cx="146" cy="138" r="13" fill="#FFC93C" />
-      <circle cx="146" cy="138" r="6" fill="#F2B220" />
-      <Gloss cx={72} cy={82} rx={20} ry={9} rot={-50} o={0.45} />
-      <path d="M20 150 q40 22 90 22 M22 160 q40 18 80 18" stroke={WOOD.dark} strokeWidth="3" strokeLinecap="round" fill="none" opacity=".5" />
+      <GroundShadow rx={92} />
+      <path d="M6 150 C10 130 40 124 100 124 C160 124 190 130 194 150 C196 170 160 184 100 184 C40 184 4 170 6 150Z" fill={WOOD.dark} />
+      <path d="M6 142 C10 122 40 116 100 116 C160 116 190 122 194 142 C196 162 160 176 100 176 C40 176 4 162 6 142Z" fill={WOOD.light} />
+      <path d="M46 138 C42 104 52 76 78 70 C90 78 110 78 122 70 C148 76 158 104 154 138 C136 150 64 150 46 138Z" fill={WOOD.dark} />
+      <path d="M44 132 C40 98 50 70 76 62 C90 72 110 72 124 62 C150 70 160 98 156 132 C138 144 62 144 44 132Z" fill={WOOD.base} />
+      <path d="M76 62 C90 72 110 72 124 62 C112 58 88 58 76 62Z" fill={WOOD.deep} opacity=".55" />
+      <path d="M44 124 C62 136 138 136 156 124 L156 136 C138 148 62 148 44 136Z" fill={CORAL_DARK} />
+      <path d="M44 120 C62 132 138 132 156 120 L156 132 C138 144 62 144 44 132Z" fill={CORAL} />
+      <path d="M22 148 q40 20 78 20 M30 158 q34 14 70 14" stroke={WOOD.dark} strokeWidth="3" strokeLinecap="round" fill="none" opacity=".45" />
+      <Gloss cx={66} cy={90} rx={14} ry={7} rot={-60} o={0.45} />
     </g>
   );
 }

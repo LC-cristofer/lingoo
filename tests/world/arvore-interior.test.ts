@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { PAL } from "@/world/palette";
-import { ARVORE_DOOR, ARVORE_LANDINGS, buildArvoreInterior } from "@/world/arvore-interior";
+import { ARVORE_INTERIOR_DOOR, ARVORE_LANDINGS, buildArvoreInterior } from "@/world/arvore-interior";
 
 describe("buildArvoreInterior", () => {
   const svg = buildArvoreInterior();
@@ -37,7 +37,7 @@ describe("buildArvoreInterior", () => {
       if (i > 0) expect(L.y).toBeLessThan(ARVORE_LANDINGS[i - 1].y);
     });
     expect(new Set(ARVORE_LANDINGS.map((L) => L.x > 500)).size).toBe(2);
-    expect(ARVORE_DOOR.x).toBe(500);
-    expect(ARVORE_DOOR.y).toBeGreaterThan(ARVORE_LANDINGS[0].y);
+    expect(ARVORE_INTERIOR_DOOR.x).toBe(500);
+    expect(ARVORE_INTERIOR_DOOR.y).toBeGreaterThan(ARVORE_LANDINGS[0].y);
   });
 });

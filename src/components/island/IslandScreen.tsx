@@ -414,8 +414,7 @@ export function IslandScreen({ mode = "auto", volta = null, held = false, onStag
       await done();
       await speak(token, lines.placeFarol);
       if (token === flowRef.current) Object.assign(s.nino.st, poseState("idle"));
-    } else if (id === "letras" && STATES.letras === "pronto") {
-      // No line of Nino's names the tree yet: the card shows it and Nino points, silently.
+    } else if (id === "letras") {
       setView({ title: PLACE_NAMES.letras, text: `Inglês · Galho ${branch}: ${branchTitle}`, chip: "Pronto", tone: "ok" });
       await goToArvore(s, vp);
       if (token !== flowRef.current) return;
@@ -423,13 +422,8 @@ export function IslandScreen({ mode = "auto", volta = null, held = false, onStag
       Object.assign(s.nino.st, poseState("point"));
       setView((v) => ({ ...v, act: "enterArvore" }));
       await done();
+      await speak(token, lines.placeArvore);
       if (token === flowRef.current) Object.assign(s.nino.st, poseState("idle"));
-    } else if (id === "letras") {
-      setView({ title: PLACE_NAMES.letras, text: "Os construtores estão trabalhando aqui.", chip: "Em construção", tone: "obra" });
-      setPose("help");
-      void speak(token, lines.placeBuilding);
-      await focusPlace(s, id, vp);
-      await done();
     } else {
       setView({ title: PLACE_NAMES[id], text: "Um lugar novo vai nascer aqui.", chip: "Em breve", tone: "futuro" });
       setPose("help");

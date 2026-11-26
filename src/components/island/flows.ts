@@ -168,13 +168,13 @@ export async function setNight(stage: Stage, on: boolean, ms: number): Promise<v
 // ---- shared by the opening, the return and the bedtime ----
 
 /** The lines Nino says in those flows (keys of content/lines.json). */
-export type LineKey = "start" | "ninoHello" | "ninoExplore" | "farolGrew" | "nestSaved" | "goodnight";
+export type LineKey = "start" | "ninoHello" | "ninoExplore" | "farolGrew" | "arvoreGrew" | "nestSaved" | "goodnight";
 /** Plays a line and resolves when it ends (at once while the audio is locked). */
 export type Say = (key: LineKey) => Promise<void>;
 export type Sfx = (name: SfxName) => void;
 
 /** How long a line holds the scene at least, so a silent run (audio still locked) keeps the same pace. */
-const LINE_MIN_MS: Record<LineKey, number> = { start: 1800, ninoHello: 1500, ninoExplore: 1900, farolGrew: 1900, nestSaved: 1900, goodnight: 2600 };
+const LINE_MIN_MS: Record<LineKey, number> = { start: 1800, ninoHello: 1500, ninoExplore: 1900, farolGrew: 1900, arvoreGrew: 1900, nestSaved: 1900, goodnight: 2600 };
 
 /** Nino talks (his mouth moves) while the line plays; never shorter than its minimum, so a muted run is not rushed. */
 export async function speakLine(stage: Stage, say: Say, key: LineKey): Promise<void> {

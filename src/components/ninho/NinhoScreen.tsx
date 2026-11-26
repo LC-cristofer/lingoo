@@ -14,7 +14,8 @@ import { CloseIcon, PlayIcon } from "@/components/trail/icons";
 import { ChunkyButton } from "@/components/trail/kit/ChunkyButton";
 import { useToday } from "@/components/trail/useToday";
 import { useTrailProgress } from "@/components/trail/TrailProgressProvider";
-import { getAreaUnits, wovenThreads } from "@/domain/nestoy/island-view";
+import { settleArvore, settleFarol } from "@/components/island/return";
+import { arvoreLevel, farolLevel, getAreaUnits, LAUNCH_STATES, wovenThreads } from "@/domain/nestoy/island-view";
 import { isNight } from "@/domain/nestoy/settings";
 import { getLines, getPath, getUnit } from "@/domain/trail/content";
 import { daysBetween, dueCards, nextDue } from "@/domain/trail/memory";
@@ -71,6 +72,8 @@ export function NinhoScreen() {
   const treeSlots = useMemo(() => slotsOf("letras"), []);
   const areas = useMemo(() => getAreaUnits(), []);
   const threads = areas ? wovenThreads(shown, areas) : 0;
+  const level = areas ? farolLevel(shown, areas.farol) : 1;
+  const treeLevel = areas ? arvoreLevel(shown, areas.letras) : 1;
 
   const legacy = Object.keys(shown.legacy?.stickers ?? {})
     .filter((id) => Object.hasOwn(LEGACY_STICKERS, id))
@@ -118,6 +121,12 @@ export function NinhoScreen() {
     vpRef.current = vp;
     if (stageRef.current) Object.assign(stageRef.current.cam, nestViewCam(vp));
   }, []);
+  // The island behind the sheet is the child's island: the farol and the tree as grown.
+  useEffect(() => {
+    if (!stage) return;
+    settleFarol(stage, level);
+    settleArvore(stage, treeLevel);
+  }, [stage, level, treeLevel]);
   useEffect(() => {
     const s = stageRef.current;
     if (!stage || !s) return;
@@ -158,14 +167,14 @@ export function NinhoScreen() {
 
   return (
     <div className="nz-screen nn-screen" data-testid="ninho" data-side={side}>
-      <StageView scene="island" threads={threads} farolLevel={1} insets={insets} onStage={onStage} onViewport={onViewport} />
+      <StageView scene="island" states={LAUNCH_STATES} threads={threads} farolLevel={level} arvoreLevel={treeLevel} insets={insets} onStage={onStage} onViewport={onViewport} />
       <div className="nn-top">
         <button type="button" className="k-round k-round-glass" aria-label="Voltar para a ilha" onClick={() => router.push("/")}>
           <CloseIcon size={24} />
         </button>
       </div>
       <main ref={sheetRef} className="nn-sheet">
-        <h1 className="nn-name">{childName ? `Ninho da ${childName}` : "Ninho"}</h1>
+        <h1 className="nn-name">{childName ? `Ninho de ${childName}` : "Ninho"}</h1>
         <section className="nn-part" aria-labelledby="nn-h-stickers">
           <header className="nn-head">
             <h2 id="nn-h-stickers" className="nn-title">Figurinhas</h2>

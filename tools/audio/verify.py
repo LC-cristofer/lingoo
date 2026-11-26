@@ -21,8 +21,9 @@ RETRY_SEEDS = (43, 44)
 _whisper = None
 
 
-# What Whisper may write for a spoken letter, by letter. A bare letter line passes if it hears the letter, the spoken
-# name sent to the voice (say_as) or one of these.
+# What Whisper may write for a spoken letter, by letter. ONLY a bare-letter line ("B", "B?") passes on these: a letter
+# alone has nothing else to check. In a sentence they would hide a real failure ("S is for sun!" heard as "This is for
+# sun!"), so there only the letter and the name the voice was sent count (NAMES below).
 HOMOPHONES = {"a": {"ay", "hey", "eh", "a"}, "b": {"bee", "be"}, "c": {"see", "sea"}, "d": {"dee"}, "e": {"ee", "eh"},
               "f": {"ef", "eff"}, "g": {"gee"}, "h": {"aitch", "age"}, "i": {"eye", "eyes"}, "j": {"jay"},
               "k": {"kay", "okay"}, "l": {"el", "ell", "elle"}, "m": {"em", "am"}, "n": {"en", "and"},
@@ -30,16 +31,28 @@ HOMOPHONES = {"a": {"ay", "hey", "eh", "a"}, "b": {"bee", "be"}, "c": {"see", "s
               "t": {"tee", "tea"}, "u": {"you"}, "v": {"vee"}, "w": {"double u", "double you"}, "x": {"ex"},
               "y": {"why"}, "z": {"zee", "zed"}}
 
-
-# Spoken letter name or Whisper spelling -> letter. Only applied to lines that have letters (those with `say_as`).
-SPOKEN = {}
-for _letter, _names in HOMOPHONES.items():
-    for _n in _names | {_letter}:
-        SPOKEN[_n] = _letter
-SPOKEN.update({"and": "n", "this": "s", "double": "w"})
+# The spoken names themselves (content/areas/letras/bank.json, plus the respellings in src/domain/letras/say-as.ts).
+NAMES = {"a": {"ay", "ey"}, "b": {"bee"}, "c": {"see"}, "d": {"dee"}, "e": {"ee"}, "f": {"ef"}, "g": {"gee"},
+         "h": {"aitch"}, "i": {"eye"}, "j": {"jay"}, "k": {"kay"}, "l": {"el", "ell"}, "m": {"em"}, "n": {"en"},
+         "o": {"oh"}, "p": {"pee"}, "q": {"cue"}, "r": {"ar"}, "s": {"ess"}, "t": {"tee"}, "u": {"you"}, "v": {"vee"},
+         "w": {"double u", "double you"}, "x": {"ex"}, "y": {"why"}, "z": {"zee"}}
 
 
-def canon(tokens):
+def _spoken(table):
+    out = {}
+    for letter, names in table.items():
+        for n in names | {letter}:
+            out[n] = letter
+    return out
+
+
+SPOKEN_BARE = _spoken(HOMOPHONES)
+SPOKEN_BARE.update({"and": "n", "this": "s", "double": "w"})
+SPOKEN_NAME = _spoken(NAMES)
+SPOKEN_NAME["and"] = "n"  # Whisper writes the name "en" as "and" in a list ("N, O, P, Q!"); unlike "this" for "ess", it is the name heard
+
+
+def canon(tokens, table):
     """Tokens with spoken letter names turned into the letters ("double u" -> "w", "why" -> "y")."""
     out, i = [], 0
     while i < len(tokens):
@@ -47,22 +60,23 @@ def canon(tokens):
             out.append("w")
             i += 2
             continue
-        out.append(SPOKEN.get(tokens[i], tokens[i]))
+        out.append(table.get(tokens[i], tokens[i]))
         i += 1
     return out
 
 
 def score(text, heard, say_as=None):
     """Similarity of what was heard with the text. A line with letters (`say_as`) is compared letter for letter, so
-    "Why is for yoyo" matches "Y is for yoyo"; a bare letter passes on the letter, its name or a usual spelling."""
+    "Why is for yoyo" matches "Y is for yoyo"; only a bare letter also passes on the usual Whisper spellings."""
     b = normalize(heard).split()
     if "".join(normalize(text).split()) == "".join(b):  # same letters, spaced differently ("yoyo" / "yo-yo")
         return 1.0
     if not say_as:
         return difflib.SequenceMatcher(None, normalize(text).split(), b).ratio()
+    table = SPOKEN_BARE if len(normalize(text).split()) == 1 else SPOKEN_NAME
     best = 0.0
     for want in (text, say_as):
-        w, h = canon(normalize(want).split()), canon(b)
+        w, h = canon(normalize(want).split(), table), canon(b, table)
         best = max(best, 1.0 if "".join(w) == "".join(h) else difflib.SequenceMatcher(None, w, h).ratio())
     return best
 

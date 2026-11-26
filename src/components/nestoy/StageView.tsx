@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useSyncExternalStore } from "react";
 import { useSettings } from "@/components/nestoy/SettingsProvider";
+import { LAUNCH_STATES } from "@/domain/nestoy/island-view";
 import type { Viewport } from "@/world/camera";
 import type { IslandStates, Threads } from "@/world/island";
 import { createStage, type Stage } from "@/world/stage";
@@ -54,10 +55,8 @@ export function useSideLayout(): boolean {
   return useSyncExternalStore(subscribeSide, sideNow, () => false);
 }
 
-const NO_STATES: IslandStates = { letras: "obra", numeros: "futuro", cores: "futuro", lago: "futuro" };
-
 /** A full-bleed host for the world stage: builds it, keeps its viewport in step with the box, destroys it on unmount. */
-export function StageView({ scene, states = NO_STATES, threads = 0, farolLevel, arvoreLevel = 1, insets, onStage, onViewport }: StageViewProps) {
+export function StageView({ scene, states = LAUNCH_STATES, threads = 0, farolLevel, arvoreLevel = 1, insets, onStage, onViewport }: StageViewProps) {
   const hostRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<Stage | null>(null);
   const reduced = useReducedMotion();

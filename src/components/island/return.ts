@@ -4,7 +4,8 @@
 import { poseState } from "@/art/nino/poses";
 import { farolCloseCam, overviewCam, type Cam, type Viewport } from "@/world/camera";
 import { NEST, type PlaceId } from "@/world/island";
-import { areaOfStop, arvoreLevel, arvoreLevelBefore, farolLevel, levelBefore, THREAD_INDEX, wovenThreads, type AreaUnits } from "@/domain/nestoy/island-view";
+import { areaOfStop } from "@/domain/letras/area";
+import { arvoreLevel, arvoreLevelBefore, farolLevel, levelBefore, THREAD_INDEX, wovenThreads, type AreaUnits } from "@/domain/nestoy/island-view";
 import type { Progress } from "@/domain/trail/progress";
 import type { Stage } from "@/world/stage";
 import {
@@ -84,7 +85,7 @@ export async function playReturn(stage: Stage, vp: Viewport, o: ReturnOpts, say:
   await tl.tween(fx.intro, { fade: 0 }, reduced ? FADE_REDUCED_MS : FADE_MS, "lin");
   // the place transforms
   if (tree && o.to > o.from) {
-    // the new layers drop in one after the other while the crown rustles (no line: the farol's would be wrong here)
+    // the new layers drop in one after the other while the crown rustles
     await tl.wait(300);
     sfx("grow");
     void shakeTree(stage, 1400);
@@ -96,7 +97,8 @@ export async function playReturn(stage: Stage, vp: Viewport, o: ReturnOpts, say:
     });
     void blendPose(stage, "happy", 200, "out");
     if (!reduced) void hopInPlace(stage);
-    await tl.wait(1900);
+    await tl.wait(1400);
+    await speakLine(stage, say, "arvoreGrew");
     await blendPose(stage, "idle", 300, "io");
   } else if (o.to > o.from) {
     await tl.wait(300);

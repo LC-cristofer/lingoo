@@ -3,7 +3,7 @@ import { getUnit } from "@/domain/trail/content";
 import { addCards } from "@/domain/trail/memory";
 import { completeStop, emptyProgress, type Progress } from "@/domain/trail/progress";
 import {
-  LAUNCH_STATES, areaOfStop, arvoreLevel, arvoreLevelBefore, farolLevel, lastPlayedByArea, levelBefore, nestThreads, suggestedPlace, wovenThreads,
+  LAUNCH_STATES, arvoreLevel, arvoreLevelBefore, farolLevel, lastPlayedByArea, levelBefore, nestThreads, suggestedPlace, wovenThreads,
   type AreaUnits,
 } from "@/domain/nestoy/island-view";
 
@@ -60,10 +60,6 @@ describe("threads", () => {
     expect(wovenThreads(tree(1), areas)).toEqual([false, true]);
     expect(nestThreads(tree(5, done(6)), areas)).toBe(2);
     expect(wovenThreads(tree(1, done(1)), areas)).toEqual([true, true]);
-  });
-  it("areaOfStop", () => {
-    expect(areaOfStop("letras-3/story")).toBe("letras");
-    expect(areaOfStop("forest-animals/song")).toBe("farol");
   });
 });
 

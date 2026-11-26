@@ -9,7 +9,8 @@ import { SongStop } from "@/components/trail/SongStop";
 import { StopPlayer, type StopExit } from "@/components/trail/StopPlayer";
 import { StoryStop } from "@/components/trail/StoryStop";
 import { useTrailProgress } from "@/components/trail/TrailProgressProvider";
-import { unitOpen, type Branch } from "@/domain/letras/access";
+import { unitOpen } from "@/domain/letras/access";
+import { branchOfUnit } from "@/domain/letras/area";
 import { defaultProfile } from "@/domain/nestoy/profile";
 import { getStop } from "@/domain/trail/content";
 import { stopStatus } from "@/domain/trail/progress";
@@ -31,8 +32,7 @@ function StopScreenBody({ stopId }: { stopId: string }) {
   const found = useMemo(() => getStop(stopId), [stopId]);
   const profileCtx = useOptionalProfile();
   // The Árvore das Letras' branches have their own rule (`unitOpen`); inside a branch the stops stay in sequence.
-  const letras = /^letras-([1-4])$/.exec(found?.unit.id ?? "");
-  const branch = letras ? (Number(letras[1]) as Branch) : null;
+  const branch = branchOfUnit(found?.unit.id ?? "");
   const profileReady = branch === null || (profileCtx?.hydrated ?? true);
   const closed = found !== null && branch !== null && !unitOpen(progress, profileCtx?.profile ?? defaultProfile(), branch);
   const locked = found !== null && (closed || stopStatus(found.unit, progress, stopId) === "locked");

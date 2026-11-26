@@ -100,6 +100,7 @@ describe("sayAs", () => {
     expect(sayAs("Box ends with X!")).toBe("Box ends with Ex!");
     expect(sayAs("A to M!")).toBe("Ey to M!");
     expect(sayAs("van!")).toBe("van?");
+    expect(sayAs("S is for sun!")).toBe("Ess, is for sun!"); // "Ess is" runs together as "this"
   });
 
   it("leaves the words A and I and plain sentences alone", () => {

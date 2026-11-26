@@ -1,3 +1,4 @@
+import type { Area } from "@/domain/letras/area";
 import { getUnit } from "@/domain/trail/content";
 import { dueCards } from "@/domain/trail/memory";
 import { stopStatus, type Progress } from "@/domain/trail/progress";
@@ -9,7 +10,7 @@ export const LAUNCH_STATES: IslandStates = { letras: "pronto", numeros: "futuro"
 type Level = 1 | 2 | 3 | 4;
 /** The areas of the island that have content: the farol's unit and the four branches of the Árvore das Letras. */
 export type AreaUnits = { farol: Unit; letras: Unit[] };
-export type Area = "farol" | "letras";
+export type { Area };
 /** Where each area's thread sits in the nest (0 the Línguas blue, 1 the Letras coral). */
 export const THREAD_INDEX: Record<Area, number> = { farol: 0, letras: 1 };
 
@@ -51,9 +52,6 @@ export function arvoreLevel(p: Progress, units: Unit[]): Level {
 export function arvoreLevelBefore(p: Progress, units: Unit[], stopId: string): Level {
   return treeLevelFor(units.reduce((n, u) => n + doneCount(p, u, stopId), 0));
 }
-
-/** The area a stop belongs to (the tree's stop ids start with its units' ids). */
-export const areaOfStop = (stopId: string): Area => (stopId.startsWith("letras-") ? "letras" : "farol");
 
 const areaUnits = (areas: AreaUnits, area: Area): Unit[] => (area === "farol" ? [areas.farol] : areas.letras);
 

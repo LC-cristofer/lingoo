@@ -261,6 +261,18 @@
       "text": "Vamos subir a escada do farol?"
     }
   ],
+  "placeArvore": [
+    {
+      "lang": "pt-BR",
+      "text": "Essa é a Árvore das Letras! Vamos aprender o ABC!"
+    }
+  ],
+  "arvoreClimb": [
+    {
+      "lang": "pt-BR",
+      "text": "Vamos subir nos galhos!"
+    }
+  ],
   "callAdult": [
     {
       "lang": "pt-BR",
@@ -277,6 +289,12 @@
     {
       "lang": "pt-BR",
       "text": "Olha! O farol brilhou mais forte!"
+    }
+  ],
+  "arvoreGrew": [
+    {
+      "lang": "pt-BR",
+      "text": "A árvore cresceu!"
     }
   ],
   "nestSaved": [

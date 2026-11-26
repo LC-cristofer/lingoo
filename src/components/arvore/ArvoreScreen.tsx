@@ -72,6 +72,7 @@ export function ArvoreScreen() {
 
   const suggested = suggestedStop(p, profile);
   const suggestedIndex = suggested ? (suggested.unit - 1) * 6 + suggested.stop : -1;
+  const suggestedBranch = suggested?.unit ?? 0;
   // The camera rests on the suggested stop; with the whole tree done, on the last platform.
   const focusIndex = suggestedIndex >= 0 ? suggestedIndex : ARVORE_LANDINGS.length - 1;
   const focusBranch = ARVORE_LANDINGS[focusIndex].unit;
@@ -103,11 +104,13 @@ export function ArvoreScreen() {
   const stageRef = useRef<Stage | null>(null);
   const vpRef = useRef<Viewport | null>(null);
   const readyRef = useRef(false);
+  const voiced = useRef(false);
+  const climbing = useRef(false); // the arrival line is playing: leaving or tapping cuts it
   const [stage, setStage] = useState<Stage | null>(null);
   // Latest values for the entry flow, which runs once per stage.
-  const live = useRef({ focusIndex, side, reduced });
+  const live = useRef({ focusIndex, side, reduced, lines });
   useEffect(() => {
-    live.current = { focusIndex, side, reduced };
+    live.current = { focusIndex, side, reduced, lines };
   });
 
   const target = useCallback((vp: Viewport, index = live.current.focusIndex) => {
@@ -127,29 +130,31 @@ export function ArvoreScreen() {
 
   // The look of the art: branch emblems (lush leaves or a bud), platforms (done badge, halo on the suggested one, a sprout on closed ones).
   const statusKey = statuses.join(",");
+  const openKey = open.join(",");
   useEffect(() => {
     const root = rootRef.current;
     if (!stage || !root) return;
+    const st = statusKey.split(",") as Status[];
+    const isOpenBranch = openKey.split(",").map((v) => v === "true");
     root.querySelectorAll("#Lint .branch").forEach((g, i) => {
-      const isOpen = open[i];
+      const isOpen = isOpenBranch[i];
       g.setAttribute("data-open", String(isOpen));
       g.querySelector(".branch-open")?.setAttribute("opacity", isOpen ? "1" : "0");
       g.querySelector(".branch-bud")?.setAttribute("opacity", isOpen ? "0" : "1");
-      g.querySelector(".branch-glow")?.setAttribute("opacity", suggested && suggested.unit === i + 1 ? "0.9" : "0");
+      g.querySelector(".branch-glow")?.setAttribute("opacity", suggestedBranch === i + 1 ? "0.9" : "0");
     });
     root.querySelectorAll("#Lint .stop").forEach((g, i) => {
-      const st = statuses[i];
-      const isOpen = st !== "closed";
+      const status = st[i];
+      const isOpen = status !== "closed";
       g.setAttribute("data-open", String(isOpen));
-      g.setAttribute("data-status", st);
-      g.querySelector(".stop-done")?.setAttribute("opacity", st === "done" ? "1" : "0");
+      g.setAttribute("data-status", status);
+      g.querySelector(".stop-done")?.setAttribute("opacity", status === "done" ? "1" : "0");
       g.querySelector(".stop-halo")?.setAttribute("opacity", i === suggestedIndex ? "1" : "0");
       g.querySelector(".stop-bud")?.setAttribute("opacity", isOpen ? "0" : "1");
-      g.querySelector(".stop-icon")?.setAttribute("opacity", !isOpen ? "0" : st === "locked" ? "0.35" : "1");
-      g.querySelector(".stop-face")?.setAttribute("fill", !isOpen ? "#E3B57F" : st === "locked" ? "#E3DACB" : "#FFF8EC");
+      g.querySelector(".stop-icon")?.setAttribute("opacity", !isOpen ? "0" : status === "locked" ? "0.35" : "1");
+      g.querySelector(".stop-face")?.setAttribute("fill", !isOpen ? "#E3B57F" : status === "locked" ? "#E3DACB" : "#FFF8EC");
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [stage, statusKey, suggestedIndex, open.join(",")]);
+  }, [stage, statusKey, suggestedIndex, suggestedBranch, openKey]);
 
   // The hit discs follow the platforms as the camera moves (transform only).
   useEffect(() => {
@@ -179,11 +184,20 @@ export function ArvoreScreen() {
     const faceSpot = () => { st.facing = ARVORE_LANDINGS[goal].x > spot.x ? 1 : -1; };
     let cancelled = false;
     let raf = 0;
-    const finish = () => {
+    const finish = async () => {
       if (cancelled) return;
       readyRef.current = true;
       setReady(true);
       setMessage(null); // the card shows the tree's live progress
+      if (!voiced.current && narrator.isUnlocked()) {
+        voiced.current = true;
+        setPose("point");
+        Object.assign(st, poseState("point"));
+        climbing.current = true;
+        await narrator.playNarration(live.current.lines.arvoreClimb, { ifIdle: true });
+        climbing.current = false;
+        if (cancelled) return;
+      }
       setPose("idle");
       Object.assign(st, poseState("idle"));
     };
@@ -196,7 +210,7 @@ export function ArvoreScreen() {
       Object.assign(st, { x: spot.x, y: spot.y, s: NINO_SCALE, walk: 0, alpha: 1 });
       faceSpot();
       showCamera();
-      finish();
+      void finish();
     } else {
       Object.assign(sg.cam, target(vp, from));
       const start = from === 0 ? { x: sg.nino.st.x, y: sg.nino.st.y } : arvoreNinoSpot(from);
@@ -214,11 +228,15 @@ export function ArvoreScreen() {
         await camGo;
         if (cancelled) return;
         if (vpRef.current) Object.assign(sg.cam, target(vpRef.current));
-        finish();
+        await finish();
       })();
     }
     return () => {
       cancelled = true;
+      if (climbing.current) {
+        climbing.current = false;
+        narrator.stop();
+      }
       cancelAnimationFrame(raf);
       st.walk = 0;
       readyRef.current = false;
@@ -229,6 +247,10 @@ export function ArvoreScreen() {
 
   // ---- taps ----
   const openStop = (i: number) => {
+    if (climbing.current) {
+      climbing.current = false;
+      narrator.stop();
+    }
     narrator.playSfx("tap");
     router.push(stopHref(stops[i].id));
   };
@@ -265,7 +287,7 @@ export function ArvoreScreen() {
           </div>
         </>
       ) : null}
-      <button type="button" aria-label="Voltar" className="k-round k-round-glass nz-back min-h-16 min-w-16" onClick={() => { narrator.stop(); router.push("/"); }}>
+      <button type="button" aria-label="Voltar" className="k-round k-round-glass nz-back min-h-16 min-w-16" onClick={() => { climbing.current = false; narrator.stop(); router.push("/"); }}>
         <CloseIcon size={30} />
       </button>
       <NinoCard

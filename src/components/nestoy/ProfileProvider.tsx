@@ -55,6 +55,8 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
     (patch: Partial<Profile>) =>
       commit((base) => {
         const next: Profile = { ...base, ...patch, version: 1 };
+        // A grown-up who answers age and English in the parents' area has done the cadastro: it must not come back on the next visit.
+        if (next.onboarding === "pending" && next.age !== null && next.english !== null) next.onboarding = "done";
         if (next.onboarding === "done" && next.createdAt === null) next.createdAt = new Date().toISOString();
         return next;
       }),

@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { defaultProfile, type Profile } from "@/domain/nestoy/profile";
 import type { Progress } from "@/domain/trail/progress";
@@ -22,6 +22,7 @@ vi.mock("@/components/nestoy/SettingsProvider", () => ({
 
 import { ArvoreScreen } from "@/components/arvore/ArvoreScreen";
 import { narrator } from "@/audio/narrator";
+import { getLines } from "@/domain/trail/content";
 
 const ALL = ["song", "lesson-1", "lesson-2", "lesson-3", "story", "challenge"];
 const empty = (): Progress => ({ completedStops: {}, stickers: {}, daysPlayed: [], memory: {}, version: 3, legacy: null });
@@ -44,6 +45,13 @@ describe("ArvoreScreen", () => {
     const b = branches(container);
     expect(b).toHaveLength(4);
     expect(b.map((g) => g.getAttribute("data-open"))).toEqual(["true", "false", "false", "false"]);
+  });
+
+  it("says the arrival line once the tree is ready, with audio unlocked", async () => {
+    render(<ArvoreScreen />);
+    await act(async () => {});
+    const lines = getLines();
+    expect(narrator.playNarration).toHaveBeenCalledWith(lines.arvoreClimb, { ifIdle: true });
   });
 
   it("only the open branches have tappable stops; closed ones show a sprout and no lock", () => {

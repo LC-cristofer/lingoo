@@ -45,6 +45,9 @@ export function MemoryHome() {
   const memory = ready ? progress.memory : {};
   const cards = Object.keys(memory).filter((id) => units.has(unitOfCard(id)));
   const due = ready ? dueCards(memory, today).filter((id) => cards.includes(id)) : [];
+  // The next round trains the first due card's unit, at most ROUND_LIMIT cards: that is the count the child is shown.
+  const roundUnit = due.length > 0 ? units.get(unitOfCard(due[0])) : undefined;
+  const roundIds = roundUnit ? due.filter((id) => unitOfCard(id) === roundUnit.id).slice(0, ROUND_LIMIT) : [];
   const next = ready ? nextDue(memory, today) : null;
   const daysToNext = next && today ? daysBetween(today, next) : null;
 
@@ -83,11 +86,10 @@ export function MemoryHome() {
     return <MemoryRound unit={round.unit} cardIds={round.ids} record onDone={() => setRound(null)} onExit={() => setRound(null)} />;
   }
   const startRound = () => {
-    const unit = due.length > 0 ? units.get(unitOfCard(due[0])) : undefined;
-    if (unit) setRound({ unit, ids: due.filter((id) => unitOfCard(id) === unit.id).slice(0, ROUND_LIMIT) });
+    if (roundUnit) setRound({ unit: roundUnit, ids: roundIds });
   };
 
-  const pictureIds = (kind === "due" ? due : cards).map((id) => wordOfCard(id) as ArtId);
+  const pictureIds = (kind === "due" ? roundIds : cards).map((id) => wordOfCard(id) as ArtId);
   const faded = kind !== "due";
   const nextLabel = daysToNext === 1 ? "amanhã" : `em ${daysToNext} dias`;
   const replay = () => line && void narrator.playNarration(line);
@@ -136,7 +138,7 @@ export function MemoryHome() {
           {kind !== "none" && kind !== "loading" ? <CardPile ids={pictureIds} faded={faded} /> : null}
           {kind === "due" ? (
             <p className="k-mem-count">
-              <b className="k-mem-count-n">{due.length}</b> {due.length === 1 ? "cartão pronto hoje" : "cartões prontos hoje"}
+              <b className="k-mem-count-n">{roundIds.length}</b> {roundIds.length === 1 ? "cartão pronto hoje" : "cartões prontos hoje"}
             </p>
           ) : null}
           {kind === "empty-tomorrow" || kind === "empty-later" ? <span className="k-soon">Próximo treino: {nextLabel}</span> : null}

@@ -2,7 +2,7 @@
    drives all motion (camera, day/night, ambient loops, Nino). React never re-renders per frame:
    only viewBox, SVG attributes, transform and opacity change. Ported from tools/visual/ilha/src/app.js. */
 import { createNinoRig, type NinoRig } from "@/art/nino/rig";
-import { ARVORE_DOOR, buildArvoreInterior } from "./arvore-interior";
+import { ARVORE_INTERIOR_DOOR, buildArvoreInterior } from "./arvore-interior";
 import { FAROL_INTERIOR_DOOR, buildFarolInterior } from "./farol-interior";
 import { NEST, ROUTES, buildIsland, threadWoven, type IslandStates, type PlaceId, type Threads } from "./island";
 import { LAYER_K, layerViewBox, toScreen, overviewCam, type Cam, type Viewport } from "./camera";
@@ -80,7 +80,7 @@ export function createStage(host: HTMLElement, o: StageOptions): Stage {
   };
   let vp: Viewport = { w: host.clientWidth || 390, h: host.clientHeight || 844, top: 108, bottom: 150 };
   // the interiors start at their door at D 0.5 (the prototype's icam was 500,2280,0.45)
-  const door = o.scene === "arvore" ? ARVORE_DOOR : FAROL_INTERIOR_DOOR;
+  const door = o.scene === "arvore" ? ARVORE_INTERIOR_DOOR : FAROL_INTERIOR_DOOR;
   const cam: Cam = isIsland ? overviewCam(vp) : { X: 500, Y: door.y - 140, D: 0.5 };
 
   // ---- DOM ----

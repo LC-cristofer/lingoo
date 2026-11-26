@@ -71,6 +71,13 @@ describe("MemoriaPage with cards ready", () => {
     expect(push).toHaveBeenCalledWith("/ninho");
   });
 
+  it("cards of another unit wait for their own round and are not counted", () => {
+    memory = Object.fromEntries([card("bear", TODAY), card("bird", TODAY), ["letras-1:letter-a", { box: 0, due: TODAY }]]);
+    render(<MemoriaPage />);
+    expect(document.querySelector(".k-mem-count-n")).toHaveTextContent(/^2$/);
+    expect(document.querySelectorAll(".k-pile-card")).toHaveLength(2);
+  });
+
   it("the bubble says memoryHome (shown and narrated)", async () => {
     render(<MemoriaPage />);
     await flush();
@@ -94,14 +101,14 @@ describe("MemoriaPage with cards ready", () => {
     expect(screen.queryByText(/cartões prontos/)).not.toBeInTheDocument();
   });
 
-  it("shows the real number even above the round limit, and a round takes at most 8", async () => {
+  it("shows the number the next round trains: at most 8, the first unit's cards only", async () => {
     memory = Object.fromEntries(
       [...WORDS.map((w) => card(w, TODAY)), card("bear", TODAY)].slice(0, 6),
     );
     // 6 real cards only exist in the unit; pad with fake ids of the same unit to pass the limit
     for (let i = 0; i < 4; i++) memory[`forest-animals:extra${i}`] = { box: 0, due: TODAY };
     render(<MemoriaPage />);
-    expect(document.querySelector(".k-mem-count-n")).toHaveTextContent(/^10$/);
+    expect(document.querySelector(".k-mem-count-n")).toHaveTextContent(/^8$/);
     fireEvent.click(screen.getByRole("button", { name: "Treinar" }));
     await flush();
     // unknown words are skipped, so the 6 real cards make the round
@@ -200,7 +207,7 @@ describe("MemoriaPage with the tree's cards", () => {
     };
     render(<MemoriaPage />);
     await flush();
-    expect(screen.getByText("3", { exact: true })).toBeInTheDocument();
+    expect(screen.getByText("2", { exact: true })).toBeInTheDocument(); // the count is the letters' round (the bear waits)
     fireEvent.click(screen.getByRole("button", { name: "Treinar" }));
     await flush();
     expect(screen.getByText("1 de 2")).toBeInTheDocument(); // the letters' round: the bear waits for the next one
