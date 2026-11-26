@@ -5,9 +5,11 @@ import { useCallback, useEffect, useId, useRef, useState, useSyncExternalStore, 
 import { poseState } from "@/art/nino/poses";
 import { ambience } from "@/audio/ambience";
 import { music } from "@/audio/music";
+import { useProfile } from "@/components/nestoy/ProfileProvider";
 import { useSettings } from "@/components/nestoy/SettingsProvider";
 import { StageView } from "@/components/nestoy/StageView";
 import { CloseIcon } from "@/components/trail/icons";
+import { NAME_MAX, type Age, type English } from "@/domain/nestoy/profile";
 import { isNight, type Settings } from "@/domain/nestoy/settings";
 import { overviewCam, type Viewport } from "@/world/camera";
 import type { PlaceId } from "@/world/island";
@@ -16,7 +18,7 @@ import { HoldGate } from "./HoldGate";
 
 type Option<T> = { value: T; label: string };
 
-function Segment<T extends string | number | boolean>({ label, value, options, onChange, hint }: {
+function Segment<T extends string | number | boolean | null>({ label, value, options, onChange, hint }: {
   label: string;
   value: T;
   options: Option<T>[];
@@ -43,6 +45,8 @@ function Segment<T extends string | number | boolean>({ label, value, options, o
 export function ParentsScreen() {
   const router = useRouter();
   const { settings, update, hydrated } = useSettings();
+  const { profile, update: updateProfile } = useProfile();
+  const nameId = useId();
   const [opened, setOpened] = useState(false);
   // A kept-alive page that is hidden runs this cleanup: the gate is closed again on the next arrival.
   useEffect(() => () => setOpened(false), []);
@@ -102,6 +106,41 @@ export function ParentsScreen() {
       ) : (
         <section ref={sheetRef} className="np-sheet" aria-label="Área dos responsáveis" onScroll={checkMore}>
           <h1 className="np-title">Área dos responsáveis</h1>
+
+          <section className="np-child" aria-labelledby="np-child-h">
+            <h2 id="np-child-h" className="np-sub">Criança</h2>
+            <div className="np-field">
+              <label htmlFor={nameId} className="np-label">Nome</label>
+              <input
+                id={nameId}
+                className="np-text"
+                type="text"
+                maxLength={NAME_MAX}
+                autoComplete="off"
+                value={profile.name}
+                onChange={(e) => updateProfile({ name: e.target.value.slice(0, NAME_MAX) })}
+              />
+              <p className="np-hint">Só aparece escrito, no ninho e aqui.</p>
+            </div>
+            <Segment<Age | null>
+              label="Idade"
+              value={profile.age}
+              options={[4, 5, 6, 7, 8, 9].map((a) => ({ value: a as Age, label: a === 9 ? "9+" : String(a) }))}
+              onChange={(v) => updateProfile({ age: v })}
+            />
+            <Segment<English | null>
+              label="Contato com inglês"
+              value={profile.english}
+              options={[
+                { value: "none", label: "Nenhum ainda" },
+                { value: "words", label: "Conhece algumas palavras" },
+                { value: "alphabet", label: "Sabe o alfabeto em inglês" },
+                { value: "reads", label: "Lê palavras simples em inglês" },
+              ]}
+              onChange={(v) => updateProfile({ english: v })}
+              hint="Muda só por onde a árvore sugere começar. O que a criança já fez continua."
+            />
+          </section>
 
           <Segment
             label="Ambiente da ilha"

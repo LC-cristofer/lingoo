@@ -1,7 +1,9 @@
 import { expect, test, type Page } from "@playwright/test";
+import { skipOnboarding } from "./helpers";
 
 /** Counts the loop sources the page starts and stops (Web Audio), and records every music request. */
 async function instrument(page: Page) {
+  await skipOnboarding(page);
   await page.addInitScript(() => {
     const state = { started: 0, stopped: 0 };
     (window as unknown as { __music: typeof state }).__music = state;

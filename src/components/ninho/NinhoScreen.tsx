@@ -7,6 +7,7 @@ import { poseState } from "@/art/nino/poses";
 import { Sticker } from "@/art/scenes/Sticker";
 import { narrator } from "@/audio/narrator";
 import { useBackgroundMusic } from "@/audio/useBackgroundMusic";
+import { useProfile } from "@/components/nestoy/ProfileProvider";
 import { useSettings } from "@/components/nestoy/SettingsProvider";
 import { StageView, useSideLayout, type StageInsets } from "@/components/nestoy/StageView";
 import { CloseIcon, PlayIcon } from "@/components/trail/icons";
@@ -36,7 +37,9 @@ type Slot = { unitId: string; number: number; title: string; sticker: { id: stri
 export function NinhoScreen() {
   const router = useRouter();
   const { settings, hydrated: settingsReady } = useSettings();
+  const { profile } = useProfile();
   const { progress, hydrated } = useTrailProgress();
+  const childName = profile.name.trim();
   const today = useToday();
   const lines = useMemo(() => getLines(), []);
   const shown = hydrated ? progress : EMPTY;
@@ -136,6 +139,7 @@ export function NinhoScreen() {
         </button>
       </div>
       <main ref={sheetRef} className="nn-sheet">
+        <h1 className="nn-name">{childName ? `Ninho da ${childName}` : "Ninho"}</h1>
         <section className="nn-part" aria-labelledby="nn-h-stickers">
           <header className="nn-head">
             <h2 id="nn-h-stickers" className="nn-title">Figurinhas</h2>

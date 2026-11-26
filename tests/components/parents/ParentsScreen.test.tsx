@@ -5,6 +5,11 @@ const push = vi.fn();
 vi.mock("next/navigation", () => ({ useRouter: () => ({ push, replace: vi.fn() }) }));
 const update = vi.fn();
 let settings: Settings;
+const updateProfile = vi.fn();
+let profile: Profile;
+vi.mock("@/components/nestoy/ProfileProvider", () => ({
+  useProfile: () => ({ profile, hydrated: true, update: updateProfile, setLevel: vi.fn() }),
+}));
 vi.mock("@/components/nestoy/SettingsProvider", () => ({
   useSettings: () => ({ settings, update, hydrated: true }),
 }));
@@ -31,6 +36,7 @@ const musicMock = vi.hoisted(() => {
 vi.mock("@/audio/music", () => ({ music: musicMock }));
 
 import { ParentsScreen } from "@/components/parents/ParentsScreen";
+import { defaultProfile, type Profile } from "@/domain/nestoy/profile";
 import { defaultSettings, type Settings } from "@/domain/nestoy/settings";
 
 const hold = () => screen.getByRole("button", { name: "Segure para entrar" });
@@ -45,6 +51,8 @@ beforeEach(() => {
   vi.useFakeTimers();
   settings = { ...defaultSettings(), motion: "reduzir" };
   update.mockClear();
+  updateProfile.mockClear();
+  profile = { ...defaultProfile(), name: "Ana", age: 6, english: "words", onboarding: "done" };
   push.mockClear();
   ambience.stop.mockClear();
   musicMock.setEnabled.mockClear();
@@ -176,5 +184,30 @@ describe("the parents' preferences", () => {
     await openGate();
     fireEvent.click(screen.getByRole("button", { name: "Fechar" }));
     expect(push).toHaveBeenCalledWith("/");
+  });
+});
+
+describe("the Criança section", () => {
+  it("shows the saved profile and edits name, age and English contact through update", async () => {
+    render(<ParentsScreen />);
+    await openGate();
+    expect(screen.getByRole("heading", { name: "Criança" })).toBeInTheDocument();
+    const name = screen.getByLabelText("Nome") as HTMLInputElement;
+    expect(name.value).toBe("Ana");
+    expect(screen.getByRole("button", { name: "6" })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByRole("button", { name: "Conhece algumas palavras" })).toHaveAttribute("aria-pressed", "true");
+
+    fireEvent.change(name, { target: { value: "Ana Maria" } });
+    expect(updateProfile).toHaveBeenLastCalledWith({ name: "Ana Maria" });
+    fireEvent.click(screen.getByRole("button", { name: "8" }));
+    expect(updateProfile).toHaveBeenLastCalledWith({ age: 8 });
+    fireEvent.click(screen.getByRole("button", { name: "Sabe o alfabeto em inglês" }));
+    expect(updateProfile).toHaveBeenLastCalledWith({ english: "alphabet" });
+  });
+
+  it("limits the name to 20 characters", async () => {
+    render(<ParentsScreen />);
+    await openGate();
+    expect((screen.getByLabelText("Nome") as HTMLInputElement).maxLength).toBe(20);
   });
 });

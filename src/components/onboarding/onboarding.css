@@ -1,0 +1,36 @@
+/* The cadastro (first opening): a cream sheet with Nino over the sky, one question per screen.
+   Imported by OnboardingScreen. Colours, radii and space only from tokens.css. */
+
+.ob-screen { position: fixed; inset: 0; z-index: 30; display: grid; place-items: center; padding: var(--sp-4); overflow-y: auto; }
+.ob-sheet { position: relative; z-index: 1; display: grid; justify-items: center; gap: var(--sp-4); width: min(100%, 460px); padding: var(--sp-3) var(--sp-5) var(--sp-6); text-align: center; background: var(--cream); border-radius: var(--r-4); box-shadow: 0 6px 0 var(--edge), var(--shadow-soft); }
+.ob-nino { width: 132px; height: 152px; margin-top: calc(-1 * var(--sp-2)); pointer-events: none; }
+.ob-nino > * { width: 100%; height: 100%; }
+.ob-title { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: var(--fs-display); line-height: 1.1; color: var(--cocoa); outline: none; }
+.ob-hint { margin: 0; max-width: 34ch; font-family: var(--font-body); font-weight: 700; font-size: var(--fs-body); line-height: 1.4; color: var(--cocoa-2); }
+
+.ob-form { display: grid; gap: var(--sp-4); width: 100%; }
+.ob-input { width: 100%; min-height: 64px; padding: 0 var(--sp-4); border: 0; border-radius: var(--r-2); background: var(--paper); box-shadow: inset 0 0 0 3px var(--area-linguas); font-family: var(--font-display); font-weight: 700; font-size: var(--fs-title); color: var(--cocoa); text-align: center; }
+.ob-input:focus-visible { outline: none; box-shadow: inset 0 0 0 3px var(--area-linguas), var(--focus-ring); }
+.ob-row { display: flex; gap: var(--sp-3); justify-content: center; flex-wrap: wrap; }
+.ob-row .k-btn { flex: 1 1 140px; margin-bottom: var(--lift); }
+
+.ob-ages { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-3); width: 100%; }
+.ob-age { min-height: 72px; font-size: 30px; margin-bottom: var(--lift); }
+.ob-options { display: grid; gap: var(--sp-3); width: 100%; }
+.ob-option { width: 100%; min-height: 64px; font-size: var(--fs-sub); text-align: center; line-height: 1.15; margin-bottom: var(--lift); }
+.ob-go { width: 100%; }
+
+.ob-later { min-height: 64px; padding: 0 var(--sp-5); border: 0; background: transparent; font-family: var(--font-body); font-weight: 800; font-size: var(--fs-body); color: var(--cocoa-2); text-decoration: underline; text-underline-offset: 4px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.ob-later:focus-visible { outline: none; box-shadow: var(--focus-ring); border-radius: var(--r-1); }
+
+/* A short landscape phone: Nino sits beside the text, not above it. */
+@media (orientation: landscape) and (max-height: 520px) {
+  .ob-sheet { width: min(100%, 620px); gap: var(--sp-2); padding-top: var(--sp-2); padding-bottom: var(--sp-3); }
+  .ob-nino { width: 84px; height: 96px; }
+  .ob-title { font-size: var(--fs-title); }
+  .ob-hint { display: none; }
+  .ob-options { grid-template-columns: 1fr 1fr; }
+}
+
+/* Cream buttons on the cream sheet need a ring to read as buttons. */
+.ob-sheet .k-btn-cream { --bg: var(--paper); box-shadow: inset 0 0 0 2px var(--line), 0 var(--lift) 0 var(--edge-c); }

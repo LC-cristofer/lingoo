@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Fredoka, Nunito } from "next/font/google";
 import "./globals.css";
 import { AudioUnlock } from "@/audio/AudioUnlock";
+import { ProfileProvider } from "@/components/nestoy/ProfileProvider";
 import { SettingsProvider } from "@/components/nestoy/SettingsProvider";
 import { TrailProgressProvider } from "@/components/trail/TrailProgressProvider";
 
@@ -39,7 +40,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="min-h-full flex flex-col font-body">
         <AudioUnlock />
         <SettingsProvider>
-          <TrailProgressProvider>{children}</TrailProgressProvider>
+          <ProfileProvider>
+            <TrailProgressProvider>{children}</TrailProgressProvider>
+          </ProfileProvider>
         </SettingsProvider>
       </body>
     </html>

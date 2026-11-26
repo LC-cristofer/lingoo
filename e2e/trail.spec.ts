@@ -1,4 +1,5 @@
 import { expect, test, type Locator, type Page } from "@playwright/test";
+import { skipOnboarding } from "./helpers";
 import { segmentId } from "../src/domain/trail/audio-id";
 import { getLines, getUnit } from "../src/domain/trail/content";
 import type { Exercise, Narration, Stop } from "../src/domain/trail/schema";
@@ -14,6 +15,7 @@ const labelOf = (stop: Stop) => (stop.kind === "story" ? "História" : stop.titl
  * needed), and audio files played at 16x so the whole unit takes minutes, not an hour. The requests stay real.
  */
 async function instrument(page: Page) {
+  await skipOnboarding(page);
   await page.addInitScript(() => {
     const spoken: string[] = [];
     (window as unknown as { __spoken: string[] }).__spoken = spoken;

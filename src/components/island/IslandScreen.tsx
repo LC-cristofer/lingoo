@@ -84,12 +84,14 @@ export type IslandScreenProps = {
   mode?: "auto" | "explore";
   /** The stop the child has just finished (`?volta=`): it opens the return when it names a finished stop of the unit. */
   volta?: string | null;
+  /** True while something must come first (the cadastro): the island stays asleep and nothing opens until it turns false. */
+  held?: boolean;
   /** The live stage once mounted, and null once destroyed. */
   onStage?: (stage: Stage | null) => void;
 };
 
 /** The island home: the world stage, six place pins, the Nino card and the top bar; it also plays the opening, the return and the night. */
-export function IslandScreen({ mode = "auto", volta = null, onStage }: IslandScreenProps) {
+export function IslandScreen({ mode = "auto", volta = null, held = false, onStage }: IslandScreenProps) {
   const router = useRouter();
   const { settings, update, hydrated: settingsReady } = useSettings();
   const { progress, hydrated: progressReady } = useTrailProgress();
@@ -218,7 +220,7 @@ export function IslandScreen({ mode = "auto", volta = null, onStage }: IslandScr
     s.fx.intro.fade = 0;
     setTrack(null);
 
-    if (!settingsReady || !progressReady) {
+    if (!settingsReady || !progressReady || held) {
       // Waiting for the stored settings: the nest close-up, Nino asleep, nothing else yet.
       // (the screen starts in the "boot" phase with the chrome hidden, and hydration only ever flips once)
       s.moveNino("nest");
@@ -325,7 +327,7 @@ export function IslandScreen({ mode = "auto", volta = null, onStage }: IslandScr
     };
     // Settings and progress are read through `live`: only the stage and the hydration decide when an arrival starts.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [stage, settingsReady, progressReady]);
+  }, [stage, settingsReady, progressReady, held]);
 
   // ---- interactions ----
   /** Cancels whatever flow is running: its promises never resolve, so the screen restores what it touched. */

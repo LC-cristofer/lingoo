@@ -50,3 +50,9 @@
 /* The ring keeps its fill: it is progress feedback for the 2 s hold, not decoration. */
 @media (prefers-reduced-motion: reduce) { .np-hold { transition: none; } }
 :root[data-motion="reduzir"] .np-hold { transition: none; }
+
+/* ---------- the child's section ---------- */
+.np-child { display: grid; gap: var(--sp-4); padding-bottom: var(--sp-4); border-bottom: 2px solid var(--line); }
+.np-sub { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: var(--fs-sub); line-height: 1.1; color: var(--cocoa); }
+.np-text { min-height: 64px; padding: 0 var(--sp-4); border: 0; border-radius: var(--r-2); background: var(--paper); box-shadow: inset 0 0 0 2px var(--line); font-family: var(--font-display); font-weight: 700; font-size: var(--fs-title); color: var(--cocoa); }
+.np-text:focus-visible { outline: none; box-shadow: inset 0 0 0 3px var(--area-linguas), var(--focus-ring); }

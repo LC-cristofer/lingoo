@@ -2,6 +2,7 @@ import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { defaultSettings } from "@/domain/nestoy/settings";
 
+import { defaultProfile } from "@/domain/nestoy/profile";
 vi.mock("next/navigation", () => ({ useRouter: () => ({ push: vi.fn(), replace: vi.fn() }), useSearchParams: () => new URLSearchParams() }));
 vi.mock("@/audio/narrator", () => ({
   narrator: { playNarration: vi.fn(() => Promise.resolve()), playSfx: vi.fn(), stop: vi.fn(), unlock: vi.fn(), isUnlocked: vi.fn(() => true) },
@@ -14,6 +15,9 @@ vi.mock("@/components/trail/TrailProgressProvider", () => ({
     finishStop: vi.fn(),
     markToday: vi.fn(),
   }),
+}));
+vi.mock("@/components/nestoy/ProfileProvider", () => ({
+  useProfile: () => ({ profile: { ...defaultProfile(), onboarding: "done" }, hydrated: true, update: vi.fn(), setLevel: vi.fn() }),
 }));
 vi.mock("@/components/nestoy/SettingsProvider", () => ({
   useSettings: () => ({ settings: { ...defaultSettings(), motion: "reduzir" }, update: vi.fn(), hydrated: true }),

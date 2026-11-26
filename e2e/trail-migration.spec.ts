@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
+import { skipOnboarding } from "./helpers";
 import { segmentId } from "../src/domain/trail/audio-id";
 import { getLines } from "../src/domain/trail/content";
 
@@ -23,6 +24,7 @@ const V2 = JSON.stringify({
  * again) and swaps speechSynthesis for a fake that records speak() calls (the browser voice must never be needed).
  */
 async function prepare(page: Page, seed: Record<string, string>) {
+  await skipOnboarding(page);
   await page.addInitScript((entries: Record<string, string>) => {
     if (!sessionStorage.getItem("__seeded")) {
       for (const [k, v] of Object.entries(entries)) localStorage.setItem(k, v);

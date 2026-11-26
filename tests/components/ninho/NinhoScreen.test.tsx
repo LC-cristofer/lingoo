@@ -13,12 +13,17 @@ let hydrated = true;
 vi.mock("@/components/trail/TrailProgressProvider", () => ({
   useTrailProgress: () => ({ progress, hydrated, finishStop: vi.fn(), markToday: vi.fn() }),
 }));
+let profile: Profile;
+vi.mock("@/components/nestoy/ProfileProvider", () => ({
+  useProfile: () => ({ profile, hydrated: true, update: vi.fn(), setLevel: vi.fn() }),
+}));
 vi.mock("@/components/nestoy/SettingsProvider", () => ({
   useSettings: () => ({ settings: { ...defaultSettings(), motion: "reduzir" }, update: vi.fn(), hydrated: true }),
 }));
 
 import { NinhoScreen } from "@/components/ninho/NinhoScreen";
 import { narrator } from "@/audio/narrator";
+import { defaultProfile, type Profile } from "@/domain/nestoy/profile";
 import { defaultSettings } from "@/domain/nestoy/settings";
 import { getLines, getUnit } from "@/domain/trail/content";
 import { emptyProgress, type Progress } from "@/domain/trail/progress";
@@ -34,6 +39,7 @@ beforeEach(() => {
   vi.useFakeTimers({ toFake: ["Date"] });
   vi.setSystemTime(new Date(2026, 10, 12, 10, 0, 0));
   progress = emptyProgress();
+  profile = defaultProfile();
   hydrated = true;
   push.mockClear();
   hook.useBackgroundMusic.mockClear();
@@ -142,5 +148,17 @@ describe("NinhoScreen exit", () => {
     const back = screen.getByRole("button", { name: "Voltar para a ilha" });
     fireEvent.click(back);
     expect(push).toHaveBeenCalledWith("/");
+  });
+});
+
+describe("NinhoScreen title", () => {
+  it('reads "Ninho da Ana" when the profile has a name', () => {
+    profile = { ...defaultProfile(), name: "Ana" };
+    render(<NinhoScreen />);
+    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("Ninho da Ana");
+  });
+  it('reads "Ninho" when the name is empty', () => {
+    render(<NinhoScreen />);
+    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(/^Ninho$/);
   });
 });
